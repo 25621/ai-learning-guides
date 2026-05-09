@@ -36,8 +36,14 @@ many tries, they figure out how to walk. Q-learning does the same thing, but wit
 Here's something clever: when Q-Learning updates its table, it *always assumes it will make
 the perfect move next time*, even if during training it sometimes explores random moves.
 
-This means Q-Learning is **off-policy** — it learns about the best strategy even while
-doing something different (exploring). It separates "what I do" (the behavior policy used to explore) from "what I learn" (the optimal target policy being evaluated and improved).
+This makes Q-Learning **off-policy**: the strategy it *learns* (always pick the best known
+action) is separate from the strategy it *follows* during training (sometimes pick a random
+action to explore). Concretely, the Q-table update uses the *maximum* Q-value of the next
+state — the theoretical best — even when the robot's actual next move will be random.
+
+In plain terms: the robot might randomly wander left to explore, but its learning still
+calculates as if it would take the *best* action next. This separation lets Q-Learning
+converge to the optimal strategy regardless of how much it explores.
 
 ---
 
