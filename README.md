@@ -32,9 +32,9 @@ Understand core concepts without deep math.
 - Exploration vs exploitation tradeoff
 
 ### Practical Work
-- [ ] [Implement a simple multi-armed bandit problem from scratch](foundations/multi_armed_bandit_explained.md) — [code](foundations/multi_armed_bandit.py)
-- [ ] [Solve Frozen Lake with random policy, observe results](foundations/frozen_lake_explained.md) — [code](foundations/frozen_lake_random_policy.py)
-- [ ] [Visualize state-value functions on a simple grid](foundations/state_value_visualization_explained.md) — [code](foundations/state_value_visualization.py)
+- [ ] [Implement a simple multi-armed bandit problem from scratch](foundations/multi_armed_bandit_explained.md)
+- [ ] [Solve Frozen Lake with random policy, observe results](foundations/frozen_lake_explained.md)
+- [ ] [Visualize state-value functions on a simple grid](foundations/state_value_visualization_explained.md)
 
 ### Tools
 - Python
