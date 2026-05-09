@@ -1,6 +1,6 @@
 # Policy Iteration for GridWorld 🗺️
 
-## What Is It? (For Curious Kids!)
+## What Is It?
 
 Imagine you are playing a board game on a **4×4 grid** (like a tiny chessboard). You start
 in one corner and need to reach the other corner. Every step costs 1 point (you don't want
