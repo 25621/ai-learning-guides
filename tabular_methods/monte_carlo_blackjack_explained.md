@@ -1,6 +1,6 @@
 # Monte Carlo Control for Blackjack 🃏
 
-## What Is It?
+## What Is It? (For Curious Kids!)
 
 Have you ever played a card game where you have to decide: **"Do I take another card,
 or am I happy with what I have?"**
@@ -40,7 +40,7 @@ Monte Carlo waits until the **entire episode is finished**, then looks back at e
 
 | Method | Updates when? | Needs complete episode? |
 |--------|---------------|------------------------|
-| **TD (Temporal Difference: learn from a one-step-better guess)** | After every step | No |
+| **TD (SARSA, Q-Learning)** | After every step | No |
 | **Monte Carlo** | After each full episode | Yes |
 
 This makes Monte Carlo simpler to understand, but it can't learn until each episode ends.
@@ -96,8 +96,7 @@ The learned policy shows:
 - **Every-visit MC**: Update the score for a state every time you visit it in an episode
 - **No bootstrapping**: Monte Carlo doesn't use estimates of future values — it waits
   for the real result!
-- **ε-soft policy**: Epsilon-soft policy (ε is epsilon, pronounced "EP-suh-lon") usually
-  does the best known action, but sometimes explores randomly
+- **ε-soft policy**: Usually do the best known action, but sometimes explore randomly
 
 The big idea: **Monte Carlo learns by playing many complete games. It's like learning from
 experience — you remember everything that happened and figure out what led to winning!**

@@ -1,6 +1,6 @@
 # SARSA vs Q-Learning: Safe vs Optimal Paths 🐢 vs 🐇
 
-## What Is It?
+## What Is It? (For Curious Kids!)
 
 Two robots both need to walk along a **cliff edge** to reach the goal. Both robots
 are still *learning* and sometimes make random moves (oops!).
@@ -38,8 +38,7 @@ Both kids eventually learn — but during training, the SARSA kid falls less!
 
 ## What Our Code Found
 
-Both algorithms ran for **500 episodes** on Cliff Walking with ε=0.1 (epsilon, pronounced
-"EP-suh-lon"; here it means 10% random moves):
+Both algorithms ran for **500 episodes** on Cliff Walking with ε=0.1 (10% random moves):
 
 | Metric | SARSA | Q-Learning |
 |--------|-------|------------|
@@ -50,7 +49,7 @@ Both algorithms ran for **500 episodes** on Cliff Walking with ε=0.1 (epsilon, 
   (accounting for its own random moves)
 - **After training** (pure greedy): Q-Learning finds the **shorter optimal path** (-13)!
 
-As ε (epsilon) shrinks toward 0, both algorithms converge to the same optimal policy.
+As ε shrinks toward 0, both algorithms converge to the same optimal policy.
 
 ---
 

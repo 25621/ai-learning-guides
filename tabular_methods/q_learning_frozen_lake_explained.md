@@ -1,6 +1,6 @@
 # Q-Learning Agent for Frozen Lake 🧊
 
-## What Is It?
+## What Is It? (For Curious Kids!)
 
 Picture a frozen pond with slippery ice. There is a **Start square** and a **Goal square**
 with some **Holes** in the middle. If you fall in a hole, you start over!
@@ -36,10 +36,8 @@ many tries, they figure out how to walk. Q-learning does the same thing, but wit
 Here's something clever: when Q-Learning updates its table, it *always assumes it will make
 the perfect move next time*, even if during training it sometimes explores random moves.
 
-This means Q-Learning is **off-policy**: the behavior policy (the moves it uses while
-training, including random exploration) can be different from the target policy (the greedy
-best-move strategy it is learning). In plain words, it separates "what I do while practicing"
-from "what I am trying to become best at."
+This means Q-Learning is **off-policy** — it learns about the best strategy even while
+doing something different (exploring). It separates "what I do" from "what I learn."
 
 ---
 
@@ -73,10 +71,8 @@ The learned Q-table shows the agent figured out: go down and right while avoidin
 - **Q(s, a)**: The score for taking action a in state s
 - **Reward**: What the agent gets after taking an action (+1 for reaching goal, 0 otherwise)
 - **Off-policy**: Learns the optimal strategy even while exploring randomly
-- **ε-greedy**: Epsilon-greedy (ε is epsilon, pronounced "EP-suh-lon") means most of the
-  time do the best known action; sometimes explore randomly
-- **Discount factor γ**: Gamma (γ, pronounced "GAM-uh") controls how much future rewards
-  are worth (like preferring money now vs later)
+- **ε-greedy**: Most of the time do the best known action; sometimes explore randomly
+- **Discount factor γ**: How much future rewards are worth (like preferring money now vs later)
 
 The big idea: **Q-Learning builds a "cheat sheet" for every situation, and keeps improving
 it until it knows the best move everywhere.**
