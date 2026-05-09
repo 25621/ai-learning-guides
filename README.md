@@ -114,12 +114,12 @@ Scale RL beyond small state spaces using function approximators.
   - Rainbow DQN
 
 ### Practical Work
-- [ ] Solve CartPole with linear Q-learning
-- [ ] Implement DQN from scratch for CartPole
-- [ ] Add experience replay, observe stability improvement
-- [ ] Add target network, compare learning curves
-- [ ] Train DQN on Atari Pong (use ALE-Py)
-- [ ] Implement Double DQN, compare with vanilla DQN
+- [x] [Solve CartPole with linear Q-learning](function_approximation/linear_q_cartpole_explained.md)
+- [x] [Implement DQN from scratch for CartPole](function_approximation/dqn_cartpole_explained.md)
+- [x] [Add experience replay, observe stability improvement](function_approximation/dqn_experience_replay_explained.md)
+- [x] [Add target network, compare learning curves](function_approximation/dqn_target_network_explained.md)
+- [x] [Train DQN on Atari Pong (use ALE-Py)](function_approximation/dqn_atari_pong_explained.md)
+- [x] [Implement Double DQN, compare with vanilla DQN](function_approximation/double_dqn_cartpole_explained.md)
 
 ### Key Insight
 The "deadly triad" (function approximation + bootstrapping + off-policy) causes instability. DQN innovations address this.
