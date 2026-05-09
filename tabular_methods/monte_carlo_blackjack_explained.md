@@ -1,6 +1,6 @@
 # Monte Carlo Control for Blackjack 🃏
 
-## What Is It? (For Curious Kids!)
+## What Is It?
 
 Have you ever played a card game where you have to decide: **"Do I take another card,
 or am I happy with what I have?"**
@@ -96,7 +96,7 @@ The learned policy shows:
 - **Every-visit MC**: Update the score for a state every time you visit it in an episode
 - **No bootstrapping**: Monte Carlo doesn't use estimates of future values — it waits
   for the real result!
-- **ε-soft policy**: Usually do the best known action, but sometimes explore randomly
+- **ε-soft policy** (ε = epsilon): Usually do the best known action, but sometimes explore randomly
 
 The big idea: **Monte Carlo learns by playing many complete games. It's like learning from
 experience — you remember everything that happened and figure out what led to winning!**

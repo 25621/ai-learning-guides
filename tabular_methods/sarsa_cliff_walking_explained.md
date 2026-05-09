@@ -1,6 +1,6 @@
 # SARSA for Cliff Walking 🏔️
 
-## What Is It? (For Curious Kids!)
+## What Is It?
 
 Imagine a **very long hallway** with a **terrible cliff** along one edge. If you fall off the
 cliff, you have to go all the way back to the start! Your goal is to walk from one end to the
@@ -80,7 +80,7 @@ extra steps (-21 instead of -13), but almost never falls off the cliff during tr
 - **On-policy**: Learns about the policy it's actually using (including its random mistakes)
 - **SARSA update**: Uses the *actual* next action, not the theoretically best one
 - **Safe path**: A longer path that avoids danger, accounting for exploration mistakes
-- **TD control**: Updating values after every single step (not waiting for the whole episode)
+- **TD (Temporal Difference) control**: Updating values after every single step (not waiting for the whole episode)
 
 The big idea: **SARSA is honest — it learns from what it actually does, not what it wishes
 it would do. This makes it cautious and safe near danger!**

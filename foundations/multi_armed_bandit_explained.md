@@ -1,6 +1,6 @@
 # The Multi-Armed Bandit Problem 🎰
 
-## What Is It? (For Curious Kids!)
+## What Is It?
 
 Imagine you are at a birthday party and there are **10 different candy jars**.
 Each jar has candy inside, but some jars have *yummy* candy and some jars have

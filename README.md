@@ -71,11 +71,11 @@ Master classical RL algorithms where state/action spaces are small enough to sto
 - Eligibility Traces and TD(λ)
 
 ### Practical Work
-- [ ] Implement policy iteration for GridWorld
-- [ ] Build Q-learning agent for Frozen Lake
-- [ ] Implement SARSA for Cliff Walking
-- [ ] Compare SARSA vs Q-learning behavior (safe vs optimal paths)
-- [ ] Implement Monte Carlo control for Blackjack
+- [ ] [Implement policy iteration for GridWorld](tabular_methods/policy_iteration_gridworld_explained.md)
+- [ ] [Build Q-learning agent for Frozen Lake](tabular_methods/q_learning_frozen_lake_explained.md)
+- [ ] [Implement SARSA for Cliff Walking](tabular_methods/sarsa_cliff_walking_explained.md)
+- [ ] [Compare SARSA vs Q-learning behavior (safe vs optimal paths)](tabular_methods/sarsa_vs_qlearning_explained.md)
+- [ ] [Implement Monte Carlo control for Blackjack](tabular_methods/monte_carlo_blackjack_explained.md)
 
 ### Key Insight
 Understand the backup diagrams—they clarify how each algorithm updates values.
