@@ -38,10 +38,10 @@ In our implementation, both use the **same neural network backbone**:
           State (8 numbers for LunarLander)
                        ↓
           ┌─────────────────────────┐
-          │  Shared Layers           │
-          │  [256 neurons] → ReLU    │
-          │  [256 neurons] → ReLU    │
-          └────────┬────────┬────────┘
+          │  Shared Layers          │
+          │  [256 neurons] → ReLU   │
+          │  [256 neurons] → ReLU   │
+          └────────┬────────┬───────┘
                    ↓        ↓
           Actor Head    Critic Head
           [4 outputs]   [1 output]
