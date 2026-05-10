@@ -167,6 +167,19 @@ L_critic  = MSE between V(s) and returns
 
 Typical coefficients: c₁ = 0.01 (entropy), c₂ = 0.5 (critic)
 
+**Two terms worth unpacking:**
+
+- **Policy gradient** — the "actor" half of the loss. It uses the gradient signal to
+  push the policy toward actions with higher advantage and away from actions with lower
+  advantage. This is the same core idea introduced in REINFORCE — see the [REINFORCE
+  walkthrough](./reinforce_cartpole_explained.md#the-old-way-vs-the-new-way) for the
+  intuition. PPO just adds the clipping wrapper around it.
+- **MSE (Mean Squared Error)** — the "critic" half of the loss. The critic V(s) predicts
+  the expected return from a state; we compare its prediction to the actual return and
+  square the difference: `MSE = mean((V(s) - return)²)`. Squaring punishes large mistakes
+  more than small ones and gives a smooth, differentiable signal for training. (Standard
+  regression loss — see [mean squared error](https://en.wikipedia.org/wiki/Mean_squared_error).)
+
 ---
 
 ## The Results
