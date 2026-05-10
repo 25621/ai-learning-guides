@@ -11,6 +11,24 @@ Start to Goal without falling in!
 
 ---
 
+## What Does the "Q" in Q-Learning Stand For?
+
+The **"Q"** stands for **"Quality"** — specifically, the *quality* of taking a particular
+action in a particular situation.
+
+Think of it like a restaurant rating: "How good (quality) is it to order the pizza at THIS
+restaurant?" Q(s, a) asks: "How good is it to take action **a** when I'm in state **s**?"
+
+A high Q-value means: "Great choice! This action leads to lots of reward."
+A low Q-value means: "Bad idea! This action usually leads to trouble."
+
+**Real-life example:** Imagine you're a kid deciding whether to eat candy before dinner.
+Your Q-value for "eat candy now" might be high right now (it tastes great!) but low overall
+(mom gets upset, you feel sick later). Q-learning learns to account for those future
+consequences — not just the immediate feeling!
+
+---
+
 ## The Big Idea: A Magic Table of Scores
 
 Q-Learning builds a big table called the **Q-table**. Each row is a square on the ice,

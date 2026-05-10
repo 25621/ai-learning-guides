@@ -114,12 +114,12 @@ Scale RL beyond small state spaces using function approximators.
   - Rainbow DQN
 
 ### Practical Work
-- [x] [Solve CartPole with linear Q-learning](function_approximation/linear_q_cartpole_explained.md)
-- [x] [Implement DQN from scratch for CartPole](function_approximation/dqn_cartpole_explained.md)
-- [x] [Add experience replay, observe stability improvement](function_approximation/dqn_experience_replay_explained.md)
-- [x] [Add target network, compare learning curves](function_approximation/dqn_target_network_explained.md)
-- [x] [Train DQN on Atari Pong (use ALE-Py)](function_approximation/dqn_atari_pong_explained.md)
-- [x] [Implement Double DQN, compare with vanilla DQN](function_approximation/double_dqn_cartpole_explained.md)
+- [ ] [Solve CartPole with linear Q-learning](function_approximation/linear_q_cartpole_explained.md)
+- [ ] [Implement DQN from scratch for CartPole](function_approximation/dqn_cartpole_explained.md)
+- [ ] [Add experience replay, observe stability improvement](function_approximation/dqn_experience_replay_explained.md)
+- [ ] [Add target network, compare learning curves](function_approximation/dqn_target_network_explained.md)
+- [ ] [Train DQN on Atari Pong (use ALE-Py)](function_approximation/dqn_atari_pong_explained.md)
+- [ ] [Implement Double DQN, compare with vanilla DQN](function_approximation/double_dqn_cartpole_explained.md)
 
 ### Key Insight
 The "deadly triad" (function approximation + bootstrapping + off-policy) causes instability. DQN innovations address this.
@@ -161,12 +161,12 @@ Learn to optimize policies directly without computing value functions.
   - PPO (Proximal Policy Optimization)
 
 ### Practical Work
-- [x] [Implement REINFORCE for CartPole](policy_gradients/reinforce_cartpole_explained.md)
-- [x] [Add baseline, measure variance reduction](policy_gradients/reinforce_baseline_explained.md)
-- [x] [Build A2C for LunarLander](policy_gradients/a2c_lunarlander_explained.md)
-- [x] [Implement PPO from scratch](policy_gradients/ppo_scratch_explained.md)
-- [x] [Train PPO on continuous control (BipedalWalker or MuJoCo)](policy_gradients/ppo_continuous_explained.md)
-- [x] [Compare PPO hyperparameter sensitivity](policy_gradients/ppo_hyperparams_explained.md)
+- [ ] [Implement REINFORCE for CartPole](policy_gradients/reinforce_cartpole_explained.md)
+- [ ] [Add baseline, measure variance reduction](policy_gradients/reinforce_baseline_explained.md)
+- [ ] [Build A2C for LunarLander](policy_gradients/a2c_lunarlander_explained.md)
+- [ ] [Implement PPO from scratch](policy_gradients/ppo_scratch_explained.md)
+- [ ] [Train PPO on continuous control (BipedalWalker or MuJoCo)](policy_gradients/ppo_continuous_explained.md)
+- [ ] [Compare PPO hyperparameter sensitivity](policy_gradients/ppo_hyperparams_explained.md)
 
 ### Key Insight
 PPO is the workhorse of modern RL—understand its clipping mechanism deeply.

@@ -18,6 +18,14 @@ That's exactly the problem with DQN without a target network!
 In DQN, the target for each update is:
 > target = reward + γ × max(Q(next_state))
 
+Here **γ (gamma)** is the **discount factor** — a number between 0 and 1 (typically 0.99)
+that controls how much the agent cares about *future* rewards vs. *immediate* rewards.
+
+**Real-life example:** Imagine someone offers you a cookie now, or two cookies tomorrow.
+If you really want cookies now, your γ is low (you discount the future heavily). If you're
+patient and happy to wait, your γ is high (future rewards matter almost as much as now).
+In RL, γ = 0.99 means "a reward next step is worth 99% of a reward right now."
+
 The Q-values on the right side come from... the same network we're training!
 
 So every time we update the network (to make Q-values better), we also change the
