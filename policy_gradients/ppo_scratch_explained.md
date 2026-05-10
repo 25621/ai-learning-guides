@@ -71,16 +71,21 @@ if r < 0.8: clip to 0.8, no more penalty for going further
 
 **Visual:**
 ```
-Advantage > 0:             Advantage < 0:
-    Objective                  Objective
-        │                          │
-  ──────┼────────                  │
-        │        ┌──           ────┤──────
-        │     ───┘               ──┘
-     0.8  1.0  1.2  r         0.8  1.0  1.2  r
+ε = 0.2, so the safe ratio window is 0.8 to 1.2.
+
+GOOD action (A > 0): increase the action probability, but stop rewarding it after 1.2
+ratio r:       0.6      0.8      1.0      1.2      1.4
+incentive:      ↑        ↑        ↑        ↑        -
+meaning:     too low     ok      old      max     clipped
+
+BAD action (A < 0): decrease the action probability, but stop rewarding it below 0.8
+ratio r:       0.6      0.8      1.0      1.2      1.4
+incentive:      -        ↓        ↓        ↓        ↓
+meaning:     clipped    max      old       ok    too high
 ```
 
-The flat parts are the "clipped" regions — no gradient flows through there.
+The `-` marks the flat clipped region. In that region, making the probability ratio even
+more extreme does not improve the objective, so PPO has no extra incentive to push farther.
 
 **Real-life example:** A car's speed limiter. You can accelerate, but once you hit 120 km/h,
 the limiter kicks in and won't let you go faster. It keeps you safe without stopping
@@ -133,6 +138,13 @@ Epoch 3: ...
 Epoch 4: ...
 ```
 
+**What is a "minibatch"?** Updating with all 2048 transitions at once is slow and
+memory-hungry; updating one transition at a time is noisy. A **minibatch** is a small
+chunk in between — here, 2048 ÷ 32 = **64 transitions per minibatch**. We compute one
+gradient step per minibatch, so each epoch performs 32 small, stable updates instead of
+1 huge one. (This is the same minibatch idea used everywhere in deep learning — see
+[mini-batch gradient descent](https://en.wikipedia.org/wiki/Stochastic_gradient_descent#Mini-batch_gradient_descent).)
+
 The clipping ensures these multiple passes don't overshoot — without clipping, multiple
 epochs would destroy the policy by pushing it too far!
 
@@ -166,6 +178,8 @@ Update  800 | Avg reward: ~280-300
 ```
 
 PPO on CartPole shows steady improvement but tends to plateau around 280-300.
+(A **plateau** means the learning curve flattens — reward stops improving even as training
+continues. The policy has found a locally good strategy but isn't making further progress.)
 This is actually expected — PPO is designed for harder, longer-episode environments.
 
 An interesting observation: **REINFORCE solved CartPole faster!** (500 avg vs 300 avg)
@@ -173,6 +187,14 @@ An interesting observation: **REINFORCE solved CartPole faster!** (500 avg vs 30
 Why? CartPole episodes are short (≤500 steps), so REINFORCE's exact returns are very
 accurate. PPO's bootstrapped estimates add unnecessary complexity. PPO truly shines on
 environments where waiting for full episodes is impractical (like BipedalWalker).
+
+**What is "BipedalWalker"?** BipedalWalker (specifically `BipedalWalker-v3` in
+[Gymnasium](https://gymnasium.farama.org/environments/box2d/bipedal_walker/)) is a
+classic benchmark RL environment: a 2-legged robot that must learn to walk forward
+across uneven terrain without falling. Unlike CartPole's two discrete actions
+(LEFT / RIGHT), BipedalWalker has **continuous** actions — four torque values, one for
+each leg joint, each a real number in [-1, 1]. Episodes can run for thousands of steps,
+which is exactly the regime where PPO's data efficiency and stability pay off.
 
 ---
 
@@ -193,8 +215,7 @@ GAE:        A_t = Σ_{l=0}^{∞} (γλ)^l · δ_{t+l}
 | **Ratio r(θ)** | How much the policy changed on this action |
 | **Clip ε** | The safety boundary — don't change the policy more than this |
 | **GAE** | A smart way to estimate advantages by looking ahead multiple steps |
-| **K epochs** | Reuse the same collected data multiple times for efficiency |
-| **Multiple envs** | Parallel environments for decorrelated, stable experience |
+| **Data efficiency** | Each rollout is collected from several parallel environments (decorrelated, stable experience) and then reused for K epochs of minibatch updates — clipping keeps these repeat passes safe |
 
 ---
 
