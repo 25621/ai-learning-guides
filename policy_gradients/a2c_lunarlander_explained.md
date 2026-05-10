@@ -14,6 +14,8 @@ This is much faster and more efficient.
 
 ## Meet the Two Characters
 
+> **What is LunarLander?** Throughout this document we use the **LunarLander** environment — a physics simulation where you control a small spacecraft and must land it softly on a target pad on the moon using three engines (left, main, and right). It is a standard benchmark in reinforcement learning, available in the Gymnasium library.
+
 ### The Actor 🎭
 The **Actor** is the policy — it decides which action to take.
 
@@ -24,7 +26,7 @@ The **Actor** is the policy — it decides which action to take.
 ### The Critic 🎬
 The **Critic** estimates how good the current situation is — the value V(s).
 
-> "Being in THIS state is worth about +150 reward in the future."
+> "Being in THIS state is worth about +150 points of total future reward."
 
 **Real-life example:** The *navigator* sitting next to the driver, saying "We're on a good road —
 expect to arrive in 30 minutes." or "We're heading into traffic — this is going to be slow."
@@ -46,6 +48,9 @@ In our implementation, both use the **same neural network backbone**:
           (action probs) (V(s))
 ```
 
+- **ReLU** (Rectified Linear Unit): an activation function applied after each layer — it outputs `max(0, x)`, keeping positive values and zeroing out negatives. This lets the network learn non-linear patterns.
+- **action probs**: the probability of taking each of the 4 actions. The Actor samples from this distribution to choose an action each step.
+
 **Real-life example:** One brain, two jobs — like a taxi driver who both drives (actor)
 AND knows if the route is good (critic). Sharing the brain means learning faster!
 
@@ -57,7 +62,7 @@ Just like REINFORCE with baseline, A2C computes the **Advantage**:
 
 > A(s, a) = "Actual result" − "What we expected"
 
-But here, "actual result" comes from the Critic's **n-step bootstrap**:
+But here, "actual result" comes from the Critic's **n-step bootstrap** (**bootstrapping** = using the Critic's own prediction V(s) to approximate the value of future steps, instead of waiting for the actual episode to end — like estimating your final exam score mid-semester using your current grade):
 
 ```
 Actual TD return: r_t + γ · r_{t+1} + γ² · r_{t+2} + ... + γⁿ · V(s_{t+n})
@@ -125,6 +130,9 @@ More frequent feedback = faster learning!
 
 A2C trains with three loss terms simultaneously:
 
+A **loss** is the number the optimizer tries to minimize. Smaller loss means the network's
+current behavior is closer to the training objective.
+
 ### 1. Actor Loss (Policy Gradient)
 Make advantageous actions more likely:
 ```
@@ -134,11 +142,11 @@ If A > 0: increase probability of that action
 If A < 0: decrease probability of that action
 
 ### 2. Critic Loss (Value Function MSE)
-Make value predictions more accurate:
+Make value predictions more accurate (**MSE** = Mean Squared Error: square the prediction error and average it — squaring penalizes large mistakes more heavily than small ones):
 ```
 L_critic = E[(V(s) - return)²]
 ```
-Like training any regression model — minimize prediction error.
+Like training any **regression** model (regression = predicting a continuous number, here the expected return V(s)) — minimize prediction error.
 
 ### 3. Entropy Bonus (Exploration)
 Keep the policy from becoming too confident too fast:
@@ -159,7 +167,7 @@ Total loss = L_actor + 0.5 × L_critic - 0.01 × entropy
 
 ## LunarLander: A Harder Challenge
 
-LunarLander-v3 is much harder than CartPole:
+**LunarLander-v3** is a Gymnasium (formerly OpenAI Gym) environment — "v3" is the version number indicating the third revision of this environment. The agent controls a small spacecraft that must land safely on a designated pad on the moon. It is much harder than CartPole:
 - 8-dimensional state space (position, velocity, angle, leg contact, fuel)
 - 4 discrete actions (do nothing, fire left, fire main, fire right)
 - Reward: +100 for landing, -100 for crashing, small fuel penalties

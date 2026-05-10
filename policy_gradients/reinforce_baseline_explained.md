@@ -10,7 +10,7 @@ Is 7 good? If the maximum is 10, yes! If everyone else got 9, no! Without contex
 you can't tell if you should change your answer style.
 
 This is exactly the problem with REINFORCE: it uses **raw returns** (G_t) to evaluate
-actions. A return of 200 might be amazing or terrible depending on the situation.
+actions. A total return score of 200 points might be amazing or terrible depending on the situation.
 
 ---
 
@@ -162,7 +162,7 @@ Advantage:        A_t = G_t - V(s_t)
 | **Advantage A_t** | "Was this action better than expected?" |
 | **Value Network** | A neural net that learns to predict expected returns |
 | **Variance reduction** | Less noise in gradient estimates → more stable learning |
-| **Unbiased** | The baseline doesn't change what the algorithm learns, only how stable it is |
+| **Unbiased** | The baseline doesn't change the target policy on average; it only makes the learning signal less noisy and more stable |
 
 ---
 

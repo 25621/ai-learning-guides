@@ -8,7 +8,8 @@ Imagine you have a robot playing a video game. Every second, the robot must choo
 Instead of memorizing every situation in a table (like Q-learning), we want the robot to learn
 a **recipe** — a set of rules that directly says: "In this situation, do this action."
 
-This recipe is called a **policy** (π).
+This recipe is called a **policy** (π, pi). In reinforcement
+learning, π means "the rule for choosing actions."
 
 ---
 
