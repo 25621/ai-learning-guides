@@ -20,6 +20,7 @@ learning, π means "the rule for choosing actions."
 
 **New way (Policy Gradient):** Directly learn which action to CHOOSE.
 > "When the pole tilts right, push RIGHT with 80% chance, push LEFT with 20% chance."
+*(The word **Gradient** refers to the mathematical "step" we take to slowly adjust these probabilities in the right direction.)*
 
 **Real-life example:** Learning to ride a bike.
 - The old way: calculate the *exact score* for "lean left 5 degrees" vs "lean left 7 degrees."
