@@ -161,12 +161,12 @@ Learn to optimize policies directly without computing value functions.
   - PPO (Proximal Policy Optimization)
 
 ### Practical Work
-- [ ] Implement REINFORCE for CartPole
-- [ ] Add baseline, measure variance reduction
-- [ ] Build A2C for LunarLander
-- [ ] Implement PPO from scratch
-- [ ] Train PPO on continuous control (BipedalWalker or MuJoCo)
-- [ ] Compare PPO hyperparameter sensitivity
+- [x] [Implement REINFORCE for CartPole](policy_gradients/reinforce_cartpole_explained.md)
+- [x] [Add baseline, measure variance reduction](policy_gradients/reinforce_baseline_explained.md)
+- [x] [Build A2C for LunarLander](policy_gradients/a2c_lunarlander_explained.md)
+- [x] [Implement PPO from scratch](policy_gradients/ppo_scratch_explained.md)
+- [x] [Train PPO on continuous control (BipedalWalker or MuJoCo)](policy_gradients/ppo_continuous_explained.md)
+- [x] [Compare PPO hyperparameter sensitivity](policy_gradients/ppo_hyperparams_explained.md)
 
 ### Key Insight
 PPO is the workhorse of modern RL—understand its clipping mechanism deeply.
