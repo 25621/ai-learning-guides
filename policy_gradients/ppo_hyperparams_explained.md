@@ -42,12 +42,12 @@ ratio must stay in [1 - ε,  1 + ε]
 **Real-life example:** Think of ε as "how far you're allowed to steer the car in one move."
 - ε=0.05: Like driving on ice — tiny adjustments only
 - ε=0.2:  Normal driving — reasonable turns
-- ε=0.4:  Racing driver — aggressive steering, risk of spinning out
+- ε=0.4:  Racing driver — aggressive steering, risk of **spinning out** (losing control because the change is too drastic, like a car skidding off the road)
 
 **Expected results:**
 - ε=0.05: Slow but stable learning (too cautious)
-- ε=0.2:  Good balance (the "Goldilocks" value)
-- ε=0.4:  Can learn fast but may overshoot and oscillate
+- ε=0.2:  Good balance (the **"Goldilocks" value** — not too small, not too large, just right — named after the fairy tale where Goldilocks picks the porridge that is neither too hot nor too cold)
+- ε=0.4:  Can learn fast but may **overshoot and oscillate** (overshoot = go past the optimal policy; oscillate = bounce back and forth around it without settling, like a pendulum that swings too far in both directions)
 
 ---
 
@@ -61,15 +61,15 @@ lr = 1e-3  (fast but risky)
 
 **What does learning rate control?**
 
-The learning rate is like the "step size" when climbing a hill:
+The learning rate is like the "step size" when climbing a hill (each step = one update to the neural network's weights, moving it slightly in the direction that improves reward):
 - Too small: Takes forever to reach the top (converges slowly)
-- Too large: You overshoot the peak and fall down the other side (diverges)
+- Too large: You overshoot the peak and fall down the other side (**diverges** — the training reward collapses or fluctuates wildly instead of improving steadily)
 - Just right: Steady progress toward the summit
 
 **Real-life example:** Tuning a guitar string.
-- lr=1e-4: Tiny turns of the tuning peg — takes forever but precise
+- lr=1e-4: Tiny turns of the tuning **peg** (the knob you rotate to tighten or loosen a string) — takes forever but precise
 - lr=3e-4: Normal tuning — find the right pitch in a few turns
-- lr=1e-3: Big yanks on the peg — might snap the string!
+- lr=1e-3: Big **yanks** (sudden hard pulls) on the peg — might **snap** the string (break it completely, just as too-large updates can break training irreversibly)!
 
 **Expected results:**
 - lr=1e-4: Eventually good but very slow
@@ -88,20 +88,26 @@ K = 20  (aggressive — many passes through each batch)
 
 **What do update epochs control?**
 
-After collecting a rollout (batch of experience), PPO reuses it for K optimization passes.
-More epochs = squeeze more learning from each batch, but risk overfitting to stale data.
+After collecting a **rollout** (= playing the game for a stretch of time to gather new experience — like a student doing a homework session before reviewing it), PPO packages that experience into a **batch** (= the full set of state, action, reward tuples from that rollout). It then runs K **passes** (= full sweeps through the batch, each pass updating the network once) over the same data.
+More epochs = squeeze more learning from each batch, but risk **overfitting to stale data** (= memorizing patterns that were true under the old policy but are no longer valid once the policy has been updated, like a student who memorizes last year's exam and fails a new one).
 
 **Real-life example:** A student practicing with a set of 20 math problems.
 - K=3:  Do each problem 3 times → still learning, don't overfit the practice set
 - K=10: Do each problem 10 times → solid mastery of these specific problems
-- K=20: Do each problem 20 times → memorize solutions without really understanding math!
+- K=20: Do each problem 20 times → **memorize solutions without really understanding math** (= the model fits the specific batch perfectly but loses the ability to generalize)!
+
+> ⚠️ **"But the results for K=20 look fine — why should I care?"**
+> PPO's clipping trick limits how much the policy can change per pass, so K=20 won't cause a sudden collapse.
+> However, the agent is still quietly over-adapting to data that no longer reflects what the current policy would actually experience.
+> This **slows down long-run learning**: each rollout teaches the agent less than it should, because later passes recycle increasingly stale information.
+> The damage is gradual, not dramatic — which is exactly why it is easy to overlook in short experiments.
 
 The clipping prevents catastrophic overfitting, but too many epochs can still slow overall learning.
 
 **Expected results:**
 - K=3:  Less efficient (some learning potential wasted per batch)
 - K=10: Good balance
-- K=20: Risk of policy becoming too confident on stale data
+- K=20: Risk of policy becoming **too confident on stale data** (= the network's updates are driven by experiences that no longer match what the current policy would encounter, quietly eroding sample efficiency)
 
 ---
 
@@ -128,7 +134,7 @@ A good hyperparameter balances all three!
 
 ## Methodology: Scientific Experimentation
 
-This experiment uses **ablation study** design:
+This experiment uses **ablation study** design (= a method where you remove or vary one component at a time to measure its individual impact — named after the scientific practice of selectively removing tissue to study its function):
 1. Pick default values: ε=0.2, lr=3e-4, K=10
 2. Change ONE parameter at a time
 3. Keep everything else fixed
@@ -148,9 +154,9 @@ This tells us the effect of EACH parameter in isolation.
 |----------------|-----------|------------|-----------|
 | **ε (clip)** | Slow convergence | ε ≈ 0.2 | Instability |
 | **lr** | Too slow | 2.5e-4 to 3e-4 | Divergence |
-| **K (epochs)** | Waste data | K = 4-10 | Overfitting |
-| **n_steps** | Too noisy | 128-2048 | Memory |
-| **batch_size** | Too noisy | 32-256 | Memory |
+| **K (epochs)** | **Waste data** (discard rollout before extracting full signal) | K = 4-10 | Overfitting to stale rollout data |
+| **n_steps** | Too noisy | 128-2048 | **OOM Memory errors** (uses too much RAM) |
+| **batch_size** | Too noisy | 32-256 | **OOM Memory errors** (uses too much RAM) |
 
 These "sweet spots" can shift depending on the environment!
 
@@ -161,7 +167,7 @@ These "sweet spots" can shift depending on the environment!
 Compared to earlier algorithms (like DQN without target networks), PPO is relatively
 robust to hyperparameter choices. The clipping mechanism provides a natural safety net.
 
-**Real-life example:** A car with ABS brakes vs. without:
+**Real-life example:** A car with **ABS** (Anti-lock Braking System — a safety feature that prevents wheels from locking up during hard braking, keeping the driver in control) brakes vs. without:
 - Without ABS (DQN): One wrong turn (bad hyperparameter) and you spin out
 - With ABS (PPO): The car corrects itself — reasonable hyperparameters all work okay
 
@@ -175,9 +181,9 @@ This robustness is a major reason PPO is the most popular RL algorithm in practi
 |---------|---------------|
 | **Ablation study** | Change one thing at a time to see its effect |
 | **Clip epsilon ε** | Safety boundary — 0.2 is usually best |
-| **Learning rate** | Step size — 2.5e-4 to 3e-4 works for most problems |
+| **Learning rate** | **Step size** — how much the network's weights are adjusted after each batch (think of it as the size of each footstep when walking toward a goal). **2.5e-4 to 3e-4** is scientific notation for 0.00025 to 0.0003 — these are dimensionless multipliers, not time values |
 | **Update epochs K** | How many times to reuse each batch — 4-10 is standard |
-| **Seeds** | Repeat each experiment multiple times to reduce luck effects |
+| **Random Seeds** | Each experiment is repeated with different **random seeds** (= the starting number fed to the random number generator, which controls all random choices in training). Using multiple seeds reveals whether results are consistent or just got lucky |
 
 ---
 
