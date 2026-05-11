@@ -269,9 +269,13 @@ Address sparse reward and hard exploration problems.
 - Go-Explore
 
 **Practical Work:**
-- [ ] Implement curiosity bonus
-- [ ] Train on Montezuma's Revenge
-- [ ] Compare exploration strategies
+- [ ] [Implement curiosity bonus](advanced_topics/exploration/curiosity_bonus_explained.md)
+- [ ] [Train on Montezuma's Revenge](advanced_topics/exploration/montezuma_revenge_explained.md)
+- [ ] [Compare exploration strategies](advanced_topics/exploration/compare_exploration_explained.md)
+
+See [`advanced_topics/exploration/`](advanced_topics/exploration/) for the
+runnable code (`curiosity_bonus.py`, `montezuma_revenge.py`,
+`compare_exploration.py`) and a section overview.
 
 **Resources:**
 - 📄 [ICM Paper](https://arxiv.org/abs/1705.05363)
