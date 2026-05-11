@@ -26,8 +26,8 @@ Action ~ Normal(μ, σ)
 ```
 
 Where:
-- **μ (mean)**: The center of the distribution — what action the network "recommends"
-- **σ (std)**: The spread — how much randomness / exploration to add
+- **μ (mu, mean)**: The center of the distribution — the action value the network "aims for"
+- **σ (sigma, standard deviation)**: The spread — how much randomness / exploration to add
 
 ```
         Probability
@@ -57,12 +57,14 @@ State (24 numbers) → [256 neurons] → [256 neurons] →
     └── Critic: 1 value (V(s))
 ```
 
-The `log_std` (log of standard deviation) is a **learned parameter** — not state-dependent.
+The `log_std` (logarithm of the **standard deviation** — a measure of spread or uncertainty)
+is a **learnable parameter** — not state-dependent.
 This keeps it simple while still letting exploration change during training.
 
-**Why log_std instead of std?** Standard deviation must be positive. Using log_std allows
-the network to output any number (positive or negative), then we do `exp(log_std)` to
-get a positive std. This prevents the std from becoming negative or zero.
+**Why log_std instead of std?** Standard deviation must be positive. Using `log_std` allows
+the network to output any real number (positive or negative), then we apply
+`exp(log_std)` — the exponential function, which is the inverse of the logarithm — to
+recover a guaranteed-positive std. This prevents the std from ever becoming negative or zero.
 
 ---
 
@@ -70,12 +72,16 @@ get a positive std. This prevents the std from becoming negative or zero.
 
 For discrete actions: `log_prob = log(P(action=LEFT))`
 
-For continuous actions with Normal distribution:
+For continuous actions, the **Normal distribution** describes a smooth bell-shaped curve
+around the mean. A single exact value has probability zero in continuous math, so we use
+the curve height at that value, called the **pdf** (probability density function):
 ```
 log_prob = Σᵢ log[Normal(μᵢ, σᵢ).pdf(aᵢ)]
 ```
 
-We sum across all action dimensions (4 for BipedalWalker).
+`log` means natural logarithm. It turns tiny density values into stable numbers that are
+easier for neural networks to optimize. We sum across all action dimensions (4 for
+BipedalWalker), because the full action is one 4-number vector.
 
 **Real-life example:** What's the probability of getting exactly 5.732...°C tomorrow?
 For continuous weather, you'd look at the Normal distribution curve and see how tall it is
@@ -98,11 +104,12 @@ BipedalWalker-v3 is a 2D robot that must learn to walk without falling:
 ```
 
 **State space (24 numbers):**
-- Hull angle, angular velocity, velocity (horizontal, vertical)
-- Each of 4 joints: angle, speed, torque
-- 10 LIDAR range sensors (seeing the ground ahead)
+- Hull: angle, angular velocity, horizontal velocity, vertical velocity (4 numbers)
+- Joints: 4 motors (2 hips, 2 knees) each providing angle and speed, plus 2 ground contact sensors (one for each leg) (10 numbers)
+- 10 LIDAR range sensors (distance readings that see the ground ahead) (10 numbers)
 
 **Action space (4 continuous values, each in [-1, 1]):**
+The action values control the **torque** (the rotational force applied by the motors) for exactly 4 joints (no actions are applied directly to the hull):
 - Hip 1 torque, Knee 1 torque, Hip 2 torque, Knee 2 torque
 
 **Rewards:**
@@ -124,9 +131,17 @@ Everything is the same EXCEPT:
 | **Policy** | Categorical(logits) | Normal(μ, σ) |
 | **Sample** | action = sample from {0,1,...,N} | action = μ + σ × noise |
 | **log_prob** | log P(action=k) | Σ log Normal(μᵢ, σᵢ).pdf(aᵢ) |
-| **Clamp** | Not needed | Clip actions to [-1, 1] |
+| **Clamp** | Not needed | Clamp actions to [-1, 1] |
 
-The clipping `action.clamp(-1, 1)` ensures we don't send actions outside the environment's bounds.
+**Logits** are raw, unnormalized scores for discrete actions. A categorical policy converts
+them into probabilities with softmax.
+
+**Clamp** means force a value into a valid range. The code uses `action.clamp(-1, 1)` so the
+environment never receives a motor command outside its allowed bounds.
+
+**Clip** in PPO means something different: PPO clips the probability ratio inside the loss,
+as explained in the [PPO clipping section](./ppo_scratch_explained.md#the-clipping-trick).
+Action clamping protects the environment interface; PPO clipping protects the policy update.
 
 ---
 
@@ -138,7 +153,8 @@ Every episode ends in a crash within seconds.
 **Mid training:** The robot discovers that moving legs alternately creates forward progress.
 It starts making small, awkward steps — reward becomes less negative.
 
-**Late training:** Smooth, efficient walking gait emerges. The robot adjusts to terrain.
+**Late training:** A smooth, efficient walking **gait** emerges. A gait is a repeated movement
+pattern, like alternating left and right steps. The robot adjusts to uneven terrain dynamically by utilizing its LIDAR sensors to adapt its steps in real-time.
 
 **Real-life example:** A baby learning to walk:
 1. Falls immediately (negative reward)
@@ -154,7 +170,7 @@ It starts making small, awkward steps — reward becomes less negative.
 - **Rewards are sparse** — forward progress rewards are tiny per step
 - **REINFORCE would need** thousands of complete episodes to get useful signal
 
-PPO's n-step updates with GAE let the robot learn from incomplete episodes:
+PPO's n-step updates with [GAE (Generalized Advantage Estimation)](./ppo_scratch_explained.md#gae-smarter-advantage-estimates) let the robot learn from incomplete episodes:
 > "Even though I fell after 50 steps, those steps showed SOME forward progress.
 > Let me use a 50-step return estimate rather than waiting for episode completion."
 
@@ -181,14 +197,16 @@ The learning curve shows the characteristic "S-curve" of continuous control:
 | **Gaussian policy** | Instead of choosing from a menu, throw a dart at a range of values |
 | **μ (mean)** | Where the policy "aims" |
 | **σ (std)** | How much randomness / exploration the policy uses |
-| **log_std as parameter** | A learnable global exploration rate |
+| **log_std as learnable parameter** | A global exploration rate updated by gradient descent |
 | **Continuous control** | Controlling real-valued outputs (torques, forces, angles) |
 
 ---
 
 ## What's Next?
 
-PPO has many hyperparameters — clip_eps, learning rate, number of epochs, etc.
+PPO has many **hyperparameters** — settings you choose before training begins (as opposed to
+*parameters* like network weights, which are learned automatically). Examples include
+`clip_eps`, learning rate, number of epochs, and batch size.
 
 How sensitive is PPO to these choices? `ppo_hyperparams.py` runs experiments
 systematically varying each hyperparameter and shows the effect on learning speed and stability.
