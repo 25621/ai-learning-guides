@@ -95,6 +95,9 @@ you from moving.
 
 ## Why This Prevents Catastrophic Updates
 
+A **catastrophic update** is when one large policy change completely destroys everything the
+agent has learned — hours of training gone in a single gradient step.
+
 Without clipping: one large gradient step might change the policy drastically.
 With clipping: the gradient is zero outside [1-ε, 1+ε], so the policy can only move a little per step.
 
