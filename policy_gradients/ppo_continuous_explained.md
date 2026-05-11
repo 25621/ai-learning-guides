@@ -110,7 +110,7 @@ BipedalWalker-v3 is a 2D robot that must learn to walk without falling:
 
 **Action space (4 continuous values, each in [-1, 1]):**
 The action values control the **torque** (the rotational force applied by the motors) for exactly 4 joints (no actions are applied directly to the hull):
-- Hip 1 torque, Knee 1 torque, Hip 2 torque, Knee 2 torque
+- Leg 1 Hip torque, Leg 1 Knee torque, Leg 2 Hip torque, Leg 2 Knee torque
 
 **Rewards:**
 - +300 for reaching the goal (right side)
@@ -134,7 +134,11 @@ Everything is the same EXCEPT:
 | **Clamp** | Not needed | Clamp actions to [-1, 1] |
 
 **Logits** are raw, unnormalized scores for discrete actions. A categorical policy converts
-them into probabilities with softmax.
+them into probabilities with **softmax** — a function that takes any set of numbers and
+squashes them into a valid probability distribution (all values positive, summing to 1).
+For example, logits [2.0, 1.0, 0.5] become probabilities [0.59, 0.24, 0.17]. Continuous PPO does **not** use softmax for the action itself,
+because the action is not chosen from a fixed menu. Instead, the policy outputs the mean
+and standard deviation of a Normal distribution, then samples real-valued torques from it.
 
 **Clamp** means force a value into a valid range. The code uses `action.clamp(-1, 1)` so the
 environment never receives a motor command outside its allowed bounds.
@@ -197,7 +201,7 @@ The learning curve shows the characteristic "S-curve" of continuous control:
 | **Gaussian policy** | Instead of choosing from a menu, throw a dart at a range of values |
 | **μ (mean)** | Where the policy "aims" |
 | **σ (std)** | How much randomness / exploration the policy uses |
-| **log_std as learnable parameter** | A global exploration rate updated by gradient descent |
+| **log_std as learnable parameter** | A global exploration rate updated by gradient-based optimization (gradient *ascent* on reward, or equivalently gradient *descent* on the PPO loss) — just like any other network weight |
 | **Continuous control** | Controlling real-valued outputs (torques, forces, angles) |
 
 ---
