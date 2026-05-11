@@ -1,160 +1,177 @@
-# World Models: Teaching a Robot to Daydream
+# Training a World Model: Teaching the Agent to Dream 🌍
 
-## The Big Idea
+## What Is a "World Model"?
 
-You know how when you close your eyes, you can imagine eating an ice cream cone?
-You can almost taste it. You can even imagine the cone falling on the floor and
-feel a little sad.
-
-You didn't really eat the ice cream. You didn't really drop it. But your brain
-**predicted** what would happen.
-
-That predicting brain is called a **world model**. In this script, we teach a tiny
-robot brain (a neural network) to do the same thing for a balancing game called
-**CartPole**.
-
----
-
-## What is CartPole?
-
-A cart has a long pole standing up on top, and it can wiggle around. The cart can
-push **LEFT** or **RIGHT**. The goal: keep the pole standing up as long as possible.
-
-The state of the world is just four numbers:
-1. Where the cart is
-2. How fast the cart is moving
-3. The angle of the pole
-4. How fast the pole is tipping
-
-The action is just one of two choices: `LEFT` (0) or `RIGHT` (1).
-
----
-
-## What a World Model Does
-
-The world model is a function:
+A **world model** is the agent's *internal copy of the universe*. Give it a
+state and an action, and it predicts what will happen next:
 
 ```
-   (current state, action chosen)  →  (next state, reward, did we fall?)
+(state, action)  ──►  Neural Network  ──►  (next_state, reward)
 ```
 
-In other words: **"If I'm here and I push left, where will I be a moment later?"**
+It is not the real world — it is a **simulator the agent built for itself** by
+watching reality and learning to mimic it.
 
-After learning, the model can run *in the robot's imagination* without ever
-touching the real game.
+Once trained, the model lets the agent ask "what-if" questions without taking
+any real action:
 
-### Real-life examples of world models
+> *"If I push left now and then right twice, where will I end up? Will the pole
+> fall?"*
 
-| Situation | What the world model predicts |
-|-----------|------------------------------|
-| You stack one more block on a tower | "I think it will fall!" |
-| You throw a ball | "It will land near the swing" |
-| You pour milk into the cup | "It will overflow at this rate" |
-| You step on ice | "I will slip" |
-
-Your brain has world models for thousands of things. They are how you plan ahead
-without trying things first.
+The agent can ponder a hundred plans inside its model in the time it would take
+to make one real move. That is the whole point.
 
 ---
 
-## How We Train the Model
+## A Real-Life Analogy
 
-### Step 1: Collect experience (the data)
-The robot plays CartPole using **random actions** — just for fun, no skill. We
-record every single moment:
+Think about how *you* solve a puzzle. You don't physically move every piece
+into every slot. You **imagine** what happens if piece A goes here. If that
+mental simulation looks wrong, you reject it before lifting a finger.
+
+Your brain has a learned world model — built from years of seeing how objects
+behave — that lets you simulate outcomes before committing.
+
+Other examples:
+
+- **A chess player** imagines moves several turns ahead.
+- **A driver** thinking, "If I brake now, the car behind has enough room."
+- **A child** stacking blocks: "If I put the big one on top, the tower will
+  wobble." (They learned this model by previously knocking towers down.)
+
+In every case, **a mental model + imagination = better decisions with less risk**.
+
+---
+
+## How Does the Agent Build Its Model?
+
+It just **watches**. Specifically:
+
+1. **Collect data.** Let any policy (even random) interact with the real
+   environment for a while. Save every transition:
+   ```
+   (state, action, reward, next_state)
+   ```
+2. **Train a neural network** to predict `next_state` and `reward` from
+   `(state, action)`. This is just supervised learning — the kind that powers
+   image classifiers and language models.
+3. **Validate.** Hold out 10% of the data and check the model's predictions
+   against the real ones. Low error means the model has captured the dynamics.
+
+The trick we use: instead of predicting `next_state` directly, predict the
+**delta** `next_state − state`. Most physics is incremental ("the cart moved a
+tiny bit"), and small targets are kinder to neural networks.
+
+---
+
+## Our Setup
+
+| Choice | Value | Why |
+|--------|-------|-----|
+| Environment | `CartPole-v1` | 4-D state, 2 actions — easy to model |
+| Data | 20,000 transitions from a random policy | Wide coverage of the state space |
+| Network | MLP, 2 × 128 ReLU hidden | Enough capacity, fast to train |
+| Loss | MSE on `(delta_state, reward)` | Standard regression |
+| Optimizer | Adam, lr = 1e-3, 30 epochs | Off-the-shelf |
+
+The whole training finishes in a few seconds on CPU.
+
+---
+
+## What Does "Good" Look Like?
+
+Two diagnostics matter:
+
+### 1. Single-step accuracy (validation MSE)
+
+This is "how well does the model predict ONE step into the future?" After 30
+epochs you should see validation MSE in the **1e-4 to 1e-3** range. That is
+tiny — pole angles and cart positions are accurate to a few decimal places.
+
+### 2. **Compounding error** on k-step rollouts
+
+This is the *real* test. Take a state, feed it through the model, then take
+its prediction and feed it back through the model — for `k` steps in a row.
+The error grows because every step adds a bit of noise on top of the previous
+prediction.
 
 ```
-(state, action, next_state, reward, did_we_fall)
-(state, action, next_state, reward, did_we_fall)
-...
-20,000 of these
+Step  1:  L2 error ≈ 0.01   (almost perfect)
+Step  5:  L2 error ≈ 0.05
+Step 10:  L2 error ≈ 0.15
+Step 20:  L2 error ≈ 0.40   (visibly drifting)
 ```
 
-### Step 2: Teach the neural network
-The neural network has three little "heads":
+**Why this matters.** If we plan 15 steps ahead with the model, the *exact*
+state at step 15 will be wrong — but if the relative ranking of "good plans
+vs. bad plans" is preserved, planning still works. (This is what
+`model_based_planning.py` exploits.)
 
-| Head | Predicts |
-|------|----------|
-| Δ-state head | how the four numbers will change |
-| Reward head  | the reward we will get |
-| Done head    | the chance that the pole will fall |
-
-We show the network thousands of examples and ask: *"Given the state and action,
-guess the next state. How close were you?"* We adjust the network to be a bit
-closer next time.
-
-### Step 3: Test the imagination
-
-This is the most fun part. We do an experiment:
-1. Reset the **real** CartPole.
-2. Pick 20 random actions.
-3. Play them in the **real** game and write down where the cart ends up.
-4. Play the **same** 20 actions in the **imagined** game (using the model).
-5. Compare the real ending to the imagined ending.
-
-If the imagined ending is close to the real one, the model is good!
+The plot in `outputs/world_model.png` shows both diagnostics side by side: the
+training-loss curve goes nicely down on a log scale, and the rollout-error
+curve goes nicely up.
 
 ---
 
-## Why Predicting Many Steps is Hard
+## Why Predict the *Delta*?
 
-Predicting **one** step ahead is easy. Predicting **20 steps** ahead is hard
-because errors compound:
+Compare two ways of phrasing the same problem to the network:
 
-```
-Step 1: model is off by 0.01
-Step 2: starts from the wrong place → off by 0.02
-Step 3: → off by 0.05
-...
-Step 20: → off by 0.5 (uh oh)
-```
+| Target | Typical magnitude | Easy or hard? |
+|--------|------------------:|--------------|
+| `next_state`        | 0–2.4 (cart pos) | Network must reproduce position **and** the tiny change |
+| `next_state - state`| ~0.02            | Network just learns the tiny change |
 
-This is why the plot shows three bars — the error grows as we predict further
-into the future.
-
-**Real-life example:** Predicting tomorrow's weather is pretty accurate.
-Predicting next month's weather... not so much. Same problem.
+Predicting the delta also means: if the network outputs zeros (a beginner
+network), the prediction is "nothing moved" — a sensible default for one
+timestep. Predicting `next_state` directly would output garbage.
 
 ---
 
-## What the Plot Shows
+## What This Buys Us
 
-The plot has two parts:
+A trained world model is the foundation for:
 
-**Left:** The training loss going down — the model is getting better at predicting.
-
-**Right:** Three bars showing how wrong the model is at horizons 1, 5, and 20 steps.
-- 1 step: very small error (good imagination!)
-- 5 steps: small but growing error
-- 20 steps: error is bigger — but the imagination is still useful
-
----
-
-## What's Saved
-
-After training, we save the model brain to a file called `world_model.pt`. The
-next script (`model_based_planning.py`) will load it and use the imagination to
-actually **play CartPole well**.
+- **Planning** — search over imagined action sequences (see
+  `model_based_planning.py`).
+- **Dyna-style augmentation** — train a Q-network on imagined data to
+  multiply sample efficiency.
+- **Curiosity / exploration** — visit states the model can't predict well.
+- **Dreamer / World-Models papers** — train a *policy* entirely inside the
+  model with zero real-world interaction beyond initial data collection.
 
 ---
 
-## Key Takeaways
+## Limits and Cautions
 
-| Concept | Plain English |
-|---------|---------------|
-| World model | A predictor of what happens next |
-| Transition | One real (state → next state) pair we collected |
-| Δ-state | The CHANGE in the state — easier to predict than the new state directly |
-| Compounding error | Mistakes pile up the further you imagine |
-| Horizon | How many steps ahead we imagine |
-| Open-loop rollout | Imagining a whole sequence without checking reality |
+- **Out-of-distribution drift.** The model only knows the part of the world it
+  has seen. Plan too aggressively and you end up in regions the model has never
+  visited — predictions there are pure fantasy.
+- **Compounding error.** Long horizons are unreliable, as the chart shows.
+  Modern systems use probabilistic ensembles (PETS, Dreamer) so the planner
+  knows *how uncertain* the model is at every step.
+- **Stochastic environments.** A deterministic regressor predicts the *mean*
+  outcome and misses the spread. Real-world environments need probabilistic
+  models (Gaussian outputs, or latent stochastic models).
 
 ---
 
-## What's Next?
+## Key Words
 
-We have an imagination. Now we need to USE it. The next file,
-`model_based_planning.py`, shows how to use the world model to pick **good
-actions** in the real game — without doing any more learning. This is called
-**model predictive control (MPC)**, and it is one of the oldest and most useful
-ideas in control theory and modern model-based RL.
+| Term | Plain English |
+|------|---------------|
+| **World model** | A neural net that mimics the environment |
+| **Dynamics** | The function `(s, a) → s'` |
+| **Reward model** | The function `(s, a) → r` (often bundled in) |
+| **One-step prediction** | What the model outputs from a real state |
+| **Rollout** | Repeated one-step predictions, feeding outputs back in |
+| **Compounding error** | Small errors that grow over a rollout |
+
+---
+
+## One-Sentence Summary
+
+> **A world model is a tiny neural copy of the universe that the agent can
+> consult — and dream inside — before risking a real action.**
+
+Next: `model_based_planning.py` puts this model to work for actual decision-making.

@@ -1,139 +1,155 @@
-# Dyna-Q: Learning From Real Life AND From Your Imagination
+# Dyna-Q: Learning Faster by Imagining 🧠
 
-## The Big Idea
+## What Is It?
 
-Imagine you are learning to find candy in a big playground. There are walls, swings,
-and a hidden treasure box (🍬) somewhere.
+Imagine a kid named Mia learning to navigate her new school. Every day she walks
+the hallways and discovers new things: "The library is past the cafeteria,"
+"Mr. Smith's room is upstairs near the stairwell."
 
-There are two ways to learn the playground:
+A **plain Q-learning** student only learns from what she does *today*. If today
+she just walked from class to the cafeteria, she only updates her memory about
+that one path.
 
-1. **Walk around it for real.** Every time you take a step, you learn a tiny bit
-   about which way is correct. This is slow — you can only take so many real steps
-   in one day.
+A **Dyna-Q** student is different. After every real walk, she sits down for a
+minute and **replays in her head** several past walks she remembers. Each replay
+strengthens her mental map. After a few weeks she knows the school inside-out —
+not because she walked more, but because she **thought more about what she
+already saw**.
 
-2. **Close your eyes and remember.** "When I went past the swing and turned left,
-   I bumped into a wall." You can practice this memory *in your head*, over and
-   over, without taking any real steps.
-
-**Dyna-Q does BOTH.** Take one real step, then close your eyes and practice 50
-imagined steps in your head. You learn 51 times faster than just walking!
+That is exactly what Dyna-Q does for an RL agent: it learns from real
+experience **and** from imagined experience drawn from a model it builds along
+the way.
 
 ---
 
-## The Three Things Dyna-Q Does Every Step
+## The Three Ingredients
 
-Every time the agent takes a real step in the world:
+Dyna-Q is "Q-learning + model + planning". One real step does **three** jobs:
 
-### 1. Direct Learning (the real step)
-> "I just took a step. Was it good or bad? Let me update my notes."
+1. **Direct RL** — the usual Q-learning update from `(s, a, r, s')`.
+2. **Model learning** — write down: "When I did *a* in *s*, I got *r* and ended in *s'*."
+3. **Planning** — pick *n* random `(s, a)` pairs from the model's memory and do
+   *n* more Q-learning updates, **pretending** those steps just happened.
 
-This is plain **Q-learning** — adjust the value of the action you took based on
-what happened.
+That third step is the magic. With `n = 50`, every real step in the world causes
+**51 updates** to the Q-table. The agent learns ~50x faster — in real-step terms —
+than a pure Q-learner.
 
-### 2. Model Learning (build a memory book)
-> "I'll write down: from spot A, if I move LEFT, I end up at spot B and get
-> reward 0."
+---
 
-The **model** is just a little notebook: `(state, action) → (next_state, reward)`.
-For a deterministic maze, this is just remembering what happened the last time.
-
-**Real-life example:** A toddler learns "if I push the red button, the music starts."
-That's a tiny world model in their head.
-
-### 3. Planning (close your eyes and replay)
-> "Now let me pretend I'm in spot A again and pick LEFT 50 times in my head,
-> each time updating my notes as if it were real."
-
-This is the **planning** part — we use the model to generate **imagined** experience
-and learn from it.
+## A Picture of the Loop
 
 ```
-n = 0  →  no imagining  →  just plain Q-learning
-n = 5  →  5 imagined steps per real step
-n = 50 →  50 imagined steps per real step (super fast learning)
+                   ┌────────────────────────────────────┐
+                   │                                    │
+   real world  ──► take action a ──► observe (r, s')    │
+                            │                           │
+              ┌─────────────┼──────────────┐            │
+              ▼             ▼              ▼            │
+        Q-learning      Model[s,a] ← (r,s')   Planning ─┘
+         update                            (n imagined updates)
 ```
 
----
-
-## Real-life Examples
-
-| Real life | Dyna-Q part |
-|-----------|-------------|
-| Walking home from school | Real step in the environment |
-| Remembering "after the red house I turn left" | Model learning |
-| Going to bed and replaying the walk in your head | Planning (imagined steps) |
-| Suddenly knowing the route in the morning | Better Q-values from planning |
-
-Athletes use this all the time — they call it **mental rehearsal**. A gymnast
-practices a routine in her head a hundred times before a competition. Her brain
-builds a model of the routine and "plans" through it.
+The model is just a lookup table:
+`(state, action) → (reward, next_state)`. Cheap to build, cheap to query.
 
 ---
 
-## The Maze in Our Code
+## Real-Life Examples
 
-```
-         G    ← Goal (treasure!)
-   #     #
-   #     #
-   #     #
-         #
-      #
-      #
-S     #       ← Start
-```
-
-It is a 8×10 maze with some walls (`#`). The agent starts at `S`, must reach `G`.
-
-- Each step: reward 0
-- Reach the goal: reward +1
-- Run into a wall: you stay in place
+- **Chess study.** Grandmasters spend hours replaying their own games and
+  master games in their heads. Every replay is "planning" — extra learning from
+  experiences that already happened.
+- **A musician practising scales.** After playing a tricky bar once, they
+  mentally rehearse it ten more times before moving on. The fingers are not
+  moving, but the brain is updating.
+- **A self-driving car.** While idling at a red light it re-plays the last
+  hundred lane-changes in simulation to fine-tune its policy without burning
+  tyres.
 
 ---
 
-## What the Plot Shows
+## What Our Code Does
 
-Three lines, three agents:
+We use the classic **Dyna Maze** (Sutton & Barto, Figure 8.2): a 6×9 grid with
+some walls, a start `S` in the middle-left, and a goal `G` in the top right.
 
-| Line | What it is | What happens |
-|------|------------|--------------|
-| 🔴 n=0 | Plain Q-learning | Episode 1 takes thousands of steps. Slowly improves. |
-| 🟡 n=5 | Dyna-Q, 5 plans per step | Drops fast within ~10 episodes. |
-| 🟢 n=50 | Dyna-Q, 50 plans per step | Finds the goal almost optimally by episode 3. |
+We run three variants, each averaged over 30 random seeds:
 
-The vertical axis is on a **log scale** — the green agent is *many times faster*,
-not just a little bit.
+| Setting | Planning steps per real step | Meaning |
+|---------|------------------------------|---------|
+| `n = 0` | 0 | plain Q-learning |
+| `n = 5` | 5 | a little imagined practice |
+| `n = 50` | 50 | a lot of imagined practice |
 
----
+The script reports the **average number of real steps per episode** as
+training progresses. Fewer steps means the agent has learned a more direct
+path to the goal.
 
-## Why It Works
+### What you should see when you run it
 
-Think about what happens when the agent finally reaches the goal for the first time:
-- **Without planning:** only one Q-value (the very last action) gets updated.
-- **With planning:** the model now knows that big reward, and every imagined
-  rollout can carry that reward backward through every state we have seen.
-  After 50 imagined replays, the "good news" of the goal spreads to many earlier
-  states.
+The shortest path on this maze is ~9 steps; with ε-greedy exploration a
+well-trained agent averages ~10 steps per episode. Run for 50 episodes and
+all three settings converge there — the difference is *how quickly*:
 
-> **Planning = a way to extract MORE value from each real-world experience.**
+| Setting | Steps per episode (last 10 eps) | What it means |
+|---------|--------------------------------:|---------------|
+| `n = 0`   | ~10 | Converged — but it took ~30–50 episodes of wandering to get here |
+| `n = 5`   | ~10 | Converged within ~10 episodes |
+| `n = 50`  | ~10 | Converged within ~3–5 episodes |
 
----
-
-## Key Takeaways
-
-| Concept | Plain English |
-|---------|---------------|
-| Model | A notebook of what we have seen happen |
-| Direct RL | Update from the real step |
-| Planning | Update from imagined steps using the model |
-| n (planning steps) | How many times we close our eyes after each real step |
-| Sample efficiency | "Learning a lot from a little real experience" |
+The interesting signal is the *learning curve*, not the final number. The plot
+saved to `outputs/dyna_q.png` shows three curves diving toward the floor at very
+different rates: `n = 50` reaches it in a handful of episodes, while `n = 0` is
+still climbing down well into the run. (On a tiny deterministic maze like this,
+plain Q-learning does eventually get there — Dyna-Q just needs far fewer real
+episodes, which is the whole point on environments where real steps are costly.)
 
 ---
 
-## What's Next?
+## Why It Works So Well on This Maze
 
-In `dyna_q.py` the model is just a hash table — perfect because the maze is
-small and deterministic. But the real world is huge and noisy. So next we
-trade the notebook for a **neural network** that learns to *predict* what
-happens next. That is a **world model**, and it is in `world_model.py`.
+Two reasons:
+
+1. **The environment is deterministic.** Each `(s, a)` always gives the same
+   `(r, s')`, so the model is exact after a single visit. Imagined experience is
+   as good as real experience.
+2. **Real steps are expensive, imagined ones are free.** Each imagined update
+   is just a few table look-ups, while a real step requires the agent to walk.
+   When real interactions are costly (think: a real robot, a real game), Dyna-Q
+   is enormously sample-efficient.
+
+---
+
+## Where Dyna-Q Struggles
+
+- **Stochastic environments.** If `(s, a)` can lead to many different `s'`
+  values, a "remember last outcome" model lies to you. Fix: store visit counts
+  or train a probabilistic model.
+- **Non-stationary environments.** If the world changes (a doorway closes),
+  the model becomes wrong. The Dyna-Q+ variant adds an exploration bonus that
+  rewards re-visiting stale states.
+- **Large state spaces.** A dictionary keyed on `(s, a)` does not scale to
+  millions of states or to continuous states. That is exactly the gap that
+  **learned (neural-network) world models** fill — see `world_model.py` next.
+
+---
+
+## Key Words to Remember
+
+| Word | Meaning |
+|------|---------|
+| **Model**       | Memory of `(state, action) → (reward, next_state)` |
+| **Planning step** | Doing a Q-update using imagined data from the model |
+| **Direct RL**   | A Q-update using real data |
+| **Sample-efficient** | Needs few real interactions to learn well |
+| **Dyna**        | Sutton's architecture that interleaves learning + planning |
+
+---
+
+## One-Sentence Summary
+
+> **Dyna-Q learns from doing AND from imagining — and imagining is free.**
+
+This idea, in its modern neural form, powers some of the strongest RL agents
+ever built (MuZero, Dreamer, World Models).

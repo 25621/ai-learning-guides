@@ -1,235 +1,230 @@
 """
-World Model for CartPole-v1
+Train a world model on CartPole-v1.
 
-A "world model" is a neural network that learns to predict the environment's dynamics:
-    given (state, action), output (next_state, reward, done?)
+A "world model" is a neural network that learns to predict the environment's
+dynamics:
+        (state, action)  ->  (next_state, reward)
 
-Once trained, we can roll the model forward to *imagine* trajectories without
-ever calling the real simulator — the foundation of model-based RL methods
-like Dyna, MPC, MuZero, and Dreamer.
+Once trained, the model lets us simulate experience without touching the real
+environment — useful for planning (see model_based_planning.py) or for
+Dyna-style data augmentation.
 
-This script:
-  1. Collects a buffer of random transitions from CartPole-v1.
-  2. Trains an MLP to predict delta_state, reward, and done-probability.
-  3. Evaluates open-loop rollout error vs the real env at horizons 1, 5, 20.
-  4. Saves the trained model to outputs/world_model.pt so model_based_planning.py
-     can load it.
+Architecture
+------------
+  Input  : 4-d state  ++  2-d one-hot action       =>  6-d
+  Hidden : 2 x 128 units, ReLU
+  Output : 4-d delta state  ++  1-d reward         =>  5-d
+
+We predict the *delta* (next_state - state) rather than next_state directly
+— this is a standard trick that keeps the targets near zero and stabilises
+training when state magnitudes vary.
+
+Data collection
+---------------
+We roll out a uniform random policy for ~20k transitions.  Random data
+covers a wide region of state space, which is what we want for an
+unbiased one-step dynamics model.
+
+Evaluation
+----------
+1. Hold-out validation MSE  (single-step accuracy)
+2. k-step rollout error     — feed the model's own prediction back in for
+                              k steps and measure how the error compounds.
 """
 
 import os
 import numpy as np
+import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
+
+import gymnasium as gym
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import gymnasium as gym
 
-DEVICE = torch.device("cpu")
-SEED = 42
+
+SEED = 0
 torch.manual_seed(SEED)
 np.random.seed(SEED)
+DEVICE = torch.device("cpu")
 
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "outputs")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 
-# ----------------------------------------------------------------------
-# 1. The world model
-# ----------------------------------------------------------------------
+# ---------------------------------------------------------------------------
 class WorldModel(nn.Module):
-    """Predicts (Δstate, reward, done_logit) from (state, action_one_hot)."""
+    """MLP dynamics model: predicts delta-state and reward."""
 
-    def __init__(self, n_obs=4, n_actions=2, hidden=128):
+    def __init__(self, obs_dim=4, n_actions=2, hidden=128):
         super().__init__()
-        self.n_obs = n_obs
+        self.obs_dim = obs_dim
         self.n_actions = n_actions
-        self.trunk = nn.Sequential(
-            nn.Linear(n_obs + n_actions, hidden),
+        self.net = nn.Sequential(
+            nn.Linear(obs_dim + n_actions, hidden),
             nn.ReLU(),
             nn.Linear(hidden, hidden),
             nn.ReLU(),
+            nn.Linear(hidden, obs_dim + 1),  # delta_state (4) + reward (1)
         )
-        self.delta_head = nn.Linear(hidden, n_obs)
-        self.reward_head = nn.Linear(hidden, 1)
-        self.done_head = nn.Linear(hidden, 1)
 
     def forward(self, state, action):
-        """state: (B, n_obs), action: (B,) int64 — returns predictions."""
-        a_onehot = torch.nn.functional.one_hot(action, self.n_actions).float()
-        x = torch.cat([state, a_onehot], dim=-1)
-        h = self.trunk(x)
-        return self.delta_head(h), self.reward_head(h).squeeze(-1), self.done_head(h).squeeze(-1)
-
-    @torch.no_grad()
-    def step(self, state, action):
-        """Single-step imagination. state: (n_obs,) np or tensor, action: int."""
-        s = torch.as_tensor(state, dtype=torch.float32, device=DEVICE).unsqueeze(0)
-        a = torch.tensor([action], dtype=torch.long, device=DEVICE)
-        delta, r, d_logit = self.forward(s, a)
-        next_state = (s + delta).squeeze(0).cpu().numpy()
-        reward = r.item()
-        done = torch.sigmoid(d_logit).item() > 0.5
-        return next_state, reward, done
+        """state: (B, obs_dim) float ;  action: (B,) int64."""
+        a_oh = torch.zeros(state.shape[0], self.n_actions, device=state.device)
+        a_oh.scatter_(1, action.long().unsqueeze(1), 1.0)
+        x = torch.cat([state, a_oh], dim=-1)
+        out = self.net(x)
+        delta = out[:, : self.obs_dim]
+        reward = out[:, self.obs_dim]
+        return state + delta, reward
 
 
-# ----------------------------------------------------------------------
-# 2. Data collection
-# ----------------------------------------------------------------------
-def collect_transitions(n_steps=20_000, seed=SEED):
+# ---------------------------------------------------------------------------
+def collect_data(n_transitions=20_000, seed=0):
+    """Roll out a random policy and store transitions."""
     env = gym.make("CartPole-v1")
+    rng = np.random.default_rng(seed)
     obs, _ = env.reset(seed=seed)
-
-    s_buf, a_buf, sn_buf, r_buf, d_buf = [], [], [], [], []
-    for _ in range(n_steps):
-        a = env.action_space.sample()
-        next_obs, r, term, trunc, _ = env.step(a)
-        done = term or trunc
-        s_buf.append(obs)
-        a_buf.append(a)
-        sn_buf.append(next_obs)
-        r_buf.append(r)
-        d_buf.append(float(term))   # only "real" terminations, not time limits
-        obs = next_obs
-        if done:
+    states, actions, rewards, next_states = [], [], [], []
+    for _ in range(n_transitions):
+        a = int(rng.integers(2))
+        nobs, r, terminated, truncated, _ = env.step(a)
+        states.append(obs)
+        actions.append(a)
+        rewards.append(r)
+        next_states.append(nobs)
+        obs = nobs
+        if terminated or truncated:
             obs, _ = env.reset()
-
     env.close()
     return (
-        np.array(s_buf, dtype=np.float32),
-        np.array(a_buf, dtype=np.int64),
-        np.array(sn_buf, dtype=np.float32),
-        np.array(r_buf, dtype=np.float32),
-        np.array(d_buf, dtype=np.float32),
+        np.asarray(states, dtype=np.float32),
+        np.asarray(actions, dtype=np.int64),
+        np.asarray(rewards, dtype=np.float32),
+        np.asarray(next_states, dtype=np.float32),
     )
 
 
-# ----------------------------------------------------------------------
-# 3. Training
-# ----------------------------------------------------------------------
-def train_world_model(model, data, n_epochs=30, batch=256, lr=1e-3):
-    s, a, sn, r, d = data
-    delta = sn - s
+def train_world_model(model, data, n_epochs=30, batch_size=256, lr=1e-3,
+                      val_frac=0.1, verbose=True):
+    s, a, r, ns = data
+    n = len(s)
+    perm = np.random.permutation(n)
+    n_val = int(n * val_frac)
+    val_idx = perm[:n_val]
+    train_idx = perm[n_val:]
 
-    s_t = torch.tensor(s, device=DEVICE)
-    a_t = torch.tensor(a, device=DEVICE)
-    delta_t = torch.tensor(delta, device=DEVICE)
-    r_t = torch.tensor(r, device=DEVICE)
-    d_t = torch.tensor(d, device=DEVICE)
+    s_t = torch.tensor(s)
+    a_t = torch.tensor(a)
+    r_t = torch.tensor(r)
+    ns_t = torch.tensor(ns)
 
     opt = optim.Adam(model.parameters(), lr=lr)
-    bce = nn.BCEWithLogitsLoss()
-    n = len(s_t)
+    history = {"train_loss": [], "val_loss": []}
 
-    history = []
     for epoch in range(n_epochs):
-        idx = torch.randperm(n, device=DEVICE)
-        losses = []
-        for i in range(0, n, batch):
-            b = idx[i:i + batch]
-            pd, pr, pdone = model(s_t[b], a_t[b])
-            loss_d = ((pd - delta_t[b]) ** 2).mean()
-            loss_r = ((pr - r_t[b]) ** 2).mean()
-            loss_done = bce(pdone, d_t[b])
-            loss = loss_d + loss_r + 0.5 * loss_done
+        model.train()
+        np.random.shuffle(train_idx)
+        ep_loss = 0.0
+        n_batches = 0
+        for i in range(0, len(train_idx), batch_size):
+            idx = train_idx[i:i + batch_size]
+            pred_ns, pred_r = model(s_t[idx], a_t[idx])
+            loss = (nn.functional.mse_loss(pred_ns, ns_t[idx])
+                    + nn.functional.mse_loss(pred_r, r_t[idx]))
             opt.zero_grad()
             loss.backward()
             opt.step()
-            losses.append(loss.item())
-        avg = float(np.mean(losses))
-        history.append(avg)
-        if (epoch + 1) % 5 == 0:
-            print(f"  epoch {epoch+1:3d} | train loss: {avg:.5f}")
+            ep_loss += loss.item()
+            n_batches += 1
+        train_loss = ep_loss / max(n_batches, 1)
+
+        model.eval()
+        with torch.no_grad():
+            pred_ns, pred_r = model(s_t[val_idx], a_t[val_idx])
+            val_loss = (nn.functional.mse_loss(pred_ns, ns_t[val_idx])
+                        + nn.functional.mse_loss(pred_r, r_t[val_idx])).item()
+
+        history["train_loss"].append(train_loss)
+        history["val_loss"].append(val_loss)
+        if verbose:
+            print(f"Epoch {epoch+1:2d} | train MSE {train_loss:.5f} "
+                  f"| val MSE {val_loss:.5f}")
     return history
 
 
-# ----------------------------------------------------------------------
-# 4. Evaluation: open-loop rollout error vs the real env
-# ----------------------------------------------------------------------
-def rollout_error(model, horizons=(1, 5, 20), n_trials=50, seed=999):
+def evaluate_rollout(model, horizon=20, n_rollouts=50, seed=99):
+    """Compare k-step model rollouts to the real environment under random actions."""
     env = gym.make("CartPole-v1")
     rng = np.random.default_rng(seed)
-    errors = {h: [] for h in horizons}
-
-    for trial in range(n_trials):
+    errs = np.zeros(horizon)
+    counts = np.zeros(horizon)
+    model.eval()
+    for _ in range(n_rollouts):
         obs, _ = env.reset(seed=int(rng.integers(1_000_000)))
-        actions = [int(rng.integers(2)) for _ in range(max(horizons))]
-
-        # Real rollout
-        real_states = [obs.copy()]
-        cur = obs.copy()
-        for a in actions:
-            cur, _, term, trunc, _ = env.step(a)
-            real_states.append(cur.copy())
+        sim = obs.copy()
+        for t in range(horizon):
+            a = int(rng.integers(2))
+            real_next, _, term, trunc, _ = env.step(a)
+            with torch.no_grad():
+                pred_next, _ = model(
+                    torch.tensor(sim, dtype=torch.float32).unsqueeze(0),
+                    torch.tensor([a], dtype=torch.int64),
+                )
+            pred_next = pred_next.squeeze(0).numpy()
+            errs[t] += float(np.linalg.norm(real_next - pred_next))
+            counts[t] += 1
+            sim = pred_next
             if term or trunc:
                 break
-
-        # Imagined rollout from the world model
-        sim = obs.copy()
-        sim_states = [sim.copy()]
-        for a in actions:
-            sim, _, sim_done = model.step(sim, a)
-            sim_states.append(sim.copy())
-            if sim_done:
-                break
-
-        # Compare at each horizon (use min length so we don't index beyond done)
-        usable = min(len(real_states), len(sim_states))
-        for h in horizons:
-            if h < usable:
-                err = float(np.linalg.norm(real_states[h] - sim_states[h]))
-                errors[h].append(err)
-
     env.close()
-    return {h: (np.mean(e) if e else float("nan")) for h, e in errors.items()}
+    return errs / np.maximum(counts, 1)
 
 
-def plot_history(history, eval_errors):
-    fig, axes = plt.subplots(1, 2, figsize=(13, 4.5))
+# ---------------------------------------------------------------------------
+def main():
+    print("=== Training a World Model on CartPole-v1 ===\n")
 
-    axes[0].plot(history, color="#3498db", linewidth=2)
+    print("Step 1: Collecting 20,000 transitions with a random policy...")
+    data = collect_data(n_transitions=20_000)
+    print(f"  collected {len(data[0])} transitions")
+
+    print("\nStep 2: Training MLP world model (30 epochs)...")
+    model = WorldModel()
+    history = train_world_model(model, data, n_epochs=30)
+
+    print("\nStep 3: k-step prediction error (random actions, horizon=20)...")
+    err = evaluate_rollout(model, horizon=20, n_rollouts=50)
+    for t in [0, 4, 9, 19]:
+        print(f"  step {t+1:2d}: avg L2 state error = {err[t]:.4f}")
+
+    ckpt = os.path.join(OUTPUT_DIR, "world_model.pt")
+    torch.save(model.state_dict(), ckpt)
+    print(f"\nWorld-model weights saved to {ckpt}")
+
+    # Plot ---------------------------------------------------------------
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4.5))
+    axes[0].plot(history["train_loss"], label="train MSE", color="#3498db", lw=2)
+    axes[0].plot(history["val_loss"], label="val MSE", color="#e74c3c", lw=2)
     axes[0].set_xlabel("Epoch")
-    axes[0].set_ylabel("MSE + BCE training loss")
-    axes[0].set_title("World model training loss")
+    axes[0].set_ylabel("MSE (delta + reward)")
+    axes[0].set_title("World-Model Training Loss")
+    axes[0].set_yscale("log")
+    axes[0].legend()
     axes[0].grid(alpha=0.3)
 
-    hs = list(eval_errors.keys())
-    vs = [eval_errors[h] for h in hs]
-    axes[1].bar([str(h) for h in hs], vs, color=["#2ecc71", "#f1c40f", "#e74c3c"])
-    axes[1].set_xlabel("Rollout horizon (steps)")
-    axes[1].set_ylabel("Mean ‖s_real − s_imagined‖")
-    axes[1].set_title("Open-loop prediction error vs horizon")
-    axes[1].grid(alpha=0.3, axis="y")
+    axes[1].plot(range(1, len(err) + 1), err,
+                 color="#9b59b6", lw=2, marker="o")
+    axes[1].set_xlabel("Rollout step (k)")
+    axes[1].set_ylabel("Avg ||real - predicted||  (L2)")
+    axes[1].set_title("Compounding Error of k-step Rollouts")
+    axes[1].grid(alpha=0.3)
 
     plt.tight_layout()
     out = os.path.join(OUTPUT_DIR, "world_model.png")
     plt.savefig(out, dpi=120)
     print(f"Plot saved to {out}")
-
-
-def main():
-    print("=== World Model for CartPole-v1 ===\n")
-    print("1) Collecting 20,000 random transitions...")
-    data = collect_transitions(n_steps=20_000)
-    print(f"   collected {len(data[0])} transitions, "
-          f"termination rate: {data[4].mean()*100:.1f}%")
-
-    print("\n2) Training world model (MLP)...")
-    model = WorldModel().to(DEVICE)
-    history = train_world_model(model, data, n_epochs=30)
-
-    print("\n3) Evaluating open-loop rollout error...")
-    eval_errors = rollout_error(model)
-    for h, e in eval_errors.items():
-        print(f"   horizon {h:3d} steps | mean L2 error: {e:.4f}")
-
-    plot_history(history, eval_errors)
-
-    ckpt_path = os.path.join(OUTPUT_DIR, "world_model.pt")
-    torch.save(model.state_dict(), ckpt_path)
-    print(f"\nSaved trained world model to {ckpt_path}")
-    print("→ Run model_based_planning.py next to USE this model for control.")
 
 
 if __name__ == "__main__":

@@ -1,177 +1,154 @@
 """
-Model-Based Planning: using a learned world model for control on CartPole-v1.
+Model-Based Planning with MPC (Random Shooting) on CartPole-v1.
 
-We load the world model trained by world_model.py and use it for online
-Model Predictive Control (MPC) via the *random shooting* method (a.k.a.
-the simplest form of the Cross-Entropy Method):
+We reuse the world model trained in world_model.py.
 
-  At every real step:
-    1. Sample K random action sequences of length H from the action space.
-    2. Use the world model to imagine each rollout from the current state.
-    3. Score each sequence by its predicted (discounted) return.
-    4. Execute only the FIRST action of the best sequence.
-    5. Observe the real transition and repeat.
+Random-Shooting Model Predictive Control
+----------------------------------------
+At every real step:
+    1. Sample N candidate action sequences of horizon H (uniformly at random).
+    2. Use the learned world model to simulate each sequence forward from the
+       current state, scoring it by a shaped reward (upright pole, centred cart).
+    3. Execute the FIRST action of the best-scoring sequence in the real env.
+    4. Observe the real next state and repeat (receding-horizon).
 
-This is the same idea behind classic MPC and the planning loop inside
-MuZero / Dreamer — only those use search trees and latent-space models.
-
-We compare three controllers on CartPole-v1:
-  - Random policy            (baseline)
-  - Greedy on world-model reward, horizon = 1 (myopic)
-  - MPC with horizon = 15 over the learned model
+Why a shaped reward?  The world model only predicts (next_state, reward) and
+in CartPole the reward is +1 every step until the episode terminates.  A flat
++1 signal gives the planner no gradient between sequences, so we replace it
+with a smooth proxy that rewards small pole angles and small cart drift.
 """
 
 import os
+import sys
 import numpy as np
+import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-import torch
+
 import gymnasium as gym
+import torch
 
-from world_model import WorldModel   # reuse the architecture
+# Reuse the WorldModel + data utilities defined in world_model.py
+sys.path.append(os.path.dirname(__file__))
+from world_model import WorldModel, collect_data, train_world_model  # noqa: E402
 
-DEVICE = torch.device("cpu")
-SEED = 7
-np.random.seed(SEED)
+
+SEED = 0
 torch.manual_seed(SEED)
+np.random.seed(SEED)
 
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "outputs")
-CKPT = os.path.join(OUTPUT_DIR, "world_model.pt")
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 
-# ----------------------------------------------------------------------
-# Planner: random-shooting MPC over the learned model
-# ----------------------------------------------------------------------
-@torch.no_grad()
-def plan_action(model, state, horizon=15, n_samples=200, gamma=0.99, rng=None):
-    """Return the best first action by imagining `n_samples` rollouts of length
-    `horizon` from `state` through the learned world model."""
-    rng = rng or np.random.default_rng()
-    n_actions = model.n_actions
+# ---------------------------------------------------------------------------
+def reward_proxy(states):
+    """Higher when the pole is upright and the cart is centred.
 
-    # Sample random action sequences: shape (n_samples, horizon)
-    seqs = rng.integers(0, n_actions, size=(n_samples, horizon))
+    CartPole terminates at |pole_angle| > 12 deg ~= 0.21 rad, or |cart_pos| > 2.4.
+    We give 1.0 when perfectly upright and centred, falling toward 0 at failure.
+    """
+    cart_pos = states[..., 0]
+    pole_angle = states[..., 2]
+    return 1.0 - (pole_angle.abs() / 0.21) - 0.1 * (cart_pos.abs() / 2.4)
 
-    # Batched imagination
-    s = torch.tensor(np.tile(state, (n_samples, 1)), dtype=torch.float32, device=DEVICE)
-    alive = torch.ones(n_samples, device=DEVICE)
-    returns = torch.zeros(n_samples, device=DEVICE)
-    discount = 1.0
 
-    for t in range(horizon):
-        a = torch.tensor(seqs[:, t], dtype=torch.long, device=DEVICE)
-        delta, r, d_logit = model(s, a)
-        s = s + delta
-        # In CartPole reward is always 1.0 while alive; trust model's reward
-        returns = returns + alive * discount * r
-        # Update alive mask: stop accumulating after predicted termination
-        not_done = (torch.sigmoid(d_logit) < 0.5).float()
-        alive = alive * not_done
-        discount *= gamma
-        if alive.sum() == 0:
+def mpc_action(model, state, n_samples=200, horizon=15, n_actions=2, rng=None):
+    """Random-shooting MPC: return the first action of the best sampled plan."""
+    if rng is None:
+        rng = np.random.default_rng()
+    acts = rng.integers(0, n_actions, size=(n_samples, horizon))  # (N, H)
+
+    s = (torch.tensor(state, dtype=torch.float32)
+         .unsqueeze(0).expand(n_samples, -1).contiguous())
+    total_reward = torch.zeros(n_samples)
+    with torch.no_grad():
+        for t in range(horizon):
+            a_t = torch.tensor(acts[:, t], dtype=torch.int64)
+            s, _ = model(s, a_t)
+            total_reward += reward_proxy(s)
+    best = int(torch.argmax(total_reward).item())
+    return int(acts[best, 0])
+
+
+def run_mpc_episode(model, env, n_samples=200, horizon=15, seed=0, max_steps=500):
+    obs, _ = env.reset(seed=seed)
+    rng = np.random.default_rng(seed)
+    total = 0.0
+    for _ in range(max_steps):
+        a = mpc_action(model, obs, n_samples=n_samples, horizon=horizon, rng=rng)
+        obs, r, term, trunc, _ = env.step(a)
+        total += r
+        if term or trunc:
             break
-
-    best = int(torch.argmax(returns).item())
-    return int(seqs[best, 0])
-
-
-# ----------------------------------------------------------------------
-# Controllers
-# ----------------------------------------------------------------------
-def run_random(env, seed):
-    obs, _ = env.reset(seed=seed)
-    total = 0.0
-    done = False
-    while not done:
-        a = env.action_space.sample()
-        obs, r, term, trunc, _ = env.step(a)
-        total += r
-        done = term or trunc
     return total
 
 
-def run_mpc(env, model, seed, horizon, n_samples, rng):
+def run_random_episode(env, seed=0, max_steps=500):
     obs, _ = env.reset(seed=seed)
+    rng = np.random.default_rng(seed)
     total = 0.0
-    done = False
-    while not done:
-        a = plan_action(model, obs, horizon=horizon, n_samples=n_samples, rng=rng)
+    for _ in range(max_steps):
+        a = int(rng.integers(2))
         obs, r, term, trunc, _ = env.step(a)
         total += r
-        done = term or trunc
+        if term or trunc:
+            break
     return total
 
 
-# ----------------------------------------------------------------------
-# Experiment
-# ----------------------------------------------------------------------
+# ---------------------------------------------------------------------------
 def main():
-    print("=== Model-Based Planning on CartPole-v1 ===\n")
-    if not os.path.exists(CKPT):
-        raise FileNotFoundError(
-            f"Could not find {CKPT}. Please run world_model.py first.")
+    print("=== Model-Based Planning (MPC w/ Random Shooting) on CartPole ===\n")
 
-    model = WorldModel().to(DEVICE)
-    model.load_state_dict(torch.load(CKPT, map_location=DEVICE))
+    model = WorldModel()
+    ckpt = os.path.join(OUTPUT_DIR, "world_model.pt")
+    if os.path.exists(ckpt):
+        print(f"Loading world model from {ckpt}")
+        model.load_state_dict(torch.load(ckpt))
+    else:
+        print("No saved world model found - training one now...")
+        data = collect_data(n_transitions=20_000)
+        train_world_model(model, data, n_epochs=30, verbose=False)
+        torch.save(model.state_dict(), ckpt)
+        print(f"Saved trained model to {ckpt}")
     model.eval()
-    print(f"Loaded world model from {CKPT}\n")
 
     env = gym.make("CartPole-v1")
-    rng = np.random.default_rng(SEED)
+    n_eps = 20
+    print(f"\nRunning {n_eps} episodes: MPC (N=200, H=15) vs Random policy...\n")
 
-    n_eval = 10
-    seeds = [100 + i for i in range(n_eval)]
-
-    configs = [
-        ("Random policy",        dict(controller="random")),
-        ("MPC  horizon=1   K=50",  dict(controller="mpc", horizon=1,  n_samples=50)),
-        ("MPC  horizon=15  K=200", dict(controller="mpc", horizon=15, n_samples=200)),
-    ]
-
-    results = {}
-    for name, cfg in configs:
-        print(f"Evaluating: {name}")
-        rewards = []
-        for s in seeds:
-            if cfg["controller"] == "random":
-                r = run_random(env, s)
-            else:
-                r = run_mpc(env, model, s, cfg["horizon"], cfg["n_samples"], rng)
-            rewards.append(r)
-            print(f"   seed {s:3d}: reward = {r:6.1f}")
-        results[name] = rewards
-        print(f"   → mean ± std: {np.mean(rewards):.1f} ± {np.std(rewards):.1f}\n")
-
+    mpc_rewards, rand_rewards = [], []
+    for ep in range(n_eps):
+        mr = run_mpc_episode(model, env, n_samples=200, horizon=15, seed=ep)
+        rr = run_random_episode(env, seed=ep)
+        mpc_rewards.append(mr)
+        rand_rewards.append(rr)
+        print(f"  ep {ep+1:2d}:   MPC = {mr:5.0f}    Random = {rr:5.0f}")
     env.close()
 
-    # ---- Plot ---------------------------------------------------------
-    fig, ax = plt.subplots(figsize=(10, 5))
-    names = list(results.keys())
-    means = [np.mean(results[n]) for n in names]
-    stds = [np.std(results[n]) for n in names]
-    colors = ["#95a5a6", "#f1c40f", "#2ecc71"]
-    bars = ax.bar(names, means, yerr=stds, capsize=6, color=colors, edgecolor="black")
-    ax.axhline(500, color="green", linestyle="--", linewidth=1, label="Max reward (500)")
-    ax.set_ylabel("Episode reward (avg over 10 seeds)")
-    ax.set_title("Planning with a learned world model beats reactive policies")
-    ax.set_ylim(0, 520)
-    for bar, m in zip(bars, means):
-        ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 5,
-                f"{m:.1f}", ha="center", va="bottom", fontsize=10)
-    ax.legend()
+    print(f"\nMPC    avg reward : {np.mean(mpc_rewards):6.1f}  "
+          f"(std {np.std(mpc_rewards):5.1f})")
+    print(f"Random avg reward : {np.mean(rand_rewards):6.1f}  "
+          f"(std {np.std(rand_rewards):5.1f})")
+
+    # Plot ---------------------------------------------------------------
+    plt.figure(figsize=(11, 5))
+    x = np.arange(n_eps)
+    plt.bar(x - 0.2, mpc_rewards, 0.4,
+            color="#27ae60", label=f"MPC  (avg {np.mean(mpc_rewards):.0f})")
+    plt.bar(x + 0.2, rand_rewards, 0.4,
+            color="#95a5a6", label=f"Random  (avg {np.mean(rand_rewards):.0f})")
+    plt.axhline(500, color="gold", linestyle="--", lw=1, label="Max possible (500)")
+    plt.xlabel("Episode")
+    plt.ylabel("Total reward (steps survived)")
+    plt.title("Planning with a learned world model beats a random policy")
+    plt.legend()
+    plt.grid(alpha=0.3, axis="y")
     plt.tight_layout()
     out = os.path.join(OUTPUT_DIR, "model_based_planning.png")
     plt.savefig(out, dpi=120)
     print(f"Plot saved to {out}")
-
-    print("\nWhat to notice:")
-    print("  • A random policy keeps the pole up only briefly (~20 steps).")
-    print("  • Horizon=1 MPC is myopic — it only looks 1 step ahead, so it")
-    print("    can't recover from a tilt that takes several steps to fix.")
-    print("  • Horizon=15 MPC plans through the LEARNED model and can")
-    print("    balance the pole far longer — using zero new training and")
-    print("    zero real-environment trial-and-error.")
 
 
 if __name__ == "__main__":

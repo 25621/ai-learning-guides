@@ -1,0 +1,6 @@
+Output plots and saved model checkpoints are written here by the scripts in this directory.
+
+  dyna_q.png              -- learning curves for n=0, 5, 50 planning steps
+  world_model.png         -- training loss + k-step rollout error
+  world_model.pt          -- trained world-model weights (used by model_based_planning.py)
+  model_based_planning.png-- MPC vs Random episode rewards
