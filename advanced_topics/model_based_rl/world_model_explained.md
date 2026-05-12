@@ -53,10 +53,12 @@ It just **watches**. Specifically:
    (state, action, reward, next_state)
    ```
 2. **Train a neural network** to predict `next_state` and `reward` from
-   `(state, action)`. This is just supervised learning — the kind that powers
-   image classifiers and language models.
+   `(state, action)`. This is supervised learning: each saved transition is a
+   labelled example where the input is "what the agent saw and did" and the
+   label is "what actually happened next."
 3. **Validate.** Hold out 10% of the data and check the model's predictions
-   against the real ones. Low error means the model has captured the dynamics.
+   against the real ones. Low error means the model has captured the
+   environment's **dynamics**: how states change after actions.
 
 The trick we use: instead of predicting `next_state` directly, predict the
 **delta** `next_state − state`. Most physics is incremental ("the cart moved a
@@ -70,9 +72,9 @@ tiny bit"), and small targets are kinder to neural networks.
 |--------|-------|-----|
 | Environment | `CartPole-v1` | 4-D state, 2 actions — easy to model |
 | Data | 20,000 transitions from a random policy | Wide coverage of the state space |
-| Network | MLP, 2 × 128 ReLU hidden | Enough capacity, fast to train |
-| Loss | MSE on `(delta_state, reward)` | Standard regression |
-| Optimizer | Adam, lr = 1e-3, 30 epochs | Off-the-shelf |
+| Network | MLP, 2 × 128 ReLU hidden | MLP = Multi-Layer Perceptron (standard "vanilla" neural network). Two hidden layers of 128 neurons using ReLU activations. Enough capacity, fast to train. |
+| Loss | MSE on `(delta_state, reward)` | MSE = Mean Squared Error (average of squared prediction errors). Standard regression loss. |
+| Optimizer | Adam, lr = 1e-3, 30 epochs | Adam = adaptive optimizer (adjusts learning rates per parameter automatically). Off-the-shelf means no special tuning needed. |
 
 The whole training finishes in a few seconds on CPU.
 
@@ -102,6 +104,9 @@ Step 10:  L2 error ≈ 0.15
 Step 20:  L2 error ≈ 0.40   (visibly drifting)
 ```
 
+*(L2 error = Euclidean distance between the predicted next state and the real one —
+think of it as "how far off is the model's guess in the 4-D state space?")*
+
 **Why this matters.** If we plan 15 steps ahead with the model, the *exact*
 state at step 15 will be wrong — but if the relative ranking of "good plans
 vs. bad plans" is preserved, planning still works. (This is what
@@ -122,9 +127,9 @@ Compare two ways of phrasing the same problem to the network:
 | `next_state`        | 0–2.4 (cart pos) | Network must reproduce position **and** the tiny change |
 | `next_state - state`| ~0.02            | Network just learns the tiny change |
 
-Predicting the delta also means: if the network outputs zeros (a beginner
-network), the prediction is "nothing moved" — a sensible default for one
-timestep. Predicting `next_state` directly would output garbage.
+Predicting the delta also means: if the network outputs zeros (as an untrained, beginner
+network often does), the prediction is simply "nothing moved" — a sensible, safe default for a single
+timestep. In contrast, predicting the absolute `next_state` directly would initially output completely random garbage values, causing early training to be highly unstable.
 
 ---
 
@@ -147,12 +152,14 @@ A trained world model is the foundation for:
 - **Out-of-distribution drift.** The model only knows the part of the world it
   has seen. Plan too aggressively and you end up in regions the model has never
   visited — predictions there are pure fantasy.
-- **Compounding error.** Long horizons are unreliable, as the chart shows.
-  Modern systems use probabilistic ensembles (PETS, Dreamer) so the planner
-  knows *how uncertain* the model is at every step.
-- **Stochastic environments.** A deterministic regressor predicts the *mean*
-  outcome and misses the spread. Real-world environments need probabilistic
-  models (Gaussian outputs, or latent stochastic models).
+- **Compounding error.** Planning over long **horizons** (many steps into the future) is unreliable due to accumulating errors, as the chart shows.
+  Modern systems address this by using **probabilistic ensembles** (training multiple models and checking if they agree, like in PETS or Dreamer) so the planner
+  knows exactly *how uncertain* the model is at every step and can avoid risky, unknown paths.
+- **Stochastic environments.** A standard deterministic regressor predicts only the *mean* average
+  outcome and completely misses the spread of possible outcomes. Complex, real-world environments require probabilistic
+  models (like those with Gaussian outputs, or **latent stochastic models** — networks that
+  encode the world state as a probability distribution in a compressed space,
+  letting them capture genuine randomness rather than averaging it away) to accurately represent uncertainty and randomness.
 
 ---
 
