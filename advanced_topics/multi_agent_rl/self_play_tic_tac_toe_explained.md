@@ -31,7 +31,7 @@ Three things make self-play special:
    is the other player's turn. So a *single* Q-table can teach itself.
 
 Tic-tac-toe is the perfect testbed: small enough to fit in a dictionary, but
-non-trivial enough that random play loses constantly.
+complex enough that randomly picking moves will almost always lead to a loss against a strategic player.
 
 ---
 
@@ -65,12 +65,12 @@ The training loop is:
 3. After each game, walk backwards through every (board, player, action)
    triple in the history and apply the Q-learning update.
 4. The reward flips sign across turns: if X wins, every move X made gets
-   +1 (or boots from a positive future); every move O made gets -1.
-5. We slowly decay ε from 0.2 → 0.02, so the agent commits to its best play
-   late in training.
+   +1 (or bootstraps value from a future winning state); every move O made gets -1.
+5. We slowly decrease (decay) our exploration rate (ε) from 0.2 → 0.02, so the agent commits to its best play
+   late in training instead of trying random moves.
 
 Every 2,500 episodes we evaluate the agent against a **random opponent**
-(no learning during eval, both sides greedy). The agent should win or draw
+(we freeze the learning process so no new updates are made to the Q-table during evaluation, and both sides play greedily). The agent should win or draw
 ~100% of those games after enough self-play.
 
 ### What you should see
@@ -80,12 +80,11 @@ After 50,000 self-play episodes:
 | Match-up | Expected result |
 |----------|-----------------|
 | Trained agent vs Random opponent (1000 games) | **~95-99% wins or draws**, virtually 0% losses |
-| Trained agent vs Itself (200 greedy games) | **All 200 draws**. Tic-tac-toe is a *drawn game* with perfect play. The fact that self-play draws every game is a sign of convergence. |
+| Trained agent vs Itself (200 greedy games) | **All 200 draws**. Tic-tac-toe is a game that always ends in a tie (draw) if both players play perfectly. The fact that self-play draws every game is a sign of convergence. |
 
 The plot `outputs/self_play_tic_tac_toe.png` shows the agent's win/draw/loss
 fractions versus a random opponent over time:
-- Win rate starts ~60% (random vs random already favours whoever has more
-  free squares).
+- Win rate starts ~60% (when both players play randomly, the first player has an inherent advantage because they get to place more markers on the board, leading to a baseline win rate of about 60% for player X).
 - Climbs to >90%.
 - Loss rate falls to nearly 0%.
 
@@ -100,7 +99,7 @@ the agent play.
   maximising their value" means *minimising ours* in the bootstrap target.
   The update in our code uses `target = reward - gamma * max(Q[next, opponent])`.
 - **Symmetry is not exploited here.** A real implementation would canonicalise
-  boards (rotate/reflect to a normal form) to share Q-values across 8
+  boards (meaning they would rotate or reflect any board state into a standard, unique 'normal form' so the agent recognizes identical board situations) to share Q-values across 8
   symmetries. We skip this — the state space is small enough to brute-force.
 - **The Q-table grows.** After 50k self-play games you will see a few
   thousand state-player keys. That is fine here; for chess or Go you would
@@ -116,11 +115,12 @@ the agent play.
 - **Asymmetric roles.** If "attacker" and "defender" have different action
   spaces, you need two separate networks.
 - **Strategy cycling.** Pure self-play can get stuck in
-  rock-paper-scissors-like cycles. AlphaStar fixed this by maintaining a
-  *population* of past selves — a "league" — and sampling opponents from it.
+  rock-paper-scissors-like cycles. AlphaStar fixed this by keeping a large
+  *pool* (or "league") of saved past versions of the agent and picking
+  opponents from that pool at random, so the agent learns to beat many
+  different playstyles rather than just the current one.
 - **Reward hacking.** Self-play makes both sides smarter, but only at the
-  game *as you defined it*. If your reward has loopholes, both sides will
-  find them together.
+  game *as you defined it*. If your reward system has unintended loopholes (like rewarding a player just for surviving longer instead of winning), both sides will mutually exploit the loophole, leading to bizarre, unhelpful behavior instead of mastering the actual game.
 
 ---
 
@@ -142,5 +142,6 @@ the agent play.
 > **Self-play turns improvement into its own ladder: every time you get
 > better, your opponent does too — automatically.**
 
-This idea, scaled up with neural nets and tree search, beat the best humans
+This idea, scaled up with **neural networks** (brain-inspired mathematical
+functions that learn patterns from data) and tree search, beat the best humans
 at Go, chess, shogi, Dota 2, and StarCraft.
