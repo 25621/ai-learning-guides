@@ -193,7 +193,7 @@ Implement PPO and solve BipedalWalker-v3 (reward > 300).
 
 Choose 2-3 areas based on your interests.
 
-### Model-Based RL
+### [Model-Based RL](advanced_topics/model_based_rl/README.md)
 Learn environment dynamics to plan or generate synthetic experience.
 
 **Concepts:**
@@ -203,9 +203,9 @@ Learn environment dynamics to plan or generate synthetic experience.
 - MuZero, Dreamer
 
 **Practical Work:**
-- [ ] Implement Dyna-Q
-- [ ] Train a world model on a simple environment
-- [ ] Use learned model for planning
+- [ ] [Implement Dyna-Q](advanced_topics/model_based_rl/dyna_q_explained.md)
+- [ ] [Train a world model on a simple environment](advanced_topics/model_based_rl/world_model_explained.md)
+- [ ] [Use learned model for planning](advanced_topics/model_based_rl/model_based_planning_explained.md)
 
 **Resources:**
 - 📖 Sutton & Barto - Chapter 8
@@ -215,7 +215,7 @@ Learn environment dynamics to plan or generate synthetic experience.
 
 ---
 
-### Multi-Agent RL
+### [Multi-Agent RL](advanced_topics/multi_agent_rl/README.md)
 Multiple agents learning simultaneously in shared environments.
 
 **Concepts:**
@@ -225,9 +225,9 @@ Multiple agents learning simultaneously in shared environments.
 - Emergent communication
 
 **Practical Work:**
-- [ ] Train agents in simple matrix games
-- [ ] Implement self-play for a board game
-- [ ] Explore PettingZoo environments
+- [ ] [Train agents in simple matrix games](advanced_topics/multi_agent_rl/matrix_games_explained.md)
+- [ ] [Implement self-play for a board game](advanced_topics/multi_agent_rl/self_play_tic_tac_toe_explained.md)
+- [ ] [Explore PettingZoo environments](advanced_topics/multi_agent_rl/pettingzoo_explore_explained.md)
 
 **Resources:**
 - 📄 [Multi-Agent RL Survey](https://arxiv.org/abs/1911.10635)
@@ -236,7 +236,7 @@ Multiple agents learning simultaneously in shared environments.
 
 ---
 
-### Offline/Batch RL
+### [Offline/Batch RL](advanced_topics/offline_rl/README.md)
 Learn from fixed datasets without environment interaction.
 
 **Concepts:**
@@ -246,9 +246,9 @@ Learn from fixed datasets without environment interaction.
 - Decision Transformer
 
 **Practical Work:**
-- [ ] Train on D4RL benchmark datasets
-- [ ] Implement CQL
-- [ ] Compare with behavioral cloning
+- [ ] [Train on D4RL benchmark datasets](advanced_topics/offline_rl/d4rl_dataset_explained.md)
+- [ ] [Implement CQL](advanced_topics/offline_rl/cql_explained.md)
+- [ ] [Compare with behavioral cloning](advanced_topics/offline_rl/behavioral_cloning_explained.md)
 
 **Resources:**
 - 📄 [Offline RL Tutorial](https://arxiv.org/abs/2005.01643)
@@ -258,7 +258,7 @@ Learn from fixed datasets without environment interaction.
 
 ---
 
-### Exploration
+### [Exploration](advanced_topics/exploration/README.md)
 Address sparse reward and hard exploration problems.
 
 **Concepts:**
