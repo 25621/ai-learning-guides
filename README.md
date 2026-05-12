@@ -192,6 +192,12 @@ Implement PPO and solve BipedalWalker-v3 (reward > 300).
 ## Phase 5: Advanced Topics (6-8 weeks)
 
 Choose 2-3 areas based on your interests.
+- [Model-Based RL](#model-based-rl)
+- [Multi-Agent RL](#multi-agent-rl)
+- [Offline/Batch RL](#offlinebatch-rl)
+- [Exploration](#exploration)
+- [Hierarchical RL](#hierarchical-rl)
+- [RLHF (RL from Human Feedback)](#rlhf-rl-from-human-feedback)
 
 ### [Model-Based RL](advanced_topics/model_based_rl/README.md)
 Learn environment dynamics to plan or generate synthetic experience.
