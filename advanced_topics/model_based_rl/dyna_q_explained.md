@@ -71,7 +71,7 @@ The model is just a lookup table:
 
 ## What Our Code Does
 
-We use the classic **Dyna Maze** (Sutton & Barto, Figure 8.2): a 6×9 grid with
+We use the classic **Dyna Maze** ([Sutton & Barto, Figure 8.2](http://incompleteideas.net/book/the-book.html)): a 6×9 grid with
 some walls, a start `S` in the middle-left, and a goal `G` in the top right.
 
 We run three variants, each averaged over 30 random seeds:
@@ -126,9 +126,12 @@ Two reasons:
 - **Stochastic environments.** If `(s, a)` can lead to many different `s'`
   values, a "remember last outcome" model lies to you. Fix: store visit counts
   or train a probabilistic model.
-- **Non-stationary environments.** If the world changes (a doorway closes),
-  the model becomes wrong. The Dyna-Q+ variant adds an exploration bonus that
-  rewards re-visiting stale states.
+- **Non-stationary environments.** If the world changes — for example, a
+  doorway that was open suddenly closes, or a shortcut appears — the model
+  becomes outdated and gives wrong predictions. **Dyna-Q+** fixes this by
+  adding an *exploration bonus*: states that haven't been revisited for a long
+  time receive a small extra reward, nudging the agent to go back and check
+  whether the world has changed.
 - **Large state spaces.** A dictionary keyed on `(s, a)` does not scale to
   millions of states or to continuous states. That is exactly the gap that
   **learned (neural-network) world models** fill — see `world_model.py` next.
@@ -142,7 +145,7 @@ Two reasons:
 | **Model**       | Memory of `(state, action) → (reward, next_state)` |
 | **Planning step** | Doing a Q-update using imagined data from the model |
 | **Direct RL**   | A Q-update using real data |
-| **Sample-efficient** | Needs few real interactions to learn well |
+| **Sample efficiency** | Measures how effectively an AI model or algorithm uses training data to achieve a specific level of performance |
 | **Dyna**        | Sutton's architecture that interleaves learning + planning |
 
 ---

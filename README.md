@@ -273,10 +273,6 @@ Address sparse reward and hard exploration problems.
 - [ ] [Train on Montezuma's Revenge](advanced_topics/exploration/montezuma_revenge_explained.md)
 - [ ] [Compare exploration strategies](advanced_topics/exploration/compare_exploration_explained.md)
 
-See [`advanced_topics/exploration/`](advanced_topics/exploration/) for the
-runnable code (`curiosity_bonus.py`, `montezuma_revenge.py`,
-`compare_exploration.py`) and a section overview.
-
 **Resources:**
 - 📄 [ICM Paper](https://arxiv.org/abs/1705.05363)
 - 📄 [RND Paper](https://arxiv.org/abs/1810.12894)
