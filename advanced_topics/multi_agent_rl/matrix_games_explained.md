@@ -103,7 +103,7 @@ For each game we:
 2. Loop for 20,000 steps. Each step: both agents pick an ε-greedy action
    simultaneously, get a reward, update their Q-values.
 3. Track each agent's **empirical action frequency** in a rolling 500-step
-   window. This *is* the learned policy.
+   window. Instead of just looking at abstract probabilities, we count what actions they actually chose recently (e.g., "in the last 500 rounds, they played Rock 40% of the time"). This gives us a real-time, practical picture of their changing strategy.
 4. Plot the frequencies over time, save to `outputs/<game>.png`, and print
    the final Q-values.
 
@@ -125,8 +125,17 @@ limits:
 
 - It **cannot guarantee convergence** in general-sum games.
 - It can get stuck in **bad equilibria** (Stag Hunt).
-- It **cannot model the opponent**. Real multi-agent algorithms (LOLA,
-  fictitious play, CFR, MADDPG) explicitly reason about the other learner.
+- It **cannot model the opponent**.
+
+Real multi-agent algorithms fix this by explicitly reasoning about the other
+learner. Here is what each one does, in plain English:
+
+| Algorithm | Core idea | Real-life analogy |
+|-----------|-----------|-------------------|
+| **Fictitious play** | Keep a running tally of how often your opponent has picked each action. Assume tomorrow they'll do what they've always done — then pick your own best response to that belief. | Watching an opponent's habits over many chess games and adjusting your opening accordingly. |
+| **CFR (Counterfactual Regret Minimisation)** | After every round, ask *"How much did I regret not picking each other action?"* Gradually shift probability toward actions you regret skipping. Used in poker because it handles **imperfect-information** games (you don't see the opponent's cards). | After a poker hand, replaying it and thinking: *"I should have bet more — I'll do that next time."* |
+| **LOLA (Learning with Opponent-Learning Awareness)** | Your gradient step accounts for the fact that the opponent is *also* gradient-stepping. You optimise your own update while anticipating the opponent's next update — two steps ahead instead of one. | Negotiating a deal while thinking: *"If I offer X, they'll counter with Y, so I should start with Z."* |
+| **MADDPG (Multi-Agent Deep Deterministic Policy Gradient)** | Each agent's *critic* (value estimator) is trained with the **global view**: it sees everyone's observations and actions. The *actor* (the policy that gets deployed) still only uses local information — this is the CTDE pattern. | A basketball coach who watches the full court (centralized critic) but teaches each player to react only to what they can see (decentralized actor). |
 
 But independent Q-learning is the right first step. You see the
 non-stationarity problem hit you in the face, and the fixes make sense
