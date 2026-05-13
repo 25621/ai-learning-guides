@@ -32,7 +32,8 @@ That `max_{a'}` is the danger. When the dataset never recorded action `a'`
 in state `s'`, the network just *guesses* a Q-value — and neural networks
 tend to **over-estimate** Q for unseen inputs. The target inherits the
 over-estimate, the network learns to predict that bigger number, and on
-the next step we extrapolate even higher. The policy chases a phantom.
+the next step we **extrapolate** (project even further beyond anything the
+data supports) even higher. The policy chases a phantom.
 
 If you could keep collecting more data this would self-correct (the
 phantom action turns out to be bad in reality). But **in offline RL you
@@ -50,23 +51,31 @@ cql_loss(s)  =  log Σ_a exp Q(s, a)   -   Q(s, a_dataset)
 
 Two pieces:
 
-1. **`log Σ_a exp Q(s, a)`** is a soft maximum over all actions.
-   Penalising it shrinks Q-values across the board — especially for
-   actions with the *highest* Q, which is exactly where the hallucinations
-   live.
+1. **`log Σ_a exp Q(s, a)`** (read: *"log-sum-exp over all actions"*) is a
+   **soft maximum** over all actions — a smooth, differentiable
+   approximation of `max` that considers every action at once rather than
+   hard-selecting one winner. Penalising it shrinks Q-values
+   **across the board** (pushing all predictions
+   down uniformly) — especially for actions with the *highest* Q, which is exactly
+   where the hallucinations live.
 2. **`- Q(s, a_dataset)`** rewards high Q on the action the dataset
    actually recorded — protecting in-distribution Q-values from the
    shrinkage above.
 
 Net effect: **Q is pulled down on un-seen actions, pulled up on seen
 actions.** The learned Q becomes a *lower bound* on the true Q. The
-`argmax` policy stops chasing phantoms.
+**`argmax`** policy (the rule that simply picks the action with the highest Q)
+stops chasing phantoms.
 
 Full loss:
 
 ```
 L  =  Bellman_MSE   +   α · cql_loss
 ```
+
+(Where **`Bellman_MSE`** is the standard error from normal Q-learning,
+measuring how much the network's current guess disagrees with its own
+future guess).
 
 `α` is the conservatism knob. Too small → distribution shift creeps back
 in. Too large → the agent is so conservative it never improves beyond the
@@ -123,8 +132,13 @@ Final evaluation returns (avg over 10 episodes, greedy):
 In the learning-curve plot:
 
 - The **red curve** (`α = 0`) climbs early then often **falls off a cliff**
-  once distribution-shift hallucinations infect the Bellman target. The
-  Bellman loss looks fine — that's the perfidy of the problem.
+  once distribution-shift hallucinations infect the **Bellman target**
+  (the number we use as the "correct answer" when training the Q-network:
+  `r + γ · max Q(s', ·)`). When phantom Q-values pollute that target,
+  every gradient step makes things worse. The **Bellman loss** (the MSE
+  between the Q-network's prediction and the Bellman target) looks fine —
+  that's the **treachery** of the problem: the network is perfectly
+  consistent with its own wrong beliefs, so the loss gives no warning.
 - The **orange curve** (`α = 1.0`) climbs more slowly but **stays up**.
 - The **green curve** (`α = 5.0`) is the most stable and usually best.
 
@@ -153,6 +167,9 @@ IQL (Kostrikov 2021)  ── never query Q on un-seen actions in the first place
    │
    ▼
 Decision Transformer (Chen 2021)  ── skip Q entirely, treat RL as sequence modelling
+                                      (predict the *next action* given past states and
+                                       a desired total return, exactly like an LLM
+                                       predicts the next word)
 ```
 
 Each step in this lineage is a different answer to the same question:
@@ -166,7 +183,8 @@ Each step in this lineage is a different answer to the same question:
 |------|---------|
 | **Distribution shift** | The trained policy wants actions outside the data |
 | **Out-of-distribution (OOD)** | An (s, a) pair the dataset never recorded |
-| **Conservative Q** | A Q-function that is a *lower bound* on the true Q |
+| **True Q** | The real expected future return for taking action `a` in state `s`, if we could measure it perfectly |
+| **Conservative Q** | A learned Q-function that tries to stay below the true Q instead of over-promising |
 | **Logsumexp** | A smooth, differentiable approximation of `max` |
 | **Alpha (α)** | CQL's conservatism knob — how hard to push Q down on OOD actions |
 
