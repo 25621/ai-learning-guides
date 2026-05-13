@@ -32,8 +32,12 @@ algorithm can't beat BC on the same dataset, it has done nothing.**
 ## Real-Life Examples
 
 - **Learning to drive from dashcam footage.** Look at the road, predict
-  the steering wheel angle the human used. (Self-driving teams have done
-  exactly this — see ALVINN, NVIDIA's PilotNet.)
+  the steering wheel angle the human used. Two landmark examples:
+  - **ALVINN (1989)** — the very first neural-network driver; a tiny 3-layer
+    network trained on camera + laser inputs to steer a van across highways.
+  - **NVIDIA PilotNet (2016)** — a modern deep CNN trained end-to-end on
+    dashcam footage; learned lane-keeping and basic steering purely by
+    imitating human drivers, no hand-engineered rules.
 - **Apprentice copying a master chef.** "Whatever the chef does, I do."
   Works great if the chef is great; produces a bad chef if the chef is
   bad.
@@ -53,7 +57,14 @@ loss = -log π(a | s)        (cross-entropy)
 ```
 
 That's it. The policy `π` is just an MLP that outputs action logits;
-training is identical to MNIST.
+training is identical to MNIST. Let's break down the jargon:
+- **`π` (Pi):** The standard symbol for "policy" — the rule or neural network deciding what to do.
+- **MLP (Multi-Layer Perceptron):** A basic, standard neural network.
+- **Logits:** The raw, un-normalized scores the network spits out before we turn them into probabilities.
+- **Cross-entropy:** The standard formula for penalizing a model when it assigns a low probability to the correct answer.
+- **MNIST:** The famous beginner dataset of handwritten digits.
+
+Training an agent to play a game via BC is literally identical to training a network to recognize handwritten digits in MNIST. In MNIST, the input is an image and the output is a digit (0-9). In BC, the input is the game state and the output is the action (e.g., "move left").
 
 ---
 
@@ -108,8 +119,7 @@ reason offline RL is a research field and not just "do imitation
 learning". When data is mixed quality (which real logs always are),
 reward-aware methods recover more.
 
-On **expert** data the comparison flips: BC matches expert (~480) and CQL
-struggles to do meaningfully better because there's nowhere to go.
+On **expert** data the comparison flips: BC matches expert (~480). You might wonder why CQL "ties" here rather than losing. Because CQL is designed to be *conservative* and penalize actions not seen in the dataset, it ends up doing exactly what the expert did. It can't beat the expert (because the maximum possible score is already achieved), but it doesn't actively break the expert's strategy either. It just ties with BC's performance.
 
 This is the famous "data-quality vs algorithm" trade-off:
 
@@ -130,9 +140,9 @@ This is the famous "data-quality vs algorithm" trade-off:
   online with PPO/SAC.
 - **RLHF.** Step 1 of InstructGPT is supervised fine-tuning — pure BC on
   human-written responses. PPO + reward model come later.
-- **DAgger (Ross et al., 2011).** A clever extension: query the expert
-  again on states the BC policy visits, fixing the compounding-error
-  problem. Often beats vanilla BC by a lot.
+- **DAgger (Ross et al., 2011).** A clever extension to fix the **compounding-error** problem.
+  *Why is compounding-error a problem if BC clones perfectly?* Even if a BC model is 99% accurate, that 1% mistake eventually happens. When it does, the agent enters a state it has never seen in the perfectly-driven dataset. Because it's confused, it makes a bigger mistake, moving even further from the known data, compounding into a total failure (like driving off a cliff).
+  *The fix:* We could just ask the expert to drive forever, but expert time is expensive. Instead, DAgger lets the BC policy drive. When the policy makes a mistake and drifts into a weird state, we pause, ask the expert "what would you do *right here*?", and add that to the dataset. We only "query the expert again on states the BC policy visits" because we only need the expert to teach us how to recover from our own specific mistakes, rather than querying them always.
 - **Decision Transformer (Chen et al., 2021).** A "smart" BC that
   conditions the action prediction on a desired *return-to-go*,
   essentially turning offline RL back into next-token prediction.
