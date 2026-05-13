@@ -199,7 +199,7 @@ Choose 2-3 areas based on your interests.
 - [Hierarchical RL](#hierarchical-rl)
 - [RLHF (RL from Human Feedback)](#rlhf-rl-from-human-feedback)
 
-### [Model-Based RL](advanced_topics/model_based_rl/README.md)
+### Model-Based RL
 Learn environment dynamics to plan or generate synthetic experience.
 
 **Concepts:**
@@ -221,7 +221,7 @@ Learn environment dynamics to plan or generate synthetic experience.
 
 ---
 
-### [Multi-Agent RL](advanced_topics/multi_agent_rl/README.md)
+### Multi-Agent RL
 Multiple agents learning simultaneously in shared environments.
 
 **Concepts:**
@@ -242,7 +242,7 @@ Multiple agents learning simultaneously in shared environments.
 
 ---
 
-### [Offline/Batch RL](advanced_topics/offline_rl/README.md)
+### Offline/Batch RL
 Learn from fixed datasets without environment interaction.
 
 **Concepts:**
@@ -264,7 +264,7 @@ Learn from fixed datasets without environment interaction.
 
 ---
 
-### [Exploration](advanced_topics/exploration/README.md)
+### Exploration
 Address sparse reward and hard exploration problems.
 
 **Concepts:**
@@ -283,6 +283,7 @@ Address sparse reward and hard exploration problems.
 - 📄 [ICM Paper](https://arxiv.org/abs/1705.05363)
 - 📄 [RND Paper](https://arxiv.org/abs/1810.12894)
 - 📄 [Go-Explore](https://arxiv.org/abs/1901.10995)
+- 📄 [Deep Exploration via Bootstrapped DQN](https://arxiv.org/abs/1602.04621) — source of the DeepSea task
 
 ---
 
