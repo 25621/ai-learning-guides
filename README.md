@@ -318,9 +318,9 @@ Align models with human preferences.
 - DPO (Direct Preference Optimization)
 
 **Practical Work:**
-- [ ] Train a reward model from preference data
-- [ ] Fine-tune a small LM with PPO
-- [ ] Implement DPO
+- [ ] [Train a reward model from preference data](advanced_topics/rlhf/reward_modeling_explained.md)
+- [ ] [Fine-tune a small LM with PPO](advanced_topics/rlhf/ppo_fine_tuning_explained.md)
+- [ ] [Implement DPO](advanced_topics/rlhf/dpo_implementation_explained.md)
 
 **Resources:**
 - 📄 [InstructGPT Paper](https://arxiv.org/abs/2203.02155)
