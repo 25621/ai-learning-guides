@@ -63,7 +63,7 @@ In a maze, the agent needs to reach a goal that may be 30–50 steps away. With 
 
 With options, the path breaks into **sub-tasks**. Each sub-task gets its own mini-reward signal (reaching the doorway, entering the next room). Learning propagates through shorter segments. **The agent learns faster on problems that require many steps.**
 
-This is the core idea behind all of [Hierarchical RL](../../README.md#hierarchical-rl) — and Option-Critic is one of its cleanest implementations.
+This is the core idea behind all of Hierarchical RL — and Option-Critic is one of its cleanest implementations.
 
 ---
 

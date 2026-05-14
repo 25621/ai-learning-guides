@@ -200,7 +200,7 @@ def train_hierarchical(n_episodes=3000, max_steps=100):
             update(wnet, wtgt, wopt, wbuf)
             pos = npos; step += 1
 
-        if (ep + 1) % 250 == 0:
+        if (ep + 1) % 50 == 0:
             wtgt.load_state_dict(wnet.state_dict())
 
         success = env.has_key and (env.pos == DOOR_POS)

@@ -90,7 +90,7 @@ Two agents compete:
 | Language | Write a full research paper (many writing decisions, one quality score) |
 | Science | Run a multi-month experiment and evaluate results |
 
-This is exactly why [Feudal Networks](../../README.md#hierarchical-rl) and HIRO were invented — as flat RL hit walls on these problems, hierarchical decomposition became the dominant strategy.
+This is exactly why Feudal Networks (an architecture where managers set directional goals for lower-level workers) and HIRO (Hierarchical RL with subgoals) were invented — as flat RL hit walls on these problems, hierarchical decomposition became the dominant strategy.
 
 ---
 

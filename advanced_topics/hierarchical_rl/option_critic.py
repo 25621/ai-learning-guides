@@ -112,7 +112,7 @@ class OptionCriticNet(nn.Module):
 
 class OptionCriticAgent:
     def __init__(self, n_states, n_actions, n_options=N_OPTIONS,
-                 lr=3e-4, gamma=0.99, buffer_size=8_000, batch=64):
+                 lr=1e-4, gamma=0.99, buffer_size=8_000, batch=64):
         self.gamma = gamma
         self.n_options = n_options
         self.batch = batch
@@ -175,15 +175,16 @@ class OptionCriticAgent:
         log_pi = torch.log(pi_o.gather(1, a.unsqueeze(1)).squeeze() + 1e-8)
         adv    = (tgt - q_pred).detach()
         loss_pi = -(log_pi * adv).mean()
+        entropy = -(pi_o * torch.log(pi_o + 1e-8)).sum(-1).mean()
 
-        # termination
+        # termination — deliberation cost prevents beta from collapsing to 1
         nh2   = self.net.body(ns)
         beta  = self.net.termination(nh2)[torch.arange(B), o]
         q_ns  = self.net.q(nh2)
         adv_t = (q_ns[torch.arange(B), o] - q_ns.max(1).values).detach()
-        loss_term = (beta * adv_t).mean()
+        loss_term = (beta * (adv_t + 0.01)).mean()
 
-        loss = loss_q + loss_pi + 0.01 * loss_term
+        loss = loss_q + loss_pi + 0.01 * loss_term - 0.01 * entropy
         self.opt.zero_grad()
         loss.backward()
         nn.utils.clip_grad_norm_(self.net.parameters(), 0.5)
@@ -194,7 +195,7 @@ class OptionCriticAgent:
 
 # ─── Training ─────────────────────────────────────────────────────────────────
 
-def train(n_episodes=2500, max_steps=100, target_update=150):
+def train(n_episodes=2500, max_steps=100, target_update=50):
     env   = GridWorld()
     agent = OptionCriticAgent(N_STATES, N_ACTIONS)
     returns, lengths = [], []
@@ -242,8 +243,6 @@ def plot_results(returns, lengths, out_dir="outputs"):
     axes[1].plot(l_sm, color="darkorange")
     axes[1].set_title("Option-Critic: Steps to Goal (100-ep avg)")
     axes[1].set_xlabel("Episode"); axes[1].set_ylabel("Steps")
-    axes[1].axhline(50, color="gray", linestyle="--", alpha=0.5, label="random walk baseline")
-    axes[1].legend()
 
     plt.tight_layout()
     path = f"{out_dir}/option_critic.png"

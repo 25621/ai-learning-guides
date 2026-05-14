@@ -81,9 +81,9 @@ Training runs for 3,000 episodes with a decaying exploration rate — the agent 
 | Robot arm reaching | Target 3-D position |
 | Self-driving car | GPS coordinate |
 | Language model assistant | User's instruction |
-| Video game NPC | Any waypoint on the map |
+| Video game Non-Player Character | Any waypoint on the map |
 
-Goal-conditioned policies are one of the key building blocks for [HIRO](../../README.md#hierarchical-rl) (Hierarchical RL with subgoals) — the high-level manager picks a subgoal, and the low-level worker is exactly this kind of goal-conditioned policy.
+Goal-conditioned policies are one of the key building blocks for HIRO (Hierarchical RL with subgoals) — the high-level manager picks a subgoal, and the low-level worker is exactly this kind of goal-conditioned policy.
 
 ---
 
