@@ -297,9 +297,9 @@ Learn at multiple levels of temporal abstraction.
 - HIRO, HAM
 
 **Practical Work:**
-- [ ] Implement option-critic architecture
-- [ ] Train goal-conditioned policy
-- [ ] Test on long-horizon tasks
+- [ ] [Implement option-critic architecture](advanced_topics/hierarchical_rl/option_critic_explained.md)
+- [ ] [Train goal-conditioned policy](advanced_topics/hierarchical_rl/goal_conditioned_policy_explained.md)
+- [ ] [Test on long-horizon tasks](advanced_topics/hierarchical_rl/long_horizon_tasks_explained.md)
 
 **Resources:**
 - 📖 Sutton & Barto - Chapter 12 (Options)
