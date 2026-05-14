@@ -1,236 +1,264 @@
 """
-Option-Critic on a small two-room gridworld.
+Option-Critic Architecture on a simple 7x7 GridWorld.
 
-The example keeps the architecture tabular so the moving parts are visible:
-  - Q(state, option): the high-level value of each option
-  - pi(action | state, option): the low-level policy inside an option
-  - beta(state, option): the probability that an option terminates
+The agent learns N options (sub-policies), each with its own termination
+condition.  A meta-policy (policy-over-options) selects which option to
+execute.  The option runs until it chooses to terminate, then the
+meta-policy picks again.
 
-Run:
-    python option_critic.py
-Output:
-    outputs/option_critic.png
+Environment: 7x7 grid, random start, fixed goal at (5,5).
+Potential-based shaping is added to make the reward less sparse.
 """
 
-import os
-
+import random
+import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import numpy as np
+import torch
+import torch.nn as nn
+import torch.optim as optim
 
+# ─── Replay Buffer ────────────────────────────────────────────────────────────
 
-OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "outputs")
-os.makedirs(OUTPUT_DIR, exist_ok=True)
+class ReplayBuffer:
+    def __init__(self, capacity):
+        self.buf = [None] * capacity
+        self.cap = capacity
+        self.idx = 0
+        self.size = 0
 
-GRID = [
-    ".....#....",
-    ".....#....",
-    "..........",
-    ".....#....",
-    ".....#....",
-]
-ROWS, COLS = len(GRID), len(GRID[0])
-START = (4, 0)
-GOAL = (0, 9)
+    def add(self, *t):
+        self.buf[self.idx] = t
+        self.idx = (self.idx + 1) % self.cap
+        self.size = min(self.size + 1, self.cap)
+
+    def sample(self, k):
+        idx = random.sample(range(self.size), k)
+        return zip(*[self.buf[i] for i in idx])
+
+    def __len__(self):
+        return self.size
+
+# ─── Environment ─────────────────────────────────────────────────────────────
+
+GRID = 7
+GOAL_POS = (5, 5)
 ACTIONS = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-ACTION_NAMES = ["up", "down", "left", "right"]
-N_STATES = ROWS * COLS
 N_ACTIONS = len(ACTIONS)
+WALLS = set()
+for i in range(GRID):
+    WALLS.add((0, i)); WALLS.add((GRID - 1, i))
+    WALLS.add((i, 0)); WALLS.add((i, GRID - 1))
+FREE = [(r, c) for r in range(GRID) for c in range(GRID)
+        if (r, c) not in WALLS and (r, c) != GOAL_POS]
+N_STATES = GRID * GRID
+
+
+def enc(r, c):
+    return r * GRID + c
+
+
+def potential(r, c):
+    return -abs(r - GOAL_POS[0]) - abs(c - GOAL_POS[1])
+
+
+class GridWorld:
+    def reset(self):
+        self.pos = random.choice(FREE)
+        return enc(*self.pos)
+
+    def step(self, action):
+        dr, dc = ACTIONS[action]
+        nr, nc = self.pos[0] + dr, self.pos[1] + dc
+        old_phi = potential(*self.pos)
+        if (nr, nc) not in WALLS and 0 <= nr < GRID and 0 <= nc < GRID:
+            self.pos = (nr, nc)
+        done = (self.pos == GOAL_POS)
+        new_phi = potential(*self.pos)
+        shaped_r = (1.0 if done else 0.0) + 0.99 * new_phi - old_phi
+        return enc(*self.pos), shaped_r, done
+
+# ─── Networks ─────────────────────────────────────────────────────────────────
+
 N_OPTIONS = 4
 
 
-def state_id(pos):
-    return pos[0] * COLS + pos[1]
+class OptionCriticNet(nn.Module):
+    def __init__(self, n_states, n_actions, n_options, hidden=64):
+        super().__init__()
+        self.n_options = n_options
+        self.n_actions = n_actions
+        self.emb = nn.Embedding(n_states, hidden)
+        self.fc = nn.Sequential(nn.Linear(hidden, hidden), nn.ReLU())
+        self.q_head = nn.Linear(hidden, n_options)
+        self.pi_head = nn.Linear(hidden, n_options * n_actions)
+        self.term_head = nn.Linear(hidden, n_options)
 
+    def body(self, s):
+        return self.fc(self.emb(s))
 
-def pos_from_state(s):
-    return divmod(s, COLS)
+    def q(self, h):
+        return self.q_head(h)
 
+    def intra_pi(self, h):
+        B = h.shape[0]
+        return self.pi_head(h).view(B, self.n_options, self.n_actions).softmax(-1)
 
-def is_wall(pos):
-    r, c = pos
-    return r < 0 or r >= ROWS or c < 0 or c >= COLS or GRID[r][c] == "#"
+    def termination(self, h):
+        return self.term_head(h).sigmoid()
 
+# ─── Agent ────────────────────────────────────────────────────────────────────
 
-def step(state, action):
-    r, c = pos_from_state(state)
-    dr, dc = ACTIONS[action]
-    nxt = (r + dr, c + dc)
-    if is_wall(nxt):
-        nxt = (r, c)
-    done = nxt == GOAL
-    reward = 1.0 if done else -0.01
-    return state_id(nxt), reward, done
+class OptionCriticAgent:
+    def __init__(self, n_states, n_actions, n_options=N_OPTIONS,
+                 lr=3e-4, gamma=0.99, buffer_size=8_000, batch=64):
+        self.gamma = gamma
+        self.n_options = n_options
+        self.batch = batch
+        self.net    = OptionCriticNet(n_states, n_actions, n_options)
+        self.target = OptionCriticNet(n_states, n_actions, n_options)
+        self.target.load_state_dict(self.net.state_dict())
+        self.opt = optim.Adam(self.net.parameters(), lr=lr)
+        self.buf = ReplayBuffer(buffer_size)
 
+    def _t(self, s):
+        return torch.tensor([s], dtype=torch.long)
 
-def softmax(x):
-    z = x - np.max(x)
-    exp = np.exp(z)
-    return exp / exp.sum()
+    def select_option(self, s, epsilon):
+        if random.random() < epsilon:
+            return random.randrange(self.n_options)
+        with torch.no_grad():
+            h = self.net.body(self._t(s))
+            return self.net.q(h).argmax().item()
 
+    def should_terminate(self, s, option):
+        with torch.no_grad():
+            h = self.net.body(self._t(s))
+            beta = self.net.termination(h)[0, option].item()
+        return random.random() < beta
 
-def sigmoid(x):
-    return 1.0 / (1.0 + np.exp(-x))
+    def select_action(self, s, option, epsilon):
+        if random.random() < epsilon:
+            return random.randrange(N_ACTIONS)
+        with torch.no_grad():
+            h = self.net.body(self._t(s))
+            probs = self.net.intra_pi(h)[0, option]
+        return torch.multinomial(probs, 1).item()
 
+    def update(self):
+        if len(self.buf) < self.batch:
+            return
+        s, o, a, r, ns, done = self.buf.sample(self.batch)
+        s  = torch.tensor(list(s),    dtype=torch.long)
+        o  = torch.tensor(list(o),    dtype=torch.long)
+        a  = torch.tensor(list(a),    dtype=torch.long)
+        r  = torch.tensor(list(r),    dtype=torch.float)
+        ns = torch.tensor(list(ns),   dtype=torch.long)
+        dn = torch.tensor(list(done), dtype=torch.float)
+        B  = self.batch
 
-def choose_option(q_options, state, rng, epsilon):
-    if rng.random() < epsilon:
-        return int(rng.integers(N_OPTIONS))
-    return int(np.argmax(q_options[state]))
+        with torch.no_grad():
+            nh     = self.target.body(ns)
+            q_next = self.target.q(nh).max(1).values
+            tgt    = r + self.gamma * q_next * (1 - dn)
 
+        h = self.net.body(s)
 
-def sample_action(policy_logits, state, option, rng):
-    probs = softmax(policy_logits[state, option])
-    return int(rng.choice(N_ACTIONS, p=probs)), probs
+        # critic
+        q_pred = self.net.q(h).gather(1, o.unsqueeze(1)).squeeze()
+        loss_q = nn.functional.mse_loss(q_pred, tgt)
 
+        # intra-option policy
+        pi_all = self.net.intra_pi(h)
+        pi_o   = pi_all[torch.arange(B), o]
+        log_pi = torch.log(pi_o.gather(1, a.unsqueeze(1)).squeeze() + 1e-8)
+        adv    = (tgt - q_pred).detach()
+        loss_pi = -(log_pi * adv).mean()
 
-def train_option_critic(
-    episodes=650,
-    alpha_q=0.18,
-    alpha_pi=0.035,
-    alpha_beta=0.03,
-    gamma=0.98,
-    epsilon=0.12,
-    seed=4,
-):
-    rng = np.random.default_rng(seed)
-    q_options = np.zeros((N_STATES, N_OPTIONS))
-    policy_logits = rng.normal(0.0, 0.03, size=(N_STATES, N_OPTIONS, N_ACTIONS))
-    beta_logits = np.full((N_STATES, N_OPTIONS), -1.0)
-    episode_steps = []
-    option_switches = []
+        # termination
+        nh2   = self.net.body(ns)
+        beta  = self.net.termination(nh2)[torch.arange(B), o]
+        q_ns  = self.net.q(nh2)
+        adv_t = (q_ns[torch.arange(B), o] - q_ns.max(1).values).detach()
+        loss_term = (beta * adv_t).mean()
 
-    for _ in range(episodes):
-        state = state_id(START)
-        option = choose_option(q_options, state, rng, epsilon)
-        steps = 0
-        switches = 0
-        done = False
+        loss = loss_q + loss_pi + 0.01 * loss_term
+        self.opt.zero_grad()
+        loss.backward()
+        nn.utils.clip_grad_norm_(self.net.parameters(), 0.5)
+        self.opt.step()
 
-        while not done and steps < 250:
-            action, probs = sample_action(policy_logits, state, option, rng)
-            next_state, reward, done = step(state, action)
+    def sync_target(self):
+        self.target.load_state_dict(self.net.state_dict())
 
-            beta = sigmoid(beta_logits[next_state, option])
-            continuation = q_options[next_state, option]
-            new_option_value = np.max(q_options[next_state])
-            mixed_next_value = (1.0 - beta) * continuation + beta * new_option_value
-            target = reward if done else reward + gamma * mixed_next_value
-            td_error = target - q_options[state, option]
-            q_options[state, option] += alpha_q * td_error
+# ─── Training ─────────────────────────────────────────────────────────────────
 
-            grad = -probs
-            grad[action] += 1.0
-            policy_logits[state, option] += alpha_pi * td_error * grad
+def train(n_episodes=2500, max_steps=100, target_update=150):
+    env   = GridWorld()
+    agent = OptionCriticAgent(N_STATES, N_ACTIONS)
+    returns, lengths = [], []
 
-            option_advantage = q_options[next_state, option] - np.max(q_options[next_state])
-            beta_logits[next_state, option] -= alpha_beta * option_advantage * beta * (1.0 - beta)
+    for ep in range(n_episodes):
+        epsilon = max(0.05, 0.5 * (1 - ep / n_episodes))
+        s = env.reset()
+        option = agent.select_option(s, epsilon)
+        ep_ret, ep_len, done = 0.0, 0, False
 
-            if done:
-                break
+        while not done and ep_len < max_steps:
+            a = agent.select_action(s, option, epsilon)
+            ns, r, done = env.step(a)
+            agent.buf.add(s, option, a, r, ns, done)
+            agent.update()
+            ep_ret += r; ep_len += 1; s = ns
+            if not done and agent.should_terminate(s, option):
+                option = agent.select_option(s, epsilon)
 
-            should_stop = rng.random() < sigmoid(beta_logits[next_state, option])
-            if should_stop:
-                option = choose_option(q_options, next_state, rng, epsilon)
-                switches += 1
+        if (ep + 1) % target_update == 0:
+            agent.sync_target()
 
-            state = next_state
-            steps += 1
+        returns.append(ep_ret)
+        lengths.append(ep_len)
 
-        episode_steps.append(steps + 1)
-        option_switches.append(switches)
+        if (ep + 1) % 500 == 0:
+            print(f"Episode {ep+1:4d} | "
+                  f"avg_return={np.mean(returns[-200:]):.3f} | "
+                  f"avg_steps={np.mean(lengths[-200:]):.1f}", flush=True)
 
-    return q_options, policy_logits, beta_logits, np.array(episode_steps), np.array(option_switches)
+    return returns, lengths
 
+# ─── Plot ─────────────────────────────────────────────────────────────────────
 
-def greedy_rollout(q_options, policy_logits, beta_logits):
-    state = state_id(START)
-    option = int(np.argmax(q_options[state]))
-    path = [state]
-    options = [option]
+def plot_results(returns, lengths, out_dir="outputs"):
+    window = 100
+    r_sm = np.convolve(returns, np.ones(window) / window, mode="valid")
+    l_sm = np.convolve(lengths, np.ones(window) / window, mode="valid")
 
-    for _ in range(120):
-        action = int(np.argmax(policy_logits[state, option]))
-        next_state, _, done = step(state, action)
-        path.append(next_state)
-        if done:
-            break
-        if sigmoid(beta_logits[next_state, option]) > 0.5:
-            option = int(np.argmax(q_options[next_state]))
-        state = next_state
-        options.append(option)
-    return path, options
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+    axes[0].plot(r_sm, color="steelblue")
+    axes[0].set_title("Option-Critic: Shaped Return (100-ep avg)")
+    axes[0].set_xlabel("Episode"); axes[0].set_ylabel("Shaped Return")
 
-
-def moving_average(values, window=25):
-    return np.array([values[max(0, i - window + 1):i + 1].mean() for i in range(len(values))])
-
-
-def plot_results(q_options, policy_logits, beta_logits, episode_steps, option_switches):
-    path, options = greedy_rollout(q_options, policy_logits, beta_logits)
-    option_grid = np.full((ROWS, COLS), np.nan)
-    for s in range(N_STATES):
-        pos = pos_from_state(s)
-        if not is_wall(pos):
-            option_grid[pos] = np.argmax(q_options[s])
-
-    visit_grid = np.zeros((ROWS, COLS))
-    for s in path:
-        visit_grid[pos_from_state(s)] += 1
-
-    fig, axes = plt.subplots(1, 3, figsize=(16, 4.8))
-
-    axes[0].plot(moving_average(episode_steps), color="#1f77b4", lw=2.5, label="steps")
-    axes[0].plot(moving_average(option_switches), color="#d62728", lw=2.0, label="option switches")
-    axes[0].set_title("Option-Critic learns shorter routines")
-    axes[0].set_xlabel("Episode")
-    axes[0].set_ylabel("Moving average")
-    axes[0].grid(alpha=0.3)
-    axes[0].legend()
-
-    cmap = plt.get_cmap("Set2", N_OPTIONS)
-    masked_options = np.ma.masked_invalid(option_grid)
-    axes[1].imshow(masked_options, cmap=cmap, vmin=0, vmax=N_OPTIONS - 1)
-    axes[1].set_title("Preferred option by location")
-    axes[1].set_xticks([])
-    axes[1].set_yticks([])
-    for r in range(ROWS):
-        for c in range(COLS):
-            if GRID[r][c] == "#":
-                axes[1].text(c, r, "#", ha="center", va="center", fontsize=14, weight="bold")
-            elif (r, c) == START:
-                axes[1].text(c, r, "S", ha="center", va="center", weight="bold")
-            elif (r, c) == GOAL:
-                axes[1].text(c, r, "G", ha="center", va="center", weight="bold")
-
-    axes[2].imshow(visit_grid, cmap="Blues")
-    axes[2].set_title("Greedy route after training")
-    axes[2].set_xticks([])
-    axes[2].set_yticks([])
-    coords = [pos_from_state(s) for s in path]
-    axes[2].plot([c for _, c in coords], [r for r, _ in coords], color="#ff7f0e", lw=3)
-    axes[2].scatter([START[1]], [START[0]], marker="o", s=90, color="#2ca02c", label="start")
-    axes[2].scatter([GOAL[1]], [GOAL[0]], marker="*", s=180, color="#d62728", label="goal")
-    axes[2].legend(loc="lower right")
+    axes[1].plot(l_sm, color="darkorange")
+    axes[1].set_title("Option-Critic: Steps to Goal (100-ep avg)")
+    axes[1].set_xlabel("Episode"); axes[1].set_ylabel("Steps")
+    axes[1].axhline(50, color="gray", linestyle="--", alpha=0.5, label="random walk baseline")
+    axes[1].legend()
 
     plt.tight_layout()
-    out = os.path.join(OUTPUT_DIR, "option_critic.png")
-    plt.savefig(out, dpi=130)
-    return out, path, options
-
-
-def main():
-    print("=== Option-Critic: two-room gridworld ===")
-    q_options, policy_logits, beta_logits, steps, switches = train_option_critic()
-    out, path, options = plot_results(q_options, policy_logits, beta_logits, steps, switches)
-
-    print(f"First 50 episodes: {steps[:50].mean():.1f} steps on average")
-    print(f"Last 50 episodes:  {steps[-50:].mean():.1f} steps on average")
-    print(f"Greedy route length after training: {len(path) - 1} steps")
-    print(f"Options used on the greedy route: {sorted(set(options))}")
-    print(f"Plot saved to {out}")
+    path = f"{out_dir}/option_critic.png"
+    plt.savefig(path, dpi=120)
+    plt.close()
+    print(f"Saved {path}", flush=True)
 
 
 if __name__ == "__main__":
-    main()
+    import os
+    out_dir = os.path.join(os.path.dirname(__file__), "outputs")
+    os.makedirs(out_dir, exist_ok=True)
+    random.seed(42)
+    np.random.seed(42)
+    torch.manual_seed(42)
+    returns, lengths = train(n_episodes=2500)
+    plot_results(returns, lengths, out_dir=out_dir)
+    print(f"Done. Final 200-ep avg return: {np.mean(returns[-200:]):.3f}", flush=True)

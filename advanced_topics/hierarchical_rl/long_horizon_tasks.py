@@ -1,211 +1,257 @@
 """
-Long-horizon sparse-reward task.
+Long-Horizon Tasks: Comparing flat vs hierarchical agents.
 
-The agent must collect a key, pass a door, then reach treasure. A flat learner
-only receives the final reward. A hierarchical learner gets small subgoal
-rewards for the natural milestones.
+A flat DQN must discover a multi-step structure from a single sparse
+reward.  A hierarchical agent uses a high-level manager (picks a subgoal)
+and a low-level worker (navigates to it), with intrinsic rewards at each
+subgoal — dramatically accelerating learning.
 
-Run:
-    python long_horizon_tasks.py
-Output:
-    outputs/long_horizon_tasks.png
+Environment: open 9x9 grid where the agent must:
+  1. Collect a KEY (position K)
+  2. Then reach the DOOR (position D)
+The episode only gives +1 at the very end (after both steps).
+
+The flat DQN must discover the joint sequence from this one reward.
+The hierarchical agent gets +1 for reaching K, and +1 for reaching D
+separately — two short tasks instead of one long compound task.
 """
 
-import os
-
+import random
+import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import numpy as np
+import torch
+import torch.nn as nn
+import torch.optim as optim
+
+# ─── Replay Buffer ────────────────────────────────────────────────────────────
+
+class ReplayBuffer:
+    def __init__(self, capacity):
+        self.buf = [None] * capacity
+        self.cap = capacity
+        self.idx = 0
+        self.size = 0
+
+    def add(self, *t):
+        self.buf[self.idx] = t
+        self.idx = (self.idx + 1) % self.cap
+        self.size = min(self.size + 1, self.cap)
+
+    def sample(self, k):
+        indices = random.sample(range(self.size), k)
+        return zip(*[self.buf[i] for i in indices])
+
+    def __len__(self):
+        return self.size
+
+# ─── Environment ─────────────────────────────────────────────────────────────
+
+SIZE = 9
+# Only outer walls (open interior — navigation is easy)
+WALLS = set()
+for i in range(SIZE):
+    WALLS.add((0, i)); WALLS.add((SIZE - 1, i))
+    WALLS.add((i, 0)); WALLS.add((i, SIZE - 1))
+
+FREE = [(r, c) for r in range(SIZE) for c in range(SIZE) if (r, c) not in WALLS]
+ACTIONS = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+N_ACTIONS = len(ACTIONS)
+KEY_POS  = (2, 2)
+DOOR_POS = (6, 6)
 
 
-OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "outputs")
-os.makedirs(OUTPUT_DIR, exist_ok=True)
-
-N_POS = 15
-START = 0
-KEY = 4
-DOOR = 9
-TREASURE = 14
-N_KEY_STATES = 2
-N_DOOR_STATES = 2
-N_STATES = N_POS * N_KEY_STATES * N_DOOR_STATES
-N_ACTIONS = 2
+def enc(r, c):
+    return r * SIZE + c
 
 
-def encode(position, has_key, door_open):
-    return (position * N_KEY_STATES + int(has_key)) * N_DOOR_STATES + int(door_open)
+N_BASE = SIZE * SIZE
+N_STATES_FLAT = N_BASE * 2   # (position, has_key)
+SUBGOALS = [KEY_POS, DOOR_POS]
+N_STATES_WORKER = N_BASE * len(SUBGOALS)
 
 
-def decode(state):
-    door_open = state % N_DOOR_STATES
-    state //= N_DOOR_STATES
-    has_key = state % N_KEY_STATES
-    position = state // N_KEY_STATES
-    return position, bool(has_key), bool(door_open)
+class KeyDoorEnv:
+    def reset(self):
+        # Start in a random free cell away from key and door
+        candidates = [c for c in FREE if c not in (KEY_POS, DOOR_POS)]
+        self.pos = random.choice(candidates)
+        self.has_key = False
+        return self._state()
+
+    def _state(self):
+        return enc(*self.pos) + (N_BASE if self.has_key else 0)
+
+    def step(self, action):
+        dr, dc = ACTIONS[action]
+        nr, nc = self.pos[0] + dr, self.pos[1] + dc
+        if (nr, nc) not in WALLS and 0 <= nr < SIZE and 0 <= nc < SIZE:
+            self.pos = (nr, nc)
+        if not self.has_key and self.pos == KEY_POS:
+            self.has_key = True
+        done = self.has_key and (self.pos == DOOR_POS)
+        reward = 1.0 if done else 0.0
+        return self._state(), reward, done
+
+# ─── DQN helpers ──────────────────────────────────────────────────────────────
+
+class DQNNet(nn.Module):
+    def __init__(self, n_states, n_actions, hidden=64):
+        super().__init__()
+        self.emb = nn.Embedding(n_states, 32)
+        self.net = nn.Sequential(nn.Linear(32, hidden), nn.ReLU(),
+                                 nn.Linear(hidden, n_actions))
+
+    def forward(self, x):
+        return self.net(self.emb(x))
 
 
-def env_step(state, action):
-    position, has_key, door_open = decode(state)
-    move = -1 if action == 0 else 1
-    next_position = int(np.clip(position + move, 0, N_POS - 1))
-
-    if next_position == DOOR and not has_key:
-        next_position = position
-
-    next_has_key = has_key or next_position == KEY
-    next_door_open = door_open or (next_position == DOOR and next_has_key)
-    done = next_position == TREASURE and next_door_open
-    reward = 1.0 if done else 0.0
-    return encode(next_position, next_has_key, next_door_open), reward, done
+def make_agent(n_states, n_actions, lr=5e-4):
+    net = DQNNet(n_states, n_actions)
+    tgt = DQNNet(n_states, n_actions)
+    tgt.load_state_dict(net.state_dict())
+    opt = optim.Adam(net.parameters(), lr=lr)
+    buf = ReplayBuffer(8_000)
+    return net, tgt, opt, buf
 
 
-def shaped_reward(prev_state, next_state, done):
-    if done:
-        return 1.0
-    _, had_key, door_was_open = decode(prev_state)
-    _, has_key, door_open = decode(next_state)
-    if has_key and not had_key:
-        return 0.25
-    if door_open and not door_was_open:
-        return 0.25
-    return -0.002
+def act(net, s, eps, n_actions):
+    if random.random() < eps:
+        return random.randrange(n_actions)
+    with torch.no_grad():
+        return net(torch.tensor([s])).argmax().item()
 
 
-def choose_action(q, state, rng, epsilon):
-    if rng.random() < epsilon:
-        return int(rng.integers(N_ACTIONS))
-    return int(np.argmax(q[state]))
+def update(net, tgt, opt, buf, batch=64, gamma=0.99):
+    if len(buf) < batch:
+        return
+    s, a, r, ns, d = buf.sample(batch)
+    s  = torch.tensor(list(s),  dtype=torch.long)
+    a  = torch.tensor(list(a),  dtype=torch.long)
+    r  = torch.tensor(list(r),  dtype=torch.float)
+    ns = torch.tensor(list(ns), dtype=torch.long)
+    d  = torch.tensor(list(d),  dtype=torch.float)
+    with torch.no_grad():
+        q_tgt = r + gamma * tgt(ns).max(1).values * (1 - d)
+    q = net(s).gather(1, a.unsqueeze(1)).squeeze()
+    loss = nn.functional.mse_loss(q, q_tgt)
+    opt.zero_grad(); loss.backward(); opt.step()
+
+# ─── Flat DQN ─────────────────────────────────────────────────────────────────
+
+def train_flat(n_episodes=3000, max_steps=100):
+    env = KeyDoorEnv()
+    net, tgt, opt, buf = make_agent(N_STATES_FLAT, N_ACTIONS)
+    history = []
+
+    for ep in range(n_episodes):
+        s = env.reset()
+        eps = max(0.05, 0.6 * (1 - ep / n_episodes))
+        done = False; step = 0; success = False
+
+        while not done and step < max_steps:
+            a = act(net, s, eps, N_ACTIONS)
+            ns, r, done = env.step(a)
+            buf.add(s, a, r, ns, done)
+            update(net, tgt, opt, buf)
+            s = ns; step += 1
+            if done: success = True
+
+        if (ep + 1) % 250 == 0:
+            tgt.load_state_dict(net.state_dict())
+
+        history.append(float(success))
+        if (ep + 1) % 500 == 0:
+            print(f"[Flat]  ep {ep+1:4d} | "
+                  f"success={np.mean(history[-200:]):.3f}", flush=True)
+
+    return history
+
+# ─── Hierarchical ─────────────────────────────────────────────────────────────
+
+def worker_s(pos, sg_idx):
+    return enc(*pos) + N_BASE * sg_idx
 
 
-def train_flat(episodes=1200, alpha=0.25, gamma=0.97, seed=3):
-    rng = np.random.default_rng(seed)
-    q = np.zeros((N_STATES, N_ACTIONS))
-    successes = np.zeros(episodes)
-    lengths = np.zeros(episodes)
+def train_hierarchical(n_episodes=3000, max_steps=100):
+    env = KeyDoorEnv()
+    wnet, wtgt, wopt, wbuf = make_agent(N_STATES_WORKER, N_ACTIONS)
+    history = []
 
-    for ep in range(episodes):
-        state = encode(START, False, False)
-        epsilon = max(0.05, 0.35 * (1.0 - ep / episodes))
-        for t in range(90):
-            action = choose_action(q, state, rng, epsilon)
-            next_state, reward, done = env_step(state, action)
-            target = reward if done else reward + gamma * np.max(q[next_state])
-            q[state, action] += alpha * (target - q[state, action])
-            state = next_state
-            if done:
-                successes[ep] = 1.0
-                lengths[ep] = t + 1
-                break
-        if not successes[ep]:
-            lengths[ep] = 90
-    return q, successes, lengths
+    for ep in range(n_episodes):
+        env.reset()
+        pos = env.pos
+        eps = max(0.05, 0.6 * (1 - ep / n_episodes))
+        done = False; step = 0
 
+        while not done and step < max_steps:
+            sg_idx = 0 if not env.has_key else 1
+            sg_pos = SUBGOALS[sg_idx]
+            ws  = worker_s(pos, sg_idx)
+            a   = act(wnet, ws, eps, N_ACTIONS)
+            _, env_r, done = env.step(a)
+            npos = env.pos
+            nws  = worker_s(npos, sg_idx)
+            # intrinsic: +1 if reached current subgoal
+            intr_r = 1.0 if npos == sg_pos else 0.0
+            wdone  = (npos == sg_pos) or done
+            wbuf.add(ws, a, intr_r, nws, wdone)
+            update(wnet, wtgt, wopt, wbuf)
+            pos = npos; step += 1
 
-def train_hierarchical(episodes=1200, alpha=0.25, gamma=0.97, seed=5):
-    rng = np.random.default_rng(seed)
-    q = np.zeros((N_STATES, N_ACTIONS))
-    successes = np.zeros(episodes)
-    lengths = np.zeros(episodes)
+        if (ep + 1) % 250 == 0:
+            wtgt.load_state_dict(wnet.state_dict())
 
-    for ep in range(episodes):
-        state = encode(START, False, False)
-        epsilon = max(0.03, 0.25 * (1.0 - ep / episodes))
-        for t in range(90):
-            action = choose_action(q, state, rng, epsilon)
-            next_state, env_reward, done = env_step(state, action)
-            reward = shaped_reward(state, next_state, done)
-            target = reward if done else reward + gamma * np.max(q[next_state])
-            q[state, action] += alpha * (target - q[state, action])
-            state = next_state
-            if done:
-                successes[ep] = 1.0 if env_reward > 0 else 0.0
-                lengths[ep] = t + 1
-                break
-        if not successes[ep]:
-            lengths[ep] = 90
-    return q, successes, lengths
+        success = env.has_key and (env.pos == DOOR_POS)
+        history.append(float(success))
+        if (ep + 1) % 500 == 0:
+            print(f"[Hier] ep {ep+1:4d} | "
+                  f"success={np.mean(history[-200:]):.3f}", flush=True)
 
+    return history
 
-def greedy_path(q):
-    state = encode(START, False, False)
-    path = [decode(state)[0]]
-    events = []
-    for _ in range(90):
-        action = int(np.argmax(q[state]))
-        next_state, _, done = env_step(state, action)
-        old = decode(state)
-        new = decode(next_state)
-        if new[1] and not old[1]:
-            events.append(("key", len(path)))
-        if new[2] and not old[2]:
-            events.append(("door", len(path)))
-        path.append(new[0])
-        state = next_state
-        if done:
-            events.append(("treasure", len(path) - 1))
-            break
-    return path, events
+# ─── Plot ─────────────────────────────────────────────────────────────────────
 
+def plot_results(flat_h, hier_h, out_dir="outputs"):
+    window = 100
+    flat_sm = np.convolve(flat_h, np.ones(window) / window, mode="valid")
+    hier_sm = np.convolve(hier_h, np.ones(window) / window, mode="valid")
 
-def moving_average(values, window=60):
-    return np.array([values[max(0, i - window + 1):i + 1].mean() for i in range(len(values))])
+    fig, axes = plt.subplots(1, 2, figsize=(13, 4))
 
+    axes[0].plot(flat_sm, label="Flat DQN",      color="tomato")
+    axes[0].plot(hier_sm, label="Hierarchical",  color="steelblue")
+    axes[0].set_title("Long-Horizon Task: Success Rate (100-ep avg)")
+    axes[0].set_xlabel("Episode"); axes[0].set_ylabel("Success Rate")
+    axes[0].set_ylim(-0.05, 1.05); axes[0].legend()
 
-def plot(flat, hier):
-    flat_q, flat_success, flat_lengths = flat
-    hier_q, hier_success, hier_lengths = hier
-    h_path, h_events = greedy_path(hier_q)
-    f_path, _ = greedy_path(flat_q)
-
-    fig, axes = plt.subplots(2, 1, figsize=(12, 8), height_ratios=[1.2, 1])
-    axes[0].plot(moving_average(flat_success), color="#de2d26", lw=2.2, label="flat sparse reward")
-    axes[0].plot(moving_average(hier_success), color="#238b45", lw=2.6, label="hierarchical milestones")
-    axes[0].set_title("Long-horizon task: milestones make the distant reward reachable")
-    axes[0].set_xlabel("Episode")
-    axes[0].set_ylabel("Success rate, moving average")
-    axes[0].set_ylim(-0.03, 1.03)
-    axes[0].grid(alpha=0.3)
-    axes[0].legend()
-
-    axes[1].plot(h_path, np.zeros(len(h_path)), "-o", color="#238b45", lw=3, label="hierarchical greedy path")
-    axes[1].plot(f_path, np.ones(len(f_path)) * 0.18, "-o", color="#de2d26", alpha=0.6, label="flat greedy path")
-    axes[1].scatter([START, KEY, DOOR, TREASURE], [0, 0, 0, 0], s=[90, 120, 120, 180],
-                    color=["#636363", "#fdae6b", "#6baed6", "#756bb1"], zorder=5)
-    axes[1].text(START, -0.12, "start", ha="center")
-    axes[1].text(KEY, -0.12, "key", ha="center")
-    axes[1].text(DOOR, -0.12, "door", ha="center")
-    axes[1].text(TREASURE, -0.12, "treasure", ha="center")
-    for label, index in h_events:
-        axes[1].annotate(label, xy=(h_path[index], 0), xytext=(h_path[index], 0.35),
-                         arrowprops={"arrowstyle": "->", "color": "#525252"}, ha="center")
-    axes[1].set_xlim(-0.7, N_POS - 0.3)
-    axes[1].set_ylim(-0.25, 0.55)
-    axes[1].set_yticks([])
-    axes[1].set_xlabel("Position on the corridor")
-    axes[1].legend(loc="upper left")
-    axes[1].grid(axis="x", alpha=0.2)
+    f500 = np.mean(flat_h[-500:])
+    h500 = np.mean(hier_h[-500:])
+    axes[1].bar(["Flat DQN", "Hierarchical"], [f500, h500],
+                color=["tomato", "steelblue"])
+    axes[1].set_title("Final 500-Episode Success Rate")
+    axes[1].set_ylabel("Success Rate"); axes[1].set_ylim(0, 1.05)
+    for i, v in enumerate([f500, h500]):
+        axes[1].text(i, v + 0.02, f"{v:.2f}", ha="center", fontweight="bold")
 
     plt.tight_layout()
-    out = os.path.join(OUTPUT_DIR, "long_horizon_tasks.png")
-    plt.savefig(out, dpi=130)
-    return out
-
-
-def main():
-    print("=== Long-horizon sparse task: key -> door -> treasure ===")
-    flat = train_flat()
-    hier = train_hierarchical()
-    out = plot(flat, hier)
-
-    _, flat_success, flat_lengths = flat
-    _, hier_success, hier_lengths = hier
-    print(f"Flat learner final success rate: {flat_success[-200:].mean():.2f}")
-    print(f"Hierarchical learner final success rate: {hier_success[-200:].mean():.2f}")
-    print(f"Flat learner final average length: {flat_lengths[-200:].mean():.1f}")
-    print(f"Hierarchical learner final average length: {hier_lengths[-200:].mean():.1f}")
-    print(f"Plot saved to {out}")
+    path = f"{out_dir}/long_horizon_tasks.png"
+    plt.savefig(path, dpi=120)
+    plt.close()
+    print(f"Saved {path}", flush=True)
+    print(f"Flat DQN:     {f500:.3f}")
+    print(f"Hierarchical: {h500:.3f}")
 
 
 if __name__ == "__main__":
-    main()
+    import os
+    out_dir = os.path.join(os.path.dirname(__file__), "outputs")
+    os.makedirs(out_dir, exist_ok=True)
+    random.seed(7); np.random.seed(7); torch.manual_seed(7)
+
+    print("=== Flat DQN ===", flush=True)
+    flat_h = train_flat(n_episodes=3000)
+    print("\n=== Hierarchical ===", flush=True)
+    hier_h = train_hierarchical(n_episodes=3000)
+    plot_results(flat_h, hier_h, out_dir=out_dir)

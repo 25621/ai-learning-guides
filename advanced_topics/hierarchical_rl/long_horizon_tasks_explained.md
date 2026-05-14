@@ -1,84 +1,107 @@
-# Long-Horizon Tasks: Solving The Faraway Reward Problem
+# Long-Horizon Tasks
 
-## The Big Idea
+## The Big Idea: When the Reward Is Very Far Away
 
-A **long-horizon task** is a task where the reward is far away from the early
-actions that make it possible.
+Imagine you are a chef trying to learn a new recipe purely by tasting the final dish. You follow 40 steps — chop, sauté, season, simmer, plate — but you only get feedback at the very end: "Too salty." Which of the 40 steps caused the problem? You have no idea.
 
-This is hard for RL because the agent may need to do many correct things before
-anything good happens. If it only gets a reward at the very end, it may never
-discover which early choices mattered.
+This is the **long-horizon problem**: when the reward signal is separated from the decisions that caused it by dozens (or hundreds) of steps, learning becomes very hard.
 
-In the foundations phase, rewards helped the agent learn. In long-horizon
-tasks, the problem is that the useful reward can be too delayed.
+---
 
-## A Treasure Hunt Analogy
+## Why Flat Agents Struggle
 
-Imagine a treasure hunt:
+A flat RL agent (like the DQN agents from Phase 3) tries to learn the value of every single step all at once. In short tasks — balance a pole, avoid a wall — this works fine. The reward arrives quickly, and the agent can connect cause and effect.
 
-1. Find the key.
-2. Use the key to open the door.
-3. Walk through the door.
-4. Reach the treasure.
+But in a long task — collect a key, then use it to open a door, then exit the maze — the agent must:
 
-If a child only gets praise after finding the treasure, they may give up before
-learning that the key mattered.
+1. Stumble across the key (lucky!)
+2. Remember that collecting keys is useful
+3. Stumble across the door (lucky again!)
+4. Connect the entire sequence to the single reward at the exit
 
-But if we also say "good, you found the key" and "good, you opened the door,"
-the task becomes easier to learn. The final goal is the same, but the path has
-meaningful milestones.
+With random exploration, the chance of accidentally completing this whole sequence shrinks exponentially with each new required step. The flat DQN essentially needs to get lucky many, many times before it sees a single positive reward to learn from.
 
-That is the hierarchical idea: break a distant goal into useful subgoals.
+---
 
-## What The Experiment Shows
+## The Hierarchical Solution: Divide and Conquer
 
-The task is a simple chain:
+Hierarchical RL breaks the long task into a **two-level structure**:
 
-start -> key -> door -> treasure
+| Level | Called | Job |
+|-------|--------|-----|
+| High | **Manager** | Picks the next subgoal |
+| Low  | **Worker** | Navigates to that subgoal |
 
-The flat learner only cares about the final treasure. The hierarchical learner
-gets help from the natural milestones: key first, door next, treasure last.
+This is exactly how humans tackle complex tasks. You don't plan your road trip turn-by-turn before you leave. Instead:
 
-![Long-horizon task result](outputs/long_horizon_tasks.png)
+- **Manager (you, at home):** "First stop: the gas station. Next stop: the highway entrance. Then: exit 42."
+- **Worker (you, driving):** Handles all the individual steering decisions to reach each stop.
 
-The green curve rises because the milestone-guided learner finds the full
-solution. The red curve stays low because the flat learner rarely connects the
-early key action to the faraway treasure reward.
+The manager thinks in *checkpoints*. The worker thinks in *steering wheels*.
 
-The bottom panel shows the learned route through the milestones.
+---
 
-## How This Connects To The Roadmap
+## Why This Beats Flat Learning on Long Tasks
 
-The README builds from simple RL toward advanced topics. Long-horizon tasks are
-one reason that advanced methods are needed.
+The worker only needs to reach the *next subgoal* — a short task with a clear, nearby reward. It gets feedback quickly and learns efficiently.
 
-Basic Q-learning can work when rewards are frequent and the task is short. But
-when success requires a long chain of preparation, the agent benefits from
-structure:
+The manager only needs to decide the *order of subgoals* — a much simpler problem than planning every individual step.
 
-- options can represent reusable routines
-- goals can tell lower-level policies what to reach
-- milestones can make faraway success easier to discover
+Together, the two levels divide the hard long-horizon problem into two easy short-horizon problems.
 
-This is why Hierarchical RL appears in the advanced section.
+---
 
-## Why This Matters
+## The Key-Door Grid Experiment
 
-Many important tasks are long-horizon tasks.
+Our script tests both approaches on a **9x9 open grid** with two objects:
 
-Real examples:
+- A **KEY** at one corner (must be collected first).
+- A **DOOR** at the opposite corner (only counts if you have the key).
 
-- a robot cleaning a kitchen
-- a game character preparing for a boss fight
-- a delivery robot navigating a building
-- a software agent completing a multi-step workflow
+The only real reward is +1 when the agent reaches the door *after* picking up the key. That single reward requires two sequential sub-tasks to be chained correctly.
 
-The final reward may come late, but the agent still needs to learn which early
-steps are useful.
+Two agents compete:
 
-Hierarchy gives the agent stepping stones.
+**Flat DQN:** Must stumble across both sub-tasks in the right order by accident, then back-propagate a signal through both. Because success requires two lucky finds in one episode, the DQN rarely learns anything useful.
+
+**Hierarchical Agent:**
+- Manager rule: "Go to key first, then go to door."
+- Worker gets **+1 each time it reaches a subgoal** — whether key or door.
+- Two separate short tasks, each with a clear nearby reward.
+
+---
+
+## What the Charts Show
+
+![Long-Horizon Task Results](outputs/long_horizon_tasks.png)
+
+**Left — Success Rate Over Time:** The hierarchical agent (blue) learns to solve the maze far earlier than the flat DQN (red). The flat agent may eventually learn too — given enough episodes — but the hierarchical agent gets there faster because its learning signal is dense and local.
+
+**Right — Final Performance:** The bar chart shows the success rate averaged over the last 500 episodes. The hierarchical agent's advantage is clear: breaking the problem into subgoals makes it tractable.
+
+---
+
+## Where Long-Horizon Thinking Shows Up
+
+| Domain | Long horizon example |
+|--------|---------------------|
+| Robotics | Assemble a device with 30 parts in order |
+| Games | Win a match of chess (many moves, one winner) |
+| Language | Write a full research paper (many writing decisions, one quality score) |
+| Science | Run a multi-month experiment and evaluate results |
+
+This is exactly why [Feudal Networks](../../README.md#hierarchical-rl) and HIRO were invented — as flat RL hit walls on these problems, hierarchical decomposition became the dominant strategy.
+
+---
+
+## The Connection to Goal-Conditioned Policies
+
+Notice that the **worker** in our hierarchical agent is essentially a **goal-conditioned policy** — it receives a subgoal and navigates to it. This is the standard design in HIRO and related papers: the manager sets goals, the worker is a goal-conditioned policy that chases them.
+
+The two ideas — goal-conditioned policies and hierarchical structure — are therefore two sides of the same coin, which is why they appear together in this module.
+
+---
 
 ## One-Sentence Summary
 
-**Long-horizon tasks are hard because the reward is far away; hierarchy helps by
-turning one distant win into a chain of understandable milestones.**
+> **Long-horizon tasks are hard because the reward arrives too late to teach individual decisions — hierarchical RL solves this by inserting nearby subgoals that let the worker learn quickly while the manager handles the big-picture sequence.**

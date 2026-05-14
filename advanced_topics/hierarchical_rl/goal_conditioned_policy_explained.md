@@ -1,84 +1,92 @@
-# Goal-Conditioned Policies: One Skill, Many Destinations
+# Goal-Conditioned Policy
 
-## The Big Idea
+## The Big Idea: One Policy to Rule Them All
 
-A normal policy answers:
+Imagine you are a delivery driver. You don't need a completely different skill set for every address. You know how to drive, read a map, and navigate traffic — you just plug in *today's destination* and go.
 
-"What should I do from here?"
+A **goal-conditioned policy** works the same way. Instead of training one agent that can only go to one fixed goal, we train a single agent that accepts any goal as an input and figures out how to get there.
 
-A **goal-conditioned policy** answers:
+---
 
-"What should I do from here, given where I want to end up?"
+## How It Differs From Standard RL
 
-That small change is powerful. The agent does not need a separate policy for
-every destination. It learns one flexible behavior that changes depending on the
-goal.
+In standard RL (as covered in the earlier phases of the curriculum), the reward function is baked in: "reach cell (7, 7), get +1." The agent learns exactly one thing: how to reach *that* cell.
 
-## A Road Trip Analogy
+In goal-conditioned RL, the reward depends on whether the agent reaches *whatever goal it was given this time*. The policy learns:
 
-Imagine using a map app.
+> **"Given where I am and where I want to be, what should I do?"**
 
-The app does not have one brain for "drive to the grocery store" and a totally
-different brain for "drive to the library." It uses the same navigation skill,
-but the route changes when the destination changes.
+The goal travels *with* the agent, like a destination typed into a navigation app.
 
-That is the heart of goal-conditioned RL.
+---
 
-The current location matters, but the destination matters too.
+## The Sparse Reward Problem
 
-## What The Experiment Shows
+Here is the catch: learning from sparse rewards (only +1 at the goal, 0 everywhere else) is brutally hard. Most attempts fail — the agent wanders randomly, never bumps into the goal, and the network gets nothing useful to learn from.
 
-The grid has many possible goals. During training, the desired goal changes from
-episode to episode. The agent learns to read the goal as part of the problem.
+Imagine trying to learn to throw a dart blindfolded. You throw a thousand times and always miss. After a thousand failures, you still have no idea what "a good throw" feels like.
 
-![Goal-conditioned policy result](outputs/goal_conditioned_policy.png)
+This is where **Hindsight Experience Replay (HER)** comes in.
 
-The left chart shows that success becomes reliable. The two route pictures use
-the same starting area but different goals. The policy changes its route because
-the destination changed.
+---
 
-This is the key visual proof: the agent did not memorize one fixed path. It
-learned a reusable "go to the requested place" skill.
+## Hindsight Experience Replay: Failing Forward
 
-## How This Connects To The Roadmap
+HER's trick is beautifully simple. After a failed episode, HER asks:
 
-Earlier phases focus on the basic RL loop:
+> *"Even though you didn't reach your goal… where did you actually end up?"*
 
-- the agent observes a state
-- chooses an action
-- receives a reward
-- improves its policy
+It then **replays that same episode**, but pretends the agent's actual final position **was** the goal all along. Suddenly, a failed episode becomes a successful one — for a different goal.
 
-Goal-conditioned RL keeps that loop, but gives the agent a clearer question:
+It's like a failed basketball player who keeps shooting for the hoop and missing. HER would say: "Okay, you hit the left wall every time. Congratulations — you're great at hitting the left wall! Let's log those throws as successful left-wall-hitting attempts." Over time the player builds up skill in hitting *any* target, and eventually transfers that to the real hoop.
 
-"Reach this goal."
+This turns thousands of "failures" into a rich library of *successful* navigations to many different spots. The agent learns to reach all of them, which generalizes to the real target.
 
-That connects naturally to the README's advanced Hierarchical RL section.
-Higher-level systems often create goals for lower-level policies. For example,
-a high-level planner might say "go to the door," then "go to the key," then
-"go to the exit." A goal-conditioned lower-level policy can carry out each of
-those instructions.
+---
 
-## Why This Matters
+## The Real-Life Analogy: Toddler Learning to Stack Blocks
 
-Many real tasks are not one-task-only problems.
+A toddler trying to put a block in a bucket misses constantly. But each "miss" lands the block *somewhere*. If you replay each miss as "you were trying to put it *right there* — and you did it!", the toddler builds fine motor skill across the whole table. Soon they can place a block anywhere — including in the bucket.
 
-A robot should not need a separate brain for every object in a room. A game
-agent should not need a separate brain for every item on the map. A navigation
-agent should not need a separate brain for every address.
+---
 
-Goal-conditioned policies make behavior reusable.
+## What Our Code Does
 
-Real examples:
+The script `goal_conditioned_policy.py` runs in a **7x7 maze** with walls. At the start of each episode, a random goal cell is chosen. The agent must find it.
 
-- "pick up that cup"
-- "walk to that room"
-- "move the cursor to that button"
-- "drive to that charging station"
+The policy takes two inputs at every step:
+1. Where the agent currently is
+2. Where it wants to go
 
-The goal changes, but the underlying skill is shared.
+After each episode (successful or not), HER generates several additional synthetic "successes" by relabeling the actual positions visited as alternative goals.
+
+Training runs for 3,000 episodes with a decaying exploration rate — the agent explores more at first and then increasingly trusts what it has learned.
+
+---
+
+## What the Charts Show
+
+![Goal-Conditioned Policy Results](outputs/goal_conditioned_policy.png)
+
+**Left — Success Rate Over Training:** Each episode is either a success (reached the goal) or failure. The curve climbs steadily as the agent's universal navigation skill improves. By the end, the agent reaches any goal almost every time.
+
+**Right — Goal Success Rate Heatmap:** After training, we test the agent on every possible goal cell and color each cell by how often the agent reaches it. Green means the agent reliably reaches that spot; red means it still struggles. A well-trained agent shows mostly green across the whole maze.
+
+---
+
+## Where This Shows Up in the Real World
+
+| Application | The "goal" |
+|-------------|------------|
+| Robot arm reaching | Target 3-D position |
+| Self-driving car | GPS coordinate |
+| Language model assistant | User's instruction |
+| Video game NPC | Any waypoint on the map |
+
+Goal-conditioned policies are one of the key building blocks for [HIRO](../../README.md#hierarchical-rl) (Hierarchical RL with subgoals) — the high-level manager picks a subgoal, and the low-level worker is exactly this kind of goal-conditioned policy.
+
+---
 
 ## One-Sentence Summary
 
-**A goal-conditioned policy is like a navigation app: the skill stays the same,
-but the destination tells it what route to take.**
+> **A goal-conditioned policy is one agent that can navigate to any destination — and HER makes learning from failure possible by pretending every missed shot was aimed at wherever it landed.**

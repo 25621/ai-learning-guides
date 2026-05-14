@@ -1,92 +1,100 @@
-# Option-Critic: Learning Helpful Habits
+# Option-Critic Architecture
 
-## The Big Idea
+## The Big Idea: Working in Chapters, Not Word by Word
 
-Hierarchical RL is about learning at more than one level.
+Imagine you are writing a novel. You don't plan every single word before you begin. Instead, you think in **chapters**: "Chapter 1 introduces the hero. Chapter 2 is the quest. Chapter 3 is the showdown." Within each chapter, you figure out the details as you go.
 
-In earlier parts of this roadmap, the agent usually chose one tiny action at a
-time: move up, move down, move left, move right. That works in small worlds, but
-it can feel like planning a road trip by thinking about every single footstep.
+That is exactly how the Option-Critic architecture thinks about decisions.
 
-The **Option-Critic** idea gives the agent reusable habits called **options**.
-An option is like a mini-plan:
+---
 
-- when to start using it
-- what small actions to take while using it
-- when to stop and let the higher-level agent choose again
+## What Is a "Flat" Agent?
 
-A human version is "walk to the elevator." That phrase hides many tiny actions:
-turn, step forward, avoid people, press the button, wait, enter. You do not
-think about each muscle movement separately. You use a familiar routine.
+A normal RL agent (like the ones from Phase 3 and 4 of the curriculum) decides one action at a time, every single step. It's like a GPS that recalculates the entire route from scratch every time you move one meter. It works, but it's exhausting and slow to learn.
 
-## A Manager Analogy
+---
 
-Imagine a manager running a small store.
+## What Is an "Option"?
 
-The manager does not say:
+An **option** is a **named skill** — a mini-policy that the agent can run for several steps in a row before handing control back.
 
-"Move your left foot, move your right foot, pick up the box, turn 10 degrees..."
+Think of it like a manager delegating to specialists:
 
-Instead, the manager says:
+| Who | What they do |
+|-----|-------------|
+| **Manager (meta-policy)** | Decides *which* specialist to send on a job |
+| **Specialist A** | Expert at navigating the top-left room |
+| **Specialist B** | Expert at crossing doorways |
+| **Specialist C** | Expert at charging toward the goal |
+| **Specialist D** | Backup generalist |
 
-"Restock the shelf."
+The manager picks a specialist. The specialist works until they decide they're done (this is called **termination**). Then the manager picks again.
 
-The employee handles the smaller steps. When the shelf is full, that job ends
-and the manager gives a new instruction.
+---
 
-In Option-Critic:
+## The Three Moving Parts
 
-- the **manager** is the high-level policy choosing an option
-- the **employee** is the option's internal policy
-- the **end of the task** is the option's termination rule
+Every option has three components — think of them as the specialist's **job description**:
 
-The useful part is that the agent learns these pieces together.
+1. **Initiation**: When can this specialist be called on? *(e.g., "Specialist A only activates near the top-left room.")*
+2. **Intra-option policy**: What does the specialist do while they're working? *(e.g., "Walk toward the top-left corner.")*
+3. **Termination**: When does the specialist hand back control? *(e.g., "Stop when you've reached a doorway.")*
 
-## What The Experiment Shows
+The beauty of Option-Critic is that all three are **learned automatically** — you don't hand-craft the specialists. The algorithm figures out that it's useful to have one option for each room, or one for rushing to the goal, all on its own.
 
-The agent starts in one room and needs to reach a goal in another room. At the
-beginning, it wanders. Over time, it learns a better routine for crossing the
-rooms and reaching the goal.
+---
 
-![Option-Critic learning curve and route](outputs/option_critic.png)
+## A Day in the Life of an Option-Critic Agent
 
-The left chart shows the agent needing fewer steps as training continues. The
-middle panel shows which option the agent prefers in different places. The right
-panel shows the route it takes after learning.
+1. Agent enters a new room (state).
+2. **Manager** looks at the room and picks an option — say, Option 2.
+3. **Option 2's specialist** takes over: walks toward the doorway, step by step.
+4. At some point, Option 2 says "I'm done here" (termination).
+5. **Manager** wakes up, picks a new option for the new situation.
+6. Repeat.
 
-The important lesson is not that the grid is hard. The important lesson is that
-the agent is no longer only learning "which single action now?" It is also
-learning "which routine should control the next stretch?"
+Compare this to the flat agent: flat agent agonizes over every single step. Option-Critic delegates whole stretches of behavior, letting each specialist get good at its narrow job.
 
-## How This Connects To The Roadmap
+---
 
-The README introduces **agents, states, actions, rewards, policies, and value
-functions** in the foundations phase. Option-Critic keeps all of those ideas but
-adds one more layer:
+## Why Does This Help?
 
-- a normal policy chooses actions
-- a hierarchical policy can choose options
-- each option then chooses actions for a while
+In a maze, the agent needs to reach a goal that may be 30–50 steps away. With flat learning, every step on the path is equally "invisible" until the reward finally arrives at the end — that signal has to travel backwards through dozens of steps.
 
-This is the same direction as the advanced topics in the roadmap: once basic RL
-works, we ask how to make it handle longer, messier problems.
+With options, the path breaks into **sub-tasks**. Each sub-task gets its own mini-reward signal (reaching the doorway, entering the next room). Learning propagates through shorter segments. **The agent learns faster on problems that require many steps.**
 
-## Why This Matters
+This is the core idea behind all of [Hierarchical RL](../../README.md#hierarchical-rl) — and Option-Critic is one of its cleanest implementations.
 
-Flat RL can be wasteful because it repeatedly relearns tiny patterns. If an
-agent discovers a useful routine, it should be able to reuse it.
+---
 
-Real examples:
+## What Our Code Does
 
-- a robot learns "go to the charger"
-- a game agent learns "collect health"
-- a household assistant learns "clear the table"
-- a navigation agent learns "leave the building"
+The script `option_critic.py` puts an Option-Critic agent into a **7x7 gridworld** with a fixed goal. The agent starts anywhere in the grid and must navigate to the goal cell.
 
-Each routine may contain many small actions, but the higher-level planner can
-think in larger chunks.
+The agent has four options and must simultaneously learn:
+
+- A policy for each option (where to walk)
+- When to terminate each option (termination condition)
+- A meta-policy for choosing between options
+
+The reward uses **potential-based shaping** — the agent gets a small bonus each step it moves closer to the goal, on top of +1 for reaching it. This dense feedback makes learning stable enough to see the options working within 2,500 episodes.
+
+No human ever tells it what each option should do. The algorithm discovers which areas of the grid each option specializes in.
+
+---
+
+## What the Charts Show
+
+![Option-Critic Learning Curves](outputs/option_critic.png)
+
+**Left — Shaped Return:** Higher return means the agent is reaching the goal more reliably *and* taking shorter paths (the shaping gives a bonus per step closer). The curve rising then stabilizing shows the options learning to coordinate.
+
+**Right — Steps to Goal:** Fewer steps means the agent found a more efficient path. The downward trend shows the options maturing into coherent skills that guide the agent more directly toward the goal.
+
+The smoothed curves show the general trend across 100-episode windows — some noise is normal in RL, especially when multiple components (options, termination, meta-policy) are learning simultaneously.
+
+---
 
 ## One-Sentence Summary
 
-**Option-Critic helps an agent learn its own reusable habits, so it can plan
-with meaningful chunks instead of only tiny actions.**
+> **Option-Critic teaches an agent to work in skills rather than single steps — a manager picks which specialist runs, each specialist does its job, and the whole system learns together from the same reward signal.**

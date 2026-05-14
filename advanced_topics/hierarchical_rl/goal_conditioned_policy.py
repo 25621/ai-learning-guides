@@ -1,184 +1,269 @@
 """
-Goal-conditioned Q-learning on a gridworld.
+Goal-Conditioned Policy with Hindsight Experience Replay (HER).
 
-One policy is trained to reach many possible goals. The goal is treated as part
-of the input, so the same learner can change behavior when the desired
-destination changes.
-
-Run:
-    python goal_conditioned_policy.py
-Output:
-    outputs/goal_conditioned_policy.png
+The agent learns a universal policy π(a | s, g) that can reach any goal
+cell in a 7x7 maze.  HER replays failed trajectories as if the agent
+had been aiming for the state it actually reached — dramatically
+accelerating learning in sparse-reward settings.
 """
 
-import os
-
+import random
+import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import numpy as np
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from collections import deque
 
+# ─── Environment ────────────────────────────────────────────────────────────
 
-OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "outputs")
-os.makedirs(OUTPUT_DIR, exist_ok=True)
-
-GRID = [
-    ".......",
-    ".##.##.",
-    ".......",
-    ".##.##.",
-    ".......",
-]
-ROWS, COLS = len(GRID), len(GRID[0])
+MAZE = 7
 ACTIONS = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 N_ACTIONS = len(ACTIONS)
-N_STATES = ROWS * COLS
-VALID_STATES = [r * COLS + c for r in range(ROWS) for c in range(COLS) if GRID[r][c] != "#"]
 
 
-def pos(state):
-    return divmod(state, COLS)
+def _make_walls(size):
+    walls = set()
+    for i in range(size):
+        walls.add((0, i)); walls.add((size - 1, i))
+        walls.add((i, 0)); walls.add((i, size - 1))
+    return walls
 
 
-def blocked(r, c):
-    return r < 0 or r >= ROWS or c < 0 or c >= COLS or GRID[r][c] == "#"
+WALLS = _make_walls(MAZE)
+FREE = [(r, c) for r in range(MAZE) for c in range(MAZE) if (r, c) not in WALLS]
 
 
-def step(state, action, goal):
-    r, c = pos(state)
-    dr, dc = ACTIONS[action]
-    nr, nc = r + dr, c + dc
-    if blocked(nr, nc):
-        nr, nc = r, c
-    next_state = nr * COLS + nc
-    done = next_state == goal
-    reward = 1.0 if done else -0.02
-    return next_state, reward, done
+def _encode(r, c, size=MAZE):
+    return r * size + c
 
 
-def choose_action(q, state, goal, rng, epsilon):
-    if rng.random() < epsilon:
-        return int(rng.integers(N_ACTIONS))
-    return int(np.argmax(q[state, goal]))
+N_STATES = MAZE * MAZE
 
 
-def train(episodes=5000, alpha=0.35, gamma=0.96, epsilon=0.25, seed=7):
-    rng = np.random.default_rng(seed)
-    q = np.zeros((N_STATES, N_STATES, N_ACTIONS))
-    successes = np.zeros(episodes)
-    lengths = np.zeros(episodes)
+class GoalMaze:
+    """Sparse-reward maze: +1 only when reaching the goal, 0 otherwise."""
 
-    for ep in range(episodes):
-        goal = int(rng.choice(VALID_STATES))
-        start_choices = [s for s in VALID_STATES if s != goal]
-        state = int(rng.choice(start_choices))
-        eps = max(0.04, epsilon * (1.0 - ep / episodes))
+    def __init__(self):
+        self.pos = None
+        self.goal = None
+        self.goal_enc = None
 
-        for t in range(70):
-            action = choose_action(q, state, goal, rng, eps)
-            next_state, reward, done = step(state, action, goal)
-            target = reward if done else reward + gamma * np.max(q[next_state, goal])
-            q[state, goal, action] += alpha * (target - q[state, goal, action])
-            state = next_state
+    def reset(self, goal=None):
+        self.goal = goal if goal is not None else random.choice(FREE)
+        self.pos = random.choice([c for c in FREE if c != self.goal])
+        self.goal_enc = _encode(*self.goal)
+        return _encode(*self.pos), self.goal_enc
+
+    def step(self, action):
+        dr, dc = ACTIONS[action]
+        nr, nc = self.pos[0] + dr, self.pos[1] + dc
+        if (nr, nc) not in WALLS and 0 <= nr < MAZE and 0 <= nc < MAZE:
+            self.pos = (nr, nc)
+        done = (self.pos == self.goal)
+        reward = 1.0 if done else 0.0
+        return _encode(*self.pos), self.goal_enc, reward, done
+
+
+# ─── Network ────────────────────────────────────────────────────────────────
+
+class GoalConditionedNet(nn.Module):
+    def __init__(self, n_states, n_actions, hidden=128):
+        super().__init__()
+        self.state_emb = nn.Embedding(n_states, 32)
+        self.goal_emb = nn.Embedding(n_states, 32)
+        self.net = nn.Sequential(
+            nn.Linear(64, hidden), nn.ReLU(),
+            nn.Linear(hidden, hidden), nn.ReLU(),
+            nn.Linear(hidden, n_actions),
+        )
+
+    def forward(self, state, goal):
+        h = torch.cat([self.state_emb(state), self.goal_emb(goal)], dim=-1)
+        return self.net(h)
+
+
+# ─── HER Replay Buffer ───────────────────────────────────────────────────────
+
+class HERBuffer:
+    """Flat replay buffer with hindsight relabeling at sample time."""
+
+    def __init__(self, capacity=50_000, her_k=4):
+        self.transitions = deque(maxlen=capacity)
+        self.her_k = her_k
+
+    def store_episode(self, trajectory):
+        """trajectory: list of (s_enc, g_enc, a, ns_enc, done) tuples."""
+        T = len(trajectory)
+        for t, (s, g, a, ns, done) in enumerate(trajectory):
+            # real transition
+            self.transitions.append((s, g, a, ns, done))
+            # HER: relabel with k future achieved states
+            for _ in range(self.her_k):
+                future_t = random.randint(t, T - 1)
+                her_goal = trajectory[future_t][3]  # ns_enc at future step
+                her_done = (ns == her_goal)
+                her_r = 1.0 if her_done else 0.0
+                self.transitions.append((s, her_goal, a, ns, her_done))
+
+    def sample(self, batch_size):
+        batch = random.sample(self.transitions, min(batch_size, len(self.transitions)))
+        s, g, a, r_or_done, ns, done = [], [], [], [], [], []
+        for item in batch:
+            _s, _g, _a, _ns, _done = item
+            s.append(_s); g.append(_g); a.append(_a)
+            r_or_done.append(1.0 if _done else 0.0)
+            ns.append(_ns); done.append(float(_done))
+        return (
+            torch.tensor(s, dtype=torch.long),
+            torch.tensor(g, dtype=torch.long),
+            torch.tensor(a, dtype=torch.long),
+            torch.tensor(r_or_done, dtype=torch.float),
+            torch.tensor(ns, dtype=torch.long),
+            torch.tensor(done, dtype=torch.float),
+        )
+
+    def __len__(self):
+        return len(self.transitions)
+
+
+# ─── Agent ──────────────────────────────────────────────────────────────────
+
+class GCPAgent:
+    def __init__(self, n_states, n_actions, lr=5e-4, gamma=0.98):
+        self.gamma = gamma
+        self.n_actions = n_actions
+        self.net = GoalConditionedNet(n_states, n_actions)
+        self.target = GoalConditionedNet(n_states, n_actions)
+        self.target.load_state_dict(self.net.state_dict())
+        self.opt = optim.Adam(self.net.parameters(), lr=lr)
+        self.buf = HERBuffer()
+
+    def act(self, state, goal, epsilon=0.1):
+        if random.random() < epsilon:
+            return random.randrange(self.n_actions)
+        s = torch.tensor([state], dtype=torch.long)
+        g = torch.tensor([goal], dtype=torch.long)
+        with torch.no_grad():
+            q = self.net(s, g)
+        return q.argmax().item()
+
+    def update(self, batch_size=256):
+        if len(self.buf) < batch_size:
+            return
+        s, g, a, r, ns, done = self.buf.sample(batch_size)
+        with torch.no_grad():
+            q_next = self.target(ns, g).max(dim=1).values
+            target_q = r + self.gamma * q_next * (1 - done)
+        q_pred = self.net(s, g).gather(1, a.unsqueeze(1)).squeeze()
+        loss = nn.functional.mse_loss(q_pred, target_q)
+        self.opt.zero_grad(); loss.backward(); self.opt.step()
+
+    def sync_target(self):
+        self.target.load_state_dict(self.net.state_dict())
+
+
+# ─── Training ───────────────────────────────────────────────────────────────
+
+def train(n_episodes=3000, max_steps=40, target_update=100):
+    env = GoalMaze()
+    agent = GCPAgent(N_STATES, N_ACTIONS)
+    success_history = []
+
+    for ep in range(n_episodes):
+        epsilon = max(0.05, 0.5 * (1 - ep / n_episodes))
+        (s, g) = env.reset()
+        trajectory = []
+        done = False
+        step = 0
+        success = False
+
+        while not done and step < max_steps:
+            a = agent.act(s, g, epsilon=epsilon)
+            ns, _g, r, done = env.step(a)
+            trajectory.append((s, g, a, ns, done))
+            s = ns
+            step += 1
             if done:
-                successes[ep] = 1.0
-                lengths[ep] = t + 1
-                break
-        if not successes[ep]:
-            lengths[ep] = 70
+                success = True
 
-    return q, successes, lengths
+        agent.buf.store_episode(trajectory)
+        for _ in range(2):
+            agent.update(batch_size=256)
 
+        if (ep + 1) % target_update == 0:
+            agent.sync_target()
 
-def evaluate(q, n_trials=400, seed=11):
-    rng = np.random.default_rng(seed)
-    solved = 0
-    lengths = []
-    for _ in range(n_trials):
-        goal = int(rng.choice(VALID_STATES))
-        start = int(rng.choice([s for s in VALID_STATES if s != goal]))
-        state = start
-        for t in range(70):
-            action = int(np.argmax(q[state, goal]))
-            state, _, done = step(state, action, goal)
-            if done:
-                solved += 1
-                lengths.append(t + 1)
-                break
-        else:
-            lengths.append(70)
-    return solved / n_trials, float(np.mean(lengths))
+        success_history.append(float(success))
+
+        if (ep + 1) % 500 == 0:
+            rate = np.mean(success_history[-200:])
+            print(f"Episode {ep+1:4d} | epsilon={epsilon:.3f} | success_rate={rate:.3f}")
+
+    return agent, success_history
 
 
-def rollout(q, start, goal):
-    state = start
-    path = [state]
-    for _ in range(70):
-        action = int(np.argmax(q[state, goal]))
-        state, _, done = step(state, action, goal)
-        path.append(state)
-        if done:
-            break
-    return path
+def evaluate_heatmap(agent, n_eval=30):
+    env = GoalMaze()
+    grid = np.full((MAZE, MAZE), np.nan)
+    for r in range(1, MAZE - 1):
+        for c in range(1, MAZE - 1):
+            if (r, c) in WALLS:
+                continue
+            g_pos = (r, c)
+            successes = 0
+            for _ in range(n_eval):
+                (s, g) = env.reset(goal=g_pos)
+                done = False
+                step = 0
+                while not done and step < 40:
+                    a = agent.act(s, g, epsilon=0.0)
+                    ns, _g, r_val, done = env.step(a)
+                    s = ns
+                    step += 1
+                if done:
+                    successes += 1
+            grid[r, c] = successes / n_eval
+    return grid
 
 
-def moving_average(values, window=100):
-    return np.array([values[max(0, i - window + 1):i + 1].mean() for i in range(len(values))])
+def plot_results(agent, success_history, out_dir="outputs"):
+    window = 100
+    smoothed = np.convolve(success_history, np.ones(window) / window, mode="valid")
 
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
 
-def draw_grid(ax, path, start, goal, title):
-    image = np.zeros((ROWS, COLS))
-    for state in path:
-        r, c = pos(state)
-        image[r, c] += 1
-    ax.imshow(image, cmap="YlGnBu")
-    ax.set_title(title)
-    ax.set_xticks([])
-    ax.set_yticks([])
-    for r in range(ROWS):
-        for c in range(COLS):
-            if GRID[r][c] == "#":
-                ax.text(c, r, "#", ha="center", va="center", fontsize=15, weight="bold")
-    coords = [pos(s) for s in path]
-    ax.plot([c for _, c in coords], [r for r, _ in coords], color="#e6550d", lw=3)
-    sr, sc = pos(start)
-    gr, gc = pos(goal)
-    ax.scatter([sc], [sr], marker="o", s=90, color="#31a354")
-    ax.scatter([gc], [gr], marker="*", s=180, color="#de2d26")
-
-
-def plot(q, successes, lengths):
-    fig, axes = plt.subplots(1, 3, figsize=(15, 4.6))
-    axes[0].plot(moving_average(successes), color="#2ca25f", lw=2.4, label="success rate")
-    axes[0].plot(moving_average(lengths / 70.0), color="#756bb1", lw=2.0, label="normalized length")
-    axes[0].set_title("One learner adapts to many goals")
+    axes[0].plot(smoothed, color="mediumseagreen")
+    axes[0].set_title("Goal-Conditioned Policy: Success Rate (with HER)")
     axes[0].set_xlabel("Episode")
-    axes[0].set_ylabel("Moving average")
-    axes[0].grid(alpha=0.3)
+    axes[0].set_ylabel("Success Rate")
+    axes[0].set_ylim(-0.05, 1.05)
+    axes[0].axhline(0.8, color="gray", linestyle="--", alpha=0.5, label="80% line")
     axes[0].legend()
 
-    start = 4 * COLS
-    goal_a = 0 * COLS + 6
-    goal_b = 4 * COLS + 6
-    draw_grid(axes[1], rollout(q, start, goal_a), start, goal_a, "Same start, goal at top right")
-    draw_grid(axes[2], rollout(q, start, goal_b), start, goal_b, "Same start, goal at bottom right")
+    grid = evaluate_heatmap(agent)
+    im = axes[1].imshow(grid, vmin=0, vmax=1, cmap="RdYlGn", origin="upper")
+    axes[1].set_title("Goal Success Rate Heatmap\n(can agent reach each cell?)")
+    axes[1].set_xlabel("Column"); axes[1].set_ylabel("Row")
+    plt.colorbar(im, ax=axes[1], label="Success Rate")
 
     plt.tight_layout()
-    out = os.path.join(OUTPUT_DIR, "goal_conditioned_policy.png")
-    plt.savefig(out, dpi=130)
-    return out
-
-
-def main():
-    print("=== Goal-conditioned policy: many goals, one learner ===")
-    q, successes, lengths = train()
-    success_rate, mean_length = evaluate(q)
-    out = plot(q, successes, lengths)
-    print(f"Final training success rate over last 500 episodes: {successes[-500:].mean():.2f}")
-    print(f"Greedy evaluation success rate: {success_rate:.2f}")
-    print(f"Greedy evaluation average path length: {mean_length:.1f} steps")
-    print(f"Plot saved to {out}")
+    path = f"{out_dir}/goal_conditioned_policy.png"
+    plt.savefig(path, dpi=120)
+    plt.close()
+    print(f"Saved {path}")
 
 
 if __name__ == "__main__":
-    main()
+    import os
+    out_dir = os.path.join(os.path.dirname(__file__), "outputs")
+    os.makedirs(out_dir, exist_ok=True)
+    random.seed(0)
+    np.random.seed(0)
+    torch.manual_seed(0)
+
+    agent, success_history = train(n_episodes=3000)
+    plot_results(agent, success_history, out_dir=out_dir)
+    print(f"Done. Final 200-ep success rate: {np.mean(success_history[-200:]):.3f}")
