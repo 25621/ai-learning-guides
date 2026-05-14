@@ -26,10 +26,13 @@ You've just moved to a new city with 200 restaurants.
   tried is the best in town until proven otherwise." You'll methodically
   work through all 200, crossing each off as reality disappoints you —
   and you'll find the genuinely great ones fast.
-- **UCB** = "Prefer my favourite, but give a *bonus* to places I've barely
-  tried — the less I know about it, the bigger the bonus." Smart about
-  *which* new place to try next, but it judges each restaurant in
-  isolation.
+- **UCB (Upper Confidence Bound)** = "Prefer my favourite, but give a *bonus* to places I've barely
+  tried — the less I know about it, the bigger the bonus." This is clever
+  about *which* unfamiliar place to try today, but every decision is local:
+  it picks the best-looking option *right now* without planning a route
+  through entire unexplored neighbourhoods. It won't think "I should cross
+  town to the east side, because there are twenty untried spots clustered
+  over there" — each restaurant is evaluated in isolation, step by step.
 - **Count-based reward bonus** = like UCB, but you also *enjoy the novelty
   itself* — a meal at a brand-new place is intrinsically satisfying, and
   that satisfaction shapes your long-term plan of which neighbourhoods to
@@ -172,4 +175,6 @@ solid.)*
 > **ε-greedy is just noise; every real exploration strategy works by making
 > the unexplored look attractive — via optimistic values, an action-choice
 > bonus, or a self-generated novelty reward — and the right choice depends
-> on whether your reward is merely *sparse* or genuinely *deep*.**
+> on whether your reward is merely *sparse* (like finding a single hidden prize
+> in a flat field) or genuinely *deep* (like a combination lock requiring a
+> long, precise sequence of specific choices to crack).**
