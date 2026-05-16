@@ -45,7 +45,7 @@ const config = {
 
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'es', 'fr', 'hi', 'ja', 'ko'],
+    locales: ['en', 'es', 'fr', 'hi', 'ja', 'ko', 'ru'],
   },
 
   headTags: [
@@ -74,7 +74,7 @@ const config = {
         name: 'Reinforcement Learning: Beginner to Advanced',
         url: `${siteUrl}${siteBaseUrl}`,
         description: siteDescription,
-        inLanguage: ['en', 'es', 'fr', 'hi', 'ja', 'ko'],
+        inLanguage: ['en', 'es', 'fr', 'hi', 'ja', 'ko', 'ru'],
         potentialAction: {
           '@type': 'SearchAction',
           target: `${siteUrl}${siteBaseUrl}search?q={search_term_string}`,
@@ -102,7 +102,7 @@ const config = {
         learningResourceType: 'Tutorial',
         teaches: siteKeywords.join(', '),
         isAccessibleForFree: true,
-        inLanguage: ['en', 'es', 'fr', 'hi', 'ja', 'ko'],
+        inLanguage: ['en', 'es', 'fr', 'hi', 'ja', 'ko', 'ru'],
       }),
     },
   ],
@@ -200,6 +200,7 @@ const config = {
       {property: 'og:locale:alternate', content: 'hi_IN'},
       {property: 'og:locale:alternate', content: 'ja_JP'},
       {property: 'og:locale:alternate', content: 'ko_KR'},
+      {property: 'og:locale:alternate', content: 'ru_RU'},
 
       {name: 'twitter:card', content: 'summary_large_image'},
       {name: 'twitter:title', content: 'Reinforcement Learning: Beginner to Advanced'},
