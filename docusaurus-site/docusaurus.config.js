@@ -45,7 +45,7 @@ const config = {
 
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'ko', 'es', 'hi', 'fr'],
+    locales: ['en', 'es', 'fr', 'hi', 'ja', 'ko'],
   },
 
   headTags: [
@@ -74,7 +74,7 @@ const config = {
         name: 'Reinforcement Learning: Beginner to Advanced',
         url: `${siteUrl}${siteBaseUrl}`,
         description: siteDescription,
-        inLanguage: ['en', 'ko', 'es', 'hi', 'fr'],
+        inLanguage: ['en', 'es', 'fr', 'hi', 'ja', 'ko'],
         potentialAction: {
           '@type': 'SearchAction',
           target: `${siteUrl}${siteBaseUrl}search?q={search_term_string}`,
@@ -102,7 +102,7 @@ const config = {
         learningResourceType: 'Tutorial',
         teaches: siteKeywords.join(', '),
         isAccessibleForFree: true,
-        inLanguage: ['en', 'ko', 'es', 'hi', 'fr'],
+        inLanguage: ['en', 'es', 'fr', 'hi', 'ja', 'ko'],
       }),
     },
   ],
@@ -195,10 +195,11 @@ const config = {
       {property: 'og:image:alt', content: 'Reinforcement Learning: Beginner to Advanced — open-source learning roadmap'},
       {property: 'og:url', content: `${siteUrl}${siteBaseUrl}`},
       {property: 'og:locale', content: 'en_US'},
-      {property: 'og:locale:alternate', content: 'ko_KR'},
       {property: 'og:locale:alternate', content: 'es_ES'},
-      {property: 'og:locale:alternate', content: 'hi_IN'},
       {property: 'og:locale:alternate', content: 'fr_FR'},
+      {property: 'og:locale:alternate', content: 'hi_IN'},
+      {property: 'og:locale:alternate', content: 'ja_JP'},
+      {property: 'og:locale:alternate', content: 'ko_KR'},
 
       {name: 'twitter:card', content: 'summary_large_image'},
       {name: 'twitter:title', content: 'Reinforcement Learning: Beginner to Advanced'},
@@ -247,7 +248,9 @@ const config = {
             {label: 'Overview', to: '/'},
             {label: 'Foundations', to: '/foundations/multi_armed_bandit_explained/'},
             {label: 'Tabular Methods', to: '/tabular_methods/q_learning_frozen_lake_explained/'},
+            {label: 'Function Approximation', to: '/function_approximation/dqn_cartpole_explained/'},
             {label: 'Policy Gradients', to: '/policy_gradients/ppo_scratch_explained/'},
+            {label: 'Advanced Topics', to: '/advanced_topics/model_based_rl/dyna_q_explained/'},
           ],
         },
         {
@@ -256,14 +259,6 @@ const config = {
             {
               label: 'GitHub',
               href: 'https://github.com/25621/reinforcement-learning',
-            },
-            {
-              label: 'Issues',
-              href: 'https://github.com/25621/reinforcement-learning/issues',
-            },
-            {
-              label: 'Discussions',
-              href: 'https://github.com/25621/reinforcement-learning/discussions',
             },
           ],
         },
@@ -275,12 +270,8 @@ const config = {
               href: 'http://incompleteideas.net/book/the-book.html',
             },
             {
-              label: 'OpenAI Spinning Up',
-              href: 'https://spinningup.openai.com/',
-            },
-            {
               label: 'David Silver Lectures',
-              href: 'https://www.youtube.com/watch?v=2pWv7GOvuf0',
+              href: 'https://www.youtube.com/watch?v=2pWv7GOvuf0&list=PLqYmG7hTraZDM-OYHWgPebj2MfCFzFObQ',
             },
           ],
         },
