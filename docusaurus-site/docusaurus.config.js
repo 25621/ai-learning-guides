@@ -3,7 +3,8 @@ const {themes} = require('prism-react-renderer');
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Reinforcement Learning: Beginner to Advanced',
-  tagline: 'A structured guide to mastering reinforcement learning.',
+  tagline:
+    'A comprehensive guide to understanding and building reinforcement learning systems.',
   favicon: 'img/favicon.ico',
 
   url: 'https://25621.github.io',
@@ -84,7 +85,7 @@ const config = {
       {
         name: 'description',
         content:
-          'A practical reinforcement learning curriculum with runnable Python implementations and explanations.',
+          'A comprehensive guide to understanding and building reinforcement learning systems, from fundamental concepts to research-level understanding.',
       },
     ],
     colorMode: {
@@ -112,7 +113,7 @@ const config = {
     footer: {
       style: 'dark',
       links: [],
-      copyright: `Copyright © ${new Date().getFullYear()} 25621. All rights reserved. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Reinforcement Learning Project Contributors. Built with Docusaurus.`,
     },
     prism: {
       theme: themes.github,

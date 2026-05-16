@@ -1,6 +1,6 @@
 # Apprentissage par Renforcement : de Débutant à Avancé
 
-Un guide structuré pour maîtriser l'apprentissage par renforcement (RL), des concepts fondamentaux à la recherche de pointe.
+Un guide complet pour comprendre et construire des systèmes d'apprentissage par renforcement, des concepts fondamentaux à une compréhension de niveau recherche.
 
 ---
 
