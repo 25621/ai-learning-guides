@@ -22,7 +22,7 @@ const config = {
 
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'ko', 'es', 'hi'],
+    locales: ['en', 'ko', 'es', 'hi', 'fr'],
   },
 
   themes: [
