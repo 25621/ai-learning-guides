@@ -114,7 +114,7 @@ Double DQN は、通常の DQN に対する多くの改善策の1つに過ぎま
 3. **Dueling Networks** (「この状態はどれくらい良いか？」と「最善の行動は何か？」を分離する)
 4. **マルチステップ収益 (Multi-step returns)** (より遠い未来まで考慮する)
 5. **分布型強化学習 (Distributional RL)** (平均だけでなく収益の分布全体を学習する)
-6. **NoisyNets** ( [ε-greedy](../foundations/multi_armed_bandit_explained.md#イプシロン・グリーディ-戦略) の代わりに学習によって探索を行う)
+6. **NoisyNets** ( [ε-greedy](../foundations/multi_armed_bandit_explained.md#ε-グリーディ-イプシロングリーディ-戦略) の代わりに学習によって探索を行う)
 
 Rainbow はこれらすべてを組み合わせ、当時の Atari で最高のパフォーマンスを達成しました！
 
