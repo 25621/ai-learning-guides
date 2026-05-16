@@ -22,23 +22,8 @@ const config = {
 
   i18n: {
     defaultLocale: 'en',
-    locales: ['en'],
+    locales: ['en', 'ko'],
   },
-
-  headTags: [
-    {
-      tagName: 'script',
-      innerHTML: 'function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: "en", layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, "google_translate_element"); }',
-      attributes: {},
-    },
-    {
-      tagName: 'script',
-      attributes: {
-        src: 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit',
-        async: 'true',
-      },
-    },
-  ],
 
   themes: [
     [
@@ -60,7 +45,8 @@ const config = {
           path: '..',
           routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl: 'https://github.com/25621/reinforcement-learning/edit/main/',
+          editUrl: ({docPath}) =>
+            `https://github.com/25621/reinforcement-learning/edit/main/${docPath}`,
           include: [
             'README.md',
             'foundations/**/*.md',
@@ -109,9 +95,8 @@ const config = {
       },
       items: [
         {
-          type: 'html',
+          type: 'localeDropdown',
           position: 'right',
-          value: '<div id="google_translate_element"></div>',
         },
         {
           href: 'https://github.com/25621/reinforcement-learning',
