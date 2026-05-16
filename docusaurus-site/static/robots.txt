@@ -1,0 +1,13 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+Disallow: /search
+
+# Block AI crawlers that don't respect content (optional - remove if desired)
+# Uncomment the following lines to opt out of training data collection
+# User-agent: GPTBot
+# Disallow: /
+# User-agent: CCBot
+# Disallow: /
+
+Sitemap: https://25621.github.io/reinforcement-learning/sitemap.xml
