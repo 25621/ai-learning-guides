@@ -1,0 +1,54 @@
+{
+  "version.label": {
+    "message": "अगला (Next)",
+    "description": "The label for version current"
+  },
+  "sidebar.guideSidebar.category.Foundations": {
+    "message": "बुनियाद (Foundations)",
+    "description": "The label for category 'Foundations' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Tabular Methods": {
+    "message": "सारणीबद्ध तरीके (Tabular Methods)",
+    "description": "The label for category 'Tabular Methods' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Function Approximation": {
+    "message": "फंक्शन एप्रोक्सीमेशन (Function Approximation)",
+    "description": "The label for category 'Function Approximation' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Policy Gradients": {
+    "message": "पॉलिसी ग्रेडिएंट्स (Policy Gradients)",
+    "description": "The label for category 'Policy Gradients' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Advanced Topics": {
+    "message": "उन्नत विषय (Advanced Topics)",
+    "description": "The label for category 'Advanced Topics' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Model-Based RL": {
+    "message": "मॉडल-आधारित RL (Model-Based RL)",
+    "description": "The label for category 'Model-Based RL' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Multi-Agent RL": {
+    "message": "मल्टी-एजेंट RL (Multi-Agent RL)",
+    "description": "The label for category 'Multi-Agent RL' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Offline RL": {
+    "message": "ऑफलाइन RL (Offline RL)",
+    "description": "The label for category 'Offline RL' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Exploration": {
+    "message": "खोज (Exploration)",
+    "description": "The label for category 'Exploration' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Hierarchical RL": {
+    "message": "पदानुक्रमित RL (Hierarchical RL)",
+    "description": "The label for category 'Hierarchical RL' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.RLHF": {
+    "message": "RLHF",
+    "description": "The label for category 'RLHF' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.doc.Introduction": {
+    "message": "परिचय (Introduction)",
+    "description": "The label for the doc item 'Introduction' in sidebar 'guideSidebar', linking to the doc README"
+  }
+}
