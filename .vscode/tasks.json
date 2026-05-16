@@ -1,0 +1,67 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Docusaurus: Build",
+      "type": "shell",
+      "command": "npm run build",
+      "options": {
+        "cwd": "${workspaceFolder}/docusaurus-site"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "panel": "dedicated",
+        "reveal": "always",
+        "clear": true
+      }
+    },
+    {
+      "label": "Docusaurus: Stop Serve",
+      "type": "shell",
+      "command": "pkill -f 'docusaurus (serve|start)' || true",
+      "problemMatcher": [],
+      "presentation": {
+        "panel": "dedicated",
+        "reveal": "silent"
+      }
+    },
+    {
+      "label": "Docusaurus: Serve",
+      "type": "shell",
+      "command": "npm run serve",
+      "options": {
+        "cwd": "${workspaceFolder}/docusaurus-site"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "docusaurus",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*Serving.*",
+          "endsPattern": ".*(Server running|Local:).*"
+        }
+      },
+      "presentation": {
+        "panel": "dedicated",
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "Docusaurus: Build and Restart",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Docusaurus: Stop Serve",
+        "Docusaurus: Build",
+        "Docusaurus: Serve"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}

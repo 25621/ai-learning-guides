@@ -1,8 +1,14 @@
 .idea/
 prompts/
 venv/
+tmp/
 
 # Python compiled files
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Docusaurus generated files
+docusaurus-site/.docusaurus/
+docusaurus-site/build/
+docusaurus-site/node_modules/
