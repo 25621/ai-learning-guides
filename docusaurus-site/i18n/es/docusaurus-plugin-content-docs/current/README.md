@@ -1,6 +1,6 @@
 # Aprendizaje por Refuerzo (Reinforcement Learning): De Principiante a Avanzado
 
-Una guía estructurada para dominar el aprendizaje por refuerzo, desde los conceptos fundamentales hasta la comprensión a nivel de investigación.
+Una guía completa para comprender y construir sistemas de aprendizaje por refuerzo, desde los conceptos fundamentales hasta la comprensión a nivel de investigación.
 
 ---
 

@@ -1,0 +1,54 @@
+{
+  "version.label": {
+    "message": "Suivant",
+    "description": "The label for version current"
+  },
+  "sidebar.guideSidebar.category.Foundations": {
+    "message": "Fondations",
+    "description": "The label for category 'Foundations' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Tabular Methods": {
+    "message": "Méthodes Tabulaires",
+    "description": "The label for category 'Tabular Methods' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Function Approximation": {
+    "message": "Approximation de Fonctions",
+    "description": "The label for category 'Function Approximation' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Policy Gradients": {
+    "message": "Gradients de Politique",
+    "description": "The label for category 'Policy Gradients' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Advanced Topics": {
+    "message": "Sujets Avancés",
+    "description": "The label for category 'Advanced Topics' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Model-Based RL": {
+    "message": "RL Basé sur un Modèle",
+    "description": "The label for category 'Model-Based RL' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Multi-Agent RL": {
+    "message": "RL Multi-Agent",
+    "description": "The label for category 'Multi-Agent RL' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Offline RL": {
+    "message": "RL Hors Ligne",
+    "description": "The label for category 'Offline RL' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Exploration": {
+    "message": "Exploration",
+    "description": "The label for category 'Exploration' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Hierarchical RL": {
+    "message": "RL Hiérarchique",
+    "description": "The label for category 'Hierarchical RL' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.RLHF": {
+    "message": "RLHF",
+    "description": "The label for category 'RLHF' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.doc.Introduction": {
+    "message": "Introduction",
+    "description": "The label for the doc item 'Introduction' in sidebar 'guideSidebar', linking to the doc README"
+  }
+}

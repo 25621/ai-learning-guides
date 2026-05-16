@@ -1,6 +1,6 @@
 # Reinforcement Learning: From Beginner to Advanced
 
-A structured guide to mastering reinforcement learning, from fundamental concepts to research-level understanding.
+A comprehensive guide to understanding and building reinforcement learning systems, from fundamental concepts to research-level understanding.
 
 ---
 
