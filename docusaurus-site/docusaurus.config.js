@@ -131,8 +131,6 @@ const config = {
           path: '..',
           routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
-          showLastUpdateTime: true,
-          showLastUpdateAuthor: true,
           breadcrumbs: true,
           editUrl: ({locale, docPath}) => {
             if (locale !== 'en') {
@@ -228,12 +226,6 @@ const config = {
       },
       hideOnScroll: true,
       items: [
-        {
-          to: '/',
-          position: 'left',
-          label: 'Get Started',
-          activeBaseRegex: '^/$',
-        },
         {
           type: 'localeDropdown',
           position: 'right',
