@@ -45,8 +45,12 @@ const config = {
           path: '..',
           routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl: ({docPath}) =>
-            `https://github.com/25621/reinforcement-learning/edit/main/${docPath}`,
+          editUrl: ({locale, docPath}) => {
+            if (locale !== 'en') {
+              return `https://github.com/25621/reinforcement-learning/edit/main/docusaurus-site/i18n/${locale}/docusaurus-plugin-content-docs/current/${docPath}`;
+            }
+            return `https://github.com/25621/reinforcement-learning/edit/main/${docPath}`;
+          },
           include: [
             'README.md',
             'foundations/**/*.md',
