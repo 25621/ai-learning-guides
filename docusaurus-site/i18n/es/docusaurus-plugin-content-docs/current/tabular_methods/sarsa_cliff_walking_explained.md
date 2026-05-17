@@ -22,7 +22,7 @@ Estas son las cinco piezas de información que SARSA utiliza para aprender:
 
 ¡La última "A" es lo que hace especial a SARSA! Actualiza sus conocimientos utilizando la acción que *realmente tomará a continuación* (incluso si se trata de un movimiento exploratorio aleatorio), no la acción ideal perfecta.
 
-**Ejemplo de la vida real:** Piensa en aprender a montar en bicicleta. Si sabes que a veces te tambaleas al azar (exploración), te mantienes un poco más alejado de los coches aparcados — ¡porque sabes que tu yo tambaleante podría desviarse! SARSA hace esto: aprende un camino seguro porque tiene en cuenta sus propios errores aleatorios.
+**Ejemplo de la vida real:** Piensa en aprender a montar en bicicleta. Si sabes que a veces te tambaleas al azar (exploración), te mantienes un poco más alejado de los automóviles estacionados — ¡porque sabes que tu yo tambaleante podría desviarse! SARSA hace esto: aprende un camino seguro porque tiene en cuenta sus propios errores aleatorios.
 
 ---
 

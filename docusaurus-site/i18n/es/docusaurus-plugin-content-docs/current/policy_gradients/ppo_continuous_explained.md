@@ -8,10 +8,10 @@ Hasta ahora, todos los entornos que hemos resuelto tenían acciones **discretas*
 
 Pero los robots del mundo real necesitan acciones **continuas**:
 - Un robot humanoide: "con qué fuerza empujar cada articulación" (cualquier valor de -1 a +1).
-- Un coche: "exactamente cuánto girar el volante" (cualquier ángulo de -30° a +30°).
+- Un automóvil: "exactamente cuánto girar el volante" (cualquier ángulo de -30° a +30°).
 - Un brazo: "aplicar exactamente 2.3 Newtons en esta dirección".
 
-**Ejemplo de la vida real:** Escribir en un teclado = discreto (pulsar A, B, C...). Escribir con un lápiz = continuo (mover la mano 2.3 cm a la derecha, presionar con 40g de fuerza...).
+**Ejemplo de la vida real:** Escribir en un teclado = discreto (presionar A, B, C...). Escribir con un lápiz = continuo (mover la mano 2.3 cm a la derecha, presionar con 40g de fuerza...).
 
 ---
 

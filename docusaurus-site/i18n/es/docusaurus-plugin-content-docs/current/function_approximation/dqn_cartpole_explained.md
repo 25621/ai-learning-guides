@@ -16,7 +16,7 @@ Necesitamos algo que pueda mirar situaciones complicadas y deducir la mejor acci
 
 Piensa en tu cerebro. Millones de pequeñas células llamadas neuronas hablan entre sí. Cuando tocas algo caliente, las neuronas envían señales: "¡CALIENTE! → ¡Retira la mano AHORA!". Cada neurona pasa información y, juntas, toman una decisión inteligente.
 
-Una **red neuronal en un ordenador** funciona de la misma manera:
+Una **red neuronal en un equipo informático** funciona de la misma manera:
 
 ```
 Capa de Entrada    Capa Oculta 1     Capa Oculta 2     Capa de Salida

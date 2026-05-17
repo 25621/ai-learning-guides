@@ -38,7 +38,7 @@ El truco de HER es maravillosamente simple. Después de un episodio fallido, HER
 
 Luego **reproduce ese mismo episodio**, pero finge que la posición final real del agente **era** el objetivo todo el tiempo. De repente, un episodio fallido se convierte en uno exitoso — para un objetivo diferente.
 
-Es como un jugador de baloncesto que sigue tirando a la canasta y fallando. HER diría: "Vale, le das a la pared izquierda todas las veces. ¡Enhorabuena, eres genial dándole a la pared izquierda! Registremos esos tiros como intentos exitosos de dar a la pared izquierda". Con el tiempo, el jugador desarrolla la habilidad de dar a *cualquier* objetivo y, finalmente, transfiere eso a la canasta real.
+Es como un jugador de baloncesto que sigue tirando a la canasta y fallando. HER diría: "Está bien, le das a la pared izquierda todas las veces. ¡Felicitaciones, eres genial dándole a la pared izquierda! Registremos esos tiros como intentos exitosos de dar a la pared izquierda". Con el tiempo, el jugador desarrolla la habilidad de dar a *cualquier* objetivo y, finalmente, transfiere eso a la canasta real.
 
 Esto convierte miles de "fallos" en una rica biblioteca de navegaciones *exitosas* a muchos puntos diferentes. El agente aprende a llegar a todos ellos, lo que se generaliza al objetivo real.
 

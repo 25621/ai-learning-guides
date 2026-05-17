@@ -18,7 +18,7 @@ Los agentes de RL normales aprenden de las recompensas que reciben realmente. Es
 
 Ejemplos reales de recompensa escasa:
 
-- **Montezuma's Revenge** (el juego de Atari): tu primer punto llega solo después de unos 100 movimientos precisos — bajar una escalera, esquivar una calavera, subir, coger una llave. Hasta entonces, la puntuación es un cero absoluto.
+- **Montezuma's Revenge** (el juego de Atari): tu primer punto llega solo después de unos 100 movimientos precisos — bajar una escalera, esquivar una calavera, subir, tomar una llave. Hasta entonces, la puntuación es un cero absoluto.
 - **Una cerradura de combinación.** 9,999 códigos erróneos no te dan nada; uno te da el premio.
 - **Descubrimiento de fármacos / experimentos científicos.** Miles de ensayos fallidos, y luego uno que funciona.
 - **Escribir una prueba larga o un programa.** No hay crédito parcial hasta que todo el conjunto sea correcto.

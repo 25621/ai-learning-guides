@@ -46,7 +46,7 @@ El modelo es simplemente una tabla de búsqueda:
 
 - **Estudio de ajedrez**. Los grandes maestros pasan horas reproduciendo sus propias partidas y partidas maestras en sus cabezas. Cada reproducción es "planificación" — aprendizaje extra de experiencias que ya ocurrieron.
 - **Un músico practicando escalas**. Después de tocar un compás difícil una vez, lo ensayan mentalmente diez veces más antes de seguir adelante. Los dedos no se mueven, pero el cerebro se está actualizando.
-- **Un coche autónomo**. Mientras está parado en un semáforo en rojo, reproduce los últimos cien cambios de carril en simulación para ajustar su política sin gastar neumáticos.
+- **Un automóvil autónomo**. Mientras está parado en un semáforo en rojo, reproduce los últimos cien cambios de carril en simulación para ajustar su política sin gastar neumáticos.
 
 ---
 

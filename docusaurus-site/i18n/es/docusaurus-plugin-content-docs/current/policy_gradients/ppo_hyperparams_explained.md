@@ -36,10 +36,10 @@ la relación debe mantenerse en [1 - ε,  1 + ε]
 ε=0.4:  relación en [0.60, 1.40]  ← cambios grandes
 ```
 
-**Ejemplo de la vida real:** Piensa en ε como "qué tanto se te permite girar el volante del coche en un solo movimiento".
+**Ejemplo de la vida real:** Piensa en ε como "qué tanto se te permite girar el volante del automóvil en un solo movimiento".
 - ε=0.05: Como conducir sobre hielo — solo ajustes minúsculos.
 - ε=0.2:  Conducción normal — giros razonables.
-- ε=0.4:  Piloto de carreras — giros agresivos, riesgo de **trompear** (perder el control porque el cambio es demasiado drástico, como un coche derrapando fuera de la carretera).
+- ε=0.4:  Piloto de carreras — giros agresivos, riesgo de **trompear** (perder el control porque el cambio es demasiado drástico, como un automóvil derrapando fuera de la carretera).
 
 **Resultados esperados:**
 - ε=0.05: Aprendizaje lento pero estable (demasiado cauteloso).
@@ -163,9 +163,9 @@ Esto nos indica el efecto de CADA parámetro por separado.
 
 En comparación con algoritmos anteriores (como DQN sin redes objetivo), PPO es relativamente robusto a la elección de hiperparámetros. El mecanismo de recorte proporciona una red de seguridad natural.
 
-**Ejemplo de la vida real:** Un coche con frenos **ABS** (Anti-lock Braking System — un sistema de seguridad que evita que las ruedas se bloqueen durante una frenada brusca, manteniendo el control del conductor) frente a uno sin ellos:
+**Ejemplo de la vida real:** Un automóvil con frenos **ABS** (Anti-lock Braking System — un sistema de seguridad que evita que las ruedas se bloqueen durante una frenada brusca, manteniendo el control del conductor) frente a uno sin ellos:
 - Sin ABS (DQN): Un giro equivocado (mal hiperparámetro) y trompeas.
-- Con ABS (PPO): El coche se corrige a sí mismo — los hiperparámetros razonables funcionan todos más o menos bien.
+- Con ABS (PPO): El automóvil se corrige a sí mismo — los hiperparámetros razonables funcionan todos más o menos bien.
 
 ¡Esta robustez es una de las razones principales por las que PPO es el algoritmo de RL más popular en la práctica!
 

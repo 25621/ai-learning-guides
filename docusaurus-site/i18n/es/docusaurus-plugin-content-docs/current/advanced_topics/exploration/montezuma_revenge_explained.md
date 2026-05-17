@@ -56,7 +56,7 @@ Este es un pequeño mundo de cuadrícula con el mismo *esqueleto* que la primera
 ###############
 ```
 
-Para ganar debes: caminar hasta la **llave** (~6 movimientos), recogerla; caminar hasta la **puerta** (~4 movimientos) — que ahora se abre; atravesarla y llegar al **tesoro** (~5 movimientos). Unos **15 movimientos perfectos**, con **cero retroalimentación hasta el tesoro**. El flag `has_key` es parte del estado del agente, así que una vez que coges la llave hay toda una segunda habitación de *nuevos* estados por descubrir — igual que las nuevas pantallas que se abren en el juego real.
+Para ganar debes: caminar hasta la **llave** (~6 movimientos), recogerla; caminar hasta la **puerta** (~4 movimientos) — que ahora se abre; atravesarla y llegar al **tesoro** (~5 movimientos). Unos **15 movimientos perfectos**, con **cero retroalimentación hasta el tesoro**. El flag `has_key` es parte del estado del agente, así que una vez que tomas la llave hay toda una segunda habitación de *nuevos* estados por descubrir — igual que las nuevas pantallas que se abren en el juego real.
 
 Luego entrenamos un **Q-learner tabular** normal dos veces:
 

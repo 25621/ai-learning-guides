@@ -31,7 +31,7 @@ La diferencia entre `medium` y `medium-replay` es crucial:
 
 - **Registros médicos.** Años de tuplas de (estado_del_paciente, tratamiento, resultado). No puedes aleatorizar los tratamientos en personas vivas, pero puedes aprender una mejor política a partir del registro.
 - **Registros de chat de servicio al cliente.** Millones de registros de (mensaje_del_usuario, respuesta_del_agente, satisfacción). Entrena un mejor asistente sin molestar a más usuarios.
-- **Datos de flotas de conducción autónoma.** Cada coche Tesla / Waymo sube sus trayectos. La flota es un conjunto de datos medium-replay gigante.
+- **Datos de flotas de conducción autónoma.** Cada automóvil Tesla / Waymo sube sus trayectos. La flota es un conjunto de datos medium-replay gigante.
 - **Sistemas de recomendación.** Los registros de clics del año pasado son un conjunto de datos congelado: no puedes volver a mostrar los mismos anuncios a los mismos usuarios.
 
 En los cuatro casos, **no puedes pedir al entorno una nueva muestra.** El conjunto de datos es lo que tienes. Para siempre.

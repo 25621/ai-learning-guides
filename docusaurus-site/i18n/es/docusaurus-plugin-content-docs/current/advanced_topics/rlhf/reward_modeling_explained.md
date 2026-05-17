@@ -1,4 +1,4 @@
-# Modelado de Recompensas: Enseñar a un ordenador qué prefieren las personas
+# Modelado de Recompensas: Enseñar a un equipo informático qué prefieren las personas
 
 ## La Gran Idea
 

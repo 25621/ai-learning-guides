@@ -2,7 +2,7 @@
 
 ## ¿Qué intentamos hacer?
 
-Imagina que tienes un robot jugando a un videojuego. Cada segundo, el robot debe elegir: **"¿Debo pulsar el botón o no?"**.
+Imagina que tienes un robot jugando a un videojuego. Cada segundo, el robot debe elegir: **"¿Debo presionar el botón o no?"**.
 
 En lugar de memorizar cada situación en una tabla (como en el Q-learning), queremos que el robot aprenda una **receta** — un conjunto de reglas que diga directamente: "En esta situación, haz esta acción".
 
@@ -13,10 +13,10 @@ Esta receta se llama **política** (π, pi). En el aprendizaje por refuerzo, π 
 ## La forma antigua frente a la forma nueva {#the-old-way-vs-the-new-way}
 
 **Forma antigua (Q-learning / DQN)**: Aprender qué tan BUENA es cada acción (valores Q) y luego elegir la mejor.
-> "Pulsar IZQUIERDA tiene una puntuación de 7, pulsar DERECHA tiene una puntuación de 5 → ¡pulsa IZQUIERDA!".
+> "Presionar IZQUIERDA tiene una puntuación de 7, presionar DERECHA tiene una puntuación de 5 → ¡presiona IZQUIERDA!".
 
 **Forma nueva (Gradiente de Política)**: Aprender directamente qué acción ELEGIR.
-> "Cuando el poste se incline a la derecha, pulsa DERECHA con un 80% de probabilidad, pulsa IZQUIERDA con un 20% de probabilidad".
+> "Cuando el poste se incline a la derecha, presiona DERECHA con un 80% de probabilidad, presiona IZQUIERDA con un 20% de probabilidad".
 *(La palabra **Gradiente** se refiere al "paso" matemático que damos para ajustar lentamente estas probabilidades en la dirección correcta).*
 
 **Ejemplo de la vida real:** Aprender a montar en bicicleta.
@@ -35,9 +35,9 @@ REINFORCE observa al robot jugar una partida completa de principio a fin (un **e
 
 El robot toma decisiones y recopila experiencia:
 ```
-Paso 1: Estado = [poste inclinándose a la derecha] → Acción = pulsar DERECHA → Recompensa = +1
-Paso 2: Estado = [poste casi equilibrado] → Acción = pulsar DERECHA → Recompensa = +1
-Paso 3: Estado = [poste inclinándose a la izquierda] → Acción = pulsar IZQUIERDA → Recompensa = +1
+Paso 1: Estado = [poste inclinándose a la derecha] → Acción = presionar DERECHA → Recompensa = +1
+Paso 2: Estado = [poste casi equilibrado] → Acción = presionar DERECHA → Recompensa = +1
+Paso 3: Estado = [poste inclinándose a la izquierda] → Acción = presionar IZQUIERDA → Recompensa = +1
 ...
 Paso 47: Estado = [¡el poste se cayó!] → Episodio terminado
 ```
@@ -76,14 +76,14 @@ En lugar de una tabla, utilizamos una **red neuronal** para representar la polí
 
 ```
 Observación        Red de Política       Probabilidades de Acción
-[pos carro]   →   [128 neuronas]   →  →  [pulsar IZQUIERDA: 30%]
-[vel carro]   →   [128 neuronas]         [pulsar DERECHA: 70%]
+[pos carro]   →   [128 neuronas]   →  →  [presionar IZQUIERDA: 30%]
+[vel carro]   →   [128 neuronas]         [presionar DERECHA: 70%]
 [ángulo poste] →
 [vel poste]    →
 ```
 
 La red genera **probabilidades** para cada acción. Luego tomamos una muestra:
-> Tirar un dado → 1-30: pulsar IZQUIERDA, 31-100: pulsar DERECHA.
+> Tirar un dado → 1-30: presionar IZQUIERDA, 31-100: presionar DERECHA.
 
 **Ejemplo de la vida real:** Una aplicación del tiempo dice "70% de probabilidad de lluvia". No SABES que lloverá — decides basándote en la probabilidad. ¡El robot hace lo mismo!
 
@@ -98,7 +98,7 @@ G_normalizado = (G - media(G)) / std(G)
 
 **¿Por qué?** Imagina que todas las recompensas son positivas (como ocurre en CartPole — siempre +1 por paso). Sin normalización, CUALQUIER acción parece "buena" y la señal de actualización resulta confusa.
 
-Después de la normalización, algunos retornos son positivos (por encima de la media → pulsar más) y otros son negativos (por debajo de la media → pulsar menos). ¡La señal se vuelve mucho más limpia!
+Después de la normalización, algunos retornos son positivos (por encima de la media → presionar más) y otros son negativos (por debajo de la media → presionar menos). ¡La señal se vuelve mucho más limpia!
 
 **Ejemplo de la vida real:** Tu profesor califica con una curva. Si la puntuación media es 70 y tú has sacado 85, ¡eso es genial! Pero si la media es 90 y has sacado 85, eso está por debajo de la media. La puntuación bruta por sí sola no cuenta toda la historia.
 
@@ -133,7 +133,7 @@ El robot aprende a equilibrar el poste durante el máximo de 500 pasos — ¡RES
 
 A pesar de sus problemas de varianza, REINFORCE en CartPole es efectivo porque:
 1. Los episodios son cortos (así que obtenemos muchos por cada ejecución de entrenamiento).
-2. La política óptima es sencilla (pulsar principalmente en la dirección en la que se inclina el poste).
+2. La política óptima es sencilla (presionar principalmente en la dirección en la que se inclina el poste).
 
 ---
 

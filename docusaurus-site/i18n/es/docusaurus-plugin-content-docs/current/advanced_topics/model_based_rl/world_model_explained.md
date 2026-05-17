@@ -27,7 +27,7 @@ Tu cerebro tiene un modelo de mundo aprendido — construido tras años de ver c
 Otros ejemplos:
 
 - **Un jugador de ajedrez** imagina jugadas varios turnos por delante.
-- **Un conductor** que piensa: "Si freno ahora, el coche de atrás tiene suficiente espacio".
+- **Un conductor** que piensa: "Si freno ahora, el automóvil de atrás tiene suficiente espacio".
 - **Un niño** apilando bloques: "Si pongo el grande arriba, la torre se tambaleará". (Aprendieron este modelo al haber derribado torres anteriormente).
 
 En todos los casos, **un modelo mental + imaginación = mejores decisiones con menos riesgo**.

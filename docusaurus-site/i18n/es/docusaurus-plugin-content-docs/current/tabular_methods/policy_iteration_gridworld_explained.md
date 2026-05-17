@@ -4,7 +4,7 @@
 
 Imagina que estás jugando a un juego de mesa en una **cuadrícula de 4×4** (como un tablero de ajedrez diminuto). Empiezas en una esquina y tienes que llegar a la esquina opuesta. Cada paso cuesta 1 punto (¡no quieres desperdiciar pasos!) y llegar a la meta no te da nada extra — solo quieres llegar allí lo más rápido posible.
 
-La **Iteración de Políticas** (Policy Iteration) es como un ordenador descubre los **mejores movimientos para cada cuadrado** del tablero — ¡todos a la vez!
+La **Iteración de Políticas** (Policy Iteration) es como un equipo informático descubre los **mejores movimientos para cada cuadrado** del tablero — ¡todos a la vez!
 
 ---
 
