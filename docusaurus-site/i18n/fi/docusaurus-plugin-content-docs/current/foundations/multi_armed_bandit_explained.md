@@ -33,7 +33,7 @@ kokeile jotain uutta, et koskaan tiedä!
 
 ---
 
-## Epsilon-ahne strategia {#the-epsilon-greedy-strategy}
+## Epsilon-ahne strategia
 
 Älykäs tapa ratkaista tämä on nimeltään **epsilon-ahne** (epsilon on vain
 Kreikkalainen kirjain ε, sanottu kuten "ep-sih-lon"):

@@ -19,7 +19,7 @@ Kattava opas oppimisjärjestelmien ymmärtämiseen ja rakentamiseen peruskäsitt
 
 ---
 
-## Vaihe 1: Perustukset (2-4 viikkoa) {#phase-1-foundations-2-4-weeks}
+## Vaihe 1: Perustukset (2-4 viikkoa)
 
 ### Maali
 Ymmärrä ydinkäsitteet ilman syvällistä matematiikkaa.
@@ -51,7 +51,7 @@ Sinun pitäisi pystyä selittämään RL-ongelman muotoilu ja miksi MDP:t ovat v
 
 ---
 
-## Vaihe 2: Taulukkomenetelmät (3–4 viikkoa) {#phase-2-tabular-methods-3-4-weeks}
+## Vaihe 2: Taulukkomenetelmät (3–4 viikkoa)
 
 ### Maali
 Hallitse klassisia RL-algoritmeja, joissa tila-/toiminta-avaruudet ovat tarpeeksi pieniä tallennettavaksi taulukoihin.
@@ -94,7 +94,7 @@ Ota Q-oppiminen käyttöön tyhjästä ja ratkaise Frozen Lake >70 % onnistumisp
 
 ---
 
-## Vaihe 3: Toiminnan arvioiminen (3-4 viikkoa) {#phase-3-function-approximation-3-4-weeks}
+## Vaihe 3: Toiminnan arvioiminen (3-4 viikkoa)
 
 ### Maali
 Skaalaa RL pienten tilaavaruuksien yli käyttämällä funktioapproksimaattoreita.
@@ -141,7 +141,7 @@ Kouluta DQN-agentti, joka saa positiivisen palkinnon Atari Pongissa.
 
 ---
 
-## Vaihe 4: Käytännön gradienttimenetelmät (4–5 viikkoa) {#phase-4-policy-gradient-methods-4-5-weeks}
+## Vaihe 4: Käytännön gradienttimenetelmät (4–5 viikkoa)
 
 ### Maali
 Opi optimoimaan käytännöt suoraan ilman arvofunktioiden laskemista.
@@ -189,7 +189,7 @@ Ota PPO käyttöön ja ratkaise BipedalWalker-v3 (palkinto > 300).
 
 ---
 
-## Vaihe 5: Edistyneet aiheet (6–8 viikkoa) {#phase-5-advanced-topics-6-8-weeks}
+## Vaihe 5: Edistyneet aiheet (6–8 viikkoa)
 
 Valitse 2-3 aluetta kiinnostuksen kohteidesi perusteella.
 - [Mallipohjainen RL](#model-based-rl)
@@ -199,7 +199,7 @@ Valitse 2-3 aluetta kiinnostuksen kohteidesi perusteella.
 - [Hierarkkinen RL](#hierarchical-rl)
 - [RLHF (RL ihmispalautteesta)](#rlhf-rl-from-human-feedback)
 
-### Mallipohjainen RL {#model-based-rl}
+### Mallipohjainen RL
 Opi ympäristön dynamiikkaa suunnittelemaan tai luomaan synteettistä kokemusta.
 
 **Konseptit:**
@@ -221,7 +221,7 @@ Opi ympäristön dynamiikkaa suunnittelemaan tai luomaan synteettistä kokemusta
 
 ---
 
-### Multi-Agent RL {#multi-agent-rl}
+### Multi-Agent RL
 Useat agentit oppivat samanaikaisesti jaetuissa ympäristöissä.
 
 **Konseptit:**
@@ -242,7 +242,7 @@ Useat agentit oppivat samanaikaisesti jaetuissa ympäristöissä.
 
 ---
 
-### Offline/Batch RL {#offlinebatch-rl}
+### Offline/Batch RL
 Opi kiinteistä tietojoukoista ilman ympäristövuorovaikutusta.
 
 **Konseptit:**
@@ -264,7 +264,7 @@ Opi kiinteistä tietojoukoista ilman ympäristövuorovaikutusta.
 
 ---
 
-### Tutkimus {#exploration}
+### Tutkimus
 Käsittele niukkoja palkkioita ja kovia etsintäongelmia.
 
 **Konseptit:**
@@ -287,7 +287,7 @@ Käsittele niukkoja palkkioita ja kovia etsintäongelmia.
 
 ---
 
-### Hierarkkinen RL {#hierarchical-rl}
+### Hierarkkinen RL
 Opi useilla temporaalisen abstraktion tasoilla.
 
 **Konseptit:**
@@ -308,7 +308,7 @@ Opi useilla temporaalisen abstraktion tasoilla.
 
 ---
 
-### RLHF (RL ihmispalautteesta) {#rlhf-rl-from-human-feedback}
+### RLHF (RL ihmispalautteesta)
 Kohdista mallit ihmisten mieltymyksiin.
 
 **Konseptit:**
@@ -330,7 +330,7 @@ Kohdista mallit ihmisten mieltymyksiin.
 
 ---
 
-## Vaihe 6: Tutkimustaso (jatkuva) {#phase-6-research-level-ongoing}
+## Vaihe 6: Tutkimustaso (jatkuva)
 
 ### Maali
 Anna omaperäistä työtä kentälle.

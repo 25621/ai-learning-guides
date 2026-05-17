@@ -1,6 +1,6 @@
 # Tutkimusstrategioiden vertailu 🔦
 
-## Yhden lauseen ongelma {#the-one-sentence-problem}
+## Yhden lauseen ongelma
 
 RL-agentin on tehtävä kaksi asiaa, jotka vetäytyvät vastakkaisiin suuntiin:
 
@@ -15,7 +15,7 @@ Montezuman kosto sellaisesta, joka saa nollan.
 Tämä skripti yhdistää **viisi** tutkimusstrategiaa
 kaksi kovaa tehtävää, jotta näet heidän persoonallisuutensa.
 
-## Analogia tosielämästä: lounaspaikan valinta {#real-life-analogy-picking-a-lunch-spot}
+## Analogia tosielämästä: lounaspaikan valinta
 
 Olet juuri muuttanut uuteen kaupunkiin, jossa on 200 ravintolaa.
 
@@ -43,7 +43,7 @@ Olet juuri muuttanut uuteen kaupunkiin, jossa on 200 ravintolaa.
   henkinen mallisi? Kiehtovaa, ja päivität suunnitelmasi saadaksesi lisää
   pidä siitä.
 
-## Viisi strategiaa (kaikki osoitteessa `compare_exploration.py`) {#the-five-strategies-all-in-compare_explorationpy}
+## Viisi strategiaa (kaikki osoitteessa `compare_exploration.py`)
 
 ### 1. ε-ahne — oletusarvo, ja se on *haittailua*, ei tutkimista {#1-ε-greedy--the-default-and-its-dithering-not-exploring}
 
@@ -53,7 +53,7 @@ DQN:n ja ystävien vakioperusviiva. Sen kohtalokas puute vaikeissa tehtävissä:
 oikeilla liikkeillä tarvitset kolikon laskeutuaksesi oikealle `N` kertaa peräkkäin - se on
 eksponentiaalisesti epätodennäköistä. ε-ahne on *jigglee*, ei *tutkimista*.
 
-### 2. Optimistinen alustus – "syytön, kunnes osoittautuu tylsäksi" {#2-optimistic-initialisation--innocent-until-proven-boring}
+### 2. Optimistinen alustus – "syytön, kunnes osoittautuu tylsäksi"
 
 Aloita *jokainen* Q-arvo suurimmalla mahdollisella tuotolla,
 `R_max / (1 − γ)`. Nyt toimi, jota agentti ei ole koskaan kokeillut, näyttää tältä
@@ -65,7 +65,7 @@ askel kohti maailman osia, joita se ei ole nähnyt. Melkein ilmainen, ei ylimä�
 kirjanpito – ja, kuten näet, vahvin *syvän* tutkimusmatkailija pienessä
 taulukkomainen maailma.
 
-### 3. UCB-tyylinen toimintavalinta – bonus *valinnassa*, ei *palkinto* {#3-ucb-style-action-selection--bonus-in-the-choice-not-the-reward}
+### 3. UCB-tyylinen toimintavalinta – bonus *valinnassa*, ei *palkinto*
 
 Valitse `argmax_a [ Q(s,a) + c·√(ln t / N(s,a)) ]`: mieluummin arvokasta
 toimia, mutta paisuta niitä, joita olet harvoin kokeillut. Kuuluisa monikätisestä
@@ -74,14 +74,14 @@ ei koskaan palkkiossa — joten se *ei* virtaa arvofunktion läpi.
 UCB on loistava "varmista, että olen kokeillut jokaista toimintaa *tässä* tilassa", mutta
 heikko "suunnittelemaan reittiä kaukaiselle tutkimattomalle alueelle".
 
-### 4. Lukuun perustuva **palkkio** -bonus – uteliaisuus, klassinen versio {#4-count-based-reward-bonus--curiosity-the-classic-version}
+### 4. Lukuun perustuva **palkkio** -bonus – uteliaisuus, klassinen versio
 
 Lisää `1/√(N(s,a))` **palkkioon** (painolla `beta` joka hajoaa).
 Koska se kuuluu palkkioon, Q-learning *edistää sitä: toteaa sen
 johtavista uusille alueille tulee arvokkaita. Tämä on MBIE-EB / klassikko
 "etsintäbonus" -idea - ja työkohdan 1 ensimmäinen puolisko.
 
-### 5. Ennustusvirhe **palkkio** -bonus – uteliaisuus, ICM/RND-versio {#5-prediction-error-reward-bonus--curiosity-the-icmrnd-version}
+### 5. Ennustusvirhe **palkkio** -bonus – uteliaisuus, ICM/RND-versio
 
 Lisää `−log P(s'|s,a)` pienestä opitusta eteenpäin mallista palkkioon
 (taas rappeutumisen kanssa `beta`). Viidestä terävin uutuussignaali: sisään
@@ -89,7 +89,7 @@ Deterministinen maailma, siirtymän yllätys putoaa ~0:aan tällä hetkellä
 olet nähnyt sen kerran sen sijaan, että hiipuisit hitaasti kuten `1/√N`. Taulukko
 ICM:n / RND:n serkku – työkohdan 1 toinen puolisko.
 
-## Kaksi testitehtävää {#the-two-test-tasks}
+## Kaksi testitehtävää
 
 - **Tehtävä A – MiniMontezuma**: avain→ovi→aarreverkkomaailma, vain palkinto
   aarteen luona (~15 täydellistä siirtyy pois). Testit "Voitko selvitä pitkään
@@ -100,7 +100,7 @@ ICM:n / RND:n serkku – työkohdan 1 toinen puolisko.
   maksaa eikä koskaan löydä palkintoa. Testit "toimiiko strategiasi edelleen
   ketju *pitenee*?"
 
-## Mitä todella tapahtuu (suorita se ja katso) {#what-actually-happens-run-it-and-see}
+## Mitä todella tapahtuu (suorita se ja katso)
 
 **Tehtävä A – MiniMontezuma:**
 
@@ -125,7 +125,7 @@ ICM:n / RND:n serkku – työkohdan 1 toinen puolisko.
 *(Numerot heiluvat hieman satunnaisten siementen kanssa, mutta muoto on kivi
 kiinteä.)*
 
-## Oppitunnit {#the-lessons}
+## Oppitunnit
 
 1. **ε-ahneus ei ole tutkimista.** Se ei koskaan ratkaise *kumpaakaan* vaikeaa tehtävää.
    Satunnainen dithering ei yksinkertaisesti pujota pitkiä oikeita sekvenssejä. (Vielä
@@ -158,7 +158,7 @@ kiinteä.)*
    *periaatteet*; todelliset järjestelmät ovat nämä samat periaatteet plus verkko
    joka yleistää.
 
-## Avainsanat muistaa {#key-words-to-remember}
+## Avainsanat muistaa
 
 | sana | Merkitys |
 |------|---------|
@@ -170,7 +170,7 @@ kiinteä.)*
 | **Syvä tutkimus** | Tutkimus, joka vaatii pitkän *yhdenmukaisen* sarjan "epätavallisia" toimia, ei vain yhtä |
 | **`beta` hehkutus** | Uteliaisuuden paino pienenee ajan myötä, jotta agentti lopulta lopettaa tutkimisen ja hyväksikäytön |
 
-## Yhden lauseen yhteenveto {#one-sentence-summary}
+## Yhden lauseen yhteenveto
 
 > **ε-ahneus on vain melua; jokainen todellinen etsintästrategia toimii tekemällä
 > tutkimaton näyttää houkuttelevalta – optimististen arvojen, toimintavalinnan kautta

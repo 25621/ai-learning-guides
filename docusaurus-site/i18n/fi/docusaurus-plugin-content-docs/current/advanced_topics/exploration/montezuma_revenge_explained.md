@@ -1,6 +1,6 @@
 # Treeni Montezuman kostosta 🏛️🔑
 
-## Miksi tämä peli on kuuluisa (RL-piireissä) {#why-this-game-is-famous-in-rl-circles}
+## Miksi tämä peli on kuuluisa (RL-piireissä)
 
 Vuonna 2015 DeepMindin DQN oppi pelaamaan kymmeniä Atari-pelejä osoitteessa
 yli-inhimillinen taso raakapikseleistä. Se pääsi otsikoihin. Mutta haudattiin
@@ -33,7 +33,7 @@ uteliaisuusbonus**, joten agentti palkitsee *itsensä* uusien näyttöjen saavut
 ja yhtäkkiä siinä on tiheä signaali, joka vetää sen syvemmälle tasolle. RND
 sai yli-inhimillisen pisteen Montezumasta. (Myöhemmin: Go-Explore, Agent57,…)
 
-## Tosielämän esimerkkejä "Montezuma-tyylisestä" harvasta palkinnosta {#real-life-examples-of-montezuma-style-sparse-reward}
+## Tosielämän esimerkkejä "Montezuma-tyylisestä" harvasta palkinnosta
 
 - **Yhdistelmälukko / aarteenetsintä salaperäisillä vihjeillä.** Ei osittaista
   luotto. Olet nollassa, kunnes olet yhtäkkiä palkinnon ääressä.
@@ -48,7 +48,7 @@ Kaikissa näissä "kokeile vain satunnaisia juttuja" on toivotonta. Sinun täyty
 *järjestelmällisesti* tutkia – ja sisäinen "ooh, se on uutta, jatka"
 signaali pitää sinut systemaattisena.
 
-## Miksi emme itse asiassa harjoittele Pixel Montezumalla täällä {#why-we-dont-actually-train-on-pixel-montezuma-here}
+## Miksi emme itse asiassa harjoittele Pixel Montezumalla täällä
 
 *oikean* asian tekeminen oikein tarkoittaa:
 
@@ -61,7 +61,7 @@ signaali pitää sinut systemaattisena.
 Se on tutkimusprojekti, ei opetuskäsikirjoitus. Joten `montezuma_revenge.py`
 tekee sen sijaan kaksi rehellistä asiaa:
 
-### 1. Se *koskettaa* oikeaa peliä (jos "ale-py" on asennettu) {#1-it-touches-the-real-game-if-ale-py-is-installed}
+### 1. Se *koskettaa* oikeaa peliä (jos "ale-py" on asennettu)
 
 Se latautuu `ALE/MontezumaRevenge-v5` Gymnasiumin kautta, pitää **univormua-
 satunnainen agentti 2000 askelta** ja raportoi pelin kokonaispalkinnon. The
@@ -70,7 +70,7 @@ palkkio" muuttui konkreettiseksi, tee se itse tosiasiaksi. Jos Atari
 pakettia ei ole asennettu, se tulostaa yksirivisen `pip install` komento ja
 siirtyy eteenpäin.
 
-### 2. Se kouluttaa taulukkoagentin *mittakaavassa*: "MiniMontezumaEnv" {#2-it-trains-a-tabular-agent-on-a-scale-model-minimontezumaenv}
+### 2. Se kouluttaa taulukkoagentin *mittakaavassa*: "MiniMontezumaEnv"
 
 Tämä on pieni verkkomaailma, jolla on sama *luuranko* kuin Montezuman ensimmäisellä
 huone:
@@ -103,7 +103,7 @@ Kuvassa on kaksi oppimiskäyrää vierekkäin plus todellinen
 reitti utelias agentti oppinut, piirretty ruudukko (käynnistys → avain → ovi →
 aarre). Skripti myös tulostaa kyseisen reitin ASCII-kehyksinä.
 
-## Oppitunti {#the-lesson}
+## Oppitunti
 
 > **"Sharse Reward" ei ole yhden oudon Atari-pelin omituisuus – se on
 > oletuksena missä tahansa maailmassa, jossa menestys vaatii pitkän, tietyn sarjan
@@ -114,7 +114,7 @@ aarre). Skripti myös tulostaa kyseisen reitin ASCII-kehyksinä.
 > ensimmäinen todellinen palkinto. Kaikki sen jälkeen (RND, Go-Explore, Agent57) on a
 > samasta liikkeestä suurennettu hermoverkkoversio.
 
-## Avainsanat muistaa {#key-words-to-remember}
+## Avainsanat muistaa
 
 | sana | Merkitys |
 |------|---------|
@@ -125,7 +125,7 @@ aarre). Skripti myös tulostaa kyseisen reitin ASCII-kehyksinä.
 | **Go-Explore** | "Muista lupaavat osavaltiot, palaa niihin ja tutki sitten sieltä" - toinen Montezuma-krakkeri |
 | **Pienoismalli** | Pieni, halpa ympäristö, joka säilyttää vaikean ongelman *rakenteen*, jotta voit tutkia sitä nopeasti |
 
-## Yhden lauseen yhteenveto {#one-sentence-summary}
+## Yhden lauseen yhteenveto
 
 > **Montezuma's Revenge on peli, joka opetti, että RL "palkitsee sinua koskaan
 > vastaanottaminen ei voi opettaa sinulle mitään" - ja korjaus silloin ja nyt on a

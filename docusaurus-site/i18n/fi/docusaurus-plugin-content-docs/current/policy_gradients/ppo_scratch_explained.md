@@ -44,7 +44,7 @@ r(θ) = π_new(a|s) / π_old(a|s)
 
 ---
 
-## Leikkaamisen temppu {#the-clipping-trick}
+## Leikkaamisen temppu
 
 PPO leikkaa suhteen pysyäkseen rajoissa [1-ε, 1+ε] (tyypillisesti ε = 0,2):
 
@@ -106,7 +106,7 @@ PPO on RL-optimoijien "huolellinen kirurgi".
 
 ---
 
-## GAE: Smarter Advantage Estimates {#gae-smarter-advantage-estimates}
+## GAE: Smarter Advantage Estimates
 
 PPO käyttää **Generalized Advantage Estimation (GAE)** laskeakseen edun:
 

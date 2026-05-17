@@ -1,6 +1,6 @@
 # Dyna-Q: oppii nopeammin kuvittelemalla 🧠
 
-## Mikä se on? {#what-is-it}
+## Mikä se on?
 
 Kuvittele Mia-nimistä lasta, joka oppii navigoimaan uudessa koulussaan. Joka päivä hän kävelee
 käytävillä ja löytää uusia asioita: "Kirjasto on kahvilan ohi",
@@ -22,7 +22,7 @@ tapa.
 
 ---
 
-## Kolme ainesosaa {#the-three-ingredients}
+## Kolme ainesosaa
 
 Dyna-Q on "Q-oppiminen + malli + suunnittelu". Yksi todellinen askel tekee **kolme** työtä:
 
@@ -37,7 +37,7 @@ kuin puhdas Q-oppija.
 
 ---
 
-## Kuva Loopista {#a-picture-of-the-loop}
+## Kuva Loopista
 
 ```
                    ┌────────────────────────────────────┐
@@ -55,7 +55,7 @@ Malli on vain hakutaulukko:
 
 ---
 
-## Esimerkkejä tosielämästä {#real-life-examples}
+## Esimerkkejä tosielämästä
 
 - **Shakin opiskelu.** Suurmestarit viettävät tuntikausia pelaamalla omia pelejään ja
   hallitsevat pelejä päässään. Jokainen uusinta on "suunnittelua" - ylimääräistä oppimista
@@ -69,7 +69,7 @@ Malli on vain hakutaulukko:
 
 ---
 
-## Mitä koodimme tekee {#what-our-code-does}
+## Mitä koodimme tekee
 
 Käytämme klassista **Dyna Maze** ([Sutton & Barto, kuva 8.2](http://incompleteideas.net/book/the-book.html)): 6×9 ruudukko
 jotkut seinät, alku `S` keskellä vasemmalla ja maali `G` oikeassa yläkulmassa.
@@ -86,7 +86,7 @@ Käsikirjoitus raportoi **todellisten vaiheiden keskimääräisen määrän jaks
 koulutus etenee. Vähemmän vaiheita tarkoittaa, että agentti on oppinut suoremman
 polku päämäärään.
 
-### Mitä sinun pitäisi nähdä, kun käytät sitä {#what-you-should-see-when-you-run-it}
+### Mitä sinun pitäisi nähdä, kun käytät sitä
 
 Lyhin polku tässä sokkelossa on ~9 askelta; ε-ahneella etsinnällä a
 hyvin koulutettu agentti tekee keskimäärin ~10 askelta jaksoa kohden. Juokse 50 jaksoa ja
@@ -107,7 +107,7 @@ jaksot, mikä on koko pointti ympäristöissä, joissa todelliset askeleet ovat 
 
 ---
 
-## Miksi se toimii niin hyvin tässä sokkelossa {#why-it-works-so-well-on-this-maze}
+## Miksi se toimii niin hyvin tässä sokkelossa
 
 Kaksi syytä:
 
@@ -121,7 +121,7 @@ Kaksi syytä:
 
 ---
 
-## Missä Dyna-Q kamppailee {#where-dyna-q-struggles}
+## Missä Dyna-Q kamppailee
 
 - **Stokastiset ympäristöt.** Jos `(s, a)` voi johtaa moniin erilaisiin `s'`
   arvot, "muista viimeinen tulos" -malli valehtelee sinulle. Korjaus: kaupassa käynnit lasketaan
@@ -138,7 +138,7 @@ Kaksi syytä:
 
 ---
 
-## Avainsanat muistaa {#key-words-to-remember}
+## Avainsanat muistaa
 
 | sana | Merkitys |
 |------|---------|
@@ -150,7 +150,7 @@ Kaksi syytä:
 
 ---
 
-## Yhden lauseen yhteenveto {#one-sentence-summary}
+## Yhden lauseen yhteenveto
 
 > **Dyna-Q oppii tekemisestä JA kuvittelemisesta – ja kuvitteleminen on ilmaista.**
 

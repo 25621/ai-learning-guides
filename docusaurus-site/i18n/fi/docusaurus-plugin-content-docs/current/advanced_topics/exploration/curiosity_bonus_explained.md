@@ -1,6 +1,6 @@
 # Uteliaisuusbonus (sisäinen motivaatio) 🧭
 
-## Mikä se on? {#what-is-it}
+## Mikä se on?
 
 Kuvittele, että lapsi putoaa uuteen huoneeseen. Kukaan ei maksa heille, kukaan ei taputa -
 Silti he tekevät linjan kaapille, jota he eivät ole avanneet, napin
@@ -20,7 +20,7 @@ reward the agent learns from  =  real reward  +  beta * curiosity bonus
 `beta` on nuppi, joka alkaa suurelta (ole utelias!) ja kutistuu ajan myötä
 (Lopeta hölmöily, käy käteisellä, mitä opit).
 
-## Miksi vaivautua? Harva-palkitsemisongelma {#why-bother-the-sparse-reward-problem}
+## Miksi vaivautua? Harva-palkitsemisongelma
 
 Normaalit RL-agentit oppivat tosiasiallisesti saamistaan palkkioista. Se toimii
 hienoa, kun palkintoja on kaikkialla ("+1 jokaisesta askeleesta pysyt pystyssä" sisään
@@ -45,9 +45,9 @@ opiskele, ellei heille makseta oikeasta vastauksesta lopullisessa - he eivät ko
 alkoi. Uteliaisuus on bonus, joka sanoo *"tutkiminen on oma palkintonsa"*
 niin agentti jatkaa tökkimistä, kunnes se kompastuu todelliseen palkintoon.
 
-## Two Flavors of Curiosity (molemmat toteutettu muodossa curiosity_bonus.py) {#two-flavours-of-curiosity-both-implemented-in-curiosity_bonuspy}
+## Two Flavors of Curiosity (molemmat toteutettu muodossa curiosity_bonus.py)
 
-### 1. Laskuriin perustuva uutuus: "Olen tuskin ollut täällä" {#1-count-based-novelty-ive-barely-been-here}
+### 1. Laskuriin perustuva uutuus: "Olen tuskin ollut täällä"
 
 Yksinkertaisin mahdollinen uutuussignaali. Pidä laskua `N(s, a)` kuinka monesta
 kertaa olet ryhtynyt toimiin `a` tilassa `s`, ja anna itsellesi se bonus
@@ -69,7 +69,7 @@ Tämä on kirjan vanhin idea (MBIE-EB, UCB). Sen heikkous: a
 valtava tai jatkuva maailma, et koskaan käy *täsmälleen* samassa tilassa kahdesti, joten
 raakaluku on aina 1 – siksi seuraava maku on olemassa.
 
-### 2. Ennustus-virheuutuus: "En nähnyt *sen* tulevan" {#2-prediction-error-novelty-i-didnt-see-that-coming}
+### 2. Ennustus-virheuutuus: "En nähnyt *sen* tulevan"
 
 Tämä on kuuluisan **ICM:n** (Intrinsic Curiosity Module,
 Pathak et ai. 2017) ja sen serkku **RND** (Random Network Distillation,
@@ -106,7 +106,7 @@ identtinen.
 > ennustusvirheagentti ratkaisee MiniMontezuman parissakymmenessä jaksossa;
 > myös laskenta-agentti pääsee perille, vain hitaammin ja vähemmän luotettavasti.
 
-## Mitä koodimme tekee {#what-our-code-does}
+## Mitä koodimme tekee
 
 `curiosity_bonus.py` kouluttaa tavallista **taulukkomuotoista Q-oppijaa**
 `MiniMontezumaEnv` - pieni kahden huoneen verkkomaailma, johon sinun täytyy kävellä a
@@ -126,7 +126,7 @@ Kuvassa näkyy:
 - ja **tilan vierailun lämpökartat** ruudukosta - ei-uteliaisuusagentti
   on tiukka möykky lähellä alkua; uteliaita agentteja tulvii *molemmat* huoneet.
 
-## Mekanismi yhdessä kuvassa {#the-mechanism-in-one-picture}
+## Mekanismi yhdessä kuvassa
 
 ```
             no curiosity                       with curiosity bonus
@@ -143,7 +143,7 @@ heiluttaa satunnaisesti. Ja koska bonus kutistuu asioiden muuttuessa
 tuttu (ja `beta` hajoaa), kun agentti on löytänyt sen todellisen palkkion
 lopettaa luonnollisesti ryöstelyn ja alkaa hyödyntää.
 
-## Muutama rehellinen varoitus {#a-few-honest-caveats}
+## Muutama rehellinen varoitus
 
 - ** "Noisy-TV-ongelma".** Ennustevirheiden agentti voi hypnotisoitua
   puhtaan satunnaisuuden lähteellä (televisio, joka näyttää staattista, noppia heittäen) - se
@@ -160,7 +160,7 @@ lopettaa luonnollisesti ryöstelyn ja alkaa hyödyntää.
   Montezuma tarvitsi ylimääräistä tulivoimaa - RND hermoverkolla, bootstrapped
   DQN, Go-Explore.
 
-## Avainsanat muistaa {#key-words-to-remember}
+## Avainsanat muistaa
 
 | sana | Merkitys |
 |------|---------|
@@ -172,7 +172,7 @@ lopettaa luonnollisesti ryöstelyn ja alkaa hyödyntää.
 | **ICM** | Intrinsic Curiosity Module: uutuus = eteenpäin suuntautuvan mallin ennustevirhe (opetetussa ominaisuustilassa) |
 | **`beta`** | Uteliaisuusbonuksen paino; yleensä hehkutetaan kohti nollaa, jotta agentti lopulta hyödyntää |
 
-## Yhden lauseen yhteenveto {#one-sentence-summary}
+## Yhden lauseen yhteenveto
 
 > **Uteliaisuusbonus on itsensä antama palkinto uutuudesta – se valmistaa
 > tiheä "mene-tutki-tulle" -signaali, joka vetää agentin läpi

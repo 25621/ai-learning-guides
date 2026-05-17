@@ -13,7 +13,7 @@ Tätä reseptiä kutsutaan **käytännöksi** (π, pi). Vahvistuksessa
 
 ---
 
-## Vanha tapa vs. Uusi tapa {#the-old-way-vs-the-new-way}
+## Vanha tapa vs. Uusi tapa
 
 **Vanha tapa (Q-learning / DQN):** Opi kuinka HYVÄ kukin toiminta on (Q-arvot), ja valitse sitten paras.
 > "Vasemmalle työntäminen saa pisteet 7, OIKEALLE työntäminen 5 → paina VASEN!"

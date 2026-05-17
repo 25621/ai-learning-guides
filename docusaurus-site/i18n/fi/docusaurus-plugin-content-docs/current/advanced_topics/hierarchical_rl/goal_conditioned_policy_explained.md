@@ -1,6 +1,6 @@
 # Tavoitteen mukainen käytäntö
 
-## Suuri idea: yksi politiikka hallitsee niitä kaikkia {#the-big-idea-one-policy-to-rule-them-all}
+## Suuri idea: yksi politiikka hallitsee niitä kaikkia
 
 Kuvittele, että olet jakelukuljettaja. Et tarvitse täysin erilaista taitosarjaa jokaiselle osoitteelle. Osaat ajaa, lukea karttaa ja navigoida liikenteessä – liität vain *tämän päivän määränpään* ja lähdet.
 
@@ -8,7 +8,7 @@ Kuvittele, että olet jakelukuljettaja. Et tarvitse täysin erilaista taitosarja
 
 ---
 
-## Miten se eroaa tavallisesta RL:stä {#how-it-differs-from-standard-rl}
+## Miten se eroaa tavallisesta RL:stä
 
 Normaalissa RL:ssä (kuten opetussuunnitelman aikaisemmissa vaiheissa käsiteltiin) palkitsemistoiminto leivotaan seuraavasti: "tavoita solu (7, 7), saat +1." Agentti oppii täsmälleen yhden asian: kuinka tavoittaa *tuo* solu.
 
@@ -20,7 +20,7 @@ Tavoite kulkee *agentin mukana*, kuten navigointisovellukseen kirjoitettu määr
 
 ---
 
-## Harva palkitsemisongelma {#the-sparse-reward-problem}
+## Harva palkitsemisongelma
 
 Tässä on saalis: harvoista palkinnoista oppiminen (vain +1 maalissa, 0 kaikkialla muualla) on julman vaikeaa. Useimmat yritykset epäonnistuvat – agentti vaeltelee satunnaisesti, ei koskaan törmää maaliin, eikä verkko saa mitään hyödyllistä opittavaa.
 
@@ -30,7 +30,7 @@ Tässä tulee esiin **Hindsight Experience Replay (HER)**.
 
 ---
 
-## Jälkikatselukokemuksen uusinta: epäonnistuminen eteenpäin {#hindsight-experience-replay-failing-forward}
+## Jälkikatselukokemuksen uusinta: epäonnistuminen eteenpäin
 
 HÄNEN temppu on ihanan yksinkertainen. Epäonnistuneen jakson jälkeen HÄN kysyy:
 
@@ -44,13 +44,13 @@ Tämä muuttaa tuhansia "epäonnistumisia" rikkaaksi kirjastoksi *onnistuneita* 
 
 ---
 
-## Analogia tosielämästä: taapero oppii pinoamaan lohkoja {#the-real-life-analogy-toddler-learning-to-stack-blocks}
+## Analogia tosielämästä: taapero oppii pinoamaan lohkoja
 
 Taaperolapsi, joka yrittää laittaa lohkon ämpäriin, missaa jatkuvasti. Mutta jokainen "miss" laskeutuu korttelin *johonkin*. Jos toistat jokaisen poissaolon sanomalla "yritit laittaa sen *oikealle* – ja teit sen!", taapero kehittää hienomotoriikkaa koko pöydässä. Pian he voivat asettaa lohkon mihin tahansa - myös ämpäriin.
 
 ---
 
-## Mitä koodimme tekee {#what-our-code-does}
+## Mitä koodimme tekee
 
 Käsikirjoitus `goal_conditioned_policy.py` kulkee **7x7 sokkelossa** seinillä. Jokaisen jakson alussa valitaan satunnainen maalisolu. Agentin on löydettävä se.
 
@@ -64,7 +64,7 @@ Koulutus kestää 3 000 jaksoa hidastuvalla tutkimusnopeudella – agentti tutki
 
 ---
 
-## Mitä kaaviot osoittavat {#what-the-charts-show}
+## Mitä kaaviot osoittavat
 
 ![Tavoitteen mukaiset käytäntötulokset](outputs/goal_conditioned_policy.png)
 
@@ -74,7 +74,7 @@ Koulutus kestää 3 000 jaksoa hidastuvalla tutkimusnopeudella – agentti tutki
 
 ---
 
-## Missä tämä näkyy todellisessa maailmassa {#where-this-shows-up-in-the-real-world}
+## Missä tämä näkyy todellisessa maailmassa
 
 | Sovellus | "tavoite" |
 |-------------|------------|
@@ -87,6 +87,6 @@ Tavoiteehtoiset käytännöt ovat yksi HIRO:n (Hierarchical RL with subgoals) ra
 
 ---
 
-## Yhden lauseen yhteenveto {#one-sentence-summary}
+## Yhden lauseen yhteenveto
 
 > **Tavoitteeseen ehdollinen käytäntö on agentti, joka voi navigoida mihin tahansa kohteeseen – ja HER mahdollistaa epäonnistumisesta oppimisen teeskentelemällä, että jokainen menetetty laukaus on suunnattu minne tahansa se laskeutuikin.**

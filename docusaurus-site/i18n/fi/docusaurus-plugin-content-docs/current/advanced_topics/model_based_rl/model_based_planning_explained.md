@@ -1,6 +1,6 @@
 # Oppitun suunnittelumallin (MPC) käyttäminen 🔮
 
-## Suuri Idea {#the-big-idea}
+## Suuri Idea
 
 Sinulla on **maailmamalli** (hermoverkko, joka ennustaa tulevaisuutta).
 Mitä nyt?
@@ -14,7 +14,7 @@ Tällä temppulla on nimi: **Model Predictive Control** (MPC).
 
 ---
 
-## Analogia tosielämästä {#a-real-life-analogy}
+## Analogia tosielämästä
 
 Olet ravintolassa katsomassa valikkoa. Et sitoudu viiden kurssiin
 tilaa paikan päällä – tilaat ensimmäisen ruokalajin ja katsot sitten, kuinka täyteläiseksi tunnet olosi
@@ -28,7 +28,7 @@ Tuo **plan-far / act-near / re-plan** -silmukka on MPC.
 
 ---
 
-## Kuinka "Satunnainen ammunta" toimii {#how-random-shooting-works}
+## Kuinka "Satunnainen ammunta" toimii
 
 On olemassa kehittyneempiä suunnittelijoita - esimerkiksi:
 - **CEM** (Cross-Entropy Method): tarkenna iteratiivisesti suunnitelmien jakautumista pitämällä vain top-k kullakin kierroksella.
@@ -54,7 +54,7 @@ muutama millisekunti.
 
 ---
 
-## Miksi suunnitella jokainen askel uudelleen? {#why-re-plan-every-step}
+## Miksi suunnitella jokainen askel uudelleen?
 
 Koska malli on epätäydellinen. Virheet yhdistetään käyttöönoton aikana (kuten näkyy kaaviossa, jonka on luonut `world_model.py`, tallennettu `outputs/world_model.png`). Vaiheen 0 suunnitelma on luotettava vain muutaman ensimmäisen liikkeen aikana; vaiheessa 15 malli on hallusinaatio. Joten luotamme vain
 **ensimmäinen siirto** ja päivitä sitten suunnitelma uusimpaan todelliseen tilaan.
@@ -65,7 +65,7 @@ todellisuutta.
 
 ---
 
-## Ryppy: Palkinnon on kerrottava suunnittelijalle jotain {#a-wrinkle-the-reward-has-to-tell-the-planner-something}
+## Ryppy: Palkinnon on kerrottava suunnittelijalle jotain
 
 CartPolessa todellinen palkinto on `+1` joka askeleella, kunnes napa putoaa. Malli
 ennustaa uskollisesti `+1, +1, +1, ...` melkein jokaiseen suunnitelmaan, koska
@@ -88,7 +88,7 @@ suunnitelmat, jotka pysyvät pystyssä. Suunnittelija voi luokitella ne.
 
 ---
 
-## Mitä koodimme tekee {#what-our-code-does}
+## Mitä koodimme tekee
 
 `model_based_planning.py`:
 
@@ -98,7 +98,7 @@ suunnitelmat, jotka pysyvät pystyssä. Suunnittelija voi luokitella ne.
 3. **Käyttää myös 20 jaksoa** tasaisen satunnaisen käytännön pohjalta.
 4. **Piirtoi** sekä vierekkäin että tulostaa keskiarvot.
 
-### Mitä sinun pitäisi nähdä, kun käytät sitä {#what-you-should-see-when-you-run-it}
+### Mitä sinun pitäisi nähdä, kun käytät sitä
 
 | politiikka | Keskimääräinen palkinto (vaiheet selviytyneet) |
 |--------|-------------------------------:|
@@ -115,7 +115,7 @@ Juoni `outputs/model_based_planning.png` näyttää kaksi värillistä palkkia j
 
 ---
 
-## Mallipohjaisen suunnittelun vahvuudet {#strengths-of-model-based-planning}
+## Mallipohjaisen suunnittelun vahvuudet
 
 - **Sample tehokas.** Kaikki oppiminen tehtiin yhdestä satunnaisesta erästä
   siirtymät. Hyödyllisen politiikan muodostamiseksi ei tarvinnut enempää env-vuorovaikutusta.
@@ -124,7 +124,7 @@ Juoni `outputs/model_based_planning.png` näyttää kaksi värillistä palkkia j
 - **Tulkitavissa.** Voit tarkastaa suunnitelmat, joita agentti harkitsi
   ennustetut lentoradat ja pisteet.
 
-## Heikkoudet (ja mitä ihmiset tekevät niistä) {#weaknesses-and-what-people-do-about-them}
+## Heikkoudet (ja mitä ihmiset tekevät niistä)
 
 - **Satunnainen ammunta on typerää.** Se näyttelee suunnitelmia sokeasti. Korkeammalle
   mitat, valitse **CEM** (Cross-Entropy Method – katso edellä) tai
@@ -145,7 +145,7 @@ Juoni `outputs/model_based_planning.png` näyttää kaksi värillistä palkkia j
 
 ---
 
-## Kuinka tämä liittyy nykyaikaisiin järjestelmiin {#how-this-connects-to-modern-systems}
+## Kuinka tämä liittyy nykyaikaisiin järjestelmiin
 
 Juuri suorittamasi tarkka resepti – **oppinut dynamiikkaa + suunnittelu** – on se
 nykyaikaisen tekoälytutkimuksen vahvimpien RL-järjestelmien selkäranka:
@@ -159,7 +159,7 @@ Olet rakentanut - muutamassa sadassa rivissä - perheen pienimmän jäsenen.
 
 ---
 
-## Avainsanat {#key-words}
+## Avainsanat
 
 | Termi | Pelkkää englantia |
 |------|---------------|
@@ -172,7 +172,7 @@ Olet rakentanut - muutamassa sadassa rivissä - perheen pienimmän jäsenen.
 
 ---
 
-## Yhden lauseen yhteenveto {#one-sentence-summary}
+## Yhden lauseen yhteenveto
 
 > **Kun sinulla on maailmanmalli, suunnittelu on vain "unelma sadasta tulevaisuudesta,
 > valitse paras ensimmäinen askel, toista."**
