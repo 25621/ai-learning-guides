@@ -149,7 +149,7 @@ Le **clipping** dans PPO signifie autre chose : PPO tronque (clipping) le ratio 
 - Les **récompenses sont éparses** — les récompenses de progression vers l'avant sont minuscules par étape.
 - **REINFORCE aurait besoin** de milliers d'épisodes complets pour obtenir un signal utile.
 
-Les mises à jour n-étapes de PPO avec [GAE (Generalized Advantage Estimation)](./ppo_scratch_explained.md#gae-smarter-advantage-estimates) permettent au robot d'apprendre à partir d'épisodes incomplets :
+Les mises à jour n-étapes de PPO avec [GAE (Generalized Advantage Estimation)](./ppo_scratch_explained.md#gae-des-estimations-davantage-plus-intelligentes) permettent au robot d'apprendre à partir d'épisodes incomplets :
 > « Même si je suis tombé après 50 étapes, ces étapes ont montré UNE CERTAINE progression. Utilisons une estimation de retour sur 50 étapes plutôt que d'attendre la fin de l'épisode. »
 
 ---

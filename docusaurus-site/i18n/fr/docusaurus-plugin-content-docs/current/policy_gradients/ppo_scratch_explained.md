@@ -100,7 +100,7 @@ Avec clipping : le gradient est nul en dehors de [1-ε, 1+ε], donc la politique
 
 ---
 
-## GAE : Des estimations d'avantage plus intelligentes
+## GAE : Des estimations d'avantage plus intelligentes {#gae-des-estimations-davantage-plus-intelligentes}
 
 PPO utilise le **Generalized Advantage Estimation (GAE)** pour calculer l'avantage :
 

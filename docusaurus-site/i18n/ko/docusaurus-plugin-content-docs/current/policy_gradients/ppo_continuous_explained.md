@@ -149,7 +149,7 @@ PPO에서 말하는 **Clip**은 다른 의미입니다. [PPO 클리핑 섹션](.
 - **보상이 희소합니다** — 앞으로 나아갈 때 얻는 보상은 단계별로 매우 작습니다.
 - **REINFORCE를 쓰려면** 유용한 신호를 얻기 위해 수천 개의 완벽한 에피소드가 필요할 것입니다.
 
-PPO의 n-step 업데이트와 [GAE (Generalized Advantage Estimation)](./ppo_scratch_explained.md#gae-smarter-advantage-estimates)를 사용하면 에피소드가 끝나지 않아도 학습할 수 있습니다.
+PPO의 n-step 업데이트와 [GAE (Generalized Advantage Estimation)](./ppo_scratch_explained.md#gae-더-똑똑한-advantage-추정)를 사용하면 에피소드가 끝나지 않아도 학습할 수 있습니다.
 > "50단계 만에 넘어졌더라도, 그 단계들 동안은 분명 앞으로 조금 나아갔어.
 > 에피소드가 끝날 때까지 기다리지 말고 이 50단계의 리턴 추정치를 사용해서 배우자."
 

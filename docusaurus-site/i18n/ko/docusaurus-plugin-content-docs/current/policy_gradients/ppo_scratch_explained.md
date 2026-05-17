@@ -100,7 +100,7 @@ L_CLIP = E[min(r(θ) · A,  clip(r(θ), 1-ε, 1+ε) · A)]
 
 ---
 
-## GAE: 더 똑똑한 Advantage 추정
+## GAE: 더 똑똑한 Advantage 추정 {#gae-더-똑똑한-advantage-추정}
 
 PPO는 **GAE (Generalized Advantage Estimation)**를 사용하여 advantage를 계산합니다.
 
