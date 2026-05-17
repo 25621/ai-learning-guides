@@ -1,0 +1,14 @@
+{
+  "title": {
+    "message": "强化学习",
+    "description": "The title in the navbar"
+  },
+  "logo.alt": {
+    "message": "强化学习网站 Logo",
+    "description": "The alt text of navbar logo"
+  },
+  "item.label.GitHub": {
+    "message": "GitHub",
+    "description": "Navbar item with label GitHub"
+  }
+}
