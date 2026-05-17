@@ -264,7 +264,7 @@ Belajar dari dataset tetap tanpa interaksi lingkungan.
 
 ---
 
-### Eksplorasi {#eksplorasi}
+### Eksplorasi {#exploration}
 Menangani imbalan jarang dan masalah eksplorasi sulit.
 
 **Konsep:**
@@ -287,7 +287,7 @@ Menangani imbalan jarang dan masalah eksplorasi sulit.
 
 ---
 
-### RL Hierarkis {#rl-hierarkis}
+### RL Hierarkis {#hierarchical-rl}
 Belajar pada beberapa tingkat abstraksi temporal.
 
 **Konsep:**
@@ -308,7 +308,7 @@ Belajar pada beberapa tingkat abstraksi temporal.
 
 ---
 
-### RLHF (RL dari Umpan Balik Manusia) {#rlhf-rl-dari-umpan-balik-manusia}
+### RLHF (RL dari Umpan Balik Manusia) {#rlhf-rl-from-human-feedback}
 Menyelaraskan model dengan preferensi manusia.
 
 **Konsep:**
