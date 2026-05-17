@@ -173,7 +173,7 @@ Tyypilliset kertoimet: c₁ = 0,01 (entropia), c₂ = 0,5 (kriittinen)
 **Kaksi termiä, jotka kannattaa purkaa:**
 
 - **Policy gradient** — "näyttelijä" puolet tappiosta. Se käyttää gradienttisignaalia
-  työnnä käytäntöa kohti toimia, joilla on suurempi hyöty ja pois toimista, joilla on pienempi hyöty
+  työnnä käytäntöä kohti toimia, joilla on suurempi hyöty ja pois toimista, joilla on pienempi hyöty
   etu. Tämä on sama ydinidea, joka esiteltiin REINFORCEssa – katso [REINFORCE
   walkthrough](./reinforce_cartpole_explained.md#the-old-way-vs-the-new-way)
   intuitio. PPO vain lisää leikkauskääreen ympärilleen.

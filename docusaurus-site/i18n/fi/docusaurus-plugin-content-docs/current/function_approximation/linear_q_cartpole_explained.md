@@ -28,7 +28,7 @@ tangon ollessa **missä tahansa kulmassa**. Pohjimmiltaan on olemassa **ääret�
 tee taulukko, jossa on äärettömät rivit. Tarvitsemme universumin kokoisen muistikirjan!
 
 **Esimerkki tosielämästä:** Kuvittele, että opettelet ajamaan pyörällä. Jokaista mahdollista huojuntaa ei voi muistaa
-– niitä on aivan liikaa! Sen sijaan opit **säännön**: "Kun nojaan vasemmalle, 
+– niitä on aivan liikaa! Sen sijaan opit **säännön**: "Kun nojaan vasemmalle,
 käännän oikealle; kun nojaan oikealle, käännän vasemmalle." Yksinkertainen sääntö pätee KAIKKIIN heilahteluihin.
 
 ---

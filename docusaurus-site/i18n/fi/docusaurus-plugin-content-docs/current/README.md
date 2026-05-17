@@ -298,7 +298,7 @@ Opi useilla temporaalisen abstraktion tasoilla.
 
 **Käytännön työ:**
 - [ ] [Toteuta vaihtoehtokriittinen arkkitehtuuri](advanced_topics/hierarchical_rl/option_critic_explained.md)
-- [ ] [Harjoittele tavoitteellista käytäntöa](advanced_topics/hierarchical_rl/goal_conditioned_policy_explained.md)
+- [ ] [Harjoittele tavoitteellista käytäntöä](advanced_topics/hierarchical_rl/goal_conditioned_policy_explained.md)
 - [ ] [Testaa pitkän horisontin tehtäviä](advanced_topics/hierarchical_rl/long_horizon_tasks_explained.md)
 
 **Resurssit:**
@@ -413,8 +413,5 @@ Anna omaperäistä työtä kentälle.
 ## Lisenssi
 
 Tämä opas on tarkoitettu koulutustarkoituksiin. Voit vapaasti jakaa ja mukauttaa.
-
----
-ttaa.
 
 ---

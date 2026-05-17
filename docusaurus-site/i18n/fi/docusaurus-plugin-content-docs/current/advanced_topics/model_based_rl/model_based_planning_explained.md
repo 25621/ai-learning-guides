@@ -150,7 +150,7 @@ Juuri suorittamasi tarkka resepti – **oppinut dynamiikkaa + suunnittelu** – 
 nykyaikaisen tekoälytutkimuksen vahvimpien RL-järjestelmien selkäranka:
 
 - **MuZero** (DeepMind): yhdistää opitun maailmanmallin Monte Carlo Tree Searchiin. Se hallitsee Go, shakki, shogi ja Atari ilman sääntöjä etukäteen.
-- **Dreamer / DreamerV3** (Hafner et al.): kouluttaa käytäntöa *oppineen* sisällä
+- **Dreamer / DreamerV3** (Hafner et al.): kouluttaa käytäntöä *oppineen* sisällä
   **latentti-avaruus**-maailmanmalli (eli malli pakkaa raakakuvat tai tilat kompaktiksi, abstraktiksi esitykseksi ennen tulevaisuuden ennustamista). Se saavuttaa huippuluokan (huipputason) suorituskyvyn yli 100:ssa vertailussa.
 - **PETS / PlaNet / TD-MPC**: nämä ovat algoritmiperheitä (tutkimuslinjoja), jotka skaalaavat juuri tämän idean monimutkaisiin jatkuviin ohjaustehtäviin, kuten robotiikkaan.
 

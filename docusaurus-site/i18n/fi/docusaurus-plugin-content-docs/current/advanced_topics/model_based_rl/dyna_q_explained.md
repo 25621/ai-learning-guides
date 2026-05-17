@@ -64,7 +64,7 @@ Malli on vain hakutaulukko:
   harjoitella sitä henkisesti vielä kymmenen kertaa ennen kuin jatkat. Sormet eivät ole
   liikkuvat, mutta aivot päivittyvät.
 - **Itse ajava auto.** Kun se käy joutokäynnillä punaisella valolla, se toistaa viimeisen
-  sata kaistanvaihtoa simulaatiossa hienosäätääkseen sen käytäntöa polttamatta
+  sata kaistanvaihtoa simulaatiossa hienosäätääkseen sen käytäntöä polttamatta
   renkaat.
 
 ---

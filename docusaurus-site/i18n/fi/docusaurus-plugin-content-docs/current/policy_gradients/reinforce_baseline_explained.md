@@ -162,7 +162,7 @@ Advantage:        A_t = G_t - V(s_t)
 | **Etu A_t** | "Oliko tämä toimenpide odotettua parempi?" |
 | **Arvoverkosto** | Neuraaliverkko, joka oppii ennustamaan odotettuja tuottoja |
 | **Varianssin vähennys** | Vähemmän kohinaa gradienttiarvioissa → vakaampi oppiminen |
-| ** Puolueeton** | Perustaso ei muuta tavoitekäytäntöa keskimäärin; se vain tekee oppimissignaalista vähemmän meluisan ja vakaamman |
+| ** Puolueeton** | Perustaso ei muuta tavoitekäytäntöä keskimäärin; se vain tekee oppimissignaalista vähemmän meluisan ja vakaamman |
 
 ---
 
