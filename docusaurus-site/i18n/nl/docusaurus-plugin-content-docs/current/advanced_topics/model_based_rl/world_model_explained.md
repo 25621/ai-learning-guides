@@ -49,9 +49,9 @@ Het **kijkt gewoon**. Specifiek:
 
 1. **Verzamel gegevens.** Laat elk beleid (zelfs willekeurig) interacteren met de werkelijkheid
    omgeving een tijdje. Bewaar elke overgang:
-   `` `
+   ```
    (state, action, reward, next_state)
-   ` ` `
+   ```
 2. **Train a neural network** to predict ` next_state ` and ` beloning ` from
    ` (status, actie)`. Dit is begeleid leren: elke opgeslagen transitie is een
    gelabeld voorbeeld waarbij de invoer is "wat de agent zag en deed" en de
