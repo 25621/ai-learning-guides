@@ -195,9 +195,9 @@ Pilih 2-3 bidang berdasarkan minat Anda.
 - [Model-Based RL](#model-based-rl)
 - [Multi-Agent RL](#multi-agent-rl)
 - [Offline/Batch RL](#offlinebatch-rl)
-- [Eksplorasi](#eksplorasi)
-- [RL Hierarkis](#rl-hierarkis)
-- [RLHF (RL dari Umpan Balik Manusia)](#rlhf-rl-dari-umpan-balik-manusia)
+- [Eksplorasi](#exploration)
+- [RL Hierarkis](#hierarchical-rl)
+- [RLHF (RL dari Umpan Balik Manusia)](#rlhf-rl-from-human-feedback)
 
 ### RL Berbasis Model (Model-Based RL) {#model-based-rl}
 Pelajari dinamika lingkungan untuk merencanakan atau menghasilkan pengalaman sintetis.
