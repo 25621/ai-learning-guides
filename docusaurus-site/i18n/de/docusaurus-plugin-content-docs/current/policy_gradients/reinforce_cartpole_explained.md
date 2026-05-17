@@ -11,7 +11,7 @@ Dieses Rezept wird **Policy** (Strategie, π, pi) genannt. Im Reinforcement Lear
 
 ---
 
-## Der alte Weg vs. der neue Weg
+## Der alte Weg vs. der neue Weg {#the-old-way-vs-the-new-way}
 
 **Alter Weg (Q-Learning / DQN):** Lerne, wie GUT jede Aktion ist (Q-Werte) und wähle dann die beste.
 > „Links drücken hat Score 7, Rechts drücken hat Score 5 → Drücke LINKS!“
