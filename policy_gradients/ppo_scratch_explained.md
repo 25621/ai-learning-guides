@@ -44,7 +44,7 @@ r(θ) = π_new(a|s) / π_old(a|s)
 
 ---
 
-## The Clipping Trick
+## The Clipping Trick {#the-clipping-trick}
 
 PPO clips the ratio to stay within [1-ε, 1+ε] (typically ε = 0.2):
 
@@ -106,7 +106,7 @@ PPO is the "careful surgeon" of RL optimizers.
 
 ---
 
-## GAE: Smarter Advantage Estimates
+## GAE: Smarter Advantage Estimates {#gae-smarter-advantage-estimates}
 
 PPO uses **Generalized Advantage Estimation (GAE)** to compute the advantage:
 

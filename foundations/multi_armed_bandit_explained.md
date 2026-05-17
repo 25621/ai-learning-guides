@@ -33,7 +33,7 @@ try anything new, you'll never know!
 
 ---
 
-## The Epsilon-Greedy Strategy
+## The Epsilon-Greedy Strategy {#the-epsilon-greedy-strategy}
 
 A smart way to solve this is called **epsilon-greedy** (epsilon is just the
 Greek letter ε, said like "ep-sih-lon"):

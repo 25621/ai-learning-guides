@@ -53,7 +53,7 @@ PPO 中的「近端 (Proximal)」意味著*不要邁大步*。每次更新都是
 2. **使用該獎勵模型，透過 PPO 微調語言模型。**
 3. (可選) 如果你想要更簡單的路徑，可以使用 DPO 跳過第 2 步。
 
-PPO 是 OpenAI 和 Anthropic 等公司用於第一波對齊模型（包括 InstructGPT 和原始 ChatGPT）的主力算法。
+PPO 是 OpenAI 和 Anthropic 等公司用於第一波對齊模型（包括 InstructGPT 和原始 ChatGPT）的主力演算法。
 
 ## 為什麼這在實驗室之外也很重要
 

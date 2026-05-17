@@ -19,13 +19,13 @@
 
 ---
 
-## 階段 1：基礎 (2-4 週) {#phase-1-foundations-2-4-weeks}
+## 階段 1：基礎 (2-4 週)
 
 ### 目標
 在不深入數學的情況下理解核心概念。
 
 ### 學習概念
-- 智能體 (Agent)、環境 (Environment)、狀態 (State)、動作 (Action)、獎勵 (Reward)
+- 代理人 (Agent)、環境 (Environment)、狀態 (State)、動作 (Action)、獎勵 (Reward)
 - 馬爾可夫決策過程 (MDP)
 - 回報 (Return) 和折扣因子 (γ)
 - 策略 (Policy) 與價值函數 (Value function)
@@ -51,7 +51,7 @@
 
 ---
 
-## 階段 2：表格方法 (3-4 週) {#phase-2-tabular-methods-3-4-weeks}
+## 階段 2：表格方法 (3-4 週)
 
 ### 目標
 掌握狀態/動作空間足夠小、可以存儲在表格中的經典強化學習演算法。
@@ -72,7 +72,7 @@
 
 ### 實踐工作
 - [ ] [為 GridWorld 實作策略迭代](tabular_methods/policy_iteration_gridworld_explained.md)
-- [ ] [為 Frozen Lake 建構 Q-learning 智能體](tabular_methods/q_learning_frozen_lake_explained.md)
+- [ ] [為 Frozen Lake 建構 Q-learning 代理人](tabular_methods/q_learning_frozen_lake_explained.md)
 - [ ] [為 Cliff Walking 實作 SARSA](tabular_methods/sarsa_cliff_walking_explained.md)
 - [ ] [比較 SARSA 與 Q-learning 的行為（安全路徑 vs 最優路徑）](tabular_methods/sarsa_vs_qlearning_explained.md)
 - [ ] [為 21 點遊戲實作蒙地卡羅控制](tabular_methods/monte_carlo_blackjack_explained.md)
@@ -94,7 +94,7 @@
 
 ---
 
-## 階段 3：函數近似 (3-4 週) {#phase-3-function-approximation-3-4-weeks}
+## 階段 3：函數近似 (3-4 週)
 
 ### 目標
 使用函數近似器將強化學習擴展到小型狀態空間之外。
@@ -137,11 +137,11 @@
 - 💻 [CleanRL 實作](https://github.com/vwxyzjn/cleanrl)
 
 ### 里程碑
-訓練一個在 Atari Pong 上獲得正獎勵的 DQN 智能體。
+訓練一個在 Atari Pong 上獲得正獎勵的 DQN 代理人。
 
 ---
 
-## 階段 4：策略梯度方法 (4-5 週) {#phase-4-policy-gradient-methods-4-5-weeks}
+## 階段 4：策略梯度方法 (4-5 週)
 
 ### 目標
 學習直接優化策略，而不計算價值函數。
@@ -189,17 +189,17 @@ PPO 是現代強化學習的主力演算法——深入理解其裁剪 (Clipping
 
 ---
 
-## 階段 5：高級主題 (6-8 週) {#phase-5-advanced-topics-6-8-weeks}
+## 階段 5：高級主題 (6-8 週)
 
 根據你的興趣選擇 2-3 個領域。
 - [基於模型的強化學習](#model-based-rl)
-- [多智能體強化學習](#multi-agent-rl)
+- [多代理人強化學習](#multi-agent-rl)
 - [離線/批量強化學習](#offlinebatch-rl)
 - [探索](#exploration)
 - [分層強化學習](#hierarchical-rl)
 - [RLHF (來自人類回饋的強化學習)](#rlhf-rl-from-human-feedback)
 
-### 基於模型的強化學習 (Model-Based RL) {#model-based-rl}
+### 基於模型的強化學習 (Model-Based RL)
 學習環境動力學以進行規劃或生成合成經驗。
 
 **概念：**
@@ -221,8 +221,8 @@ PPO 是現代強化學習的主力演算法——深入理解其裁剪 (Clipping
 
 ---
 
-### 多智能體強化學習 (Multi-Agent RL) {#multi-agent-rl}
-多個智能體在共享環境中同時學習。
+### 多代理人強化學習 (Multi-Agent RL)
+多個代理人在共享環境中同時學習。
 
 **概念：**
 - 獨立學習者
@@ -231,18 +231,18 @@ PPO 是現代強化學習的主力演算法——深入理解其裁剪 (Clipping
 - 湧現通訊 (Emergent communication)
 
 **實踐工作：**
-- [ ] [在簡單博弈論任務中訓練智能體](advanced_topics/multi_agent_rl/matrix_games_explained.md)
+- [ ] [在簡單博弈論任務中訓練代理人](advanced_topics/multi_agent_rl/matrix_games_explained.md)
 - [ ] [為棋類遊戲實作自對弈](advanced_topics/multi_agent_rl/self_play_tic_tac_toe_explained.md)
 - [ ] [探索 PettingZoo 環境](advanced_topics/multi_agent_rl/pettingzoo_explore_explained.md)
 
 **資源：**
-- 📄 [多智能體強化學習綜述](https://arxiv.org/abs/1911.10635)
+- 📄 [多代理人強化學習綜述](https://arxiv.org/abs/1911.10635)
 - 📄 [OpenAI Five](https://arxiv.org/abs/1912.06680)
 - 💻 [PettingZoo 庫](https://pettingzoo.farama.org/)
 
 ---
 
-### 離線/批量強化學習 (Offline/Batch RL) {#offlinebatch-rl}
+### 離線/批量強化學習 (Offline/Batch RL)
 在不與環境交互的情況下，從固定資料集中學習。
 
 **概念：**
@@ -264,7 +264,7 @@ PPO 是現代強化學習的主力演算法——深入理解其裁剪 (Clipping
 
 ---
 
-### 探索 (Exploration) {#exploration}
+### 探索 (Exploration)
 解決稀疏獎勵和極難探索的問題。
 
 **概念：**
@@ -287,7 +287,7 @@ PPO 是現代強化學習的主力演算法——深入理解其裁剪 (Clipping
 
 ---
 
-### 分層強化學習 (Hierarchical RL) {#hierarchical-rl}
+### 分層強化學習 (Hierarchical RL)
 在多個時間抽象層級上進行學習。
 
 **概念：**
@@ -308,7 +308,7 @@ PPO 是現代強化學習的主力演算法——深入理解其裁剪 (Clipping
 
 ---
 
-### RLHF (來自人類回饋的強化學習) {#rlhf-rl-from-human-feedback}
+### RLHF (來自人類回饋的強化學習)
 使模型與人類偏好對齊。
 
 **概念：**
@@ -330,7 +330,7 @@ PPO 是現代強化學習的主力演算法——深入理解其裁剪 (Clipping
 
 ---
 
-## 階段 6：研究級別 (持續進行) {#phase-6-research-level-ongoing}
+## 階段 6：研究級別 (持續進行)
 
 ### 目標
 為該領域貢獻原創性工作。
@@ -379,7 +379,7 @@ PPO 是現代強化學習的主力演算法——深入理解其裁剪 (Clipping
 6. **理解數學** — 至少掌握策略梯度定理和貝爾曼方程
 7. **保持耐心** — 強化學習以不穩定著稱；訓練失敗是常態
 8. **使用隨機種子** — 可重複性至關重要；在多個種子上取平均值
-9. **加入社區** — r/reinforcementlearning, RL Discord, Twitter/X
+9. **加入社群** — r/reinforcementlearning, RL Discord, Twitter/X
 
 ---
 

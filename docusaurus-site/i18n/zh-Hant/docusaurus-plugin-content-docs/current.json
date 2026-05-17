@@ -28,7 +28,7 @@
     "description": "The label for category 'Model-Based RL' in sidebar 'guideSidebar'"
   },
   "sidebar.guideSidebar.category.Multi-Agent RL": {
-    "message": "多智能體強化學習",
+    "message": "多代理人強化學習",
     "description": "The label for category 'Multi-Agent RL' in sidebar 'guideSidebar'"
   },
   "sidebar.guideSidebar.category.Offline RL": {

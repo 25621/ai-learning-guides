@@ -27,7 +27,7 @@
 
 ---
 
-## ε-贪心策略 (The Epsilon-Greedy Strategy) {#the-epsilon-greedy-strategy}
+## ε-贪心策略 (The Epsilon-Greedy Strategy)
 
 解决这个问题的一个聪明方法叫做 **ε-贪心 (epsilon-greedy)**（epsilon 就是希腊字母 ε，读作 "ep-sih-lon"）：
 

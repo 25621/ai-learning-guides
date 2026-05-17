@@ -13,7 +13,7 @@ learning, π means "the rule for choosing actions."
 
 ---
 
-## The Old Way vs. The New Way
+## The Old Way vs. The New Way {#the-old-way-vs-the-new-way}
 
 **Old way (Q-learning / DQN):** Learn how GOOD each action is (Q-values), then pick the best.
 > "Pushing LEFT has score 7, pushing RIGHT has score 5 → push LEFT!"

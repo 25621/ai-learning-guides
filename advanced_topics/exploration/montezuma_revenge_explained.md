@@ -1,6 +1,6 @@
 # Training on Montezuma's Revenge 🏛️🔑
 
-## Why This Game Is Famous (in RL circles)
+## Why This Game Is Famous (in RL circles) {#why-this-game-is-famous}
 
 In 2015, DeepMind's DQN learned to play dozens of Atari games at
 super-human level from raw pixels. It made headlines. But buried in the
@@ -33,7 +33,7 @@ curiosity bonus** so the agent rewards *itself* for reaching novel screens,
 and suddenly it has a dense signal pulling it deeper into the level. RND
 got a super-human score on Montezuma. (Later: Go-Explore, Agent57, …)
 
-## Real-Life Examples of "Montezuma-style" Sparse Reward
+## Real-Life Examples of "Montezuma-style" Sparse Reward {#real-life-examples}
 
 - **A combination lock / a treasure hunt with cryptic clues.** No partial
   credit. You're at zero until you're suddenly at the prize.
@@ -48,7 +48,7 @@ In all of these, "just try random stuff" is hopeless. You need to
 *systematically* explore — and an internal "ooh, that's new, keep going"
 signal is what keeps you systematic.
 
-## Why We Don't Actually Train On Pixel Montezuma Here
+## Why We Don't Actually Train On Pixel Montezuma Here {#why-not-pixel-level}
 
 Doing the *real* thing properly means:
 
@@ -61,7 +61,7 @@ Doing the *real* thing properly means:
 That's a research project, not a teaching script. So `montezuma_revenge.py`
 does two honest things instead:
 
-### 1. It *touches* the real game (if `ale-py` is installed)
+### 1. It *touches* the real game (if `ale-py` is installed) {#touching-real-game}
 
 It loads `ALE/MontezumaRevenge-v5` through Gymnasium, runs a **uniform-
 random agent for 2000 steps**, and reports the total game reward. The
@@ -70,7 +70,7 @@ reward" turned into a concrete, run-it-yourself fact. If the Atari
 package isn't installed, it prints the one-line `pip install` command and
 moves on.
 
-### 2. It trains a tabular agent on a *scale model*: `MiniMontezumaEnv`
+### 2. It trains a tabular agent on a *scale model*: `MiniMontezumaEnv` {#scale-model-training}
 
 This is a tiny gridworld with the same *skeleton* as Montezuma's first
 room:
@@ -103,7 +103,7 @@ The figure shows the two learning curves side by side, plus the actual
 route the curious agent learned, drawn on the grid (start → key → door →
 treasure). The script also prints that route as ASCII frames.
 
-## The Lesson
+## The Lesson {#lesson-summary}
 
 > **"Sparse reward" is not a quirk of one weird Atari game — it's the
 > default in any world where success requires a long, specific sequence of
@@ -114,7 +114,7 @@ treasure). The script also prints that route as ASCII frames.
 > first real reward. Everything after that (RND, Go-Explore, Agent57) is a
 > scaled-up, neural-network version of the same move.
 
-## Key Words to Remember
+## Key Words to Remember {#key-terms}
 
 | Word | Meaning |
 |------|---------|
@@ -125,7 +125,7 @@ treasure). The script also prints that route as ASCII frames.
 | **Go-Explore** | "Remember promising states, return to them, then explore from there" — another Montezuma-cracker |
 | **Scale model** | A small, cheap environment that keeps the *structure* of a hard problem so you can study it quickly |
 
-## One-Sentence Summary
+## One-Sentence Summary {#summary}
 
 > **Montezuma's Revenge is the game that taught RL "rewards you never
 > receive can't teach you anything" — and the fix, then and now, is a

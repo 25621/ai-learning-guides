@@ -43,7 +43,7 @@ r(θ) = π_new(a|s) / π_old(a|s)
 
 ---
 
-## 裁剪技巧 (The Clipping Trick) {#the-clipping-trick}
+## 裁剪技巧 (The Clipping Trick)
 
 PPO 将概率比限制在 [1-ε, 1+ε] 范围内（通常 ε = 0.2）：
 
@@ -100,7 +100,7 @@ L_CLIP = E[min(r(θ) · A,  clip(r(θ), 1-ε, 1+ε) · A)]
 
 ---
 
-## GAE：更明智的优势估计 {#gae-smarter-advantage-estimates}
+## GAE：更明智的优势估计
 
 PPO 使用 **广义优势估计 (GAE, Generalized Advantage Estimation)** 来计算优势函数：
 

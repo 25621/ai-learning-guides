@@ -1,6 +1,6 @@
 # Option-Critic Architecture
 
-## The Big Idea: Working in Chapters, Not Word by Word
+## The Big Idea: Working in Chapters, Not Word by Word {#core-idea}
 
 Imagine you are writing a novel. You don't plan every single word before you begin. Instead, you think in **chapters**: "Chapter 1 introduces the hero. Chapter 2 is the quest. Chapter 3 is the showdown." Within each chapter, you figure out the details as you go.
 
@@ -8,13 +8,13 @@ That is exactly how the Option-Critic architecture thinks about decisions.
 
 ---
 
-## What Is a "Flat" Agent?
+## What Is a "Flat" Agent? {#what-is-flat-agent}
 
 A normal RL agent (like the ones from Phase 3 and 4 of the curriculum) decides one action at a time, every single step. It's like a GPS that recalculates the entire route from scratch every time you move one meter. It works, but it's exhausting and slow to learn.
 
 ---
 
-## What Is an "Option"?
+## What Is an "Option"? {#what-is-an-option}
 
 An **option** is a **named skill** — a mini-policy that the agent can run for several steps in a row before handing control back.
 
@@ -32,7 +32,7 @@ The manager picks a specialist. The specialist works until they decide they're d
 
 ---
 
-## The Three Moving Parts
+## The Three Moving Parts {#three-core-components}
 
 Every option has three components — think of them as the specialist's **job description**:
 
@@ -44,7 +44,7 @@ The beauty of Option-Critic is that all three are **learned automatically** — 
 
 ---
 
-## A Day in the Life of an Option-Critic Agent
+## A Day in the Life of an Option-Critic Agent {#a-day-in-the-life}
 
 1. Agent enters a new room (state).
 2. **Manager** looks at the room and picks an option — say, Option 2.
@@ -57,7 +57,7 @@ Compare this to the flat agent: flat agent agonizes over every single step. Opti
 
 ---
 
-## Why Does This Help?
+## Why Does This Help? {#why-it-helps}
 
 In a maze, the agent needs to reach a goal that may be 30–50 steps away. With flat learning, every step on the path is equally "invisible" until the reward finally arrives at the end — that signal has to travel backwards through dozens of steps.
 
@@ -67,7 +67,7 @@ This is the core idea behind all of Hierarchical RL — and Option-Critic is one
 
 ---
 
-## What Our Code Does
+## What Our Code Does {#what-our-code-does}
 
 The script `option_critic.py` puts an Option-Critic agent into a **7x7 gridworld** with a fixed goal. The agent starts anywhere in the grid and must navigate to the goal cell.
 
@@ -83,7 +83,7 @@ No human ever tells it what each option should do. The algorithm discovers which
 
 ---
 
-## What the Charts Show
+## What the Charts Show {#what-the-charts-show}
 
 ![Option-Critic Learning Curves](outputs/option_critic.png)
 
@@ -95,6 +95,6 @@ The smoothed curves show the general trend across 100-episode windows — some n
 
 ---
 
-## One-Sentence Summary
+## One-Sentence Summary {#summary}
 
 > **Option-Critic teaches an agent to work in skills rather than single steps — a manager picks which specialist runs, each specialist does its job, and the whole system learns together from the same reward signal.**
