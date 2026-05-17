@@ -43,7 +43,7 @@ r(θ) = π_new(a|s) / π_old(a|s)
 
 ---
 
-## クリッピング・トリック (The Clipping Trick)
+## クリッピング・トリック (The Clipping Trick) {#the-clipping-trick}
 
 PPOは比率を [1-ε, 1+ε] の範囲内に収まるようにクリップ（制限）します（通常 ε = 0.2）：
 
@@ -100,7 +100,7 @@ L_CLIP = E[min(r(θ) · A,  clip(r(θ), 1-ε, 1+ε) · A)]
 
 ---
 
-## GAE：より賢いアドバンテージ推定
+## GAE：より賢いアドバンテージ推定 {#gae-smarter-advantage-estimates}
 
 PPOは **GAE (Generalized Advantage Estimation)** を使用してアドバンテージを計算します：
 
@@ -159,7 +159,7 @@ L_critic  = V(s) と実際のリターンの間の MSE
 
 **詳しく見ておくべき2つの項：**
 
-- **方策勾配 (Policy gradient)** — 損失の「Actor」側。勾配信号を使用して、方策をより高いアドバンテージを持つ行動へと押し上げ、低いアドバンテージの行動から遠ざけます。これはREINFORCEで導入されたのと同じコアアイデアです。直感的な理解については [REINFORCEの解説](./reinforce_cartpole_explained.md#従来の方法-vs-新しい方法) を参照してください。PPOはそこにクリッピングの包み紙を追加しただけです。
+- **方策勾配 (Policy gradient)** — 損失の「Actor」側。勾配信号を使用して、方策をより高いアドバンテージを持つ行動へと押し上げ、低いアドバンテージの行動から遠ざけます。これはREINFORCEで導入されたのと同じコアアイデアです。直感的な理解については [REINFORCEの解説](./reinforce_cartpole_explained.md#the-old-way-vs-the-new-way) を参照してください。PPOはそこにクリッピングの包み紙を追加しただけです。
 - **MSE (Mean Squared Error：平均二乗誤差)** — 損失の「Critic」側。Critic V(s) は、ある状態からの期待リターンを予測します。その予測を実際のリターンと比較し、差を2乗します：`MSE = mean((V(s) - return)²) `。2乗することで、小さなミスよりも大きなミスを重く罰し、トレーニングのための滑らかで微分可能な信号を提供します。（標準的な回帰損失です。詳細は [平均二乗誤差](https://ja.wikipedia.org/wiki/%E5%B9%B3%E5%9D%87%E4%BA%8C%E4%B9%97%E8%AA%A4%E5%B7%AE) を参照してください。）
 
 ---

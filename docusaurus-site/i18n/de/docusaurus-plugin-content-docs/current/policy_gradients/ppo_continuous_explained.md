@@ -149,7 +149,7 @@ Alles ist gleich, AUSSER:
 - **Belohnungen sind spärlich** — die Belohnungen für Vorwärtsbewegung sind pro Schritt winzig.
 - **REINFORCE würde tausende** kompletter Episoden benötigen, um ein brauchbares Signal zu erhalten.
 
-PPOs n-Step-Updates mit [GAE (Generalized Advantage Estimation)](./ppo_scratch_explained.md#gae-intelligentere-vorteilsschatzungen) ermöglichen es dem Roboter, aus unvollständigen Episoden zu lernen:
+PPOs n-Step-Updates mit [GAE (Generalized Advantage Estimation)](./ppo_scratch_explained.md#gae-smarter-advantage-estimates) ermöglichen es dem Roboter, aus unvollständigen Episoden zu lernen:
 > „Auch wenn ich nach 50 Schritten hingefallen bin, zeigten diese Schritte EINIGEN Vorwärtsfortschritt. Lass mich eine 50-Schritt-Return-Schätzung verwenden, anstatt auf das Ende der Episode zu warten.“
 
 ---

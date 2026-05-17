@@ -100,7 +100,7 @@ Con recorte: el gradiente es cero fuera de [1-ε, 1+ε], por lo que la política
 
 ---
 
-## GAE: Estimaciones de ventaja más inteligentes
+## GAE: Estimaciones de ventaja más inteligentes {#gae-smarter-advantage-estimates}
 
 PPO utiliza **Estimación de Ventaja Generalizada** (Generalized Advantage Estimation, GAE) para calcular la ventaja:
 

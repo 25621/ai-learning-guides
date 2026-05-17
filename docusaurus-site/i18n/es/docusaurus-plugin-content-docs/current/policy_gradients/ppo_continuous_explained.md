@@ -148,7 +148,7 @@ Los **logits** son puntuaciones brutas y no normalizadas para acciones discretas
 - Las **recompensas son escasas**: las recompensas por progreso hacia adelante son diminutas por paso.
 - **REINFORCE necesitaría** miles de episodios completos para obtener una señal útil.
 
-Las actualizaciones de n-pasos de PPO con [GAE (Generalized Advantage Estimation)](./ppo_scratch_explained.md#gae-estimaciones-de-ventaja-más-inteligentes) permiten al robot aprender de episodios incompletos:
+Las actualizaciones de n-pasos de PPO con [GAE (Generalized Advantage Estimation)](./ppo_scratch_explained.md#gae-smarter-advantage-estimates) permiten al robot aprender de episodios incompletos:
 > "Aunque me haya caído después de 50 pasos, esos pasos mostraron ALGO de progreso hacia adelante. Permítanme usar una estimación de retorno de 50 pasos en lugar de esperar a que termine el episodio".
 
 ---
