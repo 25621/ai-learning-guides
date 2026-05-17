@@ -16,7 +16,7 @@
     "description": "The label for category 'Function Approximation' in sidebar 'guideSidebar'"
   },
   "sidebar.guideSidebar.category.Policy Gradients": {
-    "message": "Policy-Gradient-Methoden",
+    "message": "Policy-Gradienten",
     "description": "The label for category 'Policy Gradients' in sidebar 'guideSidebar'"
   },
   "sidebar.guideSidebar.category.Advanced Topics": {
