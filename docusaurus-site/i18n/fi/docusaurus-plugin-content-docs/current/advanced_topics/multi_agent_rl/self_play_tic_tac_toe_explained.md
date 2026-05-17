@@ -88,7 +88,7 @@ murto-osat vs. satunnainen vastustaja ajan myötä:
 - Nousee yli 90 %:iin.
 - Tappioaste putoaa lähes 0 prosenttiin.
 
-Käsikirjoitus tulostaa myös näytepelin liikkeeltä liikkeelle lopussa, jotta näet
+Skripti tulostaa myös näytepelin liikkeeltä liikkeelle lopussa, jotta näet
 agenttipeli.
 
 ---

@@ -15,34 +15,34 @@ Miksi? Katso, mitä peli pyytää sinulta aivan ensimmäisessä huoneessa:
 4. Kiipeä *ylös* toiset tikkaat.
 5. Tartu avaimeen.
 
-Se on noin **100 tarkkaa painikkeen painallusta**, ja peli antaa sinulle
-**ei ainuttakaan pistettä** ennen kuin avain on kädessä. Palkintosignaali on a
-tasainen, piirteetön **nolla** koko avausjakson ajan.
+Se on noin **100 tarkkaa ohjainpainallusta**, eikä peli anna sinulle
+**ainuttakaan pistettä** ennen kuin avain on kädessä. Palkintosignaali on
+tasainen ja piirteetön **nolla** koko avausjakson ajan.
 
-Normaali RL-agentti oppii mukautumalla todellisuudessa saamiinsa palkkioihin.
-Jos palkkio on nolla kaikkialla, missä se voi saavuttaa, *ei ole mitään opittavaa
-alkaen* — se on kuin yrittäisi löytää täysin tasaisen laakson pohjaa
-tunne alamäkeen. Joten DQN vain nykisi ympäri
-aloitusalusta ikuisesti. Montezumasta tuli *kovan *vertailu
-tutkimus**: peli, jonka voit voittaa vain, jos tutkit *taitavasti*, et
+Normaali RL-agentti oppii mukautumalla ympäristöstä saamiinsa palkkioihin.
+Jos palkkio on nolla kaikissa tiloissa, joita agentti voi saavuttaa, *ei ole mitään, mistä oppia* —
+se on kuin yrittäisi löytää täysin tasaisen laakson pohjaa
+ilman alamäen tuntua. Joten DQN vain harhailisi paikoillaan
+aloitustasolla ikuisesti. Montezumasta tuli **haastavan etsinnän benchmark-tehtävä** (hard exploration benchmark):
+peli, jonka voi voittaa vain, jos tutkii *systemaattisesti ja taitavasti*, ei
 satunnaisesti.
 
-Läpimurto tapahtui vuonna 2018 **Random Network Distillation (RND)** avulla —
-ja temppu oli juuri työkohdan 1 aihe: lisää **luonnollinen
-uteliaisuusbonus**, joten agentti palkitsee *itsensä* uusien näyttöjen saavuttamisesta,
-ja yhtäkkiä siinä on tiheä signaali, joka vetää sen syvemmälle tasolle. RND
-sai yli-inhimillisen pisteen Montezumasta. (Myöhemmin: Go-Explore, Agent57,…)
+Läpimurto tapahtui vuonna 2018 **Random Network Distillation (RND)** -menetelmällä —
+ja temppu oli juuri edellisessä osiossa esitelty **luontainen
+uteliaisuusbonus** (intrinsic reward). Sen avulla agentti palkitsee *itsensä* uusien tilojen saavuttamisesta,
+mikä tarjoaa tiheän signaalin, joka vetää sitä syvemmälle peliin. RND
+saavutti yli-inhimillisen pistemäärän Montezumassa. (Myöhempiä menetelmiä: Go-Explore, Agent57,…)
 
 ## Tosielämän esimerkkejä "Montezuma-tyylisestä" harvasta palkinnosta
 
 - **Yhdistelmälukko / aarteenetsintä salaperäisillä vihjeillä.** Ei osittaista
   luotto. Olet nollassa, kunnes olet yhtäkkiä palkinnon ääressä.
-- **Paperin hyväksyminen tai kannattavuuden aloittaminen.** Kuukausi
-  ei ulkoista palkkiota, sitten (ehkä) iso.
+- **Tieteellisen artikkelin hyväksyminen tai kannattavan yrityksen perustaminen.**
+  Kuukausien ajan ei ulkoista palkkiota, ja sitten (ehkä) saadaan se suuri onnistuminen.
 - **Videopelin speedrun-reitti.** Kymmenet kehyksen mukaiset tulot peräkkäin
   ilman palautetta, ennen kuin temppu joko toimii tai ei.
-- **Pakohuoneet.** Huone ei kerro sinulle juuri mitään ennen kuin olet kahlittu
-  useita löytöjä yhdessä.
+- **Pakohuoneet.** Huoneet eivät kerro juuri mitään ennen kuin olet yhdistänyt
+  useita löytöjä toisiinsa.
 
 Kaikissa näissä "kokeile vain satunnaisia juttuja" on toivotonta. Sinun täytyy
 *järjestelmällisesti* tutkia – ja sisäinen "ooh, se on uutta, jatka"
@@ -58,22 +58,22 @@ signaali pitää sinut systemaattisena.
   "ennustaja"),
 - ja **kymmeniä miljoonia ympäristökehyksiä** - monta GPU-tuntia.
 
-Se on tutkimusprojekti, ei opetuskäsikirjoitus. Joten `montezuma_revenge.py`
-tekee sen sijaan kaksi rehellistä asiaa:
+Kyseessä on tutkimusprojekti, ei opetuskäyttöön tarkoitettu skripti. Joten `montezuma_revenge.py`
+tekee sen sijaan kaksi asiaa:
 
-### 1. Se *koskettaa* oikeaa peliä (jos "ale-py" on asennettu)
+### 1. Se kokeilee oikeaa peliä (jos "ale-py" on asennettu)
 
-Se latautuu `ALE/MontezumaRevenge-v5` Gymnasiumin kautta, pitää **tasaisen
-satunnaista agenttia 2000 askelta** ja raportoi pelin kokonaispalkinnon. The
-sen tulostama numero on lähes aina **0.0** - abstrakti lause "harva
-palkkio" muuttui konkreettiseksi, tee se itse tosiasiaksi. Jos Atari
-pakettia ei ole asennettu, se tulostaa yksirivisen `pip install` komento ja
+Se lataa `ALE/MontezumaRevenge-v5`-ympäristön Gymnasiumin kautta, suorittaa **tasaisen
+satunnaista käytäntöä 2000 askeleen ajan** ja raportoi pelin kokonaispalkinnon.
+Sen tulostama luku on lähes aina **0.0** — näin abstrakti käsite "harva
+palkinto" muuttui konkreettiseksi ja todistetuksi tosiasiaksi. Jos Atari-
+pakettia ei ole asennettu, se tulostaa yksirivisen `pip install` -komennon ja
 siirtyy eteenpäin.
 
 ### 2. Se kouluttaa taulukkoagentin *mittakaavassa*: "MiniMontezumaEnv"
 
-Tämä on pieni verkkomaailma, jolla on sama *luuranko* kuin Montezuman ensimmäisellä
-huone:
+Tämä on pieni ruudukkomailma, jolla on sama perusrakenne kuin Montezuman ensimmäisessä
+huoneessa:
 
 ```
 ###############
@@ -87,10 +87,10 @@ huone:
 
 Voittaaksesi sinun tulee: kävellä **avaimelle** (~6 liikettä), nostaa se; kävellä kohti
 **ovi** (~4 liikettä) — joka nyt avautuu; kävellä läpi ja saavuttaa
-**aarre** (~5 liikettä). Noin **15 täydellistä liikettä**, **nolla palautetta
-aarteeseen asti**. The `has_key` lippu on osa agentin tilaa, joten
-kun nappaat avaimen, sinulla on toinen huone *uusia* tiloja
-löydä – aivan kuin uudet näytöt avautuvat todellisessa pelissä.
+**aarre** (~5 liikettä). Tarvitaan noin **15 täydellistä askelta**, ja palkinto on **nolla
+aarteen saavuttamiseen asti**. `has_key`-muuttuja on osa agentin tilaa, joten
+kun nappaat avaimen, toisesta huoneesta avautuu täysin *uusia* tiloja
+löydettäväksi — aivan kuin uudet ruudut ja tasot avautuvat todellisessa pelissä.
 
 Koulutamme sitten tavallisen **taulukkomuotoisen Q-oppijan** kahdesti:
 
@@ -106,13 +106,13 @@ aarre). Skripti myös tulostaa kyseisen reitin ASCII-kehyksinä.
 ## Oppitunti
 
 > **Harva palkinto ("sparse reward") ei ole vain yhden oudon Atari-pelin omituisuus – se on
-> oletuksena missä tahansa maailmassa, jossa menestys vaatii pitkän, tietyn sarjan
-> toimia.** Vain ulkoisesta palkkiosta oppiva agentti (vanilja-DQN) ei kirjaimellisesti voi päästä
-> aloitettu: gradienttia ei ole seurattava. Uteliaisuusbonus valmistaa
-> yksi — tiheä, itse luoma "tämä on uutta, jatka" -signaali - ja
-> tuo signaali kuljettaa agentin nollien aavikon poikki
-> ensimmäinen todellinen palkinto. Kaikki sen jälkeen (RND, Go-Explore, Agent57) on a
-> samasta liikkeestä suurennettu hermoverkkoversio.
+> oletuksena missä tahansa maailmassa, jossa menestys vaatii pitkän ja tarkan
+> toimintasarjan.** Vain ulkoisesta palkkiosta oppiva agentti (vanilja-DQN) ei kirjaimellisesti voi päästä
+> edes alkuun: seurattavaa gradienttia ei ole olemassa. Uteliaisuusbonus luo
+> sellaisen — tiheän, itse luodun "tämä on uutta, jatka" -signaalin — ja
+> tuo signaali kuljettaa agentin nollapalkintojen aavikon poikki
+> ensimmäiselle todelliselle palkinnolle. Kaikki sen jälkeen tulleet menetelmät (RND, Go-Explore, Agent57) ovat
+> samoja ideoita hyödyntäviä, suuremman mittakaavan neuroverkkoversioita.
 
 ## Avainsanat muistaa
 
@@ -127,7 +127,7 @@ aarre). Skripti myös tulostaa kyseisen reitin ASCII-kehyksinä.
 
 ## Yhden lauseen yhteenveto
 
-> **Montezuma's Revenge on peli, joka opetti, että RL "palkitsee sinua koskaan
-> vastaanottaminen ei voi opettaa sinulle mitään" - ja korjaus silloin ja nyt on a
-> uteliaisuusbonus, jonka avulla agentti palkitsee itsensä tutkimisesta siihen asti
-> löytää oikean palkinnon.**
+> **Montezuma's Revenge on peli, joka opetti, ettei vahvistusoppimisessa palkinto, jota et koskaan
+> saavuta, voi opettaa sinulle mitään — ja korjauskeino niin silloin kuin nytkin on
+> uteliaisuusbonus, jonka avulla agentti palkitsee itsensä tutkimisesta siihen asti, kunnes se
+> löytää todellisen palkinnon.**

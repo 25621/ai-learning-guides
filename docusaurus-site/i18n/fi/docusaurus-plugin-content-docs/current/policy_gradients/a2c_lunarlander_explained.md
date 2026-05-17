@@ -1,35 +1,35 @@
-# A2C: Näyttelijä ja kriitikko työskentelevät yhdessä
+# A2C: Toimija ja arvioija työskentelevät yhdessä
 
-## Suuri Idea
+## Suuri idea
 
 REINFORCE odottaa, kunnes peli on täysin ohi ennen päivittämistä. Se on kuin valmentaja, joka
-katselee koko jalkapallopeliä hiljaa ja antaa sitten kaiken palautteen lopussa.
+katselee koko jalkapallopeliä hiljaa ja antaa sitten kaiken palautteen vasta lopussa.
 
-**A2C (Advantage Actor-Critic)** antaa palautetta pelin AIKANA – muutaman askeleen välein valmentaja
-pysähtyy sanomaan: "Tuo syöttö oli hieno! Tuo takla oli huono!"
+**A2C (Advantage Actor-Critic / toimija-arvioija (actor-critic))** antaa palautetta pelin AIKANA – muutaman askeleen välein valmentaja
+pysähtyy sanomaan: "Tuo syöttö oli hieno! Tuo taklaus oli huono!"
 
 Tämä on paljon nopeampaa ja tehokkaampaa.
 
 ---
 
-## Tapaa kaksi hahmoa
+## Esittelyssä kaksi roolia
 
 > **Mikä LunarLander on?** Tässä asiakirjassa käytämme **LunarLander**-ympäristöä – fysiikan simulaatiota, jossa ohjaat pientä avaruusalusta ja sinun on laskettava se pehmeästi kuuhun kohdetyynylle käyttämällä kolmea moottoria (vasen, pää ja oikea). Se on vahvistusoppimisen vakiovertailu, joka on saatavilla Gymnasiumin kirjastossa.
 
-### Näyttelijä 🎭
-**Toimija** on politiikka – se päättää mihin toimiin ryhdytään.
+### Toimija (Actor) 🎭
+**Toimija** on käytäntö (policy) – se päättää mihin toimiin ryhdytään.
 
 > "Olen tässä tilassa. Pitäisikö minun käynnistää vasen vai oikea moottori?"
 
 **Tosielämän esimerkki:** Auton *kuljettaja*, joka kääntää ohjauspyörää ja painaa polkimia.
 
-### Kriitikot 🎬
-**Arvoitsija** arvioi, kuinka hyvä nykyinen tilanne on – arvo V(s).
+### Arvioija (Critic) 🎬
+**Arvioija** arvioi, kuinka hyvä nykyinen tilanne on – arvo V(s).
 
 > "TÄSSÄ tilassa oleminen on noin +150 pisteen arvoinen tulevaisuuden kokonaispalkkiosta."
 
 **Tosielämän esimerkki:** *navigaattori* istuu kuljettajan vieressä ja sanoo "Olemme hyvällä tiellä -
-odottaa saapuvansa 30 minuutissa." tai "Olemme menossa liikenteeseen - tämä tulee olemaan hidasta."
+odotan saapuvamme 30 minuutissa." tai "Olemme menossa ruuhkaan - tämä tulee olemaan hidasta."
 
 ### He jakavat aivot
 Toteutuksessamme molemmat käyttävät **samaa neuroverkon runkoverkkoa**:
@@ -48,11 +48,11 @@ Toteutuksessamme molemmat käyttävät **samaa neuroverkon runkoverkkoa**:
           (action probs) (V(s))
 ```
 
-- **ReLU** (Recified Linear Unit): aktivointitoiminto, jota käytetään jokaisen kerroksen jälkeen - se tulostaa `max(0, x)`, pitää positiiviset arvot ja nollaa pois negatiiviset. Tämä antaa verkon oppia epälineaarisia kuvioita.
-- **toimintatodennäköisyydet**: todennäköisyys suorittaa jokainen neljästä toimenpiteestä. Näyttelijä ottaa näytteitä tästä jakaumasta valitakseen toiminnon jokaisessa vaiheessa.
+- **ReLU** (Rectified Linear Unit): aktivointifunktio, jota käytetään jokaisen kerroksen jälkeen - se tulostaa `max(0, x)`, pitää positiiviset arvot ja nollaa pois negatiiviset. Tämä antaa verkon oppia epälineaarisia kuvioita.
+- **toimintatodennäköisyydet**: todennäköisyys suorittaa jokainen neljästä toiminnosta. Toimija (actor) ottaa näytteitä tästä jakaumasta valitakseen toiminnon jokaisessa vaiheessa.
 
-**Tosielämän esimerkki:** Yksi aivot, kaksi työtä – kuten taksinkuljettaja, joka molemmat ajaa (näyttelijä)
-JA tietää, onko reitti hyvä (kriitikko). Aivojen jakaminen tarkoittaa nopeampaa oppimista!
+**Tosielämän esimerkki:** Yksi aivot, kaksi tehtävää – kuten taksinkuljettaja, joka sekä ajaa (toimija)
+JA tietää, onko reitti hyvä (arvioija). Aivojen jakaminen tarkoittaa nopeampaa oppimista!
 
 ---
 
@@ -119,7 +119,7 @@ Play 128 steps across 8 environments
 ```
 
 **Tosielämän esimerkki:** Opiskelija, joka opiskelee kokeeseen.
-- VAHVISTA tyyliä: Lue koko oppikirja ja suorita sitten harjoituskokeet.
+- REINFORCE-tyyli: Lue koko oppikirja ja suorita vasta sitten harjoituskokeet.
 - A2C-tyyli: Lue 10 sivua, tee tietokilpailu, lue vielä 10 sivua, tee tietokilpailu...
 
 Useampi palaute = nopeampi oppiminen!
@@ -128,12 +128,12 @@ Useampi palaute = nopeampi oppiminen!
 
 ## Kolme tappiota yhdistettynä
 
-A2C-junat kolmella häviötermillä samanaikaisesti:
+A2C-koulutuksessa käytetään kolmea eri tappiotermiä samanaikaisesti:
 
-**tappio** on luku, jonka optimoija yrittää minimoida. Pienempi häviö tarkoittaa verkkoa
-nykyinen käyttäytyminen on lähempänä harjoittelun tavoitetta.
+**Tappio** (loss) on luku, jonka optimoija yrittää minimoida. Pienempi tappio tarkoittaa verkon
+nykyisen käyttäytymisen olevan lähempänä harjoittelun tavoitetta.
 
-### 1. Näyttelijän menetys (policy Gradient)
+### 1. Toimijan menetys (policy gradient)
 Tee edullisista toimista todennäköisempää:
 ```
 L_actor = -E[log π(a|s) · A(s,a)]
@@ -141,8 +141,8 @@ L_actor = -E[log π(a|s) · A(s,a)]
 Jos A > 0: lisää toimenpiteen todennäköisyyttä
 Jos A < 0: pienennä toimenpiteen todennäköisyyttä
 
-### 2. Kriittinen menetys (arvofunktio MSE)
-Tee arvoennusteista tarkempia (**MSE** = Mean Squared Error: neliötä ennustevirhe ja keskiarvo - neliöinti rankaisee suuria virheitä raskaammin kuin pieniä):
+### 2. Arvioijan menetys (arvofunktion MSE)
+Tee arvoennusteista tarkempia (**MSE** = Mean Squared Error: neliöi ennustevirheet ja ottaa niistä keskiarvon - neliöinti rankaisee suuria virheitä raskaammin kuin pieniä):
 ```
 L_critic = E[(V(s) - return)²]
 ```
@@ -154,10 +154,10 @@ Pidä käytäntö muuttumasta liian itsevarmaksi liian nopeasti:
 L_entropy = -H[π(·|s)] = E[log π(a|s)]
 ```
 Korkea entropia = monipuoliset toimintavaihtoehdot = tutkimus
-Matala entropia = itsevarma, kapeat valinnat = hyväksikäyttö
+Matala entropia = itsevarma, kapeat valinnat = hyödyntäminen
 
-**Tosielämän esimerkki:** Entropiabonus on kuin opettaja sanoisi "Älä vain arvaa A jokaiselle
-monivalintakysymys! Kokeile erilaisia vastauksia, jotta opit, mikä toimii."
+**Tosielämän esimerkki:** Entropiabonus on kuin opettaja sanoisi: "Älä vain valitse A-vaihtoehtoa jokaiseen
+monivalintakysymykseen! Kokeile erilaisia vastauksia, jotta opit, mikä toimii."
 
 ```
 Total loss = L_actor + 0.5 × L_critic - 0.01 × entropy
@@ -169,11 +169,11 @@ Total loss = L_actor + 0.5 × L_critic - 0.01 × entropy
 
 **LunarLander-v3** on Gymnasium (entinen OpenAI Gym) -ympäristö – "v3" on versionumero, joka ilmaisee tämän ympäristön kolmannen version. Agentti ohjaa pientä avaruusalusta, jonka on laskeuduttava turvallisesti määrätylle alustalle kuuhun. Se on paljon vaikeampaa kuin CartPole:
 - 8-ulotteinen tila-avaruus (sijainti, nopeus, kulma, jalkakosketus, polttoaine)
-- 4 erillistä toimintoa (älä tee mitään, palo vasemmalle, palojohto, palo oikealle)
+- 4 erillistä toimintoa (älä tee mitään, käynnistä vasen moottori, käynnistä päämoottori, käynnistä oikea moottori)
 - Palkkio: +100 laskeutumisesta, -100 törmäyksestä, pienet polttoainemaksut
 
 Harjoittelukäyrä osoittaa asteittaista paranemista erittäin negatiivisista palkkioista kohti positiivisia.
-LunarLanderin A2C vaatii huomattavaa kokemusta ennen kuin laskeutumislaite oppii perusvakauden.
+LunarLanderin A2C vaatii huomattavaa kokemusta ennen kuin laskeutuja oppii perusvakauden.
 
 ---
 
@@ -192,12 +192,12 @@ Critic update:  θ_V ← θ_V - α ∇ L_critic
 
 | käsite | Pelkkää englantia |
 |---------|---------------|
-| **näyttelijä** | Politiikka päättää, mitä tehdä |
-| **kriitikko** | Arvofunktio – arvioi, kuinka hyvä tilanne on |
+| **toimija** | Käytäntö (policy) päättää, mitä tehdä |
+| **arvioija** | Arvofunktio – arvioi, kuinka hyvä tilanne on |
 | **Etu** | "Oliko tämä odotettua parempi?" (todellinen - odotettu) |
-| **N-vaiheinen paluu** | Katso n askelta tulevaisuuteen ennen kuin käynnistät V(s) |
-| **Rinnakkaiset envs** | Useita ympäristöjä sisustuksellisiin, monipuolisiin kokemuksiin |
-| **Entropiabonus** | Kannustaa näyttelijää jatkamaan uusien asioiden kokeilua |
+| **N-vaiheinen paluu** | Katso n askelta tulevaisuuteen ennen kuin käytät arvoa V(s) |
+| **Rinnakkaiset envs** | Useita ympäristöjä rinnakkain monipuolisten kokemusten saamiseksi |
+| **Entropiabonus** | Kannustaa toimijaa jatkamaan uusien asioiden kokeilua |
 
 ---
 
@@ -206,7 +206,7 @@ Critic update:  θ_V ← θ_V - α ∇ L_critic
 A2C on hieno, mutta siinä on yksi suuri heikkous: se päivittää käytäntöä joskus liian aggressiivisesti.
 Yksi huono päivitys voi tuhota kaiken edellisen päivityksen hyvän oppimisen.
 
-**PPO (Proximal Policy Optimization)** korjaa tämän älykkäällä "turvaklipsillä", joka estää
-yksittäinen päivitys muuttaa käytäntöä liikaa.
+**PPO (Proximal Policy Optimization)** korjaa tämän älykkäällä rajoituksella (clipping), joka estää
+yksittäistä päivitystä muuttamasta käytäntöä liikaa.
 
 Katso `ppo_scratch.py` PPO:n toteuttamiseksi!

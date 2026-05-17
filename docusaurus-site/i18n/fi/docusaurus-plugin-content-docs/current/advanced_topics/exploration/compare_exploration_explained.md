@@ -57,7 +57,7 @@ eksponentiaalisesti epätodennäköistä. ε-ahne on *jigglee*, ei *tutkimista*.
 
 Aloita *jokainen* Q-arvo suurimmalla mahdollisella tuotolla,
 `R_max / (1 − γ)`. Nyt toimi, jota agentti ei ole koskaan kokeillut, näyttää tältä
-paras asia maailmassa, joten **ahne**-politiikka on pakotettu kokeilemaan sitä;
+paras asia maailmassa, joten **ahne**-käytäntö on pakotettu kokeilemaan sitä;
 vasta käytyään siellä arvo putoaa kohti totuutta. Optimismi
 noin *kokeilemattomista alueista **etenee automaattisesti arvon kautta
 toiminto** (Q-learningin bootstrapin kautta), joten agenttia vedetään askel kerrallaan

@@ -11,7 +11,7 @@ Kattava opas oppimisjärjestelmien ymmärtämiseen ja rakentamiseen peruskäsitt
 | 1 | [Perusteet](#phase-1-foundations-2-4-weeks) | 2-4 viikkoa |
 | 2 | [Taulukkomenetelmät](#phase-2-tabular-methods-3-4-weeks) | 3-4 viikkoa |
 | 3 | [Funktion approksimointi](#phase-3-function-approximation-3-4-weeks) | 3-4 viikkoa |
-| 4 | [Politiikkagradientit](#phase-4-policy-gradient-methods-4-5-weeks) | 4-5 viikkoa |
+| 4 | [Käytäntögradientit](#phase-4-policy-gradient-methods-4-5-weeks) | 4-5 viikkoa |
 | 5 | [Edistyneet aiheet](#phase-5-advanced-topics-6-8-weeks) | 6-8 viikkoa |
 | 6 | [Tutkimustaso](#phase-6-research-level-ongoing) | Jatkuva |
 
@@ -58,7 +58,7 @@ Hallitse klassisia RL-algoritmeja, joissa tila-/toiminta-avaruudet ovat tarpeeks
 
 ### Opittavia käsitteitä
 - Dynaaminen ohjelmointi
-  - Politiikan arviointi
+  - Käytännön arviointi
   - Käytännön iteraatio
   - Arvo iterointi
 - Monte Carlon menetelmät
@@ -66,8 +66,8 @@ Hallitse klassisia RL-algoritmeja, joissa tila-/toiminta-avaruudet ovat tarpeeks
   - MC-ohjaus ja tutkimuskäynnit
 - Temporal Difference Learning
   - TD(0)-ennuste
-  - SARSA (poliittinen TD-hallinta)
-  - Q-learning (poikkeuksellinen TD-hallinta)
+  - SARSA (käytäntöön perustuva (on-policy) TD-hallinta)
+  - Q-learning (käytännöstä riippumaton (off-policy) TD-hallinta)
 - Kelpoisuusjäljet ja TD(λ)
 
 ### Käytännön työ
@@ -141,7 +141,7 @@ Kouluta DQN-agentti, joka saa positiivisen palkinnon Atari Pongissa.
 
 ---
 
-## Vaihe 4: Politiikkagradientit (4–5 viikkoa)
+## Vaihe 4: Käytäntögradientit (4–5 viikkoa)
 
 ### Tavoite
 Opi optimoimaan käytännöt suoraan ilman arvofunktioiden laskemista.
@@ -152,8 +152,8 @@ Opi optimoimaan käytännöt suoraan ilman arvofunktioiden laskemista.
 - Varianssin vähentämistekniikat
   - Perustasot
   - Palkinto matkaan
-- Näyttelijäkritiikin menetelmät
-  - A2C (etunäyttelijä-kriitikko)
+- Toimija-arvioijan menetelmät
+  - A2C (toimija-arvioija)
   - A3C (asynkroninen variantti)
 - yleinen etuarvio (GAE)
 - Luottamusalueen menetelmät
@@ -298,7 +298,7 @@ Opi useilla temporaalisen abstraktion tasoilla.
 
 **Käytännön työ:**
 - [ ] [Toteuta vaihtoehtokriittinen arkkitehtuuri](advanced_topics/hierarchical_rl/option_critic_explained.md)
-- [ ] [Harjoittele tavoitteellista politiikkaa](advanced_topics/hierarchical_rl/goal_conditioned_policy_explained.md)
+- [ ] [Harjoittele tavoitteellista käytäntöa](advanced_topics/hierarchical_rl/goal_conditioned_policy_explained.md)
 - [ ] [Testaa pitkän horisontin tehtäviä](advanced_topics/hierarchical_rl/long_horizon_tasks_explained.md)
 
 **Resurssit:**
@@ -313,7 +313,7 @@ Kohdista mallit ihmisten mieltymyksiin.
 
 **Konseptit:**
 - Palkitse mallinnus vertailuista
-- KL-rajoitettu politiikan optimointi
+- KL-rajoitettu käytännön optimointi
 - Perustuslaillinen AI
 - DPO (Direct Preference Optimization)
 
@@ -376,7 +376,7 @@ Anna omaperäistä työtä kentälle.
 3. **Kirjaa kaikki lokiin** — Palkinnot, tappiot, kaltevuus, jaksojen pituudet
 4. **Visualisoi oppiminen** — Piirrä oppimiskäyrät, renderöi jaksot
 5. **Lue Sutton & Barto -kirja** — Se on RL:n raamattu
-6. **Ymmärrä matematiikka** — ainakin politiikan gradienttilause ja Bellman-yhtälöt
+6. **Ymmärrä matematiikka** — ainakin käytännön gradienttilause ja Bellman-yhtälöt
 7. **Ole kärsivällinen** — RL on tunnetusti epävakaa; epäonnistuneet ajot ovat normaaleja
 8. **Käytä siemeniä** — Uusittavuus on tärkeää; useiden siementen keskiarvo
 9. **Liity yhteisöihin** — r/reinforcementlearning, RL Discord, Twitter/X
@@ -405,7 +405,7 @@ Anna omaperäistä työtä kentälle.
 | **Q-toiminto** | Odotettu tuotto tila-toiminto-parista |
 | **TD-virhe** | Ennustetun ja bootstrapped-arvon välinen ero |
 | **GAE** | Yleistetty etuarvio |
-| **PPO** | Proksimaalinen politiikan optimointi |
+| **PPO** | Proksimaalinen käytännön optimointi |
 | **RLHF** | Ihmisten palautteesta oppimisen vahvistaminen |
 
 ---
@@ -413,5 +413,8 @@ Anna omaperäistä työtä kentälle.
 ## Lisenssi
 
 Tämä opas on tarkoitettu koulutustarkoituksiin. Voit vapaasti jakaa ja mukauttaa.
+
+---
+ttaa.
 
 ---

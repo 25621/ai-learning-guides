@@ -96,9 +96,9 @@ Juuri tästä syystä keksittiin Feudal Networks (arkkitehtuuri, jossa johtajat 
 
 ## Yhteys tavoitteen mukaisiin käytäntöihin
 
-Huomaa, että hierarkkisessa agentissamme oleva **työntekijä** on pohjimmiltaan **tavoitteeseen perustuva käytäntö** — se vastaanottaa alitavoitteen ja siirtyy siihen. Tämä on HIRO:n ja siihen liittyvien papereiden vakiomuotoilu: johtaja asettaa tavoitteet, työntekijä on tavoitteellinen politiikka, joka jahtaa niitä.
+Huomaa, että hierarkkisessa agentissamme oleva **työntekijä** on pohjimmiltaan **tavoitteeseen perustuva käytäntö** — se vastaanottaa alitavoitteen ja siirtyy siihen. Tämä on HIRO:n ja siihen liittyvien papereiden vakiomuotoilu: johtaja asettaa tavoitteet, työntekijä on tavoitteellinen käytäntö, joka jahtaa niitä.
 
-Nämä kaksi ideaa – tavoitteellinen politiikka ja hierarkkinen rakenne – ovat siis saman kolikon kaksi puolta, minkä vuoksi ne esiintyvät yhdessä tässä moduulissa.
+Nämä kaksi ideaa – tavoitteellinen käytäntö ja hierarkkinen rakenne – ovat siis saman kolikon kaksi puolta, minkä vuoksi ne esiintyvät yhdessä tässä moduulissa.
 
 ---
 

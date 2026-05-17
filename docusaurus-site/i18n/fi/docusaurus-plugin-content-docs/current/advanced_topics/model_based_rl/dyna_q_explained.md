@@ -64,7 +64,7 @@ Malli on vain hakutaulukko:
   harjoitella sitä henkisesti vielä kymmenen kertaa ennen kuin jatkat. Sormet eivät ole
   liikkuvat, mutta aivot päivittyvät.
 - **Itse ajava auto.** Kun se käy joutokäynnillä punaisella valolla, se toistaa viimeisen
-  sata kaistanvaihtoa simulaatiossa hienosäätääkseen sen politiikkaa polttamatta
+  sata kaistanvaihtoa simulaatiossa hienosäätääkseen sen käytäntöa polttamatta
   renkaat.
 
 ---
@@ -82,7 +82,7 @@ Käytämme kolmea muunnelmaa, joista jokainen on keskimäärin yli 30 satunnaist
 | `n = 5` | 5 | vähän kuviteltua harjoitusta |
 | `n = 50` | 50 | paljon kuviteltua harjoitusta |
 
-Käsikirjoitus raportoi **todellisten vaiheiden keskimääräisen määrän jaksoa kohden**
+Skripti raportoi **todellisten vaiheiden keskimääräisen määrän jaksoa kohden**
 koulutus etenee. Vähemmän vaiheita tarkoittaa, että agentti on oppinut suoremman
 polku päämäärään.
 

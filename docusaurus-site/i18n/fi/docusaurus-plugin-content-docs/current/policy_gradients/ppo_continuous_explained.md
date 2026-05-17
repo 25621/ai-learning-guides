@@ -16,7 +16,7 @@ Kirjoittaminen kynällä = jatkuva (siirrä kättä 2,3 cm oikealle, paina 40g v
 
 ---
 
-## Gaussin jatkuvan toiminnan politiikka
+## Gaussin jatkuvan toiminnan käytäntö
 
 Jatkuville toimille kategoriallisen jakauman sijaan (valitse N luokasta),
 käytämme **normaalia (Gaussin) jakaumaa**:
@@ -48,7 +48,7 @@ Kun he harjoittelevat, ne tarkentuvat (σ pienenee) pysyen samalla keskittynein�
 
 ---
 
-## Gaussin näyttelijä-kriitikkoverkostomme
+## Gaussin toimija-arvioijaverkostomme
 
 ```
 State (24 numbers) → [256 neurons] → [256 neurons] →
@@ -133,11 +133,11 @@ Kaikki on samaa PAITSI:
 | **log_prob** | log P(toiminta=k) | Σ log Normaali(μᵢ, σᵢ).pdf(aᵢ) |
 | **Kiinnitin** | Ei tarvita | Kiinnitä toiminnot kohtaan [-1, 1] |
 
-**Logitit** ovat raakoja, normalisoimattomia pisteitä erillisille toimille. Kategorinen politiikka kääntyy
+**Logitit** ovat raakoja, normalisoimattomia pisteitä erillisille toimille. Kategorinen käytäntö kääntyy
 ne todennäköisyyksiksi **softmax**-funktiolla, joka ottaa minkä tahansa joukon lukuja ja
 puristaa ne kelvolliseen todennäköisyysjakaumaan (kaikki arvot positiivisia, summa 1).
 Esimerkiksi logiteista [2.0, 1.0, 0.5] tulee todennäköisyyksiä [0.59, 0.24, 0.17]. Jatkuva PPO **ei** käytä softmaxia itse toimintoon,
-koska toimintoa ei valita kiinteästä valikosta. Sen sijaan politiikka tuottaa keskiarvon
+koska toimintoa ei valita kiinteästä valikosta. Sen sijaan käytäntö tuottaa keskiarvon
 ja normaalijakauman keskihajonnan, sitten ottaa siitä näytteen reaaliarvoiset vääntömomentit.
 
 **Clamp** tarkoittaa arvon pakottamista kelvolliselle alueelle. Koodi käyttää `action.clamp(-1, 1)` siis
@@ -198,8 +198,8 @@ Oppimiskäyrä näyttää jatkuvan ohjauksen ominaiskäyrän "S-käyrän":
 
 | käsite | Pelkkää englantia |
 |---------|---------------|
-| **Gaussin politiikka** | Sen sijaan, että valitsisit valikosta, heitä tikkaa arvoalueelle |
-| **μ (keskiarvo)** | Mihin politiikka "tarkoittaa" |
+| **Gaussin käytäntö** | Sen sijaan, että valitsisit valikosta, heitä tikkaa arvoalueelle |
+| **μ (keskiarvo)** | Mihin käytäntö "tarkoittaa" |
 | **σ (std)** | Kuinka paljon satunnaisuutta / tutkimista käytäntö käyttää |
 | **log_std opittava parametri** | Gradienttipohjaisella optimoinnilla päivitetty maailmanlaajuinen etsintänopeus (gradientti *nousu* palkkiolla tai vastaava gradientti *lasku* PPO-häviössä) – aivan kuten mikä tahansa muu verkon paino. |
 | **Jatkuva ohjaus** | Reaaliarvoisten lähtöjen (vääntömomentit, voimat, kulmat) hallinta |

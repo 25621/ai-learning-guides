@@ -12,7 +12,7 @@ oli upea kauppa!"*
 
 Ongelma: **kirjassa ei ole tietoja maanantai-arpajaisista**, joten
 opiskelija vain hallusinoi. Silti tuo hallusinoitu kauppa näyttää hyvältä
-paperia, joten opiskelijan "politiikka" haluaa jatkuvasti tehdä sen.
+paperia, joten opiskelijan "käytäntö" haluaa jatkuvasti tehdä sen.
 
 Tuo hallusinaatio-ongelma on **jakauman muutos**: offline-oppija
 rakastaa toimintoja, joita tietojoukko ei ole koskaan testannut, koska siinä ei ole tietoja
@@ -33,7 +33,7 @@ tilassa `s'`, verkko vain *arvaa* Q-arvon — ja hermoverkot
 yleensä **yliarvioida** Q näkymättömille tuloille. Kohde perii
 yliarvioida, verkko oppii ennustamaan, että suurempi luku, ja edelleen
 Seuraavassa vaiheessa **ekstrapoloimme** (projektoimme vielä pidemmälle
-data tukee) vielä korkeampi. Politiikka jahtaa haamua.
+data tukee) vielä korkeampi. Käytäntö jahtaa haamua.
 
 Jos voisit jatkaa tietojen keräämistä, tämä korjaisi itsensä (
 haamutoiminta osoittautuu todellisuudessa huonoksi). Mutta **offline RL sinua
@@ -90,7 +90,7 @@ tiedot.
   ennakkotapaus voi olla loistava!" CQL on valmentaja, joka sanoo "meillä ei ole
   Tietoja siitä - pysytään todellisten pelaajien kokeiluissa liikkeissä."
 - **Ravintolamenuvaihtoehdot.** Yelp-arvostelut eivät koskaan kata
-  valikon ulkopuolisia kohteita. Naiivi politiikka suosittelisi valikon ulkopuolisia kohteita
+  valikon ulkopuolisia kohteita. Naiivi käytäntö suosittelisi valikon ulkopuolisia kohteita
   perustuu hallusinoituihin viiden tähden luokitukseen. CQL suosittelee vain sitä, mikä on
   tilattu tarpeeksi monta kertaa luottaakseen.
 - **Robotti tarttuu tukista.** Robottissa on video, jossa tarrataan kuppeihin,
@@ -101,20 +101,20 @@ tiedot.
 
 ## Mitä koodimme tekee
 
-Käsikirjoitus `cql.py`:
+Skripti `cql.py`:
 
 1. **Lataa neljä tietojoukkoa**, jotka on rakentanut `d4rl_dataset.py`.
 2. ** Poimintoja `medium-replay`** harjoitussarjana - se on realistisin
    (sekoitettu laatu) ja kaikkein haitallisimmat naiiveille menetelmille.
 3. **Kouluttaa kolme agenttia puhtaasti offline-tilassa**, samoissa olosuhteissa paitsi
-   varten `α`:
+   varten `α`-arvoja:
    - `α = 0`   → naiivi offline-DQN (ei rangaistusta – rikkinäinen perusviiva)
    - `α = 1.0` → lievä CQL
    - `α = 5.0` → vahva CQL
-4. **Arvioi jokaisen 2500 kaltevuusaskeleen** vierimällä ahneesti
+4. **Arvioi jokaisen 2500 kaltevuusaskeleen** suorittamalla käytäntöä
    todellisessa ympäristössä (10 jaksoa). Tämä on *ainoa* env-yhteystieto;
    koulutus itsessään ei koskaan näe env.
-5. **Oppimiskäyrät** piirtää `outputs/cql.png`.
+5. **Skripti piirtää oppimiskäyrät** tiedostoon `outputs/cql.png`.
 
 ---
 
@@ -137,13 +137,13 @@ Oppimiskäyräkaaviossa:
   `r + γ · max Q(s', ·)`). Kun haamu-Q-arvot saastuttavat kohteen,
   jokainen kaltevuusaskel pahentaa asioita. **Bellmanin tappio** (MSE
   Q-verkon ennusteen ja Bellman-kohteen välillä) näyttää hyvältä -
-  se on ongelman **petos**: verkko on täydellinen
+  se on ongelman **salakavalaisuus**: verkko on täydellinen
   omien väärien uskomustensa mukainen, joten menetys ei anna varoitusta.
 - **oranssi käyrä** (`α = 1.0`) kiipeää hitaammin, mutta **pysyy ylhäällä**.
 - **vihreä käyrä** (`α = 5.0`) on vakain ja yleensä paras.
 
 Bellmanin menetyspaneeli näyttää toisen merkkipalun: naiivi DQN:n menetys voi jäädä
-pieni, kun taas sen politiikka on kauheaa, koska verkko on sisäinen
+pieni, kun taas sen käytäntö on kauheaa, koska verkko on sisäinen
 sopusoinnussa sen omien hallusinaatioiden kanssa.
 
 ---
@@ -181,7 +181,7 @@ Jokainen vaihe tässä sukulinjassa on erilainen vastaus samaan kysymykseen:
 
 | sana | Merkitys |
 |------|---------|
-| **Jakelumuutos** | Koulutettu politiikka haluaa toimia tietojen ulkopuolella |
+| **Jakelumuutos** | Koulutettu käytäntö haluaa toimia tietojen ulkopuolella |
 | **Pois jakelusta (OOD)** | (s, a) -pari, jota ei koskaan tallennettu tietojoukkoon |
 | **Tosi Q** | Todellinen odotettu tuleva tuotto toimille `a` tilassa `s`, jos voisimme mitata sen täydellisesti |
 | **Konservatiivinen Q** | Opittu Q-funktio, joka yrittää pysyä todellisen Q:n alapuolella ylilupaamisen sijaan |

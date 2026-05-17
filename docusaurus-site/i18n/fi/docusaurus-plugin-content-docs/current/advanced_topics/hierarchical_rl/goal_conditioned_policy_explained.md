@@ -1,46 +1,46 @@
-# Tavoitteen mukainen käytäntö
+# Tavoite-ehdollinen käytäntö
 
-## Suuri idea: yksi politiikka hallitsee niitä kaikkia
+## Suuri idea: yksi käytäntö hallitsee niitä kaikkia
 
-Kuvittele, että olet jakelukuljettaja. Et tarvitse täysin erilaista taitosarjaa jokaiselle osoitteelle. Osaat ajaa, lukea karttaa ja navigoida liikenteessä – liität vain *tämän päivän määränpään* ja lähdet.
+Kuvittele, että olet jakelukuljettaja. Et tarvitse täysin erilaista osaamista jokaista eri osoitetta varten. Osaat ajaa, lukea karttaa ja navigoida liikenteessä – liität vain *tämän päivän määränpään* ja lähdet.
 
-**Tavoitteeseen perustuva politiikka** toimii samalla tavalla. Sen sijaan, että kouluttaisimme yhtä agenttia, joka voi saavuttaa vain yhden kiinteän tavoitteen, koulutamme yhden agentin, joka hyväksyy minkä tahansa tavoitteen syötteenä ja selvittää, miten siihen päästään.
+**Tavoite-ehdollinen käytäntö (goal-conditioned policy)** toimii samalla tavalla. Sen sijaan, että kouluttaisimme yhtä agenttia, joka voi saavuttaa vain yhden kiinteän tavoitteen, koulutamme yhden agentin, joka ottaa minkä tahansa tavoitteen syötteeksi ja selvittää, miten sinne päästään.
 
 ---
 
 ## Miten se eroaa tavallisesta RL:stä
 
-Normaalissa RL:ssä (kuten opetussuunnitelman aikaisemmissa vaiheissa käsiteltiin) palkitsemistoiminto leivotaan seuraavasti: "tavoita solu (7, 7), saat +1." Agentti oppii täsmälleen yhden asian: kuinka tavoittaa *tuo* solu.
+Normaalissa RL-oppimisessa palkintofunktio on määritelty kiinteästi seuraavasti: "saavuta ruutu (7, 7), saat +1." Agentti oppii täsmälleen yhden asian: kuinka tavoittaa *tuo* tietty ruutu.
 
-Tavoitteellisessa RL:ssä palkkio riippuu siitä, saavuttaako agentti *mikä tahansa tavoite, joka sille tällä kertaa annettiin*. Politiikka oppii:
+Tavoite-ehdollisessa vahvistusoppimisessa palkinto riippuu siitä, saavuttaako agentti *minkä tahansa sille kyseisellä kerralla annetun tavoitteen*. Käytäntö oppii:
 
 > **"Mitä minun pitäisi tehdä, kun otetaan huomioon missä olen ja missä haluan olla?"**
 
-Tavoite kulkee *agentin mukana*, kuten navigointisovellukseen kirjoitettu määränpää.
+Tavoite kulkee *agentin mukana*, aivan kuten navigointisovellukseen syötetty määränpää.
 
 ---
 
-## Harva palkitsemisongelma
+## Harvan palkkion ongelma
 
-Tässä on saalis: harvoista palkinnoista oppiminen (vain +1 maalissa, 0 kaikkialla muualla) on julman vaikeaa. Useimmat yritykset epäonnistuvat – agentti vaeltelee satunnaisesti, ei koskaan törmää maaliin, eikä verkko saa mitään hyödyllistä opittavaa.
+Tässä on koukku: harvoista palkinnoista (sparse rewards, eli vain +1 maalissa ja 0 muualla) oppiminen on äärimmäisen vaikeaa. Useimmat yritykset epäonnistuvat — agentti harhailee satunnaisesti, ei koskaan saavuta maalia, eikä verkko saa mitään hyödyllistä oppimateriaalia.
 
-Kuvittele, että yrität oppia heittämään tikkaa sidottuna. Heität tuhat kertaa ja menetät aina. Tuhansien epäonnistumisten jälkeen et vieläkään tiedä, miltä "hyvä heitto" tuntuu.
+Kuvittele, että yrität oppia heittämään tikkaa silmät sidottuina. Heität tuhat kertaa ja heität aina ohi. Tuhansien epäonnistumisten jälkeen et vieläkään tiedä, miltä "hyvä heitto" tuntuu.
 
-Tässä tulee esiin **Hindsight Experience Replay (HER)**.
+Tässä tulee apuun **Hindsight Experience Replay (HER)**.
 
 ---
 
-## Jälkikatselukokemuksen uusinta: epäonnistuminen eteenpäin
+## Hindsight Experience Replay (HER) -toistopuskuri: Epäonnistumisista oppiminen
 
-HÄNEN temppu on ihanan yksinkertainen. Epäonnistuneen jakson jälkeen HÄN kysyy:
+HER-toistopuskurin idea on nerokkaan yksinkertainen. Epäonnistuneen jakson jälkeen HER kysyy:
 
 > *"Vaikka et saavuttanutkaan tavoitettasi… mihin oikein päädyit?"*
 
-Sitten se **toistaa saman jakson**, mutta teeskentelee agentin todellista lopullista sijaintia **olleen** tavoite koko ajan. Yhtäkkiä epäonnistuneesta jaksosta tulee onnistunut - eri tavoitteen saavuttamiseksi.
+Sitten se **toistaa saman jakson**, mutta teeskentelee agentin todellisen lopullisen sijainnin **olleen** tavoite koko ajan. Yhtäkkiä epäonnistuneesta jaksosta tulee onnistunut – tosin eri tavoitteen saavuttamiseksi.
 
-Se on kuin epäonnistunut koripalloilija, joka ampuu jatkuvasti vanteeseen ja puuttuu. HÄN sanoisi: "Okei, osuit vasempaan seinään joka kerta. Onnittelut – olet loistava lyömään vasenta seinää! Kirjataan ne heitot onnistuneiksi vasen seinän lyöntiyrityksiksi." Ajan myötä pelaaja kehittää taitojaan lyödä *mitä tahansa* maalia ja siirtää sen lopulta oikeaan vanteeseen.
+Se on kuin epäonnistunut koripalloilija, joka heittää jatkuvasti korin ohi. HER sanoisi: "Okei, osuit vasempaan seinään joka kerta. Onnittelut – olet loistava lyömään vasenta seinää! Kirjataan ne heitot onnistuneiksi vasemman seinän lyöntiyrityksiksi." Ajan myötä pelaaja kehittää taitojaan lyödä *mitä tahansa* kohdetta ja pystyy siirtämään nämä taidot lopulta oikeaan koriin.
 
-Tämä muuttaa tuhansia "epäonnistumisia" rikkaaksi kirjastoksi *onnistuneita* navigointeja moniin eri paikkoihin. Agentti oppii saavuttamaan ne kaikki, mikä yleistyy todelliseen kohteeseen.
+Tämä muuttaa tuhansia "epäonnistumisia" rikkaaksi kirjastoksi *onnistuneita* navigointeja moniin eri paikkoihin. Agentti oppii saavuttamaan ne kaikki, mikä yleistyy lopulta todelliseen kohteeseen.
 
 ---
 
@@ -52,25 +52,25 @@ Taaperolapsi, joka yrittää laittaa lohkon ämpäriin, missaa jatkuvasti. Mutta
 
 ## Mitä koodimme tekee
 
-Käsikirjoitus `goal_conditioned_policy.py` kulkee **7x7 sokkelossa** seinillä. Jokaisen jakson alussa valitaan satunnainen maalisolu. Agentin on löydettävä se.
+Skripti `goal_conditioned_policy.py` kulkee **7x7 sokkelossa** seinien kanssa. Jokaisen jakson alussa valitaan satunnainen maalisolu. Agentin on löydettävä se.
 
-Käytännössä on kaksi syötettä jokaisessa vaiheessa:
-1. Missä edustaja tällä hetkellä on
+Käytännössä syötteitä on kaksi jokaisessa vaiheessa:
+1. Missä agentti tällä hetkellä on
 2. Minne se haluaa mennä
 
 Jokaisen jakson (onnistuneen tai epäonnistuneen) jälkeen HER luo useita synteettisiä "onnistuksia" merkitsemällä todelliset vieraillut paikat uudelleen vaihtoehtoisiksi tavoitteiksi.
 
-Koulutus kestää 3 000 jaksoa hidastuvalla tutkimusnopeudella – agentti tutkii aluksi enemmän ja luottaa sitten yhä enemmän oppimaansa.
+Koulutus kestää 3 000 jaksoa vähenevällä tutkintanopeudella (exploration rate) – agentti tutkii aluksi enemmän ja luottaa sitten yhä enemmän oppimaansa.
 
 ---
 
 ## Mitä kaaviot osoittavat
 
-![Tavoitteen mukaiset käytäntötulokset](outputs/goal_conditioned_policy.png)
+![Tavoite-ehdollisen käytännön tulokset](outputs/goal_conditioned_policy.png)
 
-**Vasemmalla – onnistumisprosentti harjoittelusta:** Jokainen jakso on joko menestys (tavoitteen saavuttaminen) tai epäonnistuminen. Käyrä nousee tasaisesti agentin yleisen navigointitaidon kehittyessä. Lopulta agentti saavuttaa minkä tahansa tavoitteen melkein joka kerta.
+**Vasemmalla – onnistumisprosentti harjoittelun aikana:** Jokainen jakso on joko menestys (tavoitteen saavuttaminen) tai epäonnistuminen. Käyrä nousee tasaisesti agentin yleisen navigointitaidon kehittyessä. Lopulta agentti saavuttaa minkä tahansa tavoitteen melkein joka kerta.
 
-**Oikein — maalin onnistumisprosentin lämpökartta:** Harjoittelun jälkeen testaamme agenttia kaikissa mahdollisissa maalisoluissa ja värjäämme jokaisen solun sen mukaan, kuinka usein agentti saavuttaa sen. Vihreä tarkoittaa, että agentti saavuttaa luotettavasti kyseisen kohdan; punainen tarkoittaa, että se kamppailee edelleen. Hyvin koulutettu agentti näyttää enimmäkseen vihreää koko sokkelossa.
+**Oikealla — maalin onnistumisprosentin lämpökartta (heatmap):** Harjoittelun jälkeen testaamme agenttia kaikissa mahdollisissa maalisoluissa ja värjäämme jokaisen solun sen mukaan, kuinka usein agentti saavuttaa sen. Vihreä tarkoittaa, että agentti saavuttaa luotettavasti kyseisen kohdan; punainen tarkoittaa, että se kamppailee edelleen. Hyvin koulutettu agentti näyttää enimmäkseen vihreää koko sokkelossa.
 
 ---
 
@@ -80,13 +80,13 @@ Koulutus kestää 3 000 jaksoa hidastuvalla tutkimusnopeudella – agentti tutki
 |-------------|------------|
 | Robotin käsi ulottuu | Kohdista 3D-asento |
 | Itse ajava auto | GPS-koordinaatti |
-| Kielimallin avustaja | Käyttäjän ohje |
+| Kielimallipohjainen avustaja | Käyttäjän ohje |
 | Videopeli, ei-pelaajahahmo | Mikä tahansa reittipiste kartalla |
 
-Tavoiteehtoiset käytännöt ovat yksi HIRO:n (Hierarchical RL with subgoals) rakennuspalikoista – korkean tason johtaja valitsee osatavoitteen, ja matalan tason työntekijä on juuri tällainen tavoitteellinen politiikka.
+Tavoite-ehdolliset käytännöt ovat yksi HIRO-arkkitehtuurin (Hierarchical RL with subgoals) rakennuspalikoista – korkean tason johtaja valitsee osatavoitteen, ja matalan tason työntekijä on juuri tällainen tavoitteellinen käytäntö.
 
 ---
 
 ## Yhden lauseen yhteenveto
 
-> **Tavoitteeseen ehdollinen käytäntö on agentti, joka voi navigoida mihin tahansa kohteeseen – ja HER mahdollistaa epäonnistumisesta oppimisen teeskentelemällä, että jokainen menetetty laukaus on suunnattu minne tahansa se laskeutuikin.**
+> **Tavoite-ehdollinen käytäntö on agentti, joka voi navigoida mihin tahansa kohteeseen – ja HER mahdollistaa epäonnistumisesta oppimisen teeskentelemällä, että jokainen ohi mennyt yritys oli alun perinkin suunnattu sinne, minne se lopulta päätyi.**

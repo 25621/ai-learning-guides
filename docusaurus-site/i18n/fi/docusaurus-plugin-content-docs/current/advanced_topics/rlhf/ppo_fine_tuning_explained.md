@@ -44,19 +44,19 @@ Jokainen harjoituskierros näyttää tältä:
 4. Työnnä mallia kohti vastauksia, jotka saivat hyvän tuloksen.
 
 "Proksimaalinen" PPO:ssa tarkoittaa *älä ota suuria hyppyjä*. Jokainen päivitys on a
-pieni, varovainen askel. Suuret hypyt politiikkakoulutuksessa aiheuttavat kaatumisia, mikä on
-miksi aikaisemmat menetelmät, kuten vaniljapolitiikan gradientti, olivat niin epävakaita.
+pieni, varovainen askel. Suuret hypyt käytäntökoulutuksessa aiheuttavat kaatumisia, mikä on
+miksi aikaisemmat menetelmät, kuten vaniljakäytännön gradientti, olivat niin epävakaita.
 
 ## Mitä Kokeilu osoittaa
 
-Aloitamme uudella politiikalla ja koulutetulla palkitsemismallilla. PPO maksaa 150
+Aloitamme uudella käytännöllä ja koulutetulla palkitsemismallilla. PPO suorittaa 150
 iteraatiot, vastauserien näytteenotto ja käytännön päivittäminen.
 
 ![PPO koulutus](outputs/ppo_fine_tuning.png)
 
-- **Vasen** - palkintomallin keskimääräinen pistemäärä nousee tasaisesti. Politiikka on
+- **Vasen** - palkintomallin keskimääräinen pistemäärä nousee tasaisesti. Käytäntö on
   oppia tuottamaan vastauksia, joista tuomari pitää.
-- **Keski** - KL:n ero vertailumallista kasvaa. Politiikka on
+- **Keski** - KL:n ero vertailumallista kasvaa. Käytäntö on
   siirtyä pois siitä, mistä se alkoi. Tätä odotetaan, mutta jos se kasvaa
   tarkistamatta malli ajautuisi hölynpölyyn.
 - **Oikein** - muotoiltu palkinto (raaka palkinto miinus KL-rangaistus) kappaleita

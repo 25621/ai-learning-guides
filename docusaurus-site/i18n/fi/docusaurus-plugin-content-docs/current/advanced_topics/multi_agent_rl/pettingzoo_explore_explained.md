@@ -140,7 +140,7 @@ pelata lähellä ~0:ta kohti vakaata **koordinaatiota** lähellä ~+25. Vihreä 
 merkitsee täydellisen koordinaation kattoa.
 
 Jos `pettingzoo` on asennettu, myös komentosarja julkaistaan
-`pettingzoo.classic.rps_v2` todistaa, että käsikirjoitus toimii todellista vastaan
+`pettingzoo.classic.rps_v2` todistaa, että skripti toimii todellista vastaan
 kirjasto täsmälleen samalla tavalla kuin se toimii käsin rullatussa kotelossamme. Ota käyttöön
 tuo jakso:
 

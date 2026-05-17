@@ -13,7 +13,7 @@ Peli alkaa aina tuloksesta −21 (pahin mahdollinen). Hyvä agentti saavuttaa 0 
 
 ## Miksi Pong on vaikea tekoälylle?
 
-CartPolessa robotti näki numerot suoraan (napakulma, kärryn nopeus...).
+CartPolessa robotti näki numerot suoraan (tangon kulma, kärryn nopeus...).
 Pongissa se näkee vain **raakoja pikseleitä** – tuhansia pieniä värillisiä pisteitä näytöllä!
 
 ```
@@ -53,9 +53,9 @@ rotu on vain sumea kuva. Katso 4 kehystä ja voit kertoa kumpi auto on nopeampi!
 
 ---
 
-## Nähdään CNN:n kanssa 🔍
+## Näkeminen CNN-verkon avulla 🔍
 
-Pikselituloissa käytämme erityistä hermoverkkoa, jota kutsutaan **konvoluutiohermoverkoksi
+Pikselituloissa käytämme erityistä hermoverkkoa, jota kutsutaan **konvoluutioneuroverkoksi
 (CNN)**. Sen sijaan, että CNN katsoisi kaikkia pikseleitä kerralla, se käyttää liukuikkunoita havaitsemiseen
 kuvioita – kuten silmät skannaavat kuvaa.
 
@@ -109,7 +109,7 @@ Tämä sama koodi voi harjoitella MILLOIN Atari-pelissä ilman palkintoasteikkoj
 | 1M askelta | Alkaa välillä liikkua kohti palloa |
 | 5M askelta | Palauttaa muutaman laukauksen |
 | 10M askelta | Kilpailukykyinen peli, saattaa voittaa jonkin verran |
-| 20M+ askelta | Usein voittaa tietokoneen vastustaja |
+| 20M+ askelta | Voittaa usein tietokonevastustajan |
 
 Demomme kestää **300 000 askelta** – tarpeeksi nähdäksesi koulutusarkkitehtuurin toimivan ja
 tarkkaile varhaista oppimista, mutta ei tarpeeksi hallitsemaan peliä.
@@ -135,9 +135,9 @@ Toteutus on täydellinen ja oikea - se tarvitsee vain lisää aikaa!
 
 | sana | Merkitys |
 |------|---------|
-| **CNN** | Konvoluutiohermoverkko — erikoistunut kuvasisääntuloihin |
+| **CNN** | Konvoluutioneuroverkko — erikoistunut kuvasisääntuloihin |
 | **Kehysten pinoaminen** | Useiden peräkkäisten kuvien syöttäminen liikkeen tallentamiseksi |
-| **Esikäsittely** | Raakakehysten muuntaminen (harmaasävy, kokoa, normalisointi) ennen syöttämistä verkkoon |
+| **Esikäsittely** | Raakakehysten muuntaminen (harmaasävy, koon muuttaminen, normalisointi) ennen syöttämistä verkkoon |
 | **Palkintojen leikkaus** | Palkintojen rajoittaminen [−1, +1]:iin, jotta se voi toimia eri peleissä |
 | **ALE** | Arcade Learning Environment — kirjasto, joka pyörittää Atari-pelejä |
 

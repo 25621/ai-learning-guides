@@ -16,12 +16,12 @@ laudalla – kaikki kerralla!
 
 Ajattele sitä kuin huoneen puhdistamista avustajan kanssa:
 
-1. **Vaihe 1 – Selvitä, kuinka hyvä kukin neliö on (politiikan arviointi)**
-   Auttajasi kävelee jokaisen neliön ympäri ja kirjoittaa muistiin: "Jos noudatan nykyistä suunnitelmaa, miten
+1. **Vaihe 1 – Selvitä, kuinka hyvä kukin ruutu on (käytännön arviointi)**
+   Auttajasi kävelee jokaisen ruudun ympäri ja kirjoittaa muistiin: "Jos noudatan nykyistä suunnitelmaa, miten
    kestääkö monta askelta päästäkseni uloskäynnille täältä?" He tekevät tämän uudestaan ja uudestaan, kunnes
    numerot lakkaavat muuttumasta.
 
-2. **Vaihe 2 – Paranna suunnitelmaa (politiikan parantaminen)**
+2. **Vaihe 2 – Paranna suunnitelmaa (käytännön parantaminen)**
    Nyt katsot jokaista ruutua ja kysyt: "Onko olemassa parempaa suuntaa, johon voisin mennä täältä?"
    Jos kyllä, päivitä suunnitelma!
 
@@ -46,8 +46,8 @@ State Values V(s):       Optimal Policy:
 -2.7  -1.9  -1.0   0.0    ↑   →   →   T
 ```
 
-**Arvot ovat täysin järkeviä!** Päätteen vieressä olevien neliöiden arvo on -1 (yhden askeleen päässä).
-Kahden askeleen päässä olevien neliöiden arvo on -1,9 (= -1 + 0,9 × -1) ja niin edelleen.
+**Arvot ovat täysin järkeviä!** Päätteen vieressä olevien ruutujen arvo on -1 (yhden askeleen päässä).
+Kahden askeleen päässä olevien ruutujen arvo on -1,9 (= -1 + 0,9 × -1) ja niin edelleen.
 
 ---
 
@@ -61,10 +61,10 @@ Kahden askeleen päässä olevien neliöiden arvo on -1,9 (= -1 + 0,9 × -1) ja 
 
 ## Avainsanat muistaa
 
-- **Politiikka**: Suunnitelma – mitä toimia kussakin osavaltiossa tulee tehdä
+- **Käytäntö**: Suunnitelma – mitä toimia kussakin osavaltiossa tulee tehdä
 - **Arvofunktio V(s)**: Kuinka hyvä on olla tilassa s (korkeampi = lähempänä tavoitetta)
 - **Käytännön arviointi**: Lasketaan, kuinka hyvä nykyinen suunnitelma on
-- **Politic Improvement**: Suunnitelman parantaminen arvofunktion avulla
+- **Käytännön parantaminen**: Suunnitelman parantaminen arvofunktion avulla
 - **Optimaalinen käytäntö**: Paras mahdollinen suunnitelma – ei voi enää parantaa
 
 Suuri idea: **Sinun ei tarvitse kokeilla kaikkia mahdollisia suunnitelmia! Jatka vain virran parantamista

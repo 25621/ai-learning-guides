@@ -148,7 +148,7 @@ jälkeenpäin.
 | sana | Merkitys |
 |------|---------|
 | **Matoitusmatriisi** | Taulukko, joka määrittelee yhden laukauksen monen agentin pelin |
-| **Nash-tasapaino** | Politiikkaprofiili, jossa yksikään toimija ei voi parantaa poikkeamalla |
+| **Nash-tasapaino** | Käytäntöprofiili, jossa yksikään toimija ei voi parantaa poikkeamalla |
 | **Sekastrategia** | Käytäntö, joka satunnaistaa useita toimintoja |
 | **Ei-stationaarisuus** | Ympäristö (= muut toimijat) muuttuu jatkuvasti oppiessaan |
 | **itsenäinen oppija** | Agentti, joka jättää huomioimatta muiden oppijoiden olemassaolon |

@@ -95,7 +95,7 @@ sinua muuttamasta.
 
 ## Miksi tämä estää katastrofaaliset päivitykset
 
-**Katastrofaalinen päivitys** on, kun yksi suuri politiikan muutos tuhoaa kokonaan kaiken
+**Katastrofaalinen päivitys** on, kun yksi suuri käytännön muutos tuhoaa kokonaan kaiken
 agentti on oppinut – koulutustunteja on kulunut yhdellä gradienttivaiheella.
 
 Ilman leikkaamista: yksi suuri gradienttiaskel voi muuttaa käytäntöä radikaalisti.
@@ -149,7 +149,7 @@ gradienttiaskel per minierä, joten jokainen aikakausi suorittaa 32 pientä, vak
 [mini-erä gradienttilasku](https://en.wikipedia.org/wiki/Stochastic_gradient_descent#Mini-batch_gradient_descent).)
 
 Leikkaus varmistaa, että nämä useat siirrot eivät ylitä – ilman leikkausta, useita
-aikakaudet tuhoaisivat politiikan työntämällä sitä liian pitkälle!
+aikakaudet tuhoaisivat käytännön työntämällä sitä liian pitkälle!
 
 **Tosielämän esimerkki:** Oppilaalla on 30 harjoitustehtävää.
 - VAHVISTA: tee jokainen ongelma kerran, opi vähän, heitä ne pois
@@ -173,7 +173,7 @@ Tyypilliset kertoimet: c₁ = 0,01 (entropia), c₂ = 0,5 (kriittinen)
 **Kaksi termiä, jotka kannattaa purkaa:**
 
 - **Policy gradient** — "näyttelijä" puolet tappiosta. Se käyttää gradienttisignaalia
-  työnnä politiikkaa kohti toimia, joilla on suurempi hyöty ja pois toimista, joilla on pienempi hyöty
+  työnnä käytäntöa kohti toimia, joilla on suurempi hyöty ja pois toimista, joilla on pienempi hyöty
   etu. Tämä on sama ydinidea, joka esiteltiin REINFORCEssa – katso [REINFORCE
   walkthrough](./reinforce_cartpole_explained.md#the-old-way-vs-the-new-way)
   intuitio. PPO vain lisää leikkauskääreen ympärilleen.
@@ -195,7 +195,7 @@ Update  800 | Avg reward: ~280-300
 
 CartPolen PPO-arvo parantuu tasaisesti, mutta se on yleensä tasanteella noin 280-300.
 (**tasanko** tarkoittaa, että oppimiskäyrä tasoittuu – palkinto lakkaa paranemasta jopa harjoittelun aikana
-jatkuu. Politiikka on löytänyt paikallisesti hyvän strategian, mutta se ei edisty enempää.)
+jatkuu. Käytäntö on löytänyt paikallisesti hyvän strategian, mutta se ei edisty enempää.)
 Tämä on itse asiassa odotettavissa - PPO on suunniteltu kovempiin, pidempijaksoisiin ympäristöihin.
 
 Mielenkiintoinen havainto: **REINFORCE ratkaisi CartPolen nopeammin!** (500 avg vs 300 avg)

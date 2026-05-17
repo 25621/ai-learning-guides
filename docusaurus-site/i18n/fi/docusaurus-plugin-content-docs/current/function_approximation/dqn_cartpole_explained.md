@@ -1,10 +1,10 @@
-# Deep Q-Network (DQN) tyhjästä 🧠
+# Deep Q-Network (DQN) alusta alkaen 🧠
 
 ## Lineaarisen ongelma
 
 Muistatko lineaarisen kaavamme aikaisemmasta?
 
-> Pisteet = w₁ × kärryn_sijainti + w₂ × kärryn_nopeus + w₃ × napakulma + w₄ × napanopeus
+> Pisteet = w₁ × kärryn_sijainti + w₂ × kärryn_nopeus + w₃ × tangon_kulma + w₄ × tangon_kulmanopeus
 
 Tämä toimii hyvin CartPolelle, mutta entä videopeli, jossa näet tuhansia
 pikseliä? Sille ei voi kirjoittaa yksinkertaista reseptiä!
@@ -24,7 +24,7 @@ välittää tietoa eteenpäin, ja yhdessä he tekevät viisaan päätöksen.
 
 ```
 Input Layer      Hidden Layer 1    Hidden Layer 2    Output Layer
-[cart pos]  →    [128 neurons]  →  [128 neurons]  →  [push LEFT score]
+[cart pos]   →   [128 neurons]  →  [128 neurons]  →  [push LEFT score]
 [cart speed] →   [  ...       ]    [  ...       ]    [push RIGHT score]
 [pole angle] →
 [pole speed] →
@@ -43,7 +43,7 @@ tuhansia aterioita.
 ## DQN = syvä Q-verkko
 
 **DQN** (Deep Q-Network) keksi DeepMind vuonna 2013. He ottivat vanhan Q-oppimisen
-kaava ja vaihtanut Q-taulukon hermoverkkoon!
+kaavan ja korvasivat Q-taulukon neuroverkolla!
 
 Sen sijaan:
 > Q-taulukko[tila][toiminta] = pisteet
@@ -51,12 +51,12 @@ Sen sijaan:
 Meillä on:
 > Q-verkko(tila) → [pisteet_vasemmalle, pistemäärä_oikealle]
 
-Verkko ottaa tilan syötteenä ja tulostaa Q-arvot KAIKKIIN toimintoihin kerralla.
+Verkko ottaa tilan syötteeksi ja laskee Q-arvot KAIKILLE toiminnoille kerralla.
 Tämä on paljon tehokkaampaa kuin niiden laskeminen erikseen!
 
 ---
 
-## Tämä käsikirjoitus: "Naiivi" versio
+## Tämä skripti: "Naiivi" versio
 
 Tämä skripti näyttää DQN:n **ilman** erityisiä temppuja. Se vain:
 1. Näkee valtion
@@ -127,5 +127,5 @@ Tällä naiivilla DQN:llä on kaksi suurta ongelmaa:
    SAMA verkko laskea, mikä kohteen pitäisi olla. Se on kuin ampuisi liikkuvaa kohdetta
    napakymppi!
 
-Nämä ongelmat ratkaistaan seuraavassa **Experience Replay** ja **Target Networks** avulla
-käsikirjoituksia. Yhdessä he tekevät DQN:n heiluvasta aloittelijasta mestaripelin pelaajaksi!
+Nämä ongelmat ratkaistaan seuraavissa **Experience Replay** ja **Target Networks** -skripteissä.
+Yhdessä ne tekevät DQN:n heiluvasta aloittelijasta pelien mestarin!

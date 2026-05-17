@@ -142,7 +142,7 @@ Koulutettu maailmanmalli on perusta:
 - **Dyna-tyylinen lisäys** — kouluta Q-verkko kuviteltujen tietojen pohjalta
   moninkertaistaa näytteen tehokkuuden.
 - **Uteliaisuus / tutkiminen** — käynti kertoo, että malli ei pysty ennustamaan hyvin.
-- **Dreamer / World-Models -paperit** — harjoita *politiikka* kokonaan sisällä
+- **Dreamer / World-Models -paperit** — harjoita *käytäntö* kokonaan sisällä
   malli, jossa ei ole todellista vuorovaikutusta alkuperäisen tiedonkeruun lisäksi.
 
 ---

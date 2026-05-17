@@ -51,7 +51,7 @@ PPO KL-rangaistuksella." Sama kohde, yksinkertaisempi matka.
 
 ## Mitä Kokeilu osoittaa
 
-Koulutimme politiikan suoraan 2 000 etusijaparille 300 aikakaudelle.
+Koulutimme käytännön suoraan 2 000 etusijaparille 300 aikakaudelle.
 
 ![DPO koulutus](outputs/dpo_implementation.png)
 

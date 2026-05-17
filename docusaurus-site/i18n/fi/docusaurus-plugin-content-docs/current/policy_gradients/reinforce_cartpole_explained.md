@@ -75,7 +75,7 @@ Gradientin ottaminen ja käytännön päivittäminen on kuin kertoisi robotille:
 
 ---
 
-## Mikä on politiikkaverkosto?
+## Mikä on käytäntöverkosto?
 
 Taulukon sijasta käytämme **hermoverkkoa** edustamaan käytäntöä.
 

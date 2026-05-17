@@ -1,30 +1,29 @@
-# Oppitun suunnittelumallin (MPC) käyttäminen 🔮
+# Opitun maailmanmallin käyttäminen suunnittelussa (MPC) 🔮
 
-## Suuri Idea
+## Suuri idea
 
-Sinulla on **maailmamalli** (hermoverkko, joka ennustaa tulevaisuutta).
+Sinulla on **maailmanmalli** (neuroverkko, joka ennustaa tulevaisuutta).
 Mitä nyt?
 
-Suorinta käyttöä on **suunnittelu**: kysy joka hetki mallilta "mitä
-tapahtuisi, jos kokeilisin *tätä* suunnitelmaa? *se* suunnitelma? *se toinen* suunnitelma?"
-Tee sitten se suunnitelma, joka näyttää parhaalta – mutta **vain sen ensimmäinen askel**.
-Koska malli ei ole täydellinen, suoritamme vain yhden toiminnon, tarkkailemme todellista uutta tilaa todellisesta ympäristöstä ja suunnittelemme sitten uudelleen alusta.
+Suorinta käyttöä on **suunnittelu**: kysy joka hetki mallilta: "Mitä tapahtuisi, jos kokeilisin *tätä* suunnitelmaa? Tai *tuota* suunnitelmaa? Tai *tätä kolmatta* suunnitelmaa?"
+Valitse sitten parhaalta vaikuttava suunnitelma – mutta suorita **vain sen ensimmäinen askel**.
+Koska maailmanmalli ei ole täydellinen, suoritamme vain yhden toiminnon, tarkkailemme todellista uutta tilaa todellisesta ympäristöstä ja suunnittelemme sitten kaiken uudelleen alusta alkaen.
 
-Tällä temppulla on nimi: **Model Predictive Control** (MPC).
+Tällä tempulla on nimi: **Model Predictive Control** (MPC).
 
 ---
 
 ## Analogia tosielämästä
 
-Olet ravintolassa katsomassa valikkoa. Et sitoudu viiden kurssiin
-tilaa paikan päällä – tilaat ensimmäisen ruokalajin ja katsot sitten, kuinka täyteläiseksi tunnet olosi
-päättää jälkiruoasta uudelleen.
+Olet ravintolassa katsomassa ruokalistaa. Et tilaa viiden ruokalajin illallista heti alkuun
+– tilaat ensin alkupalan ja katsot sitten, kuinka kylläiseksi tunnet itsesi
+ennen kuin päätät jälkiruoasta.
 
-Tai: ajat mutkaisella tiellä. Et lukitse ohjaustuloja
-seuraavat 30 sekuntia – katsot jatkuvasti eteenpäin, suunnittelet muutaman sekunnin, otat
-seuraava ohjaustoiminto ja suunnittele uudelleen.
+Tai: ajat mutkaisella tiellä. Et lukitse ohjausliikkeitä
+seuraavaksi 30 sekunniksi – katsot jatkuvasti eteenpäin, suunnittelet muutaman sekunnin etukäteen, suoritat
+seuraavan ohjaustoiminnon ja suunnittelet sitten uudelleen.
 
-Tuo **plan-far / act-near / re-plan** -silmukka on MPC.
+Tuo **plan-far / act-near / re-plan** -silmukka (suunnittele pitkälle, toimi lähellä, suunnittele uudelleen) on MPC.
 
 ---
 
@@ -56,32 +55,32 @@ muutama millisekunti.
 
 ## Miksi suunnitella jokainen askel uudelleen?
 
-Koska malli on epätäydellinen. Virheet yhdistetään käyttöönoton aikana (kuten näkyy kaaviossa, jonka on luonut `world_model.py`, tallennettu `outputs/world_model.png`). Vaiheen 0 suunnitelma on luotettava vain muutaman ensimmäisen liikkeen aikana; vaiheessa 15 malli on hallusinaatio. Joten luotamme vain
-**ensimmäinen siirto** ja päivitä sitten suunnitelma uusimpaan todelliseen tilaan.
+Koska malli on epätäydellinen. Virheet yhdistetään käyttöönoton aikana (kuten näkyy kaaviossa, jonka on luonut `world_model.py`, tallennettu `outputs/world_model.png`). Vaiheen 0 suunnitelma on luotettava vain muutaman ensimmäisen liikkeen aikana; vaiheessa 15 malli alkaa hallusinoida. Joten luotamme vain
+**ensimmäiseen siirtoon** ja päivitämme sitten suunnitelman uusimman todellisen tilan mukaan.
 
-Tämä on sama syy, miksi ihmiset eivät kirjoita 100 liikkeen shakkisuunnitelmaa ja pidä siitä kiinni
-se – olosuhteet muuttuvat, ja mitä kauempana arvelet, sitä vähemmän se vastaa
+Tämä on sama syy, miksi ihmiset eivät kirjoita 100 siirron shakkisuunnitelmaa ja pidä siitä
+kiinni – olosuhteet muuttuvat, ja mitä kauemmas tulevaisuuteen yrität arvioida, sitä vähemmän se vastaa
 todellisuutta.
 
 ---
 
 ## Ryppy: Palkinnon on kerrottava suunnittelijalle jotain
 
-CartPolessa todellinen palkinto on `+1` joka askeleella, kunnes napa putoaa. Malli
-ennustaa uskollisesti `+1, +1, +1, ...` melkein jokaiseen suunnitelmaan, koska
-satunnaiset suunnitelmat harvoin päättyvät nopeasti mallin sisällä - ja niin jokainen suunnitelma
-pisteet samat. Suunnittelijalla ei ole valinnanvaraa.
+CartPolessa todellinen palkinto on `+1` joka askeleella, kunnes tanko putoaa. Malli
+ennustaa uskollisesti `+1, +1, +1, ...` melkein jokaiselle suunnitelmalle, koska
+satunnaiset suunnitelmat päättyvät harvoin nopeasti mallin sisällä – ja siten jokaisen suunnitelman
+pisteet ovat samat. Suunnittelijalla ei ole mahdollisuutta valita parasta.
 
-Korjaus: korvaa todellinen palkkio **pehmeällä välityspalvelimella** suunnittelun aikana:
+Korjaus: korvataan todellinen palkkio **pehmeällä välityspalkkiolla (proxy reward)** suunnittelun aikana:
 
 ```python
 reward_proxy(state) = 1
-                    - |pole_angle| / 0.21          # pole upright?  (1=yes)
-                    - 0.1 * |cart_position| / 2.4  # cart centred?  (1=yes)
+                    - |pole_angle| / 0.21          # onko tanko pystyssä? (1=kyllä)
+                    - 0.1 * |cart_position| / 2.4  # onko kärry keskellä? (1=kyllä)
 ```
 
-Nyt suunnitelmat, jotka *päättyisivät* kaatuneeseen tangon, saavat näkyvästi huonompia arvoja kuin
-suunnitelmat, jotka pysyvät pystyssä. Suunnittelija voi luokitella ne.
+Nyt suunnitelmat, jotka *päättyisivät* tangon kaatumiseen, saavat näkyvästi huonompia arvoja kuin
+suunnitelmat, jotka pysyvät pystyssä. Suunnittelija voi pisteyttää ja järjestää ne paremmuusjärjestykseen.
 
 > **Oikean elämän oppitunti.** Tasainen palkintosignaali – "selvisit toisen sekunnin" -
 > on hyödytön lyhyen aikavälin suunnittelussa. Tiheät, muotoillut signaalit auttavat.
@@ -92,37 +91,37 @@ suunnitelmat, jotka pysyvät pystyssä. Suunnittelija voi luokitella ne.
 
 `model_based_planning.py`:
 
-1. **Lataa** maailman mallin painot, jotka säästävät `world_model.py`. (Jos he ovat
-   puuttuu, se kouluttaa yhden uudelleen lennossa.)
-2. **Käyttää 20 jaksoa** MPC:stä oikealla CartPole-v1:llä.
-3. **Käyttää myös 20 jaksoa** tasaisen satunnaisen käytännön pohjalta.
-4. **Piirtoi** sekä vierekkäin että tulostaa keskiarvot.
+1. **Lataa** maailmanmallin painot, jotka tallennettiin skriptissä `world_model.py`. (Jos ne
+   puuttuvat, se kouluttaa mallin uudelleen lennossa.)
+2. **Käyttää 20 jaksoa** MPC:stä oikeassa CartPole-v1-ympäristössä.
+3. **Käyttää myös 20 jaksoa** tasaisen satunnaista käytäntöä vertailukohtana.
+4. **Piirtää** molemmat vierekkäin kuvaajaan ja tulostaa keskiarvot.
 
 ### Mitä sinun pitäisi nähdä, kun käytät sitä
 
-| politiikka | Keskimääräinen palkinto (vaiheet selviytyneet) |
+| Käytäntö | Keskimääräinen palkinto (selviydytyt askeleet) |
 |--------|-------------------------------:|
-| Satunnainen        | ~22 (tyypillistä CartPolelle – sauva putoaa nopeasti) |
-| MPC (meidän)    | ~150–500 (vaihtelee siemenittain; monet jaksot lähellä 500) |
-| Max mahdollista  | 500 |
+| Satunnainen        | ~22 (tyypillistä CartPolelle – tanko kaatuu nopeasti) |
+| MPC (meidän)    | ~150–500 (vaihtelee satunnaissiementen mukaan; monet jaksot lähellä 500) |
+| Maksimi | 500 |
 
-Tämä **5–25-kertainen parannus** saavutetaan ilman politiikkaverkostoa tai arvoa
-toimi, eikä lisäkoulutusta. Vain maailmanmalli + 200 unta askelta kohti.
+Tämä **5–25-kertainen parannus** saavutetaan täysin ilman erillistä käytäntöverkkoa tai arvofunktiota,
+eikä se vaadi lisäkoulutusta. Vain opittu maailmanmalli + 200 uneksittua suunnitelmaa askelta kohti.
 
-Juoni `outputs/model_based_planning.png` näyttää kaksi värillistä palkkia jaksoa kohden
-— MPC lähes aina pitempi kuin Random, ja monet jaksot osuvat
-500 portaan katto.
+Kuvaaja `outputs/model_based_planning.png` näyttää kaksi värillistä palkkia jaksoa kohden
+— MPC on lähes aina huomattavasti pidempi kuin Random, ja monet jaksot yltävät
+500 askeleen maksimikattoon.
 
 ---
 
 ## Mallipohjaisen suunnittelun vahvuudet
 
-- **Sample tehokas.** Kaikki oppiminen tehtiin yhdestä satunnaisesta erästä
-  siirtymät. Hyödyllisen politiikan muodostamiseksi ei tarvinnut enempää env-vuorovaikutusta.
-- **Helppo kohdistaa uudelleen.** Haluatko hallita agenttia eri tavalla? Vaihda
-  palkkion välityspalvelin – ei uudelleenkoulutusta. (Kokeile maksimoida kärryn nopeus huvin vuoksi.)
-- **Tulkitavissa.** Voit tarkastaa suunnitelmat, joita agentti harkitsi
-  ennustetut lentoradat ja pisteet.
+- **Näytetehokas (sample efficient).** Kaikki oppiminen tapahtui yhdestä satunnaisten
+  siirtymien erästä. Hyödyllisen käytännön muodostamiseksi ei tarvittu lainkaan uutta vuorovaikutusta ympäristön kanssa.
+- **Helppo kohdistaa uudelleen.** Haluatko ohjata agenttia toisella tavalla? Vaihda vain
+  palkkion välityspalkkiota – skriptiä ei tarvitse kouluttaa uudelleen. (Kokeile vaikkapa maksimoida kärryn nopeus!)
+- **Tulkittavissa.** Voit tarkastaa agentin harkitsemat suunnitelmat,
+  ennustetut reitit ja niiden pisteet.
 
 ## Heikkoudet (ja mitä ihmiset tekevät niistä)
 
@@ -136,12 +135,12 @@ Juoni `outputs/model_based_planning.png` näyttää kaksi värillistä palkkia j
   kokoonpanot** (useita malleja, jotka on koulutettu samoilla tiedoilla, kuten PETS, Chua et
   al. 2018), jotta suunnittelija voi havaita erimielisyydet ja rangaista suunnitelmista
   malli on epävarma.
-- **Todellinen palkkio on se, mitä haluamme.** Palkinnon muotoilu auttaa, mutta varten
-  monimutkaisempia tehtäviä ihmiset oppivat **arvofunktion** koulutettu *sisällä*
-  maailmanmalli - oppinut kriitikko, joka arvioi pitkän aikavälin tuoton mistä tahansa
-  tila ilman käsintehtyä välityspalvelinta. Molemmat **Dreamer** (joka harjoittelee
-  näyttelijä-kriitikko täysin piilevässä mielikuvituksessa) ja **MuZero** (joka yhdistää
-  MCTS oppitun arvoverkoston kanssa) käyttävät tätä ideaa.
+- **Todellinen palkkio on se, mitä haluamme.** Palkkion muotoilu (reward shaping) auttaa, mutta
+  monimutkaisempia tehtäviä varten ihmiset oppivat **arvofunktion**, joka on koulutettu *maailmanmallin sisällä*
+  – eli opitun arvioijan (critic), joka arvioi pitkän aikavälin tuottoa mistä tahansa
+  tilasta ilman käsintehtyä välityspalkkiota. Sekä **Dreamer** (joka kouluttaa
+  toimija-arvioijan (actor-critic) täysin latentissa mielikuvituksessa) että **MuZero** (joka yhdistää
+  MCTS-puuhaun opittuun arvoverkkoon) käyttävät tätä ideaa.
 
 ---
 
@@ -151,7 +150,7 @@ Juuri suorittamasi tarkka resepti – **oppinut dynamiikkaa + suunnittelu** – 
 nykyaikaisen tekoälytutkimuksen vahvimpien RL-järjestelmien selkäranka:
 
 - **MuZero** (DeepMind): yhdistää opitun maailmanmallin Monte Carlo Tree Searchiin. Se hallitsee Go, shakki, shogi ja Atari ilman sääntöjä etukäteen.
-- **Dreamer / DreamerV3** (Hafner et al.): kouluttaa politiikkaa *oppineen* sisällä
+- **Dreamer / DreamerV3** (Hafner et al.): kouluttaa käytäntöa *oppineen* sisällä
   **latentti-avaruus**-maailmanmalli (eli malli pakkaa raakakuvat tai tilat kompaktiksi, abstraktiksi esitykseksi ennen tulevaisuuden ennustamista). Se saavuttaa huippuluokan (huipputason) suorituskyvyn yli 100:ssa vertailussa.
 - **PETS / PlaNet / TD-MPC**: nämä ovat algoritmiperheitä (tutkimuslinjoja), jotka skaalaavat juuri tämän idean monimutkaisiin jatkuviin ohjaustehtäviin, kuten robotiikkaan.
 
@@ -161,14 +160,14 @@ Olet rakentanut - muutamassa sadassa rivissä - perheen pienimmän jäsenen.
 
 ## Avainsanat
 
-| Termi | Pelkkää englantia |
+| Termi | Selkosuomeksi |
 |------|---------------|
-| **MPC**           | Mallin ennakoiva ohjaus – suunnittele etukäteen, toimi kerran, suunnittele uudelleen |
-| **Satunnainen ammunta** | Tee paljon satunnaisia suunnitelmia, valitse paras |
-| **Horisontti (H)**   | Kuinka monta askelta suunnitelma näyttää eteenpäin |
-| **N näytettä**     | Kuinka monta ehdokassuunnitelmaa harkitsemme askelta kohti |
-| **Vähentyvä horisontti** | Suunnittele uudelleen joka vaiheessa sen sijaan, että sitoutuisi yhteen suunnitelmaan |
-| **Palkintojen välityspalvelin / muotoilu** | Sujuva korvikepalkkio, joka antaa suunnittelijalle hyödyllisen signaalin optimointia varten |
+| **MPC**           | Malliennakoiva ohjaus (Model Predictive Control) – suunnittele eteenpäin, toimi kerran, suunnittele uudelleen |
+| **Satunnaisammunta** | Tehdään paljon satunnaisia suunnitelmia ja valitaan niistä paras |
+| **Horisontti (H)**   | Kuinka monta askelta suunnitelma katsoo eteenpäin |
+| **N näytettä**     | Kuinka monta ehdokassuunnitelmaa harkitaan askelta kohti |
+| **Vähenevä horisontti** | Suunnitellaan uudelleen joka askeleella sen sijaan, että sitouduttaisiin yhteen pitkään suunnitelmaan |
+| **Palkintojen välityspalkkio / muotoilu** | Jatkuva ja tiheä korvikepalkkio, joka antaa suunnittelijalle hyödyllisen signaalin optimointia varten |
 
 ---
 

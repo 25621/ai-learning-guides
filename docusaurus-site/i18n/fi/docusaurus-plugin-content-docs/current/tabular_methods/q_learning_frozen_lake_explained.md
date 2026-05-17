@@ -3,7 +3,7 @@
 ## Mikä se on?
 
 Kuvittele jäätynyt lampi, jossa on liukasta jäätä. Siellä on **aloitusruutu** ja **maaliruutu**
-jossa on joitain **reikiä** keskellä. Jos putoat kuoppaan, aloitat alusta!
+jossa on joitain **reikiä** keskellä. Jos putoat reikään, aloitat alusta!
 
 Jää on liukasta, joten vaikka yrittäisit kävellä oikein, saatat sen sijaan liukua ylös tai alas.
 **Q-Learning-agentti** on robotti, joka oppii – yrittämällä yhä uudelleen – miten päästä
@@ -13,27 +13,26 @@ aloitusruudusta maaliin putoamatta!
 
 ## Mitä Q-Learningin "Q" tarkoittaa?
 
-**"Q"** tarkoittaa **"laatua"** - erityisesti *laatua* tietyn ottamisen
-toimia tietyssä tilanteessa.
+**"Q"**-kirjain tulee sanasta **"Quality"** (laatu) – se kuvaa tietyn toiminnon valinnan hyvyyttä tietyssä tilanteessa.
 
 Ajattele sitä kuin ravintolan arvosanaa: "Kuinka hyvää (laatua) on tilata pizza TÄSTÄ
-ravintola?" Q(s, a) kysyy: "Kuinka hyvä on toimia **a**, kun olen tilassa **s**?"
+ravintolasta?" Q(s, a) kysyy: "Kuinka hyvä on toiminto **a**, kun olen tilassa **s**?"
 
-Korkea Q-arvo tarkoittaa: "Loistava valinta! Tämä toiminta johtaa paljon palkintoja."
-Matala Q-arvo tarkoittaa: "Huono idea! Tämä toiminta johtaa yleensä ongelmiin."
+Korkea Q-arvo tarkoittaa: "Loistava valinta! Tämä toiminto johtaa moniin palkintoihin."
+Matala Q-arvo tarkoittaa: "Huono idea! Tämä toiminto johtaa yleensä ongelmiin."
 
 **Tosielämän esimerkki:** Kuvittele, että olet lapsi, joka päättää syödä karkkia ennen illallista.
 Q-arvo "syö karkkia nyt" saattaa olla korkea juuri nyt (se maistuu hyvältä!), mutta yleisesti ottaen matala
 (äiti suuttuu, tunnet olosi kipeäksi myöhemmin). Q-learning oppii ottamaan huomioon tulevaisuuden
-seuraukset - ei vain välitön tunne!
+seuraukset - eikä vain välitöntä tunnetta!
 
 ---
 
 ## Suuri idea: Maaginen pistetaulukko
 
-Q-Learning rakentaa suuren taulukon nimeltä **Q-table**. Jokainen rivi on neliö jäällä,
+Q-Learning rakentaa suuren taulukon nimeltä **Q-table**. Jokainen rivi on ruutu jäällä,
 ja jokainen sarake on toiminto (vasen, oikea, ylös, alas). Sisällä olevat numerot ovat **pisteitä**:
-"Kuinka hyvä on tehdä tämä toimenpide tältä aukiolta?"
+"Kuinka hyvä on valita tämä toiminto tästä ruudusta?"
 
 Aina kun robotti yrittää liikettä:
 1. Se saa palautetta (putosiko se? saavuttiko tavoitteen?)
@@ -43,13 +42,13 @@ Aina kun robotti yrittää liikettä:
 
 Robotti pohjimmiltaan kysyy: "Oliko tämä liike parempi vai huonompi kuin luulin?"
 
-**Tosielämän esimerkki:** Ajattele vauvaa, joka oppii kävelemään. Joka kerta kun he yrittävät astua ja kaatua,
-he oppivat "se askel oli huono". Joka kerta kun he onnistuvat, he muistavat "se toimi!" jälkeen
-monet yrittävät, he keksivät kuinka kävellä. Q-learning tekee saman asian, mutta pöydällä!
+**Tosielämän esimerkki:** Ajattele vauvaa, joka oppii kävelemään. Joka kerta kun vauva yrittää ottaa askeleen ja kaatuu,
+se oppii, että "se askel oli huono". Joka kerta kun se onnistuu, se muistaa, että "se toimi!" Monen
+yrityksen jälkeen vauva oppii kävelemään. Q-learning tekee saman asian, mutta taulukon avulla!
 
 ---
 
-## Mikä tekee Q-Learningistä erityisen: se on politiikan ulkopuolella!
+## Mikä tekee Q-Learningistä erityisen: se on käytännöstä riippumaton (off-policy)!
 
 Tässä on jotain fiksua: kun Q-Learning päivittää taulukkoaan, se *olettaa aina, että se tekee
 täydellinen liike ensi kerralla*, vaikka harjoituksen aikana se joskus tutkii satunnaisia liikkeitä.
@@ -74,7 +73,7 @@ Harjoittelimme **50 000 jaksoa** liukkaalla 4 × 4 Frozen Lakella:
 | Ahne arvioinnin onnistumisprosentti | **73.1%** |
 | Välitavoite (>70 %) | ✓ **LÄPISTETTY** |
 
-Jää on erittäin liukasta, joten paraskaan politiikka ei voi voittaa 100% ajasta!
+Jää on erittäin liukasta, joten paraskaan käytäntö ei voi voittaa 100% ajasta!
 
 Opittu Q-taulukko näyttää agentin selvittäneen: mene alas ja oikealle välttäen reikiä.
 
@@ -94,7 +93,7 @@ Opittu Q-taulukko näyttää agentin selvittäneen: mene alas ja oikealle vältt
 - **Q-taulukko**: Taulukko siitä, "kuinka hyvä kukin toiminto on kussakin tilassa"
 - **Q(s, a)**: Toiminnon a pisteet tilassa s
 - **Palkinto**: Mitä agentti saa toimenpiteen jälkeen (+1 tavoitteen saavuttamisesta, 0 muuten)
-- **Poiskäytäntö**: Oppii optimaalisen strategian vaikka tutkii satunnaisesti
+- **Käytännöstä riippumaton (off-policy)**: Oppii optimaalisen strategian vaikka tutkii satunnaisesti
 - **ε-ahne** (ε = epsilon): Suurimman osan ajasta tekevät tunnetuimman toiminnan; joskus tutkia satunnaisesti
 - **Alennuskerroin γ** (γ = gamma): kuinka paljon tulevat palkkiot ovat arvokkaita (kuten rahan suosiminen nyt tai myöhemmin)
 

@@ -56,9 +56,9 @@ Jokaiselle `(s, a)` tietojoukossa minimoi:
 loss = -log π(a | s)        (cross-entropy)
 ```
 
-Siinä se. politiikka `π` on vain MLP, joka tulostaa toimintalogit;
+Siinä se. käytäntö `π` on vain MLP, joka tulostaa toimintalogit;
 koulutus on sama kuin MNIST. Puretaan ammattikieltä:
-- **`π` (Pi):** "politiikan" vakiosymboli – sääntö tai hermoverkko, joka päättää mitä tehdä.
+- **`π` (Pi):** "käytännön" vakiosymboli – sääntö tai hermoverkko, joka päättää mitä tehdä.
 - **MLP (Multi-Layer Perceptron):** Normaali perushermoverkko.
 - **Logitit:** Raa'at, normalisoimattomat pisteet, joita verkko sylkee ennen kuin muutamme ne todennäköisyyksiksi.
 - **Ristientropia:** Vakiokaava mallin rankaisemiseksi, kun se määrittää oikean vastauksen alhaisen todennäköisyyden.
@@ -70,7 +70,7 @@ Agentin kouluttaminen pelaamaan peliä BC:n kautta on kirjaimellisesti identtist
 
 ## Mitä koodimme tekee
 
-Käsikirjoitus `behavioral_cloning.py`:
+Skripti `behavioral_cloning.py`:
 
 1. **Lataa kaikki neljä tietojoukkoa**, jonka on rakentanut `d4rl_dataset.py`
    (`random`, `medium`, `expert`, `medium-replay`).
@@ -112,7 +112,7 @@ Tämä on lyöntiviiva: **BC perii datan enimmäismäärän.**
 | menetelmä | Suunnilleen lopullinen tuotto | Miksi? |
 |--------|--------------------:|------|
 | eKr     | ~60   | Jäljittelee epäonnistuneiden aikaisten ajojen *keskiarvoa* + myöhempiä hyviä |
-| CQL    | ~400+ | Käyttää palkintoja suosiakseen korkean Q-siirtymiä; ompelee hyvän politiikan sekoitetuista tiedoista |
+| CQL    | ~400+ | Käyttää palkintoja suosiakseen korkean Q-siirtymiä; ompelee hyvän käytännön sekoitetuista tiedoista |
 
 Joten CQL **päihittää tiedot**, BC ** vastaa tiedot**. Siinä kaikki
 syy offline RL on tutkimusala eikä vain "teke jäljitelmiä".
@@ -142,7 +142,7 @@ Tämä on kuuluisa "datan laatu vs algoritmi" -kompromissi:
   ihmisen kirjoittamia vastauksia. PPO + palkintomalli tulee myöhemmin.
 - **DAgger (Ross et al., 2011).** Nerokas laajennus korjaamaan **kompositio-virhe** -ongelman.
   *Miksi yhdistämisvirhe on ongelma, jos BC-kloonat täydellisesti?* Vaikka BC-malli olisi 99 % tarkka, tuo 1 %:n virhe lopulta tapahtuu. Kun se tapahtuu, agentti siirtyy tilaan, jota se ei ole koskaan nähnyt täydellisesti ohjatussa tietojoukossa. Koska se on hämmentynyt, se tekee suuremman virheen, siirtyen vielä kauemmaksi tunnetusta tiedosta, mikä johtaa täydelliseen epäonnistumiseen (kuten kalliolta ajaminen).
-  *Korjaus:* Voisimme vain pyytää asiantuntijaa ajamaan ikuisesti, mutta asiantuntija-aika on kallista. Sen sijaan DAgger antaa BC-politiikan ajaa. Kun käytäntö tekee virheen ja ajautuu omituiseen tilaan, pidämme tauon, kysymme asiantuntijalta "mitä sinä tekisit *täällä*?" ja lisäämme sen tietojoukkoon. Me vain "kysymme asiantuntijalta uudelleen valtioiden BC-politiikan vierailuja", koska tarvitsemme asiantuntijan vain opettamaan meille, kuinka toipua omista virheistämme, sen sijaan, että kyselisimme niitä aina.
+  *Korjaus:* Voisimme vain pyytää asiantuntijaa ajamaan ikuisesti, mutta asiantuntija-aika on kallista. Sen sijaan DAgger antaa BC-käytännön ajaa. Kun käytäntö tekee virheen ja ajautuu omituiseen tilaan, pidämme tauon, kysymme asiantuntijalta "mitä sinä tekisit *täällä*?" ja lisäämme sen tietojoukkoon. Me vain "kysymme asiantuntijalta uudelleen valtioiden BC-käytännön vierailuja", koska tarvitsemme asiantuntijan vain opettamaan meille, kuinka toipua omista virheistämme, sen sijaan, että kyselisimme niitä aina.
 - **Decision Transformer (Chen et al., 2021).** "Älykäs" eKr.
   määrittää toiminnan ennusteen halutuksi *paluuksi*,
   Pohjimmiltaan offline RL:n muuttaminen takaisin seuraavan tunnuksen ennusteeksi.

@@ -162,7 +162,7 @@ Advantage:        A_t = G_t - V(s_t)
 | **Etu A_t** | "Oliko tämä toimenpide odotettua parempi?" |
 | **Arvoverkosto** | Neuraaliverkko, joka oppii ennustamaan odotettuja tuottoja |
 | **Varianssin vähennys** | Vähemmän kohinaa gradienttiarvioissa → vakaampi oppiminen |
-| ** Puolueeton** | Perustaso ei muuta tavoitepolitiikkaa keskimäärin; se vain tekee oppimissignaalista vähemmän meluisan ja vakaamman |
+| ** Puolueeton** | Perustaso ei muuta tavoitekäytäntöa keskimäärin; se vain tekee oppimissignaalista vähemmän meluisan ja vakaamman |
 
 ---
 
@@ -170,7 +170,7 @@ Advantage:        A_t = G_t - V(s_t)
 
 Lähtökohta on itse asiassa alku jollekin paljon tehokkaammalle: **Actor-Critic** -menetelmille.
 
-Sen sijaan, että näyttelijä-kriitikko laskisi V(t) vain jakson lopussa, hän päivittää
+Sen sijaan, että toimija-arvioija laskisi V(t) vain jakson lopussa, hän päivittää
 V(t) jokaisessa vaiheessa käyttämällä **Ajallisen eron** oppimista. Tämä tekee päivityksiä
 paljon nopeampi ja antaa agentille mahdollisuuden oppia keskeneräisistä jaksoista!
 

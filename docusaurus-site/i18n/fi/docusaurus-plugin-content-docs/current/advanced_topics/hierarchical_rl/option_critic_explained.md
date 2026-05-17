@@ -22,7 +22,7 @@ Ajattele sitä kuin esimies, joka delegoi asiantuntijoille:
 
 | Kuka | What they do |
 |-----|-------------|
-| **Ylläpitäjä (metapolitiikka)** | Päättää *kuka* asiantuntija lähettää työhön |
+| **Ylläpitäjä (metakäytäntö)** | Päättää *kuka* asiantuntija lähettää työhön |
 | **Specialist A** | Asiantuntija navigoimaan vasemmassa yläkulmassa |
 | **B-asiantuntija** | Oviaukkojen ylittämisen asiantuntija |
 | **C-asiantuntija** | Asiantuntija lataamaan kohti tavoitetta |
@@ -69,13 +69,13 @@ Tämä on kaiken Hierarchical RL:n perusidea – ja Option-Critic on yksi sen pu
 
 ## Mitä koodimme tekee
 
-Käsikirjoitus `option_critic.py` asettaa Option-Critic-agentin **7x7 gridworld-maailmaan**, jolla on kiinteä tavoite. Agentti alkaa mistä tahansa ruudukosta ja sen on navigoitava tavoitesoluun.
+Skripti `option_critic.py` asettaa Option-Critic-agentin **7x7 gridworld-maailmaan**, jolla on kiinteä tavoite. Agentti alkaa mistä tahansa ruudukosta ja sen on navigoitava tavoitesoluun.
 
 Agentilla on neljä vaihtoehtoa, ja hänen on opittava samanaikaisesti:
 
 - Käytäntö jokaiselle vaihtoehdolle (missä kävellä)
 - Milloin kukin vaihtoehto on lopetettava (päättymisehto)
-- Metapolitiikka, jolla valitaan vaihtoehtojen välillä
+- Metakäytäntö, jolla valitaan vaihtoehtojen välillä
 
 Palkinto käyttää **potentiaaliin perustuvaa muotoilua** – agentti saa pienen bonuksen joka askeleelta, jonka se siirtyy lähemmäs tavoitetta, plus +1 sen saavuttamisesta. Tämä tiheä palaute tekee oppimisesta riittävän vakaata, jotta vaihtoehdot toimivat 2 500 jaksossa.
 
@@ -91,7 +91,7 @@ Kukaan ihminen ei koskaan kerro sille, mitä kunkin vaihtoehdon tulisi tehdä. A
 
 **Oikein — askeleita tavoitteeseen:** Vähemmän vaiheita tarkoittaa, että agentti löysi tehokkaamman polun. Laskeva trendi osoittaa vaihtoehdot kypsyvät yhtenäisiksi taidoiksi, jotka ohjaavat agenttia suoremmin kohti tavoitetta.
 
-Tasoitetut käyrät osoittavat yleisen trendin 100 jakson ikkunoissa – jonkin verran kohinaa on normaalia RL:ssä, varsinkin kun useat komponentit (vaihtoehdot, lopetus, metapolitiikka) oppivat samanaikaisesti.
+Tasoitetut käyrät osoittavat yleisen trendin 100 jakson ikkunoissa – jonkin verran kohinaa on normaalia RL:ssä, varsinkin kun useat komponentit (vaihtoehdot, lopetus, metakäytäntö) oppivat samanaikaisesti.
 
 ---
 

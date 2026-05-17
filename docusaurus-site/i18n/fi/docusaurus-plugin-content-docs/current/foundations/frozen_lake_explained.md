@@ -8,7 +8,7 @@ Jää on pääosin turvallista, mutta joissakin paikoissa on **reikiä** - jos a
 putoat sisään ja peli on ohi! Lammen toisessa päässä on **lahja** 🎁.
 Sinun tehtäväsi on liukua **aloitusruudusta** **lahjalle** putoamatta sisään.
 
-Tältä jäätynyt järvi näyttää (4 neliötä × 4 ruutua):
+Tältä jäätynyt järvi näyttää (4 ruutua × 4 ruutua):
 
 ```
 S  F  F  F
@@ -26,18 +26,18 @@ H  F  F  G
 
 ## Hankala osa: Liukas jää!
 
-Oikealla jäälammikolla, kun yrität kävellä *oikealle*, joskus jää tekee
-liu'utat sen sijaan *ylös* tai *alas*! Se tekee tästä vaikean.
+Oikealla jäälammikolla, kun yrität kävellä *oikealle*, joskus jää saa sinut
+liukumaan sen sijaan *ylös* tai *alas*! Se tekee tästä vaikeaa.
 
 Vaikka *haluaisit* mennä oikealle, peli saattaa viedä sinut jonnekin muualle.
-Tätä kutsutaan **stokastisuudeksi** - hieno sana "asiat eivät aina mene
+Tätä kutsutaan **stokastisuudeksi** - se on hieno sana sille, että "asiat eivät aina mene
 niin kuin suunnittelit."
 
 ---
 
-## Mikä on satunnainen politiikka?
+## Mikä on satunnainen käytäntö?
 
-**politiikka** on vain suunnitelma: "Tässä tilanteessa teen TÄMÄN toimenpiteen."
+**Käytäntö** (policy) on vain suunnitelma: "Tässä tilanteessa valitsen TÄMÄN toiminnon."
 
 **Satunnainen käytäntö** tarkoittaa: "Minulla ei ole suunnitelmaa ollenkaan! Valitsen vain satunnaisen
 suuntaan joka kerta - ylös, alas, vasemmalle tai oikealle - kuin pyörität kehrää!"
@@ -48,7 +48,7 @@ Se on kuin vauva, joka kävelee jäällä ilman aavistustakaan siitä, missä la
 
 ## Mitä koodimme löysi
 
-Kokeilimme satunnaista käytäntöä **1 000 pelille**:
+Kokeilimme satunnaista käytäntöä **1 000 pelissä**:
 
 | Tulos | Arvo |
 |--------|-------|
@@ -57,14 +57,14 @@ Kokeilimme satunnaista käytäntöä **1 000 pelille**:
 | **Nopein peli** | 2 askelta |
 | **Pisin peli** | 33 askelta |
 
-Suurimman osan ajasta satunnainen kävelijä putosi kuoppaan nopeasti.
+Suurimman osan ajasta satunnainen kävelijä putosi reikään nopeasti.
 Vain yksi 100 pelistä päättyi lahjan löytämiseen!
 
 ---
 
 ## Miksi tämä on hyödyllistä?
 
-Vaikka satunnainen politiikka on kauheaa, se antaa meille **perustason** —
+Vaikka satunnainen käytäntö on kauheaa, se antaa meille **perustason** —
 vertailukohtana.
 
 Kun rakennamme myöhemmin *älykkään* käytännön (käyttäen Q-learningiä tai muita algoritmeja),
@@ -73,7 +73,7 @@ satunnaisen kävelijän 1%!"
 
 **Tosielämän esimerkki:** Kuvittele, että yrität löytää luokkahuoneesi uudesta koulusta
 kääntämällä satunnaisesti vasemmalle tai oikealle jokaisessa käytävässä. Saatat päästä sinne
-lopulta, mutta se kestää kauan! Älykäs politiikka on kuin kartta.
+lopulta, mutta se kestää kauan! Älykäs käytäntö on kuin kartta.
 
 ---
 
@@ -88,8 +88,8 @@ useimmiten:
 - **Maaliruudulla** vieraillaan erittäin harvoin, koska satunnainen kävelijä ei juuri koskaan
   pääse sinne.
 
-Tämä kertoo meille jotain tärkeää: satunnainen politiikka juuttuu lähelle
-alussa eikä koskaan oikeastaan tutki koko järveä.
+Tämä kertoo meille jotain tärkeää: satunnainen käytäntö juuttuu lähelle
+alkua eikä koskaan oikeastaan tutki koko järveä.
 
 ---
 
@@ -101,5 +101,5 @@ alussa eikä koskaan oikeastaan tutki koko järveä.
 - **Stokastinen**: Asiat eivät aina mene niin kuin suunnittelet (kuten liukas jää!)
 - **Onnistumisprosentti**: Kuinka usein voitimme? (Tässä: 1,1 % - erittäin alhainen!)
 
-Suuri idea: **Satunnainen politiikka on lähtökohta. Todellinen oppiminen tarkoittaa
-rakentaa parempi suunnitelma!**
+Suuri idea: **Satunnainen käytäntö on vain lähtökohta. Todellinen oppiminen tarkoittaa
+paremman suunnitelman rakentamista!**

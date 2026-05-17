@@ -20,7 +20,7 @@ optimaalinen-mutta-riskialtista-oppimisen aikana.
 Kun päivität pisteitä jokaisen vaiheen jälkeen, molemmat algoritmit kysyvät:
 > "Mikä on *seuraavan tilan* arvo?"
 
-| Algoritmi | Käyttää seuraavaa toimintoa... | Politiikassa? |
+| Algoritmi | Käyttää seuraavaa toimintoa... | Käytännössä? |
 |-----------|------------------------|------------|
 | **SARSA** | ...jotka otan *itse asiassa* (ehkä satunnaisesti!) | Kyllä |
 | **Q-Learning** | ...se on *teoreettisesti paras* (aina ahne) | Ei |
@@ -81,7 +81,7 @@ SARSA path (during training):     Q-Learning path (greedy, after training):
 ## Avainsanat muistaa
 
 - **On-policy** (SARSA): oppii mitä *todellisuudessa teet*, mukaan lukien satunnainen tutkiminen
-- **Poiskäytäntö** (Q-Learning): oppii *parhasta mahdollisesta* käyttäytymisestä erikseen
+- **Käytännöstä riippumaton (off-policy)** (Q-Learning): oppii *parhasta mahdollisesta* käyttäytymisestä erikseen
   mitä todella teet
 - **Turvallinen polku**: Pidempi reitti, joka välttää vaaran, käytetään, kun etsintä aiheuttaa onnettomuuksia
 - **Optimaalinen polku**: Lyhin/korkein palkkio reitti, joka löytyy, kun etsintä ei tapahdu
@@ -89,4 +89,4 @@ SARSA path (during training):     Q-Learning path (greedy, after training):
   mitä tiedät
 
 Suuri idea: **SARSA on turvallisempi koulutuksen aikana (on-policy), Q-Learning löytää optimaalisen
-polku nopeammin (pois politiikasta). Kumpi on parempi, riippuu siitä, onko kalliolta putoamisella merkitystä!**
+polku nopeammin (käytännöstä riippumaton). Kumpi on parempi, riippuu siitä, onko kalliolta putoamisella merkitystä!**
