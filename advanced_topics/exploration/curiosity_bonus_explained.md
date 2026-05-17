@@ -1,6 +1,6 @@
 # Curiosity Bonus (Intrinsic Motivation) 🧭
 
-## What Is It? {#what-is-curiosity-bonus}
+## What Is It? {#what-is-it}
 
 Imagine a toddler dropped into a new room. Nobody pays them, nobody claps —
 yet they make a beeline for the cupboard they haven't opened, the button
@@ -20,7 +20,7 @@ reward the agent learns from  =  real reward  +  beta * curiosity bonus
 `beta` is a knob that starts large (be curious!) and shrinks over time
 (stop dawdling, go cash in what you learned).
 
-## Why Bother? The Sparse-Reward Problem {#why-sparse-rewards}
+## Why Bother? The Sparse-Reward Problem {#why-bother-the-sparse-reward-problem}
 
 Normal RL agents learn from rewards they actually receive. That works
 great when rewards are everywhere ("+1 every step you stay upright" in
@@ -45,9 +45,9 @@ study unless they're paid per correct answer on the final — they never get
 started. Curiosity is the bonus that says *"exploring is its own reward,"*
 so the agent keeps poking around until it trips over the real prize.
 
-## Two Flavours of Curiosity (both implemented in `curiosity_bonus.py`) {#two-forms-of-curiosity}
+## Two Flavours of Curiosity (both implemented in `curiosity_bonus.py`) {#two-flavours-of-curiosity-both-implemented-in-curiosity_bonuspy}
 
-### 1. Count-based novelty: "I've barely been here" {#count-based-novelty}
+### 1. Count-based novelty: "I've barely been here" {#1-count-based-novelty-ive-barely-been-here}
 
 The simplest possible novelty signal. Keep a tally `N(s, a)` of how many
 times you've taken action `a` in state `s`, and give yourself a bonus that
@@ -69,7 +69,7 @@ This is the oldest idea in the book (MBIE-EB, UCB). Its weakness: in a
 huge or continuous world you never visit the *exact* same state twice, so
 the raw count is always 1 — which is why the next flavour exists.
 
-### 2. Prediction-error novelty: "I didn't see *that* coming" {#prediction-error-novelty}
+### 2. Prediction-error novelty: "I didn't see *that* coming" {#2-prediction-error-novelty-i-didnt-see-that-coming}
 
 This is the idea behind the famous **ICM** (Intrinsic Curiosity Module,
 Pathak et al. 2017) and its cousin **RND** (Random Network Distillation,
@@ -126,7 +126,7 @@ The figure shows:
 - and **state-visitation heat-maps** of the grid — the no-curiosity agent
   is a tight blob near the start; the curious agents flood *both* rooms.
 
-## The Mechanism in One Picture {#mechanism-diagram}
+## The Mechanism in One Picture {#the-mechanism-in-one-picture}
 
 ```
             no curiosity                       with curiosity bonus
@@ -143,7 +143,7 @@ flailing randomly. And because the bonus shrinks as things become
 familiar (and `beta` decays), once the agent has found the real reward it
 naturally stops dawdling and starts exploiting.
 
-## A Few Honest Caveats {#caveats}
+## A Few Honest Caveats {#a-few-honest-caveats}
 
 - **The "noisy-TV problem".** A prediction-error agent can get hypnotised
   by a source of pure randomness (a TV showing static, dice rolling) — it
@@ -160,7 +160,7 @@ naturally stops dawdling and starts exploiting.
   Montezuma needed extra firepower — RND with a neural net, bootstrapped
   DQN, Go-Explore.
 
-## Key Words to Remember {#key-terms}
+## Key Words to Remember {#key-words-to-remember}
 
 | Word | Meaning |
 |------|---------|
@@ -172,7 +172,7 @@ naturally stops dawdling and starts exploiting.
 | **ICM** | Intrinsic Curiosity Module: novelty = a forward model's prediction error (in a learned feature space) |
 | **`beta`** | The weight on the curiosity bonus; usually annealed toward 0 so the agent eventually exploits |
 
-## One-Sentence Summary {#summary}
+## One-Sentence Summary {#one-sentence-summary}
 
 > **A curiosity bonus is a self-given reward for novelty — it manufactures
 > a dense, "go-explore-over-there" signal that drags the agent through
