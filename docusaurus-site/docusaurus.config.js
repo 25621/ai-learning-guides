@@ -46,6 +46,12 @@ const config = {
   i18n: {
     defaultLocale: 'en',
     locales: ['en', 'de', 'es', 'fr', 'hi', 'ja', 'ko', 'pt-BR', 'ru', 'zh-Hans', 'zh-Hant'],
+    localeConfigs: {
+      es: {
+        label: 'Español (internacional)',
+        htmlLang: 'es-419',
+      },
+    },
   },
 
   headTags: [

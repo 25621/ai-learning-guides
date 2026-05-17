@@ -42,7 +42,7 @@ Frame 4: pelota en la posición 49
 
 La red ahora puede inferir: "la pelota se mueve hacia la derecha a velocidad 3".
 
-**Ejemplo de la vida real:** Ver una película frente a mirar un solo frame. Un solo frame de una carrera de coches es solo una imagen borrosa. ¡Mira 4 frames y podrás decir qué coche es más rápido!
+**Ejemplo de la vida real:** Ver una película frente a mirar un solo frame. Un solo frame de una carrera de automóviles es solo una imagen borrosa. ¡Mira 4 frames y podrás decir qué automóvil es más rápido!
 
 ---
 

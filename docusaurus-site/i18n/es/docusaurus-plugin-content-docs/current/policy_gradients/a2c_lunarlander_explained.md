@@ -19,7 +19,7 @@ El **Actor** es la política — decide qué acción tomar.
 
 > "Estoy en este estado. ¿Debo encender el motor izquierdo o el derecho?"
 
-**Ejemplo de la vida real:** El *conductor* de un coche que gira el volante y pisa los pedales.
+**Ejemplo de la vida real:** El *conductor* de un automóvil que gira el volante y pisa los pedales.
 
 ### El Crítico 🎬
 El **Crítico** estima qué tan buena es la situación actual — el valor V(s).

@@ -85,7 +85,7 @@ significado: recortado  max    antiguo    ok  demasiado alto
 
 El `-` marca la región plana recortada. En esa región, hacer que la relación de probabilidad sea aún más extrema no mejora el objetivo, por lo que PPO no tiene ningún incentivo extra para presionar más allá.
 
-**Ejemplo de la vida real:** El limitador de velocidad de un coche. Puedes acelerar, pero una vez que llegas a 120 km/h, el limitador entra en acción y no te deja ir más rápido. Te mantiene seguro sin impedirte moverte.
+**Ejemplo de la vida real:** El limitador de velocidad de un automóvil. Puedes acelerar, pero una vez que llegas a 120 km/h, el limitador entra en acción y no te deja ir más rápido. Te mantiene seguro sin impedirte moverte.
 
 ---
 
@@ -205,7 +205,7 @@ GAE:            A_t = Σ_{l=0}^{∞} (γλ)^l · δ_{t+l}
 
 ## ¿Qué sigue?
 
-Hasta ahora, todos nuestros entornos tienen acciones **discretas** (pulsar IZQUIERDA o DERECHA).
+Hasta ahora, todos nuestros entornos tienen acciones **discretas** (presionar IZQUIERDA o DERECHA).
 
 Los robots reales necesitan controlar acciones **continuas** — como "aplicar exactamente 0.73 Newtons de fuerza".
 
