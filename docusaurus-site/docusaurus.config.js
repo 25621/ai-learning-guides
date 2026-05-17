@@ -45,11 +45,15 @@ const config = {
 
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'de', 'es', 'fr', 'hi', 'id', 'ja', 'ko', 'nl', 'pt-BR', 'ru', 'zh-Hans', 'zh-Hant'],
+    locales: ['en', 'de', 'es', 'fi', 'fr', 'hi', 'id', 'ja', 'ko', 'nl', 'pt-BR', 'ru', 'zh-Hans', 'zh-Hant'],
     localeConfigs: {
       es: {
         label: 'Español (internacional)',
         htmlLang: 'es-419',
+      },
+      fi: {
+        label: 'Suomi',
+        htmlLang: 'fi-FI',
       },
       nl: {
         label: 'Nederlands',
@@ -84,7 +88,7 @@ const config = {
         name: 'Reinforcement Learning: Beginner to Advanced',
         url: `${siteUrl}${siteBaseUrl}`,
         description: siteDescription,
-        inLanguage: ['en', 'de', 'es', 'fr', 'hi', 'id', 'ja', 'ko', 'nl', 'pt-BR', 'ru', 'zh-Hans', 'zh-Hant'],
+        inLanguage: ['en', 'de', 'es', 'fi', 'fr', 'hi', 'id', 'ja', 'ko', 'nl', 'pt-BR', 'ru', 'zh-Hans', 'zh-Hant'],
         potentialAction: {
           '@type': 'SearchAction',
           target: `${siteUrl}${siteBaseUrl}search?q={search_term_string}`,
@@ -112,7 +116,7 @@ const config = {
         learningResourceType: 'Tutorial',
         teaches: siteKeywords.join(', '),
         isAccessibleForFree: true,
-        inLanguage: ['en', 'de', 'es', 'fr', 'hi', 'id', 'ja', 'ko', 'nl', 'pt-BR', 'ru', 'zh-Hans', 'zh-Hant'],
+        inLanguage: ['en', 'de', 'es', 'fi', 'fr', 'hi', 'id', 'ja', 'ko', 'nl', 'pt-BR', 'ru', 'zh-Hans', 'zh-Hant'],
       }),
     },
   ],
@@ -207,6 +211,7 @@ const config = {
       {property: 'og:locale', content: 'en_US'},
       {property: 'og:locale:alternate', content: 'de_DE'},
       {property: 'og:locale:alternate', content: 'es_ES'},
+      {property: 'og:locale:alternate', content: 'fi_FI'},
       {property: 'og:locale:alternate', content: 'fr_FR'},
       {property: 'og:locale:alternate', content: 'hi_IN'},
       {property: 'og:locale:alternate', content: 'id_ID'},
