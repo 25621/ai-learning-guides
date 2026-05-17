@@ -59,7 +59,7 @@ Koulutimme politiikan suoraan 2 000 etusijaparille 300 aikakaudelle.
   hylättyjä vastauksia.
 - **Keskitaso** - asetustarkkuus (kuinka usein käytäntö määrittää korkeamman
   implisiittinen palkkio valitusta vastauksesta) nousee noin 99 prosenttiin.
-- **Oikein** - implisiittinen palkkiomarginaali kasvaa. Tietosuojavastaava ei koskaan nimeä "palkintoa"
+- **Oikein** - implisiittinen palkkiomarginaali kasvaa. DPO ei koskaan nimeä "palkintoa"
   mutta ero valittujen ja hylättyjen logaritmistodennäköisyyksien välillä, skaalattuna
   beta, voidaan lukea yhtenä. Se levenee tasaisesti, mikä tarkoittaa, että mallista tulee
   luottaa enemmän mieltymyksiinsä.

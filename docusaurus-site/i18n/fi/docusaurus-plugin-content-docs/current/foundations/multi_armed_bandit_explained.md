@@ -4,31 +4,31 @@
 
 Kuvittele, että olet syntymäpäiväjuhlissa ja siellä on **10 erilaista karkkipurkkia**.
 Jokaisessa purkissa on karkkia sisällä, mutta joissakin purkeissa on *namia* karkkia ja joissakin purkeissa
-*ei-niin-namia* karkkia.Et tiedä mikä purkki on paras – sinun täytyy kokeilla niitä!
+*ei-niin-namia* karkkia. Et tiedä mikä purkki on paras – sinun täytyy kokeilla niitä!
 
-Joka kerta kun kurkottelet purkkiin, saat karkkia.Työsi on:
+Joka kerta kun kurkottelet purkkiin, saat karkkia. Työsi on:
 
 > **Hanki mahdollisimman paljon herkullisia karkkia!**
 
-Se on Multi-Armed Banditin ongelma!Karkkipurkkien sijaan tiedemiehet kutsuvat
-ne "käsivarret" (kuten kädet kolikkopelissä).Jokainen käsi antaa sinulle palkinnon, mutta
+Se on Multi-Armed Banditin ongelma! Karkkipurkkien sijaan tiedemiehet kutsuvat
+niitä "käsivarsiksi" (kuten kädet kolikkopelissä). Jokainen käsi antaa sinulle palkinnon, mutta
 palkinnot ovat joka kerta erilaisia.
 
 ---
 
 ## Suuri kysymys: Pitäisikö minun kokeilla uusia purkkeja vai pysyä suosikkini kanssa?
 
-Tämä on vaikein osa!Oletetaan, että kokeilit purkkia nro 3 ja se oli melko hyvä.
+Tämä on vaikein osa! Oletetaan, että kokeilit purkkia nro 3 ja se oli melko hyvä.
 Nyt sinulla on valinnanvaraa:
 
 - **Hyödynnä**: Jatka purkin 3 valitsemista, koska tiedät jo sen olevan hyvä.
 - **Tutki**: Kokeile uutta purkkia – ehkä Purkki #7 on vielä *parempi*!
 
 Jos valitset vain ensimmäisen purkin, josta pidit, saatat jäädä paitsi supernamiin
-purkki.Mutta jos *aina* kokeilet uusia purkkeja, et koskaan käytä jo oppimaasi!
+purkki. Mutta jos *aina* kokeilet uusia purkkeja, et koskaan käytä jo oppimaasi!
 
-**Tosielämän esimerkki:** Ajattele suosikkiravintolaasi.Tilaat aina
-kananuggetit (hyödynnä!), mutta ehkä pizza on vielä parempi.Jos et koskaan
+**Tosielämän esimerkki:** Ajattele suosikkiravintolaasi. Tilaat aina
+kananuggetit (hyödynnä!), mutta ehkä pizza on vielä parempi. Jos et koskaan
 kokeile jotain uutta, et koskaan tiedä!
 
 ---

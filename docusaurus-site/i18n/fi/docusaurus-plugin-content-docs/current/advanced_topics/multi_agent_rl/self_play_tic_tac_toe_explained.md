@@ -65,7 +65,7 @@ Harjoituskierros on:
 3. Kävele jokaisen pelin jälkeen taaksepäin jokaisen (lauta, pelaaja, toiminta) läpi.
    kolminkertaistaa historian ja käytä Q-learning-päivitystä.
 4. Palkinto kääntää merkin kierrosten välillä: jos X voittaa, jokainen X:n tekemä liike saa
-   +1 (tai käynnistysarvo tulevasta voittajatilasta); jokainen O:n tekemä liike saa -1.
+   +1 (tai bootstrap-arvo tulevasta voittajatilasta); jokainen O:n tekemä liike saa -1.
 5. Laskemme (vähennämme) tutkimusnopeuttamme (ε) hitaasti arvosta 0,2 → 0,02, joten agentti sitoutuu parhaaseen peliinsä
    myöhään harjoittelussa satunnaisten liikkeiden yrittämisen sijaan.
 

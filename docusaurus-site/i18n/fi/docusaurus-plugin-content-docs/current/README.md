@@ -8,20 +8,20 @@ Kattava opas oppimisjärjestelmien ymmärtämiseen ja rakentamiseen peruskäsitt
 
 | Vaihe | Keskity | Kesto |
 |-------|-------|----------|
-| 1 | [Säätiöt](#phase-1-foundations-2-4-weeks) | 2-4 viikkoa |
+| 1 | [Perusteet](#phase-1-foundations-2-4-weeks) | 2-4 viikkoa |
 | 2 | [Taulukkomenetelmät](#phase-2-tabular-methods-3-4-weeks) | 3-4 viikkoa |
-| 3 | [Toiminnan likiarvo](#phase-3-function-approximation-3-4-weeks) | 3-4 viikkoa |
-| 4 | [Käytännön gradienttimenetelmät](#phase-4-policy-gradient-methods-4-5-weeks) | 4-5 viikkoa |
+| 3 | [Funktion approksimointi](#phase-3-function-approximation-3-4-weeks) | 3-4 viikkoa |
+| 4 | [Politiikkagradientit](#phase-4-policy-gradient-methods-4-5-weeks) | 4-5 viikkoa |
 | 5 | [Edistyneet aiheet](#phase-5-advanced-topics-6-8-weeks) | 6-8 viikkoa |
-| 6 | [Tutkimustason](#phase-6-research-level-ongoing) | Meneillään |
+| 6 | [Tutkimustaso](#phase-6-research-level-ongoing) | Jatkuva |
 
 **Kokonaisaika pätevyyteen:** ~6 kuukautta
 
 ---
 
-## Vaihe 1: Perustukset (2-4 viikkoa)
+## Vaihe 1: Perusteet (2-4 viikkoa)
 
-### Maali
+### Tavoite
 Ymmärrä ydinkäsitteet ilman syvällistä matematiikkaa.
 
 ### Opittavia käsitteitä
@@ -53,7 +53,7 @@ Sinun pitäisi pystyä selittämään RL-ongelman muotoilu ja miksi MDP:t ovat v
 
 ## Vaihe 2: Taulukkomenetelmät (3–4 viikkoa)
 
-### Maali
+### Tavoite
 Hallitse klassisia RL-algoritmeja, joissa tila-/toiminta-avaruudet ovat tarpeeksi pieniä tallennettavaksi taulukoihin.
 
 ### Opittavia käsitteitä
@@ -77,12 +77,12 @@ Hallitse klassisia RL-algoritmeja, joissa tila-/toiminta-avaruudet ovat tarpeeks
 - [ ] [Vertaa SARSA- ja Q-oppimiskäyttäytymistä (turvalliset vs. optimaaliset polut)](tabular_methods/sarsa_vs_qlearning_explained.md)
 - [ ] [Ota käyttöön Monte Carlo -hallinta Blackjackille](tabular_methods/monte_carlo_blackjack_explained.md)
 
-### Key Insight
+### Keskeinen oivallus
 Ymmärrä varmuuskopiokaaviot – ne selventävät, kuinka kukin algoritmi päivittää arvoja.
 
 ### Työkalut
 - NumPy
-- Kuntosali (ympäristöihin)
+- Gymnasium (ympäristöihin)
 
 ### Resurssit
 - 📖 Sutton & Barto - Luvut 4-7
@@ -94,9 +94,9 @@ Ota Q-oppiminen käyttöön tyhjästä ja ratkaise Frozen Lake >70 % onnistumisp
 
 ---
 
-## Vaihe 3: Toiminnan arvioiminen (3-4 viikkoa)
+## Vaihe 3: Funktion approksimointi (3-4 viikkoa)
 
-### Maali
+### Tavoite
 Skaalaa RL pienten tilaavaruuksien yli käyttämällä funktioapproksimaattoreita.
 
 ### Opittavia käsitteitä
@@ -109,7 +109,7 @@ Skaalaa RL pienten tilaavaruuksien yli käyttämällä funktioapproksimaattoreit
   - Palkkion leikkaaminen
 - DQN-parannukset
   - Double DQN
-  - Kaksintaistelu DQN
+  - Dueling DQN
   - Priorisoitu kokemustoisto
   - Rainbow DQN
 
@@ -121,19 +121,19 @@ Skaalaa RL pienten tilaavaruuksien yli käyttämällä funktioapproksimaattoreit
 - [ ] [Harjoittele DQN:ää Atari Pongilla (käytä ALE-Py:tä)](function_approximation/dqn_atari_pong_explained.md)
 - [ ] [Toteuta Double DQN, vertaa vanilja DQN:ään](function_approximation/double_dqn_cartpole_explained.md)
 
-### Key Insight
-"Tappava kolmikko" (funktion approksimaatio + käynnistys + off-policy) aiheuttaa epävakautta. DQN-innovaatiot ratkaisevat tämän.
+### Keskeinen oivallus
+"Tappava kolmikko" (funktion approksimaatio + bootstrapping + off-policy) aiheuttaa epävakautta. DQN-innovaatiot ratkaisevat tämän.
 
 ### Työkalut
 - PyTorch tai TensorFlow
-- Kuntosali
+- Gymnasium
 - ALE-Py (Atarille)
-- Painot ja painotukset (kokeilun seurantaan)
+- Weights & Biases (kokeilun seurantaan)
 
 ### Resurssit
 - 📖 Sutton & Barto - Luvut 9-11
-- 📄 [DQN Paper (Mnih et al., 2015)](https://www.nature.com/articles/nature14236)
-- 📄 [Sateenkaari paperi](https://arxiv.org/abs/1710.02298)
+- 📄 [DQN-paperi (Mnih et al., 2015)](https://www.nature.com/articles/nature14236)
+- 📄 [Rainbow-paperi](https://arxiv.org/abs/1710.02298)
 - 💻 [CleanRL-toteutukset](https://github.com/vwxyzjn/cleanrl)
 
 ### Virstanpylväs
@@ -141,9 +141,9 @@ Kouluta DQN-agentti, joka saa positiivisen palkinnon Atari Pongissa.
 
 ---
 
-## Vaihe 4: Käytännön gradienttimenetelmät (4–5 viikkoa)
+## Vaihe 4: Politiikkagradientit (4–5 viikkoa)
 
-### Maali
+### Tavoite
 Opi optimoimaan käytännöt suoraan ilman arvofunktioiden laskemista.
 
 ### Opittavia käsitteitä
@@ -168,12 +168,12 @@ Opi optimoimaan käytännöt suoraan ilman arvofunktioiden laskemista.
 - [ ] [Harjoittele PPO:ta jatkuvalla ohjauksella (BipedalWalker tai MuJoCo)](policy_gradients/ppo_continuous_explained.md)
 - [ ] [Vertaa PPO-hyperparametrin herkkyyttä](policy_gradients/ppo_hyperparams_explained.md)
 
-### Key Insight
+### Keskeinen oivallus
 PPO on nykyaikaisen RL:n työhevonen – ymmärrä sen leikkausmekanismi syvästi.
 
 ### Työkalut
 - PyTorch
-- Kuntosali
+- Gymnasium
 - Stable-Baselines3 (viite)
 - MuJoCo tai Box2D (jatkuvaan ohjaukseen)
 
@@ -193,9 +193,9 @@ Ota PPO käyttöön ja ratkaise BipedalWalker-v3 (palkinto > 300).
 
 Valitse 2-3 aluetta kiinnostuksen kohteidesi perusteella.
 - [Mallipohjainen RL](#model-based-rl)
-- [Multi-Agent RL](#multi-agent-rl)
+- [Monen agentin RL](#multi-agent-rl)
 - [Offline/Batch RL](#offlinebatch-rl)
-- [Tutkimus](#exploration)
+- [Eksploraatio](#exploration)
 - [Hierarkkinen RL](#hierarchical-rl)
 - [RLHF (RL ihmispalautteesta)](#rlhf-rl-from-human-feedback)
 
@@ -203,10 +203,10 @@ Valitse 2-3 aluetta kiinnostuksen kohteidesi perusteella.
 Opi ympäristön dynamiikkaa suunnittelemaan tai luomaan synteettistä kokemusta.
 
 **Konseptit:**
-- Dynaaminen arkkitehtuuri
--Maailmamalleja
+- Dyna-arkkitehtuuri
+- Maailmanmallit
 - Mallin ennakoiva ohjaus (MPC)
-- MuZero, unelmoija
+- MuZero, Dreamer
 
 **Käytännön työ:**
 - [ ] [Ota Dyna-Q käyttöön](advanced_topics/model_based_rl/dyna_q_explained.md)
@@ -221,7 +221,7 @@ Opi ympäristön dynamiikkaa suunnittelemaan tai luomaan synteettistä kokemusta
 
 ---
 
-### Multi-Agent RL
+### Monen agentin RL
 Useat agentit oppivat samanaikaisesti jaetuissa ympäristöissä.
 
 **Konseptit:**
@@ -264,15 +264,15 @@ Opi kiinteistä tietojoukoista ilman ympäristövuorovaikutusta.
 
 ---
 
-### Tutkimus
+### Eksploraatio
 Käsittele niukkoja palkkioita ja kovia etsintäongelmia.
 
 **Konseptit:**
 - Sisäinen motivaatio
-- Uteliaisuusvetoinen tutkimus (ICM)
-- Random Network Distilation (RND)
-- Count-pohjainen etsintä
-- Mene tutkimaan
+- Uteliaisuusvetoinen eksploraatio (ICM)
+- Random Network Distillation (RND)
+- Laskuriin perustuva eksploraatio
+- Go-Explore
 
 **Käytännön työ:**
 - [ ] [Ota käyttöön uteliaisuusbonus](advanced_topics/exploration/curiosity_bonus_explained.md)
@@ -282,7 +282,7 @@ Käsittele niukkoja palkkioita ja kovia etsintäongelmia.
 **Resurssit:**
 - 📄 [ICM-paperi](https://arxiv.org/abs/1705.05363)
 - 📄 [RND-paperi](https://arxiv.org/abs/1810.12894)
-- 📄 [Mene - Tutki](https://arxiv.org/abs/1901.10995)
+- 📄 [Go-Explore](https://arxiv.org/abs/1901.10995)
 - 📄 [Deep Exploration Bootstrapped DQN:n kautta](https://arxiv.org/abs/1602.04621) — DeepSea-tehtävän lähde
 
 ---
@@ -294,7 +294,7 @@ Opi useilla temporaalisen abstraktion tasoilla.
 - Optio-kehys
 - Tavoitteisiin perustuvat käytännöt
 - Feodaaliverkot
-- HIRO, KINKKU
+- HIRO, HAM
 
 **Käytännön työ:**
 - [ ] [Toteuta vaihtoehtokriittinen arkkitehtuuri](advanced_topics/hierarchical_rl/option_critic_explained.md)
@@ -320,7 +320,7 @@ Kohdista mallit ihmisten mieltymyksiin.
 **Käytännön työ:**
 - [ ] [Harjoittele palkkiomalli preferenssitiedoista](advanced_topics/rlhf/reward_modeling_explained.md)
 - [ ] [Hienosäädä pieni LM PPO:lla](advanced_topics/rlhf/ppo_fine_tuning_explained.md)
-- [ ] [Toteuta tietosuojavastaava](advanced_topics/rlhf/dpo_implementation_explained.md)
+- [ ] [Toteuta DPO](advanced_topics/rlhf/dpo_implementation_explained.md)
 
 **Resurssit:**
 - 📄 [InstructGPT Paper](https://arxiv.org/abs/2203.02155)
@@ -332,7 +332,7 @@ Kohdista mallit ihmisten mieltymyksiin.
 
 ## Vaihe 6: Tutkimustaso (jatkuva)
 
-### Maali
+### Tavoite
 Anna omaperäistä työtä kentälle.
 
 ### Aktiviteetit

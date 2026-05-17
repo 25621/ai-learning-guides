@@ -122,7 +122,7 @@ Monimutkaisissa Atari-peleissä Double DQN teki paljon suuremman eron kuin CartP
 
 ## DQN-parannusten perhe
 
-Double DQN on vain yksi monista vanilja-DQN:n parannuksista. "Sateenkaari" -paperi
+Double DQN on vain yksi monista vanilja-DQN:n parannuksista. "Rainbow"-paperi
 (2017) yhdistää kuusi parannusta:
 
 1. **Double DQN** (korjaa yliarviointi) ← tämä kirjoitus!
@@ -143,8 +143,8 @@ Rainbow yhdisti ne KAIKKI ja saavutti aikansa parhaan Atari-suorituksen!
 | **Yliarviointi** | Q-arvot ovat korkeampia kuin todelliset arvot (liian optimistisia) |
 | **Double DQN** | Käyttää online-verkkoa toimintojen valintaan, kohdeverkkoa arviointiin |
 | **irrottaminen** | Erotetaan kaksi tehtävää, jotka tehtiin samassa verkossa |
-| **Viha** | Järjestelmällinen virhe yhteen suuntaan (aina liian korkea tai aina liian matala) |
-| **Sateenkaari** | DQN-versio, joka yhdistää 6 parannusta maksimaalisen suorituskyvyn saavuttamiseksi |
+| **Vinouma (bias)** | Järjestelmällinen virhe yhteen suuntaan (aina liian korkea tai aina liian matala) |
+| **Rainbow** | DQN-versio, joka yhdistää 6 parannusta maksimaalisen suorituskyvyn saavuttamiseksi |
 
 ---
 
