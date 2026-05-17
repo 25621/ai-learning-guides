@@ -25,7 +25,7 @@ Si solo eliges el primer tarro que te gustó, podrías perderte el tarro súper 
 
 ---
 
-## La Estrategia Epsilon-Greedy
+## La Estrategia Epsilon-Greedy {#the-epsilon-greedy-strategy}
 
 Una forma inteligente de resolver esto se llama **epsilon-greedy** (épsilon es solo la letra griega ε):
 

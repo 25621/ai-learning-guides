@@ -25,7 +25,7 @@ Wenn Sie immer nur das erste Glas nehmen, das Ihnen geschmeckt hat, verpassen Si
 
 ---
 
-## Die Epsilon-Greedy-Strategie
+## Die Epsilon-Greedy-Strategie {#the-epsilon-greedy-strategy}
 
 Eine kluge Art, dies zu lösen, nennt man **Epsilon-Greedy** (Epsilon ist einfach der griechische Buchstabe ε):
 

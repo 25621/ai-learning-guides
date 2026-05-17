@@ -114,7 +114,7 @@ Double DQN ist nur eine von vielen Verbesserungen des ursprünglichen DQN. Das �
 3. **Dueling Networks** (trennt „Wie gut ist dieser Zustand?“ von „Was ist die beste Aktion?“)
 4. **Multi-Step Returns** (blickt weiter in die Zukunft)
 5. **Distributional RL** (lernt die vollständige Verteilung der Returns, nicht nur den Durchschnitt)
-6. **NoisyNets** (gelerntes Erforschen statt [ε-greedy](../foundations/multi_armed_bandit_explained.md#die-epsilon-greedy-strategie))
+6. **NoisyNets** (gelerntes Erforschen statt [ε-greedy](../foundations/multi_armed_bandit_explained.md#the-epsilon-greedy-strategy))
 
 Rainbow kombinierte ALLE diese Ansätze und erreichte die beste Atari-Leistung seiner Zeit!
 

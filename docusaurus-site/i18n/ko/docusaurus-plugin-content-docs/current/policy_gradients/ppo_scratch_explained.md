@@ -43,7 +43,7 @@ r(θ) = π_new(a|s) / π_old(a|s)
 
 ---
 
-## 클리핑 (Clipping) 트릭
+## 클리핑 (Clipping) 트릭 {#the-clipping-trick}
 
 PPO는 비율(ratio)이 [1-ε, 1+ε] 범위(보통 ε = 0.2) 안에 머물도록 제한(clip)합니다.
 

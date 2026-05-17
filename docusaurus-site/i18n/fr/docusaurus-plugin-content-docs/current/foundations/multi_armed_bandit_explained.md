@@ -25,7 +25,7 @@ Si vous ne choisissez que le premier bocal que vous avez aimé, vous risquez de 
 
 ---
 
-## La Stratégie Epsilon-Gloutonne (Epsilon-Greedy)
+## La Stratégie Epsilon-Gloutonne (Epsilon-Greedy) {#the-epsilon-greedy-strategy}
 
 Une façon intelligente de résoudre ce problème s'appelle **epsilon-glouton** (epsilon est simplement la lettre grecque ε, prononcée "èp-si-lon") :
 

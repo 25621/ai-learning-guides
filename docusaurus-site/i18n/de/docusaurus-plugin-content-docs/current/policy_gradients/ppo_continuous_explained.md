@@ -123,7 +123,7 @@ Alles ist gleich, AUSSER:
 
 **Clamp** bedeutet, einen Wert in einen gültigen Bereich zu zwingen. Der Code verwendet `action.clamp(-1, 1)`, damit die Umgebung niemals einen Motorbefehl außerhalb der erlaubten Grenzen erhält.
 
-**Clip** bedeutet bei PPO etwas anderes: PPO „clippt“ das Wahrscheinlichkeitsverhältnis innerhalb der Loss-Funktion, wie im Abschnitt [PPO Clipping](./ppo_scratch_explained.md#der-clipping-trick) erklärt. Das Clamping der Aktion schützt die Schnittstelle zur Umgebung; das Clipping bei PPO schützt das Policy-Update.
+**Clip** bedeutet bei PPO etwas anderes: PPO „clippt“ das Wahrscheinlichkeitsverhältnis innerhalb der Loss-Funktion, wie im Abschnitt [PPO Clipping](./ppo_scratch_explained.md#the-clipping-trick) erklärt. Das Clamping der Aktion schützt die Schnittstelle zur Umgebung; das Clipping bei PPO schützt das Policy-Update.
 
 ---
 

@@ -43,7 +43,7 @@ r(θ) = π_new(a|s) / π_old(a|s)
 
 ---
 
-## Der Clipping-Trick
+## Der Clipping-Trick {#the-clipping-trick}
 
 PPO begrenzt (clippt) das Verhältnis, damit es im Bereich [1-ε, 1+ε] bleibt (typischerweise ε = 0,2):
 

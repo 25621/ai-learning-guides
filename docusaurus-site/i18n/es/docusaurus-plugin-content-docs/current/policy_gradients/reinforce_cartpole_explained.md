@@ -10,7 +10,7 @@ Esta receta se llama **política** (π, pi). En el aprendizaje por refuerzo, π 
 
 ---
 
-## La forma antigua frente a la forma nueva
+## La forma antigua frente a la forma nueva {#the-old-way-vs-the-new-way}
 
 **Forma antigua (Q-learning / DQN)**: Aprender qué tan BUENA es cada acción (valores Q) y luego elegir la mejor.
 > "Pulsar IZQUIERDA tiene una puntuación de 7, pulsar DERECHA tiene una puntuación de 5 → ¡pulsa IZQUIERDA!".

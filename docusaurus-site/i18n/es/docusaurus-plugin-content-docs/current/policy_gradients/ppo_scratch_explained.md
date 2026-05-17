@@ -43,7 +43,7 @@ r(θ) = π_new(a|s) / π_old(a|s)
 
 ---
 
-## El truco del Recorte (Clipping)
+## El truco del Recorte (Clipping) {#the-clipping-trick}
 
 PPO recorta (clips) la relación para que se mantenga dentro de [1-ε, 1+ε] (normalmente ε = 0.2):
 
@@ -159,7 +159,7 @@ Coeficientes típicos: c₁ = 0.01 (entropía), c₂ = 0.5 (crítico).
 
 **Dos términos que vale la pena desglosar:**
 
-- **Gradiente de política**: la mitad "actor" de la pérdida. Utiliza la señal del gradiente para empujar la política hacia acciones con mayor ventaja y alejarla de acciones con menor ventaja. Esta es la misma idea central introducida en REINFORCE — ver el [tutorial de REINFORCE](./reinforce_cartpole_explained.md#la-forma-antigua-frente-a-la-forma-nueva) para la intuición. PPO simplemente le añade el envoltorio de recorte.
+- **Gradiente de política**: la mitad "actor" de la pérdida. Utiliza la señal del gradiente para empujar la política hacia acciones con mayor ventaja y alejarla de acciones con menor ventaja. Esta es la misma idea central introducida en REINFORCE — ver el [tutorial de REINFORCE](./reinforce_cartpole_explained.md#the-old-way-vs-the-new-way) para la intuición. PPO simplemente le añade el envoltorio de recorte.
 - **MSE (Error Cuadrático Medio)**: la mitad "crítico" de la pérdida. El crítico V(s) predice el retorno esperado desde un estado; comparamos su predicción con el retorno real y elevamos al cuadrado la diferencia: `MSE = media((V(s) - retorno)²)`. Al elevar al cuadrado, se castigan más los errores grandes que los pequeños y se obtiene una señal suave y diferenciable para el entrenamiento. (Pérdida de regresión estándar — ver [error cuadrático medio](https://es.wikipedia.org/wiki/Error_cuadr%C3%A1tico_medio)).
 
 ---
