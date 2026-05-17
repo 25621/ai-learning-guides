@@ -89,6 +89,13 @@ Wir führen dann Folgendes aus:
 
 Das Diagramm `outputs/pettingzoo_coordination.png` zeigt die Returns der einzelnen Episoden (grau) und eine gleitende Durchschnittskurve (**Mean**, blau). Der Durchschnitt glättet verrauschte Episoden, sodass Sie den Trend sehen können: Die Agenten bewegen sich von unkoordiniertem Zufallsspiel nahe ~0 hin zu stabiler **Koordination** nahe ~+25. Die gestrichelte grüne Linie markiert die Obergrenze der perfekten Koordination.
 
+Wenn `pettingzoo` installiert ist, führt das Skript außerdem einen Rollout von `pettingzoo.classic.rps_v2` aus, um zu zeigen, dass das Skript mit der echten Bibliothek genauso funktioniert wie mit unserer selbst gebauten Umgebung. Um diesen Abschnitt zu aktivieren:
+
+```bash
+source ../../venv/bin/activate
+pip install "pettingzoo[classic]"
+```
+
 ---
 
 ## Warum zuerst eine eigene Umgebung bauen?

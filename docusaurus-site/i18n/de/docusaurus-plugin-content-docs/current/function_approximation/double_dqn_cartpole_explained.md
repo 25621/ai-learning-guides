@@ -92,6 +92,19 @@ Das Diagramm der Q-Wert-Überschätzung ist die wichtigste Erkenntnis – es zei
 
 ---
 
+## Wie viel besser ist Double DQN?
+
+| Metrik | Normales DQN | Double DQN |
+|--------|--------------|------------|
+| Q-Wert-Genauigkeit | Überschätzt | Genauer |
+| Lernstabilität | Mehr Varianz | Weniger Varianz |
+| CartPole-Leistung | Gut | Etwas besser |
+| Atari-Leistung (50 Spiele) | Baseline | +2,6× mehr Spiele nahe menschlichem Niveau |
+
+Bei komplexen Atari-Spielen machte Double DQN einen deutlich größeren Unterschied als bei CartPole, weil Atari wesentlich verrauschtere Q-Wert-Schätzungen hat.
+
+---
+
 ## Die Familie der DQN-Verbesserungen
 
 Double DQN ist nur eine von vielen Verbesserungen des ursprünglichen DQN. Das „Rainbow“-Paper (2017) kombinierte 6 Verbesserungen:

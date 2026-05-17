@@ -100,7 +100,7 @@ Mit Clipping: Der Gradient ist außerhalb von [1-ε, 1+ε] gleich Null, sodass s
 
 ---
 
-## GAE: Intelligentere Vorteilsschätzungen
+## GAE: Intelligentere Vorteilsschätzungen {#gae-intelligentere-vorteilsschatzungen}
 
 PPO verwendet **Generalized Advantage Estimation (GAE)**, um den Vorteil (Advantage) zu berechnen:
 
