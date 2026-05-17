@@ -89,22 +89,22 @@ Vriend 2 zal dat gerecht de volgende keer eerder bestellen.
 Zonder basislijn: `gradient ∝ ∇log π(a|s) × G_t`
 
 De G_t-waarden variëren sterk van aflevering tot aflevering:
-`` `
+```
 Episode 1: G = [45, 44, 43, ..., 1]   (medium game)
 Episode 2: G = [500, 499, ..., 1]      (great game!)
 Episode 3: G = [12, 11, ..., 1]        (terrible game)
-` ``
+```
 
 De gradiëntschattingen lopen enorm op omdat G_t groot en luidruchtig is.
 
 Met basislijn: `gradient ∝ ∇log π(a|s) × (G_t - V(s_t))`
 
 Het voordeel (G_t - V(s_t)) is veel kleiner en gecentreerd rond nul:
-`` `
+```
 Episode 1: advantage ≈ [-2, +1, -3, ..., 0]   (small, centered)
 Episode 2: advantage ≈ [+10, +8, ..., +3]      (this game WAS great)
 Episode 3: advantage ≈ [-5, -6, ..., -2]       (this game WAS bad)
-` ``
+```
 
 **Voorbeeld uit de praktijk:** Je hardloopsnelheid meten.
 - Zonder basislijn: "Ik rende 8 km/u" (zinloos zonder context)

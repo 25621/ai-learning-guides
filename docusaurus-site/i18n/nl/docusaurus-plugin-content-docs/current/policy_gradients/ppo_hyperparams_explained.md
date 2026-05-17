@@ -32,12 +32,12 @@ voer elke instelling uit met 3 verschillende willekeurige zaden en vergelijk de 
 **Wat regelt ε?**
 
 ε is de grootte van het "veiligheidsvenster" rond het oude beleid:
-`` `
+```
 ratio must stay in [1 - ε,  1 + ε]
 ε=0.05: ratio in [0.95, 1.05]  ← tiny changes
 ε=0.2:  ratio in [0.80, 1.20]  ← standard  
 ε=0.4:  ratio in [0.60, 1.40]  ← large changes
-` ``
+```
 
 **Voorbeeld uit de praktijk:** Beschouw ε als 'hoe ver je de auto in één beweging mag sturen'.
 - ε=0,05: Net als rijden op ijs — slechts kleine aanpassingen

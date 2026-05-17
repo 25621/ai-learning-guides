@@ -135,24 +135,24 @@ Het huidige gedrag ligt dichter bij het trainingsdoel.
 
 ### 1. Acteurverlies (beleidsgradiënt)
 Maak voordelige acties waarschijnlijker:
-`` `
+```
 L_actor = -E[log π(a|s) · A(s,a)]
-` ``
+```
 Indien A > 0: verhoog de waarschijnlijkheid van die actie
 Indien A < 0: verklein de waarschijnlijkheid van die actie
 
 ### 2. Criticusverlies (waardefunctie MSE)
 Waardevoorspellingen nauwkeuriger maken (**MSE** = Mean Squared Error: kwadraat van de voorspellingsfout en het gemiddelde ervan — kwadrateren bestraft grote fouten zwaarder dan kleine):
-`` `
+```
 L_critic = E[(V(s) - return)²]
-` ``
+```
 Zoals het trainen van elk **regressie**-model (regressie = voorspellen van een continu getal, hier de verwachte retour V(s)) – minimaliseer de voorspellingsfout.
 
 ### 3. Entropiebonus (verkenning)
 Zorg ervoor dat het beleid niet te snel te zelfverzekerd wordt:
-`` `
+```
 L_entropy = -H[π(·|s)] = E[log π(a|s)]
-` ``
+```
 Hoge entropie = diverse actiekeuzes = verkenning
 Lage entropie = zelfverzekerd, beperkte keuzes = uitbuiting
 

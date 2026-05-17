@@ -57,17 +57,17 @@ Laten we dit opsplitsen:
 **Geval 1: De actie was GOED (A > 0)**
 
 We willen deze actie vaker doen (r > 1). Maar we beperken hoeveel we verhogen:
-`` `
+```
 if r > 1.2: clip to 1.2, no more incentive to push further
-` ``
+```
 Dit voorkomt dat we TE ver in één richting zwaaien.
 
 **Geval 2: De actie was SLECHT (A < 0)**
 
 We willen deze actie minder doen (r < 1). Maar nogmaals, we sluiten af:
-`` `
+```
 if r < 0.8: clip to 0.8, no more penalty for going further
-` ``
+```
 
 **Visueel:**
 ```

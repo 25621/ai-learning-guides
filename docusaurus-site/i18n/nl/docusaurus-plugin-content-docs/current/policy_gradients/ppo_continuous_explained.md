@@ -75,9 +75,9 @@ Voor discrete acties: `log_prob = log(P(action=LEFT))`
 Voor continue acties beschrijft de **Normale verdeling** een vloeiende klokvormige curve
 rond het gemiddelde. Een enkele exacte waarde heeft een waarschijnlijkheid nul bij continue wiskunde, zo gebruiken we
 de curvehoogte bij die waarde, de **pdf** genoemd (kansdichtheidsfunctie):
-`` `
+```
 log_prob = Σᵢ log[Normal(μᵢ, σᵢ).pdf(aᵢ)]
-` ``
+```
 
 `log` betekent natuurlijke logaritme. Het verandert kleine dichtheidswaarden in stabiele getallen die dat ook zijn
 gemakkelijker voor neurale netwerken om te optimaliseren. We tellen alle actiedimensies op (4 voor

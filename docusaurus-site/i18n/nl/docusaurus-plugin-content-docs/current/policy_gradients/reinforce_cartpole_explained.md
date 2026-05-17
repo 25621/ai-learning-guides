@@ -38,24 +38,24 @@ vraagt: "Welke acties hebben tot een goede score geleid? Laten we dat vaker doen
 **1. Speel een aflevering**
 
 De robot maakt keuzes en verzamelt ervaring:
-`` `
+```
 Step 1: State = [pole tilting right] → Action = push RIGHT → Reward = +1
 Step 2: State = [pole nearly balanced] → Action = push RIGHT → Reward = +1
 Step 3: State = [pole tilting left] → Action = push LEFT  → Reward = +1
 ...
 Step 47: State = [pole fell!] → Episode over
-` ``
+```
 
 **2. Bereken rendement**
 
 Bereken voor elke stap G_t — de **totale beloning vanaf dat moment**:
-`` `
+```
 G_at_step_47 = 1
 G_at_step_46 = 1 + 0.99 × 1 = 1.99
 G_at_step_45 = 1 + 0.99 × 1.99 = 2.97
 ...
 G_at_step_1  = 47 (roughly — higher return because it was from the start)
-` ``
+```
 
 De γ = 0,99 **kortingsfactor** betekent dat beloningen ver in de toekomst iets minder tellen.
 
@@ -98,9 +98,9 @@ beslissen op basis van waarschijnlijkheid. De robot doet hetzelfde!
 ## Normalisatie: waarom we het gemiddelde aftrekken
 
 Voordat we G_t gebruiken om bij te werken, normaliseren we:
-`` `
+```
 G_normalized = (G - mean(G)) / std(G)
-` ``
+```
 
 **Waarom?** Stel je voor dat alle beloningen positief zijn (wat in CartPole het geval is: altijd +1 per stap).
 Zonder normalisatie ziet ELKE actie er "goed" uit en is het updatesignaal verwarrend.
