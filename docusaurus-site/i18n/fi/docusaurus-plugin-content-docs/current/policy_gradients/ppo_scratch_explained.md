@@ -9,8 +9,8 @@ Nyt valmentajasi antaa sinulle neuvoja: "Kallista rannettasi hieman enemmän vas
 
 **Hyviä neuvoja → huolellinen muutos → pidä tasapainoa 30 sekuntia ✓**
 
-Mutta entä jos valmentaja ylireagoi ja sanoo: "LAHJA VÄLITTÖMÄSTI VASEMMALLE!"
-Liioittelet → luudanvarren putoaminen → olet menettänyt viikkoja edistymisen.
+Mutta entä jos valmentaja ylireagoi ja sanoo: "KALLISTA VÄLITTÖMÄSTI VOIMAKKAASTI VASEMMALLE!"
+Ylikorjaat → luudanvarsi putoaa → olet menettänyt viikkojen edistymisen.
 
 Tämä on A2C-ongelma: **suuret gradienttipäivitykset voivat tuhota hyvän käytännön**.
 
@@ -34,8 +34,8 @@ r(θ) = π_new(a|s) / π_old(a|s)
 ```
 
 - r = 1,0: käytäntö ennallaan
-- r = 1,5: uusi politiikka ryhtyy 50 % todennäköisemmin tähän toimenpiteeseen
-- r = 0,5: uusi politiikka tekee 50 % vähemmän todennäköisempää
+- r = 1,5: uusi käytäntö valitsee tämän toiminnan 50 % todennäköisemmin
+- r = 0,5: uusi käytäntö valitsee tämän toiminnan 50 % epätodennäköisemmin
 
 **Tosielämän esimerkki:** Olet kokki, joka muokkaa reseptiä.
 - r = 1,0: sama määrä suolaa kuin ennen
