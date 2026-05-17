@@ -1,17 +1,17 @@
-# Treeni Montezuman kostosta 🏛️🔑
+# Harjoittelu Montezuma's Revenge -pelissä 🏛️🔑
 
 ## Miksi tämä peli on kuuluisa (RL-piireissä)
 
-Vuonna 2015 DeepMindin DQN oppi pelaamaan kymmeniä Atari-pelejä osoitteessa
-yli-inhimillinen taso raakapikseleistä. Se pääsi otsikoihin. Mutta haudattiin
-tulostaulukko oli yksi peli, jossa DQN teki **0** - sama kuin tekisi
-ei mitään: **Montezuma's Revenge**.
+Vuonna 2015 DeepMindin DQN oppi pelaamaan kymmeniä Atari-pelejä
+yli-inhimillisellä tasolla raakapikseleistä. Se pääsi otsikoihin. Mutta tulostaulukon
+syövereihin oli haudattu eräs peli, jossa DQN teki **0** - eli saman verran kuin tekisi
+tekemättä mitään: **Montezuma's Revenge**.
 
 Miksi? Katso, mitä peli pyytää sinulta aivan ensimmäisessä huoneessa:
 
 1. Kiipeä *alas* tikkaat.
 2. Kävele reunan yli.
-3. Hyppää pyörivän kallon yli (mittaus → kuolet).
+3. Hyppää pyörivän kallon yli (jos kosket siihen → kuolet).
 4. Kiipeä *ylös* toiset tikkaat.
 5. Tartu avaimeen.
 
@@ -63,8 +63,8 @@ tekee sen sijaan kaksi rehellistä asiaa:
 
 ### 1. Se *koskettaa* oikeaa peliä (jos "ale-py" on asennettu)
 
-Se latautuu `ALE/MontezumaRevenge-v5` Gymnasiumin kautta, pitää **univormua-
-satunnainen agentti 2000 askelta** ja raportoi pelin kokonaispalkinnon. The
+Se latautuu `ALE/MontezumaRevenge-v5` Gymnasiumin kautta, pitää **tasaisen
+satunnaista agenttia 2000 askelta** ja raportoi pelin kokonaispalkinnon. The
 sen tulostama numero on lähes aina **0.0** - abstrakti lause "harva
 palkkio" muuttui konkreettiseksi, tee se itse tosiasiaksi. Jos Atari
 pakettia ei ole asennettu, se tulostaa yksirivisen `pip install` komento ja
@@ -100,14 +100,14 @@ Koulutamme sitten tavallisen **taulukkomuotoisen Q-oppijan** kahdesti:
 | **ennustus-virhe-uteliaisuusbonuksella** | Saavuttaa aarteen noin 20–25 jaksossa ja oppii sitten **optimaalisen 15-vaiheisen reitin**. (Se on RND-idea, kutistettu sopimaan Q-taulukkoon.) |
 
 Kuvassa on kaksi oppimiskäyrää vierekkäin plus todellinen
-reitti utelias agentti oppinut, piirretty ruudukko (käynnistys → avain → ovi →
+reitti, jonka utelias agentti oppi, piirrettynä ruudukkoon (alku → avain → ovi →
 aarre). Skripti myös tulostaa kyseisen reitin ASCII-kehyksinä.
 
 ## Oppitunti
 
-> **"Sharse Reward" ei ole yhden oudon Atari-pelin omituisuus – se on
+> **Harva palkinto ("sparse reward") ei ole vain yhden oudon Atari-pelin omituisuus – se on
 > oletuksena missä tahansa maailmassa, jossa menestys vaatii pitkän, tietyn sarjan
-> toimia.** Vain palkkio -agentti (vanilja DQN) ei kirjaimellisesti voi saada
+> toimia.** Vain ulkoisesta palkkiosta oppiva agentti (vanilja-DQN) ei kirjaimellisesti voi päästä
 > aloitettu: gradienttia ei ole seurattava. Uteliaisuusbonus valmistaa
 > yksi — tiheä, itse luoma "tämä on uutta, jatka" -signaali - ja
 > tuo signaali kuljettaa agentin nollien aavikon poikki
@@ -119,7 +119,7 @@ aarre). Skripti myös tulostaa kyseisen reitin ASCII-kehyksinä.
 | sana | Merkitys |
 |------|---------|
 | **Kova tutkimus** | Ongelmia, joissa onnistut vain tutkimalla taitavasti; satunnainen etsintä epäonnistuu |
-| **Hiha palkinto** | Palkkio on nolla melkein kaikkialla; saat sen vasta pitkän oikean sarjan jälkeen |
+| **Harva palkinto** | Palkkio on nolla melkein kaikkialla; saat sen vasta pitkän oikean sarjan jälkeen |
 | **Montezuman kosto** | Atari-peli, josta klassiset syvä-RL-agentit (DQN, A3C) saivat 0 – kanoninen kovan tutkimisen vertailukohta |
 | **RND (satunnainen verkkotislaus)** | Vuoden 2018 menetelmä, joka voitti Montezuman käyttämällä ennustusvirhe-uteliaisuusbonusta |
 | **Go-Explore** | "Muista lupaavat osavaltiot, palaa niihin ja tutki sitten sieltä" - toinen Montezuma-krakkeri |

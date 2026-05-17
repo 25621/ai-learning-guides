@@ -20,7 +20,7 @@ reward the agent learns from  =  real reward  +  beta * curiosity bonus
 `beta` on nuppi, joka alkaa suurelta (ole utelias!) ja kutistuu ajan myötä
 (Lopeta hölmöily, käy käteisellä, mitä opit).
 
-## Miksi vaivautua? Harva-palkitsemisongelma
+## Miksi vaivautua? Harvan palkinnon ongelma
 
 Normaalit RL-agentit oppivat tosiasiallisesti saamistaan palkkioista. Se toimii
 hienoa, kun palkintoja on kaikkialla ("+1 jokaisesta askeleesta pysyt pystyssä" sisään
@@ -166,7 +166,7 @@ lopettaa luonnollisesti ryöstelyn ja alkaa hyödyntää.
 |------|---------|
 | **Sisäinen palkinto** | Palkkio, jonka agentti tuottaa itselleen, ympäristön palkkiosta erillään |
 | **Ulkoinen palkinto** | Ympäristön todellinen palkinto (pisteet, voitto/tappio) |
-| **Hiha palkinto** | Palkkio on nolla melkein kaikkialla; saat sen vasta pitkän oikean sarjan jälkeen |
+| **Harva palkinto** | Palkkio on nolla melkein kaikkialla; saat sen vasta pitkän oikean sarjan jälkeen |
 | **Uutuus/yllätys** | Kuinka uusi tai odottamaton tila (tai siirtymä) on - asia, jonka uteliaisuus palkitsee |
 | **Lukuperusteinen bonus** | Uutuus ≈ `1/sqrt(visit count)` - klassinen tutkimusbonus |
 | **ICM** | Intrinsic Curiosity Module: uutuus = eteenpäin suuntautuvan mallin ennustevirhe (opetetussa ominaisuustilassa) |

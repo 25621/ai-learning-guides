@@ -6,7 +6,7 @@ Kuvittele, että pelaat **jäätyneellä lammikolla** ystäviesi kanssa.
 
 Jää on pääosin turvallista, mutta joissakin paikoissa on **reikiä** - jos astut reikään,
 putoat sisään ja peli on ohi! Lammen toisessa päässä on **lahja** 🎁.
-Sinun tehtäväsi on liukua **alusta** **nykyhetkeen** putoamatta sisään.
+Sinun tehtäväsi on liukua **aloitusruudusta** **lahjalle** putoamatta sisään.
 
 Tältä jäätynyt järvi näyttää (4 neliötä × 4 ruutua):
 
@@ -17,10 +17,10 @@ F  F  F  H
 H  F  F  G
 ```
 
-- **S** = Aloita (mistä aloitat)
-- **F** = pakastejää (turvallista!)
-- **H** = reikä (pudota sisään, peli ohi 😨)
-- **G** = tavoite - nykyhetki! 🎁
+- **S** = Aloitusruutu (mistä aloitat)
+- **F** = Jääruutu (turvallista!)
+- **H** = Reikä (pudota sisään, peli ohi 😨)
+- **G** = Maali — lahja! 🎁
 
 ---
 
@@ -42,7 +42,7 @@ niin kuin suunnittelit."
 **Satunnainen käytäntö** tarkoittaa: "Minulla ei ole suunnitelmaa ollenkaan! Valitsen vain satunnaisen
 suuntaan joka kerta - ylös, alas, vasemmalle tai oikealle - kuin pyörität kehrää!"
 
-Se on kuin vauva, joka kävelee jäällä ilman aavistustakaan, missä nykyisyys on.
+Se on kuin vauva, joka kävelee jäällä ilman aavistustakaan siitä, missä lahja on.
 
 ---
 
@@ -52,7 +52,7 @@ Kokeilimme satunnaista käytäntöä **1 000 pelille**:
 
 | Tulos | Arvo |
 |--------|-------|
-| **Ajat tulivat nykypäivään** | 11/1000 (1,1 %) |
+| **Lahjalle pääsyt** | 11/1000 (1,1 %) |
 | **Keskimääräiset askeleet per peli** | 7,5 askelta |
 | **Nopein peli** | 2 askelta |
 | **Pisin peli** | 33 askelta |
@@ -82,11 +82,11 @@ lopulta, mutta se kestää kauan! Älykäs politiikka on kuin kartta.
 Kuvassamme **lämpökartta** näyttää millä ruuduilla satunnainen kävelijä vieraili
 useimmiten:
 
-- **Aloitus**-ruudulla käydään paljon (jokainen peli alkaa sieltä).
-- **reikien** lähellä olevilla aukioilla käydään vähemmän (kävelijä putoaa usein ennen
-  saavuttaa heidät).
-- **Goal** vierailee hyvin harvoin, koska satunnainen kävelijä ei juuri koskaan
-  pääsee sinne.
+- **Aloitusruudussa** käydään paljon (jokainen peli alkaa sieltä).
+- **Reikien** lähellä olevissa ruuduissa käydään vähemmän (kävelijä putoaa usein ennen
+  kuin saavuttaa ne).
+- **Maaliruudulla** vieraillaan erittäin harvoin, koska satunnainen kävelijä ei juuri koskaan
+  pääse sinne.
 
 Tämä kertoo meille jotain tärkeää: satunnainen politiikka juuttuu lähelle
 alussa eikä koskaan oikeastaan tutki koko järveä.

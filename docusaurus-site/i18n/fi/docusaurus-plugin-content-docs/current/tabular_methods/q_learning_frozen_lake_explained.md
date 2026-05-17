@@ -6,8 +6,8 @@ Kuvittele jäätynyt lampi, jossa on liukasta jäätä. Siellä on **aloitusruut
 jossa on joitain **reikiä** keskellä. Jos putoat kuoppaan, aloitat alusta!
 
 Jää on liukasta, joten vaikka yrittäisit kävellä oikein, saatat sen sijaan liukua ylös tai alas.
-**Q-Learning-agentti** on robotti, joka oppii – yrittämällä yhä uudelleen – miten päästä siitä irti
-Aloita maaliin putoamatta!
+**Q-Learning-agentti** on robotti, joka oppii – yrittämällä yhä uudelleen – miten päästä
+aloitusruudusta maaliin putoamatta!
 
 ---
 
@@ -36,7 +36,7 @@ ja jokainen sarake on toiminto (vasen, oikea, ylös, alas). Sisällä olevat num
 "Kuinka hyvä on tehdä tämä toimenpide tältä aukiolta?"
 
 Aina kun robotti yrittää liikettä:
-1. Se saa palautetta (pudottiko se? saavuttiko tavoitteen?)
+1. Se saa palautetta (putosiko se? saavuttiko tavoitteen?)
 2. Se päivittää taulukon pistemäärän käyttämällä tätä kaavaa:
 
 > **Uusi pistemäärä = vanha pistemäärä + oppimisaste × (mitä todella tapahtui − mitä odotin)**
@@ -91,7 +91,7 @@ Opittu Q-taulukko näyttää agentin selvittäneen: mene alas ja oikealle vältt
 
 ## Avainsanat muistaa
 
-- **Q-taulukko**: Taulukko "kuinkainen toiminto kussakin tilassa on hyvä"
+- **Q-taulukko**: Taulukko siitä, "kuinka hyvä kukin toiminto on kussakin tilassa"
 - **Q(s, a)**: Toiminnon a pisteet tilassa s
 - **Palkinto**: Mitä agentti saa toimenpiteen jälkeen (+1 tavoitteen saavuttamisesta, 0 muuten)
 - **Poiskäytäntö**: Oppii optimaalisen strategian vaikka tutkii satunnaisesti
