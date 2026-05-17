@@ -1,6 +1,6 @@
 # Comparing Exploration Strategies 🔦
 
-## The One-Sentence Problem
+## The One-Sentence Problem {#the-one-sentence-problem}
 
 An RL agent has to do two things that pull in opposite directions:
 
@@ -15,7 +15,7 @@ Montezuma's Revenge from one that scores zero.
 This script puts **five** exploration strategies head-to-head on the same
 two hard tasks, so you can see their personalities.
 
-## Real-Life Analogy: Picking a Lunch Spot
+## Real-Life Analogy: Picking a Lunch Spot {#real-life-analogy-picking-a-lunch-spot}
 
 You've just moved to a new city with 200 restaurants.
 
@@ -43,9 +43,9 @@ You've just moved to a new city with 200 restaurants.
   your mental model? Fascinating, and you update your plan to seek more
   like it.
 
-## The Five Strategies (all in `compare_exploration.py`)
+## The Five Strategies (all in `compare_exploration.py`) {#the-five-strategies-all-in-compare_explorationpy}
 
-### 1. ε-greedy — the default, and it's *dithering*, not exploring
+### 1. ε-greedy — the default, and it's *dithering*, not exploring {#1-ε-greedy--the-default-and-its-dithering-not-exploring}
 
 Act greedily, but with probability ε take a uniformly random action. It's
 the standard baseline in DQN and friends. Its fatal flaw on hard tasks:
@@ -53,7 +53,7 @@ the standard baseline in DQN and friends. Its fatal flaw on hard tasks:
 correct moves you need the coin to land right `N` times in a row — that's
 exponentially unlikely. ε-greedy is *jiggling*, not *exploring*.
 
-### 2. Optimistic initialisation — "innocent until proven boring"
+### 2. Optimistic initialisation — "innocent until proven boring" {#2-optimistic-initialisation--innocent-until-proven-boring}
 
 Start *every* Q-value at the largest return that's even possible,
 `R_max / (1 − γ)`. Now an action the agent has never tried looks like the
@@ -65,7 +65,7 @@ step, toward the parts of the world it hasn't seen. Almost free, no extra
 bookkeeping — and, as you'll see, the strongest *deep* explorer in a small
 tabular world.
 
-### 3. UCB-style action selection — bonus in the *choice*, not the *reward*
+### 3. UCB-style action selection — bonus in the *choice*, not the *reward* {#3-ucb-style-action-selection--bonus-in-the-choice-not-the-reward}
 
 Pick `argmax_a [ Q(s,a) + c·√(ln t / N(s,a)) ]`: prefer high-value
 actions, but inflate the ones you've rarely tried. Famous from multi-armed
@@ -74,14 +74,14 @@ never in the reward — so it does *not* flow through the value function.
 UCB is great at "make sure I've tried every action in *this* state" but
 weak at "plan a route toward a far-away unexplored region."
 
-### 4. Count-based **reward** bonus — curiosity, the classic version
+### 4. Count-based **reward** bonus — curiosity, the classic version {#4-count-based-reward-bonus--curiosity-the-classic-version}
 
 Add `1/√(N(s,a))` to the **reward** (with a weight `beta` that decays).
 Because it's in the reward, Q-learning *does* propagate it: states that
 lead toward novel regions become valuable. This is the MBIE-EB / classic
 "exploration bonus" idea — and the first half of work item 1.
 
-### 5. Prediction-error **reward** bonus — curiosity, the ICM/RND version
+### 5. Prediction-error **reward** bonus — curiosity, the ICM/RND version {#5-prediction-error-reward-bonus--curiosity-the-icmrnd-version}
 
 Add `−log P(s'|s,a)` from a tiny learned forward model to the reward
 (again with decaying `beta`). The sharpest novelty signal of the five: in
@@ -89,7 +89,7 @@ a deterministic world, the surprise of a transition drops to ~0 the moment
 you've seen it once, instead of fading slowly like `1/√N`. The tabular
 cousin of ICM / RND — the second half of work item 1.
 
-## The Two Test Tasks
+## The Two Test Tasks {#the-two-test-tasks}
 
 - **Task A — MiniMontezuma**: the key→door→treasure gridworld, reward only
   at the treasure (~15 perfect moves away). Tests "can you survive a long
@@ -100,7 +100,7 @@ cousin of ICM / RND — the second half of work item 1.
   cost and never finds the prize. Tests "does your strategy still work as
   the chain gets *longer*?"
 
-## What Actually Happens (run it and see)
+## What Actually Happens (run it and see) {#what-actually-happens-run-it-and-see}
 
 **Task A — MiniMontezuma:**
 
@@ -125,7 +125,7 @@ cousin of ICM / RND — the second half of work item 1.
 *(Numbers wobble a little with the random seeds, but the shape is rock
 solid.)*
 
-## The Lessons
+## The Lessons {#the-lessons}
 
 1. **ε-greedy is not exploration.** It never solves *either* hard task.
    Random dithering simply does not thread long correct sequences. (Yet
@@ -158,7 +158,7 @@ solid.)*
    *principles*; the real systems are these same principles plus a network
    that generalises.
 
-## Key Words to Remember
+## Key Words to Remember {#key-words-to-remember}
 
 | Word | Meaning |
 |------|---------|
@@ -170,7 +170,7 @@ solid.)*
 | **Deep exploration** | Exploration that requires a long *coherent* sequence of "unusual" actions, not just one |
 | **`beta` annealing** | Shrinking the curiosity weight over time so the agent eventually stops exploring and exploits |
 
-## One-Sentence Summary
+## One-Sentence Summary {#one-sentence-summary}
 
 > **ε-greedy is just noise; every real exploration strategy works by making
 > the unexplored look attractive — via optimistic values, an action-choice

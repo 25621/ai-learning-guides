@@ -19,7 +19,7 @@ A comprehensive guide to understanding and building reinforcement learning syste
 
 ---
 
-## Phase 1: Foundations (2-4 weeks)
+## Phase 1: Foundations (2-4 weeks) {#phase-1-foundations-2-4-weeks}
 
 ### Goal
 Understand core concepts without deep math.
@@ -51,7 +51,7 @@ You should be able to explain the RL problem formulation and why MDPs are the st
 
 ---
 
-## Phase 2: Tabular Methods (3-4 weeks)
+## Phase 2: Tabular Methods (3-4 weeks) {#phase-2-tabular-methods-3-4-weeks}
 
 ### Goal
 Master classical RL algorithms where state/action spaces are small enough to store in tables.
@@ -94,7 +94,7 @@ Implement Q-learning from scratch and solve Frozen Lake with >70% success rate.
 
 ---
 
-## Phase 3: Function Approximation (3-4 weeks)
+## Phase 3: Function Approximation (3-4 weeks) {#phase-3-function-approximation-3-4-weeks}
 
 ### Goal
 Scale RL beyond small state spaces using function approximators.
@@ -141,7 +141,7 @@ Train a DQN agent that achieves positive reward on Atari Pong.
 
 ---
 
-## Phase 4: Policy Gradient Methods (4-5 weeks)
+## Phase 4: Policy Gradient Methods (4-5 weeks) {#phase-4-policy-gradient-methods-4-5-weeks}
 
 ### Goal
 Learn to optimize policies directly without computing value functions.
@@ -189,7 +189,7 @@ Implement PPO and solve BipedalWalker-v3 (reward > 300).
 
 ---
 
-## Phase 5: Advanced Topics (6-8 weeks)
+## Phase 5: Advanced Topics (6-8 weeks) {#phase-5-advanced-topics-6-8-weeks}
 
 Choose 2-3 areas based on your interests.
 - [Model-Based RL](#model-based-rl)
@@ -199,7 +199,7 @@ Choose 2-3 areas based on your interests.
 - [Hierarchical RL](#hierarchical-rl)
 - [RLHF (RL from Human Feedback)](#rlhf-rl-from-human-feedback)
 
-### Model-Based RL
+### Model-Based RL {#model-based-rl}
 Learn environment dynamics to plan or generate synthetic experience.
 
 **Concepts:**
@@ -221,7 +221,7 @@ Learn environment dynamics to plan or generate synthetic experience.
 
 ---
 
-### Multi-Agent RL
+### Multi-Agent RL {#multi-agent-rl}
 Multiple agents learning simultaneously in shared environments.
 
 **Concepts:**
@@ -242,7 +242,7 @@ Multiple agents learning simultaneously in shared environments.
 
 ---
 
-### Offline/Batch RL
+### Offline/Batch RL {#offlinebatch-rl}
 Learn from fixed datasets without environment interaction.
 
 **Concepts:**
@@ -264,7 +264,7 @@ Learn from fixed datasets without environment interaction.
 
 ---
 
-### Exploration
+### Exploration {#exploration}
 Address sparse reward and hard exploration problems.
 
 **Concepts:**
@@ -287,7 +287,7 @@ Address sparse reward and hard exploration problems.
 
 ---
 
-### Hierarchical RL
+### Hierarchical RL {#hierarchical-rl}
 Learn at multiple levels of temporal abstraction.
 
 **Concepts:**
@@ -308,7 +308,7 @@ Learn at multiple levels of temporal abstraction.
 
 ---
 
-### RLHF (RL from Human Feedback)
+### RLHF (RL from Human Feedback) {#rlhf-rl-from-human-feedback}
 Align models with human preferences.
 
 **Concepts:**
@@ -330,7 +330,7 @@ Align models with human preferences.
 
 ---
 
-## Phase 6: Research-Level (Ongoing)
+## Phase 6: Research-Level (Ongoing) {#phase-6-research-level-ongoing}
 
 ### Goal
 Contribute original work to the field.

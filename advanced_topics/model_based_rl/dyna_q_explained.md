@@ -1,6 +1,6 @@
 # Dyna-Q: Learning Faster by Imagining 🧠
 
-## What Is It?
+## What Is It? {#what-is-it}
 
 Imagine a kid named Mia learning to navigate her new school. Every day she walks
 the hallways and discovers new things: "The library is past the cafeteria,"
@@ -22,7 +22,7 @@ the way.
 
 ---
 
-## The Three Ingredients
+## The Three Ingredients {#the-three-ingredients}
 
 Dyna-Q is "Q-learning + model + planning". One real step does **three** jobs:
 
@@ -37,7 +37,7 @@ than a pure Q-learner.
 
 ---
 
-## A Picture of the Loop
+## A Picture of the Loop {#a-picture-of-the-loop}
 
 ```
                    ┌────────────────────────────────────┐
@@ -55,7 +55,7 @@ The model is just a lookup table:
 
 ---
 
-## Real-Life Examples
+## Real-Life Examples {#real-life-examples}
 
 - **Chess study.** Grandmasters spend hours replaying their own games and
   master games in their heads. Every replay is "planning" — extra learning from
@@ -69,7 +69,7 @@ The model is just a lookup table:
 
 ---
 
-## What Our Code Does
+## What Our Code Does {#what-our-code-does}
 
 We use the classic **Dyna Maze** ([Sutton & Barto, Figure 8.2](http://incompleteideas.net/book/the-book.html)): a 6×9 grid with
 some walls, a start `S` in the middle-left, and a goal `G` in the top right.
@@ -86,7 +86,7 @@ The script reports the **average number of real steps per episode** as
 training progresses. Fewer steps means the agent has learned a more direct
 path to the goal.
 
-### What you should see when you run it
+### What you should see when you run it {#what-you-should-see-when-you-run-it}
 
 The shortest path on this maze is ~9 steps; with ε-greedy exploration a
 well-trained agent averages ~10 steps per episode. Run for 50 episodes and
@@ -107,7 +107,7 @@ episodes, which is the whole point on environments where real steps are costly.)
 
 ---
 
-## Why It Works So Well on This Maze
+## Why It Works So Well on This Maze {#why-it-works-so-well-on-this-maze}
 
 Two reasons:
 
@@ -121,7 +121,7 @@ Two reasons:
 
 ---
 
-## Where Dyna-Q Struggles
+## Where Dyna-Q Struggles {#where-dyna-q-struggles}
 
 - **Stochastic environments.** If `(s, a)` can lead to many different `s'`
   values, a "remember last outcome" model lies to you. Fix: store visit counts
@@ -138,7 +138,7 @@ Two reasons:
 
 ---
 
-## Key Words to Remember
+## Key Words to Remember {#key-words-to-remember}
 
 | Word | Meaning |
 |------|---------|
@@ -150,7 +150,7 @@ Two reasons:
 
 ---
 
-## One-Sentence Summary
+## One-Sentence Summary {#one-sentence-summary}
 
 > **Dyna-Q learns from doing AND from imagining — and imagining is free.**
 

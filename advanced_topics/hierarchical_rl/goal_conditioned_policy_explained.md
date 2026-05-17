@@ -1,6 +1,6 @@
 # Goal-Conditioned Policy
 
-## The Big Idea: One Policy to Rule Them All
+## The Big Idea: One Policy to Rule Them All {#the-big-idea-one-policy-to-rule-them-all}
 
 Imagine you are a delivery driver. You don't need a completely different skill set for every address. You know how to drive, read a map, and navigate traffic — you just plug in *today's destination* and go.
 
@@ -8,7 +8,7 @@ A **goal-conditioned policy** works the same way. Instead of training one agent 
 
 ---
 
-## How It Differs From Standard RL
+## How It Differs From Standard RL {#how-it-differs-from-standard-rl}
 
 In standard RL (as covered in the earlier phases of the curriculum), the reward function is baked in: "reach cell (7, 7), get +1." The agent learns exactly one thing: how to reach *that* cell.
 
@@ -20,7 +20,7 @@ The goal travels *with* the agent, like a destination typed into a navigation ap
 
 ---
 
-## The Sparse Reward Problem
+## The Sparse Reward Problem {#the-sparse-reward-problem}
 
 Here is the catch: learning from sparse rewards (only +1 at the goal, 0 everywhere else) is brutally hard. Most attempts fail — the agent wanders randomly, never bumps into the goal, and the network gets nothing useful to learn from.
 
@@ -30,7 +30,7 @@ This is where **Hindsight Experience Replay (HER)** comes in.
 
 ---
 
-## Hindsight Experience Replay: Failing Forward
+## Hindsight Experience Replay: Failing Forward {#hindsight-experience-replay-failing-forward}
 
 HER's trick is beautifully simple. After a failed episode, HER asks:
 
@@ -44,13 +44,13 @@ This turns thousands of "failures" into a rich library of *successful* navigatio
 
 ---
 
-## The Real-Life Analogy: Toddler Learning to Stack Blocks
+## The Real-Life Analogy: Toddler Learning to Stack Blocks {#the-real-life-analogy-toddler-learning-to-stack-blocks}
 
 A toddler trying to put a block in a bucket misses constantly. But each "miss" lands the block *somewhere*. If you replay each miss as "you were trying to put it *right there* — and you did it!", the toddler builds fine motor skill across the whole table. Soon they can place a block anywhere — including in the bucket.
 
 ---
 
-## What Our Code Does
+## What Our Code Does {#what-our-code-does}
 
 The script `goal_conditioned_policy.py` runs in a **7x7 maze** with walls. At the start of each episode, a random goal cell is chosen. The agent must find it.
 
@@ -64,7 +64,7 @@ Training runs for 3,000 episodes with a decaying exploration rate — the agent 
 
 ---
 
-## What the Charts Show
+## What the Charts Show {#what-the-charts-show}
 
 ![Goal-Conditioned Policy Results](outputs/goal_conditioned_policy.png)
 
@@ -74,7 +74,7 @@ Training runs for 3,000 episodes with a decaying exploration rate — the agent 
 
 ---
 
-## Where This Shows Up in the Real World
+## Where This Shows Up in the Real World {#where-this-shows-up-in-the-real-world}
 
 | Application | The "goal" |
 |-------------|------------|
@@ -87,6 +87,6 @@ Goal-conditioned policies are one of the key building blocks for HIRO (Hierarchi
 
 ---
 
-## One-Sentence Summary
+## One-Sentence Summary {#one-sentence-summary}
 
 > **A goal-conditioned policy is one agent that can navigate to any destination — and HER makes learning from failure possible by pretending every missed shot was aimed at wherever it landed.**

@@ -1,0 +1,54 @@
+{
+  "version.label": {
+    "message": "目前版本",
+    "description": "The label for version current"
+  },
+  "sidebar.guideSidebar.category.Foundations": {
+    "message": "基礎",
+    "description": "The label for category 'Foundations' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Tabular Methods": {
+    "message": "表格方法",
+    "description": "The label for category 'Tabular Methods' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Function Approximation": {
+    "message": "函數近似",
+    "description": "The label for category 'Function Approximation' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Policy Gradients": {
+    "message": "策略梯度",
+    "description": "The label for category 'Policy Gradients' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Advanced Topics": {
+    "message": "高級主題",
+    "description": "The label for category 'Advanced Topics' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Model-Based RL": {
+    "message": "基於模型的強化學習",
+    "description": "The label for category 'Model-Based RL' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Multi-Agent RL": {
+    "message": "多代理人強化學習",
+    "description": "The label for category 'Multi-Agent RL' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Offline RL": {
+    "message": "離線強化學習",
+    "description": "The label for category 'Offline RL' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Exploration": {
+    "message": "探索",
+    "description": "The label for category 'Exploration' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.Hierarchical RL": {
+    "message": "分層強化學習",
+    "description": "The label for category 'Hierarchical RL' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.category.RLHF": {
+    "message": "RLHF",
+    "description": "The label for category 'RLHF' in sidebar 'guideSidebar'"
+  },
+  "sidebar.guideSidebar.doc.Introduction": {
+    "message": "介紹",
+    "description": "The label for the doc item 'Introduction' in sidebar 'guideSidebar', linking to the doc README"
+  }
+}
