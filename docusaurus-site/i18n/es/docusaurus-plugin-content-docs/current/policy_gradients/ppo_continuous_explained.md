@@ -122,7 +122,7 @@ Los **logits** son puntuaciones brutas y no normalizadas para acciones discretas
 
 **Clamp** significa forzar un valor dentro de un rango válido. El código utiliza `action.clamp(-1, 1)` para que el entorno nunca reciba una orden de motor fuera de sus límites permitidos.
 
-**Clip** en PPO significa algo diferente: PPO recorta la relación de probabilidad dentro de la pérdida, como se explica en la [sección de recorte de PPO](./ppo_scratch_explained.md#el-truco-del-recorte). La restricción de acción (clamping) protege la interfaz del entorno; el recorte (clipping) de PPO protege la actualización de la política.
+**Clip** en PPO significa algo diferente: PPO recorta la relación de probabilidad dentro de la pérdida, como se explica en la [sección de recorte de PPO](./ppo_scratch_explained.md#the-clipping-trick). La restricción de acción (clamping) protege la interfaz del entorno; el recorte (clipping) de PPO protege la actualización de la política.
 
 ---
 
@@ -148,7 +148,7 @@ Los **logits** son puntuaciones brutas y no normalizadas para acciones discretas
 - Las **recompensas son escasas**: las recompensas por progreso hacia adelante son diminutas por paso.
 - **REINFORCE necesitaría** miles de episodios completos para obtener una señal útil.
 
-Las actualizaciones de n-pasos de PPO con [GAE (Generalized Advantage Estimation)](./ppo_scratch_explained.md#gae-estimaciones-de-ventaja-más-inteligentes) permiten al robot aprender de episodios incompletos:
+Las actualizaciones de n-pasos de PPO con [GAE (Generalized Advantage Estimation)](./ppo_scratch_explained.md#gae-smarter-advantage-estimates) permiten al robot aprender de episodios incompletos:
 > "Aunque me haya caído después de 50 pasos, esos pasos mostraron ALGO de progreso hacia adelante. Permítanme usar una estimación de retorno de 50 pasos en lugar de esperar a que termine el episodio".
 
 ---

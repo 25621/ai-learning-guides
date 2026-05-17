@@ -43,7 +43,7 @@ r(θ) = π_new(a|s) / π_old(a|s)
 
 ---
 
-## L'astuce du clipping (tronquage)
+## L'astuce du clipping (tronquage) {#the-clipping-trick}
 
 PPO tronque (clipping) le ratio pour qu'il reste dans l'intervalle [1-ε, 1+ε] (généralement ε = 0.2) :
 
@@ -100,7 +100,7 @@ Avec clipping : le gradient est nul en dehors de [1-ε, 1+ε], donc la politique
 
 ---
 
-## GAE : Des estimations d'avantage plus intelligentes
+## GAE : Des estimations d'avantage plus intelligentes {#gae-smarter-advantage-estimates}
 
 PPO utilise le **Generalized Advantage Estimation (GAE)** pour calculer l'avantage :
 

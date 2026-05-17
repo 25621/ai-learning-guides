@@ -43,7 +43,7 @@ r(θ) = π_new(a|s) / π_old(a|s)
 
 ---
 
-## 클리핑 (Clipping) 트릭
+## 클리핑 (Clipping) 트릭 {#the-clipping-trick}
 
 PPO는 비율(ratio)이 [1-ε, 1+ε] 범위(보통 ε = 0.2) 안에 머물도록 제한(clip)합니다.
 
@@ -100,7 +100,7 @@ L_CLIP = E[min(r(θ) · A,  clip(r(θ), 1-ε, 1+ε) · A)]
 
 ---
 
-## GAE: 더 똑똑한 Advantage 추정
+## GAE: 더 똑똑한 Advantage 추정 {#gae-smarter-advantage-estimates}
 
 PPO는 **GAE (Generalized Advantage Estimation)**를 사용하여 advantage를 계산합니다.
 

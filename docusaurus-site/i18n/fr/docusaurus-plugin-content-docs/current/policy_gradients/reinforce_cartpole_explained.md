@@ -11,7 +11,7 @@ Cette recette est appelée une **politique** (π, pi). En apprentissage par renf
 
 ---
 
-## L'Ancienne vs la Nouvelle Méthode
+## L'Ancienne vs la Nouvelle Méthode {#the-old-way-vs-the-new-way}
 
 **Ancienne méthode (Q-learning / DQN) :** Apprendre à quel point chaque action est BONNE (valeurs Q), puis choisir la meilleure.
 > "Pousser à GAUCHE a un score de 7, pousser à DROITE a un score de 5 → pousse à GAUCHE !"

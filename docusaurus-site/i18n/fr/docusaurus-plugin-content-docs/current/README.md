@@ -8,18 +8,18 @@ Un guide complet pour comprendre et construire des systèmes d'apprentissage par
 
 | Phase | Objectif | Durée |
 |-------|-------|----------|
-| 1 | [Fondations](#phase-1--fondations-2-à-4-semaines) | 2-4 semaines |
-| 2 | [Méthodes Tabulaires](#phase-2--méthodes-tabulaires-3-à-4-semaines) | 3-4 semaines |
-| 3 | [Approximation de Fonction](#phase-3--approximation-de-fonction-3-à-4-semaines) | 3-4 semaines |
-| 4 | [Méthodes de Gradient de Politique](#phase-4--méthodes-de-gradient-de-politique-4-à-5-semaines) | 4-5 semaines |
-| 5 | [Sujets Avancés](#phase-5--sujets-avancés-6-à-8-semaines) | 6-8 semaines |
-| 6 | [Niveau Recherche](#phase-6--niveau-recherche-continu) | Continu |
+| 1 | [Fondations](#phase-1-foundations-2-4-weeks) | 2-4 semaines |
+| 2 | [Méthodes Tabulaires](#phase-2-tabular-methods-3-4-weeks) | 3-4 semaines |
+| 3 | [Approximation de Fonction](#phase-3-function-approximation-3-4-weeks) | 3-4 semaines |
+| 4 | [Méthodes de Gradient de Politique](#phase-4-policy-gradient-methods-4-5-weeks) | 4-5 semaines |
+| 5 | [Sujets Avancés](#phase-5-advanced-topics-6-8-weeks) | 6-8 semaines |
+| 6 | [Niveau Recherche](#phase-6-research-level-ongoing) | Continu |
 
 **Temps total pour devenir compétent :** ~6 mois
 
 ---
 
-## Phase 1 : Fondations (2 à 4 semaines)
+## Phase 1 : Fondations (2 à 4 semaines) {#phase-1-foundations-2-4-weeks}
 
 ### Objectif
 Comprendre les concepts de base sans mathématiques approfondies.
@@ -51,7 +51,7 @@ Vous devriez être capable d'expliquer la formulation du problème RL et pourquo
 
 ---
 
-## Phase 2 : Méthodes Tabulaires (3 à 4 semaines)
+## Phase 2 : Méthodes Tabulaires (3 à 4 semaines) {#phase-2-tabular-methods-3-4-weeks}
 
 ### Objectif
 Maîtriser les algorithmes RL classiques où les espaces d'états/actions sont suffisamment petits pour être stockés dans des tableaux.
@@ -94,7 +94,7 @@ Implémenter le Q-learning à partir de zéro et résoudre Frozen Lake avec un t
 
 ---
 
-## Phase 3 : Approximation de Fonction (3 à 4 semaines)
+## Phase 3 : Approximation de Fonction (3 à 4 semaines) {#phase-3-function-approximation-3-4-weeks}
 
 ### Objectif
 Passer à l'échelle du RL au-delà des petits espaces d'états en utilisant des approximateurs de fonction.
@@ -141,7 +141,7 @@ Entraîner un agent DQN qui obtient une récompense positive sur Atari Pong.
 
 ---
 
-## Phase 4 : Méthodes de Gradient de Politique (4 à 5 semaines)
+## Phase 4 : Méthodes de Gradient de Politique (4 à 5 semaines) {#phase-4-policy-gradient-methods-4-5-weeks}
 
 ### Objectif
 Apprendre à optimiser directement les politiques sans calculer de fonctions de valeur.
@@ -189,17 +189,17 @@ Implémenter PPO et résoudre BipedalWalker-v3 (récompense > 300).
 
 ---
 
-## Phase 5 : Sujets Avancés (6 à 8 semaines)
+## Phase 5 : Sujets Avancés (6 à 8 semaines) {#phase-5-advanced-topics-6-8-weeks}
 
 Choisissez 2-3 domaines en fonction de vos intérêts.
-- [RL Basé sur un Modèle (Model-Based)](#rl-basé-sur-un-modèle-model-based)
-- [RL Multi-Agents](#rl-multi-agents)
-- [RL Hors-ligne / Batch](#rl-hors-ligne--batch)
+- [RL Basé sur un Modèle (Model-Based)](#model-based-rl)
+- [RL Multi-Agents](#multi-agent-rl)
+- [RL Hors-ligne / Batch](#offlinebatch-rl)
 - [Exploration](#exploration)
-- [RL Hiérarchique](#rl-hiérarchique)
-- [RLHF (RL à partir de retours humains)](#rlhf-rl-à-partir-de-retours-humains)
+- [RL Hiérarchique](#hierarchical-rl)
+- [RLHF (RL à partir de retours humains)](#rlhf-rl-from-human-feedback)
 
-### RL Basé sur un Modèle (Model-Based)
+### RL Basé sur un Modèle (Model-Based) {#model-based-rl}
 Apprendre la dynamique de l'environnement pour planifier ou générer de l'expérience synthétique.
 
 **Concepts :**
@@ -221,7 +221,7 @@ Apprendre la dynamique de l'environnement pour planifier ou générer de l'expé
 
 ---
 
-### RL Multi-Agents
+### RL Multi-Agents {#multi-agent-rl}
 Plusieurs agents apprenant simultanément dans des environnements partagés.
 
 **Concepts :**
@@ -242,7 +242,7 @@ Plusieurs agents apprenant simultanément dans des environnements partagés.
 
 ---
 
-### RL Hors-ligne / Batch
+### RL Hors-ligne / Batch {#offlinebatch-rl}
 Apprendre à partir de jeux de données fixes sans interaction avec l'environnement.
 
 **Concepts :**
@@ -264,7 +264,7 @@ Apprendre à partir de jeux de données fixes sans interaction avec l'environnem
 
 ---
 
-### Exploration
+### Exploration {#exploration}
 S'attaquer aux problèmes de récompense éparse et d'exploration difficile.
 
 **Concepts :**
@@ -287,7 +287,7 @@ S'attaquer aux problèmes de récompense éparse et d'exploration difficile.
 
 ---
 
-### RL Hiérarchique
+### RL Hiérarchique {#hierarchical-rl}
 Apprendre à plusieurs niveaux d'abstraction temporelle.
 
 **Concepts :**
@@ -308,7 +308,7 @@ Apprendre à plusieurs niveaux d'abstraction temporelle.
 
 ---
 
-## Phase 5 : RLHF (RL à partir de retours humains)
+### RLHF (RL à partir de retours humains) {#rlhf-rl-from-human-feedback}
 Aligner les modèles avec les préférences humaines.
 
 **Concepts :**
@@ -330,7 +330,7 @@ Aligner les modèles avec les préférences humaines.
 
 ---
 
-## Phase 6 : Niveau Recherche (Continu)
+## Phase 6 : Niveau Recherche (Continu) {#phase-6-research-level-ongoing}
 
 ### Objectif
 Contribuer par des travaux originaux au domaine.

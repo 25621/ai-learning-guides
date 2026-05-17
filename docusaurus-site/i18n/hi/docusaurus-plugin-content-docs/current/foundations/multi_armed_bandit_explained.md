@@ -25,7 +25,7 @@
 
 ---
 
-## एप्सिलॉन-ग्रीडी रणनीति (The Epsilon-Greedy Strategy)
+## एप्सिलॉन-ग्रीडी रणनीति (The Epsilon-Greedy Strategy) {#the-epsilon-greedy-strategy}
 
 इसे हल करने का एक स्मार्ट तरीका **एप्सिलॉन-ग्रीडी (epsilon-greedy)** कहलाता है (एप्सिलॉन ग्रीक अक्षर ε है):
 

@@ -123,7 +123,7 @@ Les **logits** sont des scores bruts non normalisés pour des actions discrètes
 
 **Clamp** signifie forcer une valeur dans une plage valide. Le code utilise `action.clamp(-1, 1)` pour que l'environnement ne reçoive jamais une commande de moteur en dehors de ses limites autorisées.
 
-Le **clipping** dans PPO signifie autre chose : PPO tronque (clipping) le ratio de probabilité à l'intérieur de la fonction de perte, comme expliqué dans la [section sur le clipping PPO](./ppo_scratch_explained.md#le-clipping-trick). Le clamping d'action protège l'interface de l'environnement ; le clipping PPO protège la mise à jour de la politique.
+Le **clipping** dans PPO signifie autre chose : PPO tronque (clipping) le ratio de probabilité à l'intérieur de la fonction de perte, comme expliqué dans la [section sur le clipping PPO](./ppo_scratch_explained.md#the-clipping-trick). Le clamping d'action protège l'interface de l'environnement ; le clipping PPO protège la mise à jour de la politique.
 
 ---
 
