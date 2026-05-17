@@ -8,18 +8,18 @@ Una guía completa para comprender y construir sistemas de aprendizaje por refue
 
 | Fase | Enfoque | Duración |
 |-------|-------|----------|
-| 1 | [Fundamentos](#fase-1-fundamentos-2-4-semanas) | 2-4 semanas |
-| 2 | [Métodos Tabulares](#fase-2-métodos-tabulares-3-4-semanas) | 3-4 semanas |
-| 3 | [Aproximación de Funciones](#fase-3-aproximación-de-funciones-3-4-semanas) | 3-4 semanas |
-| 4 | [Métodos de Gradiente de Política](#fase-4-métodos-de-gradiente-de-política-4-5-semanas) | 4-5 semanas |
-| 5 | [Temas Avanzados](#fase-5-temas-avanzados-6-8-semanas) | 6-8 semanas |
-| 6 | [Nivel de Investigación](#fase-6-nivel-de-investigación-continuo) | Continuo |
+| 1 | [Fundamentos](#phase-1-foundations-2-4-weeks) | 2-4 semanas |
+| 2 | [Métodos Tabulares](#phase-2-tabular-methods-3-4-weeks) | 3-4 semanas |
+| 3 | [Aproximación de Funciones](#phase-3-function-approximation-3-4-weeks) | 3-4 semanas |
+| 4 | [Métodos de Gradiente de Política](#phase-4-policy-gradient-methods-4-5-weeks) | 4-5 semanas |
+| 5 | [Temas Avanzados](#phase-5-advanced-topics-6-8-weeks) | 6-8 semanas |
+| 6 | [Nivel de Investigación](#phase-6-research-level-ongoing) | Continuo |
 
 **Tiempo total para la competencia:** ~6 meses
 
 ---
 
-## Fase 1: Fundamentos (2-4 semanas)
+## Fase 1: Fundamentos (2-4 semanas) {#phase-1-foundations-2-4-weeks}
 
 ### Objetivo
 Comprender los conceptos básicos sin matemáticas profundas.
@@ -51,7 +51,7 @@ Deberías ser capaz de explicar la formulación del problema de RL y por qué lo
 
 ---
 
-## Fase 2: Métodos Tabulares (3-4 semanas)
+## Fase 2: Métodos Tabulares (3-4 semanas) {#phase-2-tabular-methods-3-4-weeks}
 
 ### Objetivo
 Dominar los algoritmos clásicos de RL donde los espacios de estado/acción son lo suficientemente pequeños como para almacenarlos en tablas.
@@ -94,7 +94,7 @@ Implementar Q-learning desde cero y resolver Frozen Lake con una tasa de éxito 
 
 ---
 
-## Fase 3: Aproximación de Funciones (3-4 semanas)
+## Fase 3: Aproximación de Funciones (3-4 semanas) {#phase-3-function-approximation-3-4-weeks}
 
 ### Objetivo
 Escalar el RL más allá de los espacios de estado pequeños utilizando aproximadores de funciones.
@@ -141,7 +141,7 @@ Entrenar un agente DQN que logre una recompensa positiva en Atari Pong.
 
 ---
 
-## Fase 4: Métodos de Gradiente de Política (4-5 semanas)
+## Fase 4: Métodos de Gradiente de Política (4-5 semanas) {#phase-4-policy-gradient-methods-4-5-weeks}
 
 ### Objetivo
 Aprender a optimizar las políticas directamente sin calcular funciones de valor.
@@ -189,17 +189,17 @@ Implementar PPO y resolver BipedalWalker-v3 (recompensa > 300).
 
 ---
 
-## Fase 5: Temas Avanzados (6-8 semanas)
+## Fase 5: Temas Avanzados (6-8 semanas) {#phase-5-advanced-topics-6-8-weeks}
 
 Elige 2-3 áreas basadas en tus intereses.
-- [RL Basado en Modelos](#rl-basado-en-modelos)
-- [RL Multiagente](#rl-multiagente)
-- [RL Offline/Por Lotes](#rl-offlinepor-lotes)
-- [Exploración](#exploración)
-- [RL Jerárquico](#rl-jerárquico)
-- [RLHF (RL a partir de retroalimentación humana)](#rlhf-rl-a-partir-de-retroalimentación-humana)
+- [RL Basado en Modelos](#model-based-rl)
+- [RL Multiagente](#multi-agent-rl)
+- [RL Offline/Por Lotes](#offlinebatch-rl)
+- [Exploración](#exploration)
+- [RL Jerárquico](#hierarchical-rl)
+- [RLHF (RL a partir de retroalimentación humana)](#rlhf-rl-from-human-feedback)
 
-### RL Basado en Modelos
+### RL Basado en Modelos {#model-based-rl}
 Aprender la dinámica del entorno para planificar o generar experiencia sintética.
 
 **Conceptos:**
@@ -221,7 +221,7 @@ Aprender la dinámica del entorno para planificar o generar experiencia sintéti
 
 ---
 
-### RL Multiagente
+### RL Multiagente {#multi-agent-rl}
 Múltiples agentes aprendiendo simultáneamente en entornos compartidos.
 
 **Conceptos:**
@@ -242,7 +242,7 @@ Múltiples agentes aprendiendo simultáneamente en entornos compartidos.
 
 ---
 
-### RL Offline/Por Lotes
+### RL Offline/Por Lotes {#offlinebatch-rl}
 Aprender de conjuntos de datos fijos sin interacción con el entorno.
 
 **Conceptos:**
@@ -264,7 +264,7 @@ Aprender de conjuntos de datos fijos sin interacción con el entorno.
 
 ---
 
-### Exploración
+### Exploración {#exploration}
 Abordar la recompensa escasa y los problemas de exploración difícil.
 
 **Conceptos:**
@@ -287,7 +287,7 @@ Abordar la recompensa escasa y los problemas de exploración difícil.
 
 ---
 
-### RL Jerárquico
+### RL Jerárquico {#hierarchical-rl}
 Aprender a múltiples niveles de abstracción temporal.
 
 **Conceptos:**
@@ -308,7 +308,7 @@ Aprender a múltiples niveles de abstracción temporal.
 
 ---
 
-### RLHF (RL a partir de retroalimentación humana)
+### RLHF (RL a partir de retroalimentación humana) {#rlhf-rl-from-human-feedback}
 Alinear modelos con las preferencias humanas.
 
 **Conceptos:**
@@ -330,7 +330,7 @@ Alinear modelos con las preferencias humanas.
 
 ---
 
-## Fase 6: Nivel de Investigación (Continuo)
+## Fase 6: Nivel de Investigación (Continuo) {#phase-6-research-level-ongoing}
 
 ### Objetivo
 Contribuir con trabajo original al campo.

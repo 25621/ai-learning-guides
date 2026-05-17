@@ -8,18 +8,18 @@ Ein umfassender Leitfaden zum Verständnis und zum Aufbau von Reinforcement-Lear
 
 | Phase | Fokus | Dauer |
 |-------|-------|----------|
-| 1 | [Grundlagen](#phase-1-grundlagen-2-4-wochen) | 2-4 Wochen |
-| 2 | [Tabellarische Methoden](#phase-2-tabellarische-methoden-3-4-wochen) | 3-4 Wochen |
-| 3 | [Funktionsapproximation](#phase-3-funktionsapproximation-3-4-wochen) | 3-4 Wochen |
-| 4 | [Policy-Gradient-Methoden](#phase-4-policy-gradient-methoden-4-5-wochen) | 4-5 Wochen |
-| 5 | [Fortgeschrittene Themen](#phase-5-fortgeschrittene-themen-6-8-wochen) | 6-8 Wochen |
-| 6 | [Forschungsniveau](#phase-6-forschungsniveau-fortlaufend) | Laufend |
+| 1 | [Grundlagen](#phase-1-foundations-2-4-weeks) | 2-4 Wochen |
+| 2 | [Tabellarische Methoden](#phase-2-tabular-methods-3-4-weeks) | 3-4 Wochen |
+| 3 | [Funktionsapproximation](#phase-3-function-approximation-3-4-weeks) | 3-4 Wochen |
+| 4 | [Policy-Gradient-Methoden](#phase-4-policy-gradient-methods-4-5-weeks) | 4-5 Wochen |
+| 5 | [Fortgeschrittene Themen](#phase-5-advanced-topics-6-8-weeks) | 6-8 Wochen |
+| 6 | [Forschungsniveau](#phase-6-research-level-ongoing) | Laufend |
 
 **Gesamtzeit bis zur Kompetenz:** ca. 6 Monate
 
 ---
 
-## Phase 1: Grundlagen (2-4 Wochen)
+## Phase 1: Grundlagen (2-4 Wochen) {#phase-1-foundations-2-4-weeks}
 
 ### Ziel
 Kernkonzepte ohne tiefe Mathematik verstehen.
@@ -51,7 +51,7 @@ Sie sollten in der Lage sein, die RL-Problemstellung zu erklären und zu begrün
 
 ---
 
-## Phase 2: Tabellarische Methoden (3-4 Wochen)
+## Phase 2: Tabellarische Methoden (3-4 Wochen) {#phase-2-tabular-methods-3-4-weeks}
 
 ### Ziel
 Beherrschung klassischer RL-Algorithmen, bei denen Zustands-/Aktionsräume klein genug sind, um in Tabellen gespeichert zu werden.
@@ -94,7 +94,7 @@ Implementieren Sie Q-Learning von Grund auf und lösen Sie Frozen Lake mit einer
 
 ---
 
-## Phase 3: Funktionsapproximation (3-4 Wochen)
+## Phase 3: Funktionsapproximation (3-4 Wochen) {#phase-3-function-approximation-3-4-weeks}
 
 ### Ziel
 RL über kleine Zustandsräume hinaus skalieren durch den Einsatz von Funktionsapproximatoren.
@@ -141,7 +141,7 @@ Trainieren Sie einen DQN-Agenten, der eine positive Belohnung bei Atari Pong erz
 
 ---
 
-## Phase 4: Policy-Gradient-Methoden (4-5 Wochen)
+## Phase 4: Policy-Gradient-Methoden (4-5 Wochen) {#phase-4-policy-gradient-methods-4-5-weeks}
 
 ### Ziel
 Lernen, Strategien (Policies) direkt zu optimieren, ohne Value-Funktionen berechnen zu müssen.
@@ -189,17 +189,17 @@ Implementieren Sie PPO und lösen Sie BipedalWalker-v3 (Belohnung > 300).
 
 ---
 
-## Phase 5: Fortgeschrittene Themen (6-8 Wochen)
+## Phase 5: Fortgeschrittene Themen (6-8 Wochen) {#phase-5-advanced-topics-6-8-weeks}
 
 Wählen Sie 2-3 Bereiche basierend auf Ihren Interessen aus.
-- [Modellbasiertes RL](#modellbasiertes-rl)
-- [Multiagenten-RL](#multiagenten-rl)
+- [Modellbasiertes RL](#model-based-rl)
+- [Multiagenten-RL](#multi-agent-rl)
 - [Offline/Batch RL](#offlinebatch-rl)
 - [Exploration](#exploration)
-- [Hierarchisches RL](#hierarchisches-rl)
-- [RLHF (RL from Human Feedback)](#rlhf-rl-aus-menschlichem-feedback)
+- [Hierarchisches RL](#hierarchical-rl)
+- [RLHF (RL from Human Feedback)](#rlhf-rl-from-human-feedback)
 
-### Modellbasiertes RL
+### Modellbasiertes RL {#model-based-rl}
 Lernen der Umgebungsdynamik, um zu planen oder synthetische Erfahrungen zu generieren.
 
 **Konzepte:**
@@ -221,7 +221,7 @@ Lernen der Umgebungsdynamik, um zu planen oder synthetische Erfahrungen zu gener
 
 ---
 
-### Multiagenten-RL
+### Multiagenten-RL {#multi-agent-rl}
 Mehrere Agenten lernen gleichzeitig in gemeinsamen Umgebungen.
 
 **Konzepte:**
@@ -242,7 +242,7 @@ Mehrere Agenten lernen gleichzeitig in gemeinsamen Umgebungen.
 
 ---
 
-### Offline/Batch RL
+### Offline/Batch RL {#offlinebatch-rl}
 Lernen aus festen Datensätzen ohne Interaktion mit der Umgebung.
 
 **Konzepte:**
@@ -264,7 +264,7 @@ Lernen aus festen Datensätzen ohne Interaktion mit der Umgebung.
 
 ---
 
-### Exploration
+### Exploration {#exploration}
 Adressierung von Problemen mit spärlichen Belohnungen und schwieriger Exploration.
 
 **Konzepte:**
@@ -287,7 +287,7 @@ Adressierung von Problemen mit spärlichen Belohnungen und schwieriger Explorati
 
 ---
 
-### Hierarchisches RL
+### Hierarchisches RL {#hierarchical-rl}
 Lernen auf mehreren Ebenen zeitlicher Abstraktion.
 
 **Konzepte:**
@@ -308,7 +308,7 @@ Lernen auf mehreren Ebenen zeitlicher Abstraktion.
 
 ---
 
-### RLHF (RL aus menschlichem Feedback)
+### RLHF (RL aus menschlichem Feedback) {#rlhf-rl-from-human-feedback}
 Ausrichtung (Alignment) von Modellen an menschlichen Präferenzen.
 
 **Konzepte:**
@@ -330,7 +330,7 @@ Ausrichtung (Alignment) von Modellen an menschlichen Präferenzen.
 
 ---
 
-## Phase 6: Forschungsniveau (Fortlaufend)
+## Phase 6: Forschungsniveau (Fortlaufend) {#phase-6-research-level-ongoing}
 
 ### Ziel
 Eigene Originalarbeiten zum Fachgebiet beisteuern.
