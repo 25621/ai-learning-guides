@@ -71,7 +71,7 @@ tiny bit"), ja pienet kohteet ovat hermoverkkoja ystävällisiä.
 | Valinta | Arvo | Miksi? |
 |--------|-------|-----|
 | Ympäristö | `CartPole-v1` | 4-D-tila, 2 toimintoa – helppo mallintaa |
-| Data | 20 000 siirtymää satunnaisesta käytännöstä | Laaja kattavuus valtiotilasta |
+| Data | 20 000 siirtymää satunnaisesta käytännöstä | Laaja kattavuus tila-avaruudesta |
 | Verkko | MLP, 2 × 128 ReLU piilotettu | MLP = Multi-Layer Perceptron (tavallinen "vanilja" neuroverkko). Kaksi piilotettua kerrosta 128 neuronista ReLU-aktivaatioiden avulla. Riittävä kapasiteetti, nopea harjoitella. |
 | Tappio | MSE päällä `(delta_state, reward)` | MSE = Mean Squared Error (neliöityjen ennustusvirheiden keskiarvo). Normaali regressiohäviö. |
 | Optimoija | Adam, lr = 1e-3, 30 aikakausia | Adam = mukautuva optimoija (säätää oppimisnopeudet parametria kohti automaattisesti). Valmis hyllystä tarkoittaa, että erityistä viritystä ei tarvita. |

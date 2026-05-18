@@ -48,7 +48,7 @@ hankalia hetkiä. Tämä auttaa sinua ymmärtämään malleja koko elämäsi aik
 
 Kun valitsemme muistoja satunnaisesti, rikkomme korrelaatiot. Robotti saattaa oppia:
 - Muisto, jossa sauva oli täydellinen (500 askelta sitten)
-- Muisto, jossa sauva oli kaatumassa (20 askelta sitten)  
+- Muisto, jossa sauva oli kaatumassa (20 askelta sitten)
 - Muisto, jossa kävi tuuri (vaiheesta 3)
 
 Tämä satunnainen sekoitus tarkoittaa:

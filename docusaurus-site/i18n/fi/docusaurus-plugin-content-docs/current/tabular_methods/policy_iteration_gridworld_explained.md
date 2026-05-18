@@ -61,7 +61,7 @@ Kahden askeleen päässä olevien ruutujen arvo on -1,9 (= -1 + 0,9 × -1) ja ni
 
 ## Avainsanat muistaa
 
-- **Käytäntö**: Suunnitelma – mitä toimia kussakin osavaltiossa tulee tehdä
+- **Käytäntö**: Suunnitelma – mitä toimia kussakin tilassa tulee tehdä
 - **Arvofunktio V(s)**: Kuinka hyvä on olla tilassa s (korkeampi = lähempänä tavoitetta)
 - **Käytännön arviointi**: Lasketaan, kuinka hyvä nykyinen suunnitelma on
 - **Käytännön parantaminen**: Suunnitelman parantaminen arvofunktion avulla

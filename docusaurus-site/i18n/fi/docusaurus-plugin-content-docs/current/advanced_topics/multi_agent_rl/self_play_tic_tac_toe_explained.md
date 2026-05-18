@@ -100,9 +100,9 @@ agenttipeli.
   Koodimme päivitys käyttää `target = reward - gamma * max(Q[next, opponent])`.
 - **Symmetriaa ei hyödynnetä tässä.** Todellinen toteutus kanonisoituisi
   laudat (eli ne pyörittävät tai heijastavat minkä tahansa kortin tilan vakiomuotoon, ainutlaatuiseen "normaalimuotoon", jotta agentti tunnistaa identtiset korttitilanteet) jakamaan Q-arvot 8:lle.
-  symmetriat. Ohitamme tämän – tilatila on tarpeeksi pieni raa'alla voimalla.
+  symmetriat. Ohitamme tämän – tila-avaruus on tarpeeksi pieni raa'alla voimalla.
 - **Q-pöytä kasvaa.** 50 000 itsepelatun pelin jälkeen näet muutaman
-  tuhat state-player-näppäintä. Se on hyvä tässä; shakille tai Go:lle
+  tuhat tila-pelaaja-avainta. Se on hyvä tässä; shakille tai Go:lle
   tarvitsevat sen sijaan hermoverkon, minkä vuoksi **AlphaZero korvaa
   pöytä, jossa on CNN + MCTS**.
 

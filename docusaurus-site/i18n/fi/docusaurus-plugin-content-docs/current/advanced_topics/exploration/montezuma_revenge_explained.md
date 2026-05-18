@@ -122,7 +122,7 @@ aarre). Skripti myös tulostaa kyseisen reitin ASCII-kehyksinä.
 | **Harva palkinto** | Palkkio on nolla melkein kaikkialla; saat sen vasta pitkän oikean sarjan jälkeen |
 | **Montezuman kosto** | Atari-peli, josta klassiset syvä-RL-agentit (DQN, A3C) saivat 0 – kanoninen kovan tutkimisen vertailukohta |
 | **RND (satunnainen verkkotislaus)** | Vuoden 2018 menetelmä, joka voitti Montezuman käyttämällä ennustusvirhe-uteliaisuusbonusta |
-| **Go-Explore** | "Muista lupaavat osavaltiot, palaa niihin ja tutki sitten sieltä" - toinen Montezuma-krakkeri |
+| **Go-Explore** | "Muista lupaavat tilat, palaa niihin ja tutki sitten sieltä" - toinen Montezuman ratkaisemiseen käytetty menetelmä |
 | **Pienoismalli** | Pieni, halpa ympäristö, joka säilyttää vaikean ongelman *rakenteen*, jotta voit tutkia sitä nopeasti |
 
 ## Yhden lauseen yhteenveto

@@ -59,7 +59,7 @@ Tämä on paljon tehokkaampaa kuin niiden laskeminen erikseen!
 ## Tämä skripti: "Naiivi" versio
 
 Tämä skripti näyttää DQN:n **ilman** erityisiä temppuja. Se vain:
-1. Näkee valtion
+1. Näkee tilan
 2. Kysyy verkostolta "kuinka hyvä on vasen? kuinka hyvä on oikea?"
 3. Suorittaa toiminnan korkeammalla pistemäärällä
 4. Ansaitsee palkinnon, päivittää verkkoa
@@ -122,7 +122,7 @@ Tällä naiivilla DQN:llä on kaksi suurta ongelmaa:
 
 1. **Vastaavat päivitykset**: Jokainen kokemus tulee järjestyksessä (vaihe 1, vaihe 2, vaihe 3...).
    Jos vaihe 5 oli huono, KAIKKI lähellä olevat päivitykset sekoittuvat yhteen.
-   
+
 2. **Liikkuva kohde**: Verkko vaihtuu jokaisen päivityksen jälkeen. Mutta seuraava päivitys käyttää
    SAMA verkko laskea, mikä kohteen pitäisi olla. Se on kuin ampuisi liikkuvaa kohdetta
    napakymppi!

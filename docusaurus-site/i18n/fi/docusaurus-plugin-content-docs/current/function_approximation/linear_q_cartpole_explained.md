@@ -17,7 +17,7 @@ Robotti voi nähdä 4 asiaa maailmasta:
 
 ---
 
-## Suuri ongelma: Liian monta osavaltiota!
+## Suuri ongelma: Liian monta tilaa!
 
 Muistatko Q-learningin vaiheesta 2? Se käytti suurta taulukkoa muistaakseen, kuinka hyvä kukin toiminto
 oli kussakin tilanteessa (tilassa). Se toimi hyvin Frozen Lakelle – siellä oli vain 16

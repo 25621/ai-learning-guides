@@ -125,9 +125,9 @@ Tämä on kuuluisa "datan laatu vs algoritmi" -kompromissi:
 
 ```
                             EXPERT  data  →  BC wins, CQL ties
-   Algorithm sophistication  ↑         
+   Algoritmin hienostuneisuus ↑
                             MIXED   data  →  CQL clearly beats BC
-                            
+
                             RANDOM  data  →  Everybody fails; need exploration
 ```
 
@@ -142,7 +142,7 @@ Tämä on kuuluisa "datan laatu vs algoritmi" -kompromissi:
   ihmisen kirjoittamia vastauksia. PPO + palkintomalli tulee myöhemmin.
 - **DAgger (Ross et al., 2011).** Nerokas laajennus korjaamaan **kompositio-virhe** -ongelman.
   *Miksi yhdistämisvirhe on ongelma, jos BC-kloonat täydellisesti?* Vaikka BC-malli olisi 99 % tarkka, tuo 1 %:n virhe lopulta tapahtuu. Kun se tapahtuu, agentti siirtyy tilaan, jota se ei ole koskaan nähnyt täydellisesti ohjatussa tietojoukossa. Koska se on hämmentynyt, se tekee suuremman virheen, siirtyen vielä kauemmaksi tunnetusta tiedosta, mikä johtaa täydelliseen epäonnistumiseen (kuten kalliolta ajaminen).
-  *Korjaus:* Voisimme vain pyytää asiantuntijaa ajamaan ikuisesti, mutta asiantuntija-aika on kallista. Sen sijaan DAgger antaa BC-käytännön ajaa. Kun käytäntö tekee virheen ja ajautuu omituiseen tilaan, pidämme tauon, kysymme asiantuntijalta "mitä sinä tekisit *täällä*?" ja lisäämme sen tietojoukkoon. Me vain "kysymme asiantuntijalta uudelleen valtioiden BC-käytännön vierailuja", koska tarvitsemme asiantuntijan vain opettamaan meille, kuinka toipua omista virheistämme, sen sijaan, että kyselisimme niitä aina.
+  *Korjaus:* Voisimme vain pyytää asiantuntijaa ajamaan ikuisesti, mutta asiantuntija-aika on kallista. Sen sijaan DAgger antaa BC-käytännön ajaa. Kun käytäntö tekee virheen ja ajautuu omituiseen tilaan, pidämme tauon, kysymme asiantuntijalta "mitä sinä tekisit *täällä*?" ja lisäämme sen tietojoukkoon. Me vain "kysymme asiantuntijalta uudelleen BC-käytännön vierailemissa tiloissa", koska tarvitsemme asiantuntijan vain opettamaan meille, kuinka toipua omista virheistämme, sen sijaan, että kyselisimme niitä aina.
 - **Decision Transformer (Chen et al., 2021).** "Älykäs" eKr.
   määrittää toiminnan ennusteen halutuksi *paluuksi*,
   Pohjimmiltaan offline RL:n muuttaminen takaisin seuraavan tunnuksen ennusteeksi.

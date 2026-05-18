@@ -401,7 +401,7 @@ Anna omaperäistä työtä kentälle.
 |------|------------|
 | **MDP** | Markovin päätösprosessi - muodollinen kehys RL:lle |
 | **Käytäntö (π)** | Kartoitus tiloista tekoihin |
-| **Arvofunktio (V)** | Odotettu paluu osavaltiosta |
+| **Arvofunktio (V)** | Odotettu tuotto tilasta |
 | **Q-toiminto** | Odotettu tuotto tila-toiminto-parista |
 | **TD-virhe** | Ennustetun ja bootstrapped-arvon välinen ero |
 | **GAE** | Yleistetty etuarvio |

@@ -33,10 +33,10 @@ kunkin asetuksen suorittaminen 3 eri satunnaisella siemenellä ja tulosten verta
 
 ε on vanhan käytännön ympärillä olevan "turvaikkunan" koko:
 ```
-ratio must stay in [1 - ε,  1 + ε]
-ε=0.05: ratio in [0.95, 1.05]  ← tiny changes
-ε=0.2:  ratio in [0.80, 1.20]  ← standard  
-ε=0.4:  ratio in [0.60, 1.40]  ← large changes
+suhteen täytyy pysyä välillä [1 - ε,  1 + ε]
+ε=0.05: suhde välillä [0.95, 1.05]  ← pienet muutokset
+ε=0.2:  suhde välillä [0.80, 1.20]  ← vakio
+ε=0.4:  suhde välillä [0.60, 1.40]  ← suuret muutokset
 ```
 
 **Tosielämän esimerkki:** Ajattele ε:tä "kuinka pitkälle voit ohjata autoa yhdellä liikkeellä".
@@ -88,7 +88,7 @@ K = 20  (aggressive — many passes through each batch)
 
 **Mitä päivityskaudet hallitsevat?**
 
-Kun olet kerännyt **julkaisun** (= pelannut peliä jonkin verran uuden kokemuksen hankkimiseksi – kuten opiskelija tekee kotitehtävän ennen sen tarkistamista), PPO paketoi, jotka kokevat **erän** (= koko sarja tilan, toiminnon, palkkion sarjat kyseisestä julkaisusta). Sitten se suorittaa K **passia** (= täydet pyyhkäisysarjan läpi, jokainen kierros päivittää verkon kerran) samoilla tiedoilla.
+Kun olet kerännyt **rolloutin** (= pelannut peliä jonkin aikaa uuden kokemuksen hankkimiseksi – kuten opiskelija tekee kotitehtävän ennen sen tarkistamista), PPO paketoi kokemuksen **eräksi** (= koko sarja tilan, toiminnon ja palkkion pareja kyseisestä rolloutista). Sitten se suorittaa K **läpikäyntiä** (= täydet pyyhkäisyt erän läpi, jokainen kierros päivittää verkon kerran) samoilla tiedoilla.
 Lisää aikakausia = purista enemmän oppimista jokaisesta erästä, mutta on vaara, että **sovitetaan liikaa vanhentuneisiin tietoihin** (= muistiin kuviot, jotka olivat totta vanhan käytännön mukaan mutta eivät ole enää voimassa, kun käytäntö on päivitetty, kuten opiskelija, joka muistaa viime vuoden kokeen ja epäonnistuu uudessa).
 
 **Tosielämän esimerkki:** Opiskelija harjoittelee 20 matemaattisen tehtävän kanssa.

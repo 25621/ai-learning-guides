@@ -99,8 +99,8 @@ Koordinointipeli**. Kaksi agenttia valitsee toistuvasti kanavaa `0` tai `1`:
 
 Jokaisen edustajan saama **havainto** on edellinen *yhteistoimi* —
 mitä molemmat agentit valitsivat viime kierroksella, pakattuna yhdeksi kokonaisluvuksi.
-Konkreettisesti: kunkin agentin viimeinen toiminta on yksi `{start, 0, 1}` (3 osavaltiota),
-joten pari koodaa as `3 × agent_1_state + agent_2_state`, periksi
+Konkreettisesti: kunkin agentin viimeinen toiminta on yksi `{start, 0, 1}` (3 tilaa),
+joten pari koodataan muodossa `3 × agent_1_state + agent_2_state`, jolloin saadaan
 9 mahdollista kokonaislukua (0-8). Kokonaisluku 0 on "aloitus"-tila - se signaloi
 että toimenpiteisiin ei ole vielä ryhdytty (jakson alussa).
 Jakso kestää 25 vaihetta, joten maksimi kokonaistuotto on +25 agenttia kohti

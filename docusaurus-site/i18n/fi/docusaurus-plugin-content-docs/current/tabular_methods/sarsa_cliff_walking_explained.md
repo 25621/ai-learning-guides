@@ -14,7 +14,7 @@ liukastu vahingossa lähelle reunaa tutkiessasi!
 
 ## Suuri idea: oppia siitä, mitä todella teet
 
-SARSA tarkoittaa: **S**tate → **A**toiminta → **R**palkinto → **S**valtio → **A**toiminta
+SARSA tarkoittaa: **S**tila → **A**toiminta → **R**palkinto → **S**seuraava tila → **A**toiminta
 
 Nämä ovat viisi tietoa, joita SARSA käyttää oppiessaan:
 

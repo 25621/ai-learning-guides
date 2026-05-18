@@ -154,7 +154,7 @@ kiinteä.)*
    tarvitaan ylimääräistä tulivoimaa** — bootstrapped DQN, RND todellisella hermoverkolla
    (joten optimismi *ylentää* samankaltaisten tilojen sijaan
    lisäämällä yksi solu kerrallaan), Go-Explore (kirjaimellisesti muistaa ja
-   palaa lupaaviin valtioihin). Tässä olevat taulukkolelut näyttävät sinulle
+   palaa lupaaviin tiloihin). Tässä olevat taulukkolelut näyttävät sinulle
    *periaatteet*; todelliset järjestelmät ovat nämä samat periaatteet plus verkko
    joka yleistää.
 

@@ -98,8 +98,8 @@ jänis (pieni mutta turvallinen palkinto):
 ## Mitä koodimme tekee
 
 Jokaiselle pelille me:
-1. Luo kaksi valtiotonta Q-oppijaa (Q on vain yksi numero toimintoa kohden – siellä
-   eivät ole osavaltioita yhden laukauksen pelissä).
+1. Luo kaksi tilatonta Q-oppijaa (Q on vain yksi numero toimintoa kohden – yhden
+   siirron pelissä ei ole tiloja).
 2. Kierrä 20 000 askelta. Jokainen vaihe: molemmat agentit valitsevat ε-ahneen toiminnon
    samanaikaisesti saada palkinto, päivittää Q-arvonsa.
 3. Seuraa kunkin agentin **empiiristä toimintataajuutta** 500 askeleen

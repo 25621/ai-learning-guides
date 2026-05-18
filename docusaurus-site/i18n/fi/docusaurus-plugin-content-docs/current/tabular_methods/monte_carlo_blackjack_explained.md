@@ -47,7 +47,7 @@ Tämä tekee Monte Carlosta helpommin ymmärrettävän, mutta se ei voi oppia en
 
 ---
 
-## Blackjackin osavaltio
+## Blackjackin tila
 
 Robotti katsoo kolmea asiaa joka käänteessä:
 1. **Kortin kokonaissumma** (12-21)
@@ -93,7 +93,7 @@ Opittu käytäntö osoittaa:
 
 - **Episode**: Yksi täydellinen peli alusta loppuun
 - **Palautus (G)**: Kokonaispalkinto, joka on kerätty pelin pisteestä loppuun asti
-- **Jokainen käynti MC:ssä**: Päivitä osavaltion pisteet aina, kun vierailet siinä jaksossa
+- **Jokainen käynti MC:ssä**: Päivitä tilan pisteet aina, kun vierailet siinä jaksossa
 - **Ei bootstrappingia**: Monte Carlo ei käytä arvioita tulevista arvoista – se odottaa
   todellista lopputulosta!
 - **ε-pehmeä käytäntö** (ε = epsilon): Tee yleensä tunnetuin toiminto, mutta joskus tutkii satunnaisesti

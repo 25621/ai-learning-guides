@@ -163,9 +163,9 @@ aikakaudet tuhoaisivat käytännön työntämällä sitä liian pitkälle!
 ```
 L = L_CLIP - c₁ · L_entropy + c₂ · L_critic
 
-L_CLIP    = clipped policy gradient
-L_entropy = entropy bonus (encourages exploration)  
-L_critic  = MSE between V(s) and returns
+L_CLIP    = leikattu policy gradient
+L_entropy = entropiabonus (kannustaa tutkimiseen)
+L_critic  = MSE V(s):n ja palautusten välillä
 ```
 
 Tyypilliset kertoimet: c₁ = 0,01 (entropia), c₂ = 0,5 (kriittinen)
@@ -177,8 +177,8 @@ Tyypilliset kertoimet: c₁ = 0,01 (entropia), c₂ = 0,5 (kriittinen)
   etu. Tämä on sama ydinidea, joka esiteltiin REINFORCEssa – katso [REINFORCE
   walkthrough](./reinforce_cartpole_explained.md#the-old-way-vs-the-new-way)
   intuitio. PPO vain lisää leikkauskääreen ympärilleen.
-- **MSE (Mean Squared Error)** – "kriittinen" puolet tappiosta. Kriitikot V(s) ennustaa
-  odotettu tuotto osavaltiosta; vertaamme sen ennustetta todelliseen tuottoon ja
+- **MSE (Mean Squared Error)** – "kriittinen" puolet tappiosta. Kriitikko V(s) ennustaa
+  odotetun tuoton tilasta; vertaamme sen ennustetta todelliseen tuottoon ja
   neliöi eron: `MSE = mean((V(s) - return)²)`. Neliöinti rankaisee suuria virheitä
   enemmän kuin pieniä ja antaa tasaisen, erottuvan signaalin harjoitteluun. (Vakio
   regressiohäviö – katso [keskimääräinen neliövirhe](https://en.wikipedia.org/wiki/Mean_squared_error).)

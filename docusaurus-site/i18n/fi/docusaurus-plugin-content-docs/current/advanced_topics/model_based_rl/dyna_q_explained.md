@@ -129,11 +129,11 @@ Kaksi syytä:
 - **Ei-kiinteät ympäristöt.** Jos maailma muuttuu – esimerkiksi a
   auki ollut oviaukko sulkeutuu yhtäkkiä tai näkyviin tulee pikakuvake – malli
   vanhenee ja antaa vääriä ennusteita. **Dyna-Q+** korjaa tämän
-  *etsintäbonuksen* lisääminen: osavaltiot, joissa ei ole käyty uudelleen pitkään aikaan
+  *etsintäbonuksen* lisääminen: tilat, joissa ei ole käyty uudelleen pitkään aikaan
   aika saada pieni ylimääräinen palkkio, joka tönäisi agenttia palaamaan tarkistamaan
   onko maailma muuttunut.
-- **Suuret tilatilat.** Sanakirja kytkettynä `(s, a)` ei skaalaudu
-  miljooniin valtioihin tai jatkuviin tiloihin. Se on juuri se aukko
+- **Suuret tila-avaruudet.** Sanakirja kytkettynä `(s, a)` ei skaalaudu
+  miljooniin tiloihin tai jatkuviin tiloihin. Se on juuri se aukko
   **oppineet (hermoverkon) maailmanmallit** täytä - katso `world_model.py` seuraavaksi.
 
 ---
