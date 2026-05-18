@@ -1,0 +1,54 @@
+{
+  "copyright": {
+    "message": "Copyright © 2026 Collaboratori del Progetto di Apprendimento per Rinforzo. Realizzato con Docusaurus.",
+    "description": "The footer copyright"
+  },
+  "link.title.Learn": {
+    "message": "Impara",
+    "description": "The title of the footer links column with title=Learn in the footer"
+  },
+  "link.title.Community": {
+    "message": "Comunità",
+    "description": "The title of the footer links column with title=Community in the footer"
+  },
+  "link.title.Resources": {
+    "message": "Risorse",
+    "description": "The title of the footer links column with title=Resources in the footer"
+  },
+  "link.item.label.Overview": {
+    "message": "Panoramica",
+    "description": "The label of footer link with label=Overview linking to /"
+  },
+  "link.item.label.Foundations": {
+    "message": "Fondamenti",
+    "description": "The label of footer link with label=Foundations linking to /foundations/multi_armed_bandit_explained/"
+  },
+  "link.item.label.Tabular Methods": {
+    "message": "Metodi Tabulari",
+    "description": "The label of footer link with label=Tabular Methods linking to /tabular_methods/q_learning_frozen_lake_explained/"
+  },
+  "link.item.label.Function Approximation": {
+    "message": "Approssimazione delle Funzioni",
+    "description": "The label of footer link with label=Function Approximation linking to /function_approximation/dqn_cartpole_explained/"
+  },
+  "link.item.label.Policy Gradients": {
+    "message": "Gradienti della Politica",
+    "description": "The label of footer link with label=Policy Gradients linking to /policy_gradients/ppo_scratch_explained/"
+  },
+  "link.item.label.Advanced Topics": {
+    "message": "Argomenti Avanzati",
+    "description": "The label of footer link with label=Advanced Topics linking to /advanced_topics/model_based_rl/dyna_q_explained/"
+  },
+  "link.item.label.GitHub": {
+    "message": "GitHub",
+    "description": "The label of footer link with label=GitHub linking to https://github.com/25621/reinforcement-learning"
+  },
+  "link.item.label.Sutton & Barto": {
+    "message": "Sutton & Barto",
+    "description": "The label of footer link with label=Sutton & Barto linking to http://incompleteideas.net/book/the-book.html"
+  },
+  "link.item.label.David Silver Lectures": {
+    "message": "Lezioni di David Silver",
+    "description": "The label of footer link with label=David Silver Lectures linking to the David Silver YouTube playlist"
+  }
+}
