@@ -1,6 +1,6 @@
 # Confronto tra Strategie di Esplorazione 🔦
 
-## Il problema in una frase {#the-one-sentence-problem}
+## Il problema in una frase
 
 Un agente RL deve fare due cose che spingono in direzioni opposte:
 
@@ -15,7 +15,7 @@ Montezuma's Revenge da uno che ottiene un punteggio pari a zero.
 Questo script mette **cinque** strategie di esplorazione a confronto sugli stessi
 due compiti difficili, così puoi vederne le diverse personalità.
 
-## Analogia con la vita reale: scegliere dove pranzare {#real-life-analogy-picking-a-lunch-spot}
+## Analogia con la vita reale: scegliere dove pranzare
 
 Ti sei appena trasferito in una nuova città con 200 ristoranti.
 
@@ -40,17 +40,15 @@ Ti sei appena trasferito in una nuova città con 200 ristoranti.
   tuo modello mentale? Affascinante, e aggiorni il tuo piano per cercarne altri
   simili.
 
-## Le cinque strategie (tutte in `compare_exploration.py`) {#the-five-strategies-all-in-compare_explorationpy}
-
-### 1. ε-greedy — il default, ed è *esitazione (dithering)*, non esplorazione {#1-ε-greedy--the-default-and-its-dithering-not-exploring}
-
+## Le cinque strategie (tutte in `compare_exploration.py`)
+### 1. ε-greedy — il default, ed è *esitazione (dithering)*, non esplorazione
 Agisci in modo greedy, ma con probabilità ε compi un'azione uniformemente casuale. È
 il baseline standard in DQN e simili. Il suo difetto fatale nei compiti difficili:
 **ogni passo è un lancio di moneta indipendente.** Per percorrere una catena di `N`
 mosse corrette hai bisogno che la moneta cada dal lato giusto `N` volte di fila — il che è
 esponenzialmente improbabile. ε-greedy è un *agitarsi*, non un *esplorare*.
 
-### 2. Inizializzazione ottimistica — "innocente fino a prova contraria" {#2-optimistic-initialisation--innocent-until-proven-boring}
+### 2. Inizializzazione ottimistica — "innocente fino a prova contraria"
 
 Fai iniziare *ogni* valore Q al più grande ritorno possibile,
 `R_max / (1 − γ)`. Ora un'azione che l'agente non ha mai provato sembra la
@@ -62,7 +60,7 @@ dopo passo, verso le parti del mondo che non ha visto. Quasi gratuito, nessun
 costo extra — e, come vedrai, il più forte esploratore *profondo* in un piccolo
 mondo tabellare.
 
-### 3. Selezione dell'azione in stile UCB — bonus nella *scelta*, non nella *ricompensa* {#3-ucb-style-action-selection--bonus-in-the-choice-not-the-reward}
+### 3. Selezione dell'azione in stile UCB — bonus nella *scelta*, non nella *ricompensa*
 
 Scegli `argmax_a [ Q(s,a) + c·√(ln t / N(s,a)) ]`: preferisci le azioni di
 alto valore, ma gonfia quelle che hai provato raramente. Famoso dai
@@ -71,14 +69,14 @@ mai nella ricompensa — quindi *non* fluisce attraverso la funzione valore.
 L'UCB è ottimo per "assicurarsi di aver provato ogni azione in *questo* stato" ma
 debole per "pianificare un percorso verso una regione inesplorata lontana".
 
-### 4. Bonus di **ricompensa** basato sul conteggio — curiosità, la versione classica {#4-count-based-reward-bonus--curiosity-the-classic-version}
+### 4. Bonus di **ricompensa** basato sul conteggio — curiosità, la versione classica
 
 Aggiungi `1/√(N(s,a))` alla **ricompensa** (con un peso `beta` che decade).
 Poiché è nella ricompensa, il Q-learning *propaga* questo segnale: gli stati che
 portano verso regioni nuove diventano preziosi. Questa è l'idea MBIE-EB / il classico
 "bonus di esplorazione" — e la prima parte del punto 1 del lavoro.
 
-### 5. Bonus di **ricompensa** basato sull'errore di previsione — curiosità, la versione ICM/RND {#5-prediction-error-reward-bonus--curiosity-the-icmrnd-version}
+### 5. Bonus di **ricompensa** basato sull'errore di previsione — curiosità, la versione ICM/RND
 
 Aggiungi `−log P(s'|s,a)` da un piccolo modello predittivo appreso alla ricompensa
 (sempre con `beta` decrescente). Il segnale di novità più nitido dei cinque: in
@@ -86,7 +84,7 @@ un mondo deterministico, la sorpresa di una transizione scende a ~0 nel momento
 in cui l'hai vista una volta, invece di svanire lentamente come `1/√N`. Il
 cugino tabellare di ICM / RND — la seconda parte del punto 1 del lavoro.
 
-## I due compiti di test {#the-two-test-tasks}
+## I due compiti di test
 
 - **Compito A — MiniMontezuma**: il mondo a griglia chiave→porta→tesoro, ricompensa solo
   al tesoro (a circa 15 mosse perfette di distanza). Verifica se "riesci a sopravvivere a una lunga catena a ricompensa sparsa".
@@ -95,7 +93,7 @@ cugino tabellare di ICM / RND — la seconda parte del punto 1 del lavoro.
   ognuna con un piccolo costo immediato — così un agente miope impara a evitare il
   costo e non trova mai il premio. Verifica se "la tua strategia funziona ancora man mano che la catena si allunga".
 
-## Cosa succede realmente (eseguilo e vedrai) {#what-actually-happens-run-it-and-see}
+## Cosa succede realmente (eseguilo e vedrai)
 
 **Compito A — MiniMontezuma:**
 
@@ -119,7 +117,7 @@ cugino tabellare di ICM / RND — la seconda parte del punto 1 del lavoro.
 
 *(I numeri variano leggermente con i seed casuali, ma la tendenza è solida.)*
 
-## Le lezioni {#the-lessons}
+## Le lezioni
 
 1. **ε-greedy non è esplorazione.** Non risolve mai *nessuno* dei due compiti difficili.
    L'esitazione casuale (dithering) semplicemente non riesce a percorrere lunghe sequenze corrette. (Eppure è ancora il default in molto codice — perché sui compiti *facili* è sufficiente e semplicissimo.)
@@ -149,7 +147,7 @@ cugino tabellare di ICM / RND — la seconda parte del punto 1 del lavoro.
    *principi*; i sistemi reali sono questi stessi principi uniti a una rete
    che generalizza.
 
-## Parole chiave da ricordare {#key-words-to-remember}
+## Parole chiave da ricordare
 
 | Parola | Significato |
 |------|---------|
@@ -161,7 +159,7 @@ cugino tabellare di ICM / RND — la seconda parte del punto 1 del lavoro.
 | **Esplorazione profonda (Deep exploration)** | Esplorazione che richiede una lunga sequenza *coerente* di azioni "insolite", non solo una |
 | **Annealing di `beta`** | Riduzione del peso della curiosità nel tempo in modo che l'agente alla fine smetta di esplorare e sfrutti ciò che ha appreso |
 
-## Riassunto in una frase {#one-sentence-summary}
+## Riassunto in una frase
 
 > **ε-greedy è solo rumore; ogni vera strategia di esplorazione funziona rendendo
 > attraente l'inesplorato — tramite valori ottimistici, un bonus nella scelta dell'azione,

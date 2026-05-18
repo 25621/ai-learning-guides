@@ -1,6 +1,6 @@
 # Addestramento su Montezuma's Revenge 🏛️🔑
 
-## Perché questo gioco è famoso (nei circoli RL) {#why-this-game-is-famous-in-rl-circles}
+## Perché questo gioco è famoso (nei circoli RL)
 
 Nel 2015, il DQN di DeepMind imparò a giocare a dozzine di giochi Atari a un livello
 sovrumano partendo dai pixel grezzi. Fu un evento da prima pagina. Ma sepolto nella
@@ -32,7 +32,7 @@ in modo che l'agente premi *se stesso* per aver raggiunto schermate nuove,
 e improvvisamente ha un segnale denso che lo trascina più in profondità nel livello. RND
 ha ottenuto un punteggio sovrumano su Montezuma. (Successivamente: Go-Explore, Agent57, …)
 
-## Esempi di vita reale di ricompensa sparsa "stile Montezuma" {#real-life-examples-of-montezuma-style-sparse-reward}
+## Esempi di vita reale di ricompensa sparsa "stile Montezuma"
 
 - **Una serratura a combinazione / una caccia al tesoro con indizi criptici.** Nessun credito
   parziale. Sei a zero finché non trovi improvvisamente il premio.
@@ -47,7 +47,7 @@ In tutti questi casi, "provare roba a caso" è inutile. Devi
 esplorare *sistematicamente* — e un segnale interno del tipo "ooh, questo è nuovo, continua così"
 è ciò che ti mantiene sistematico.
 
-## Perché qui non ci addestriamo sul Montezuma originale a pixel {#why-we-dont-actually-train-on-pixel-montezuma-here}
+## Perché qui non ci addestriamo sul Montezuma originale a pixel
 
 Fare la cosa *reale* in modo appropriato significa:
 
@@ -60,7 +60,7 @@ Fare la cosa *reale* in modo appropriato significa:
 Questo è un progetto di ricerca, non uno script didattico. Quindi `montezuma_revenge.py`
 fa invece due cose oneste:
 
-### 1. "Tocca" il gioco reale (se `ale-py` è installato) {#1-it-touches-the-real-game-if-ale-py-is-installed}
+### 1. "Tocca" il gioco reale (se `ale-py` è installato)
 
 Carica `ALE/MontezumaRevenge-v5` tramite Gymnasium, esegue un **agente
 casuale uniforme per 2000 passi** e riporta la ricompensa totale del gioco. Il
@@ -68,7 +68,7 @@ numero che stampa è quasi sempre **0.0** — la frase astratta "ricompensa spar
 trasformata in un fatto concreto che puoi verificare tu stesso. Se il pacchetto
 Atari non è installato, stampa il comando `pip install` e prosegue.
 
-### 2. Addestra un agente tabellare su un *modello in scala*: `MiniMontezumaEnv` {#2-it-trains-a-tabular-agent-on-a-scale-model-minimontezumaenv}
+### 2. Addestra un agente tabellare su un *modello in scala*: `MiniMontezumaEnv`
 
 Questo è un minuscolo mondo a griglia con lo stesso *scheletro* della prima stanza di
 Montezuma:
@@ -101,7 +101,7 @@ La figura mostra le due curve di apprendimento affiancate, oltre al percorso
 effettivo appreso dall'agente curioso, disegnato sulla griglia (inizio → chiave → porta →
 tesoro). Lo script stampa anche quel percorso come fotogrammi ASCII.
 
-## La lezione {#the-lesson}
+## La lezione
 
 > **La "ricompensa sparsa" non è una bizzarria di un unico strano gioco Atari — è l'impostazione
 > predefinita in qualsiasi mondo in cui il successo richiede una sequenza lunga e specifica di
@@ -112,7 +112,7 @@ tesoro). Lo script stampa anche quel percorso come fotogrammi ASCII.
 > prima vera ricompensa. Tutto ciò che viene dopo (RND, Go-Explore, Agent57) è una
 > versione in scala reale, basata su reti neurali, della stessa mossa.
 
-## Parole chiave da ricordare {#key-words-to-remember}
+## Parole chiave da ricordare
 
 | Parola | Significato |
 |------|---------|
@@ -123,7 +123,7 @@ tesoro). Lo script stampa anche quel percorso come fotogrammi ASCII.
 | **Go-Explore** | "Ricorda gli stati promettenti, torna ad essi, poi esplora da lì" — un altro sistema che ha battuto Montezuma |
 | **Modello in scala** | Un ambiente piccolo ed economico che mantiene la *struttura* di un problema difficile in modo da poterlo studiare rapidamente |
 
-## Riassunto in una frase {#one-sentence-summary}
+## Riassunto in una frase
 
 > **Montezuma's Revenge è il gioco che ha insegnato all'RL che "le ricompense che non ricevi mai
 > non possono insegnarti nulla" — e la soluzione, allora come oggi, è un

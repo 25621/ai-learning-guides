@@ -25,7 +25,7 @@ Se scegli sempre e solo il primo barattolo che ti è piaciuto, potresti perderti
 
 ---
 
-## La Strategia Epsilon-Greedy {#the-epsilon-greedy-strategy}
+## La Strategia Epsilon-Greedy
 
 Un modo intelligente per risolvere questo problema è chiamato **epsilon-greedy** (epsilon è semplicemente la lettera greca ε, pronunciata "èp-si-lon"):
 

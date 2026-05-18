@@ -1,6 +1,6 @@
 # Bonus di Curiosità (Motivazione Intrinseca) 🧭
 
-## Cos'è? {#what-is-it}
+## Cos'è?
 
 Immagina un bambino piccolo lasciato in una stanza nuova. Nessuno lo paga, nessuno
 applaude — eppure si dirige subito verso l'armadietto che non ha ancora aperto, il pulsante
@@ -20,7 +20,7 @@ ricompensa su cui l'agente impara  =  ricompensa reale  +  beta * bonus di curio
 `beta` è una manopola che inizia con un valore alto (sii curioso!) e si riduce nel tempo
 (smetti di gironzolare, vai a mettere a frutto ciò che hai imparato).
 
-## Perché preoccuparsene? Il problema della ricompensa sparsa {#why-bother-the-sparse-reward-problem}
+## Perché preoccuparsene? Il problema della ricompensa sparsa
 
 I normali agenti RL imparano dalle ricompense che effettivamente ricevono. Questo funziona
 benissimo quando le ricompense sono ovunque ("+1 per ogni passo in cui rimani in piedi" in
@@ -45,9 +45,8 @@ studiare a meno che non venga pagato per ogni risposta corretta all'esame finale
 inizierà mai. La curiosità è il bonus che dice *"esplorare è la sua stessa ricompensa,"*
 quindi l'agente continua a curiosare finché non inciampa nel vero premio.
 
-## Due varianti della curiosità (entrambe implementate in `curiosity_bonus.py`) {#two-flavours-of-curiosity-both-implemented-in-curiosity_bonuspy}
-
-### 1. Novità basata sul conteggio: "Non sono quasi mai stato qui" {#1-count-based-novelty-ive-barely-been-here}
+## Due varianti della curiosità (entrambe implementate in `curiosity_bonus.py`)
+### 1. Novità basata sul conteggio: "Non sono quasi mai stato qui"
 
 Il segnale di novità più semplice possibile. Tieni un conteggio `N(s, a)` di quante
 volte hai compiuto l'azione `a` nello stato `s`, e concediti un bonus che
@@ -69,7 +68,7 @@ Questa è l'idea più antica del settore (MBIE-EB, UCB). Il suo punto debole: in
 mondo vasto o continuo non visiterai mai *esattamente* lo stesso stato due volte, quindi
 il conteggio grezzo sarà sempre 1 — ecco perché esiste la variante successiva.
 
-### 2. Novità basata sull'errore di previsione: "Questo non me lo aspettavo" {#2-prediction-error-novelty-i-didnt-see-that-coming}
+### 2. Novità basata sull'errore di previsione: "Questo non me lo aspettavo"
 
 Questa è l'idea alla base del famoso **ICM** (Intrinsic Curiosity Module,
 Pathak et al. 2017) e del suo "cugino" **RND** (Random Network Distillation,
@@ -106,7 +105,7 @@ identico.
 > con errore di previsione risolve MiniMontezuma in un paio di dozzine di episodi;
 > l'agente basato sul conteggio ci arriva anch'esso, solo più lentamente e con meno affidabilità.
 
-## Cosa fa il nostro codice {#what-our-code-does}
+## Cosa fa il nostro codice
 
 `curiosity_bonus.py` addestra un semplice **Q-learner tabellare** su
 `MiniMontezumaEnv` — un minuscolo mondo a griglia di due stanze dove devi camminare fino a una
@@ -126,7 +125,7 @@ La figura mostra:
 - e **mappe di calore (heat-maps) delle visite degli stati** della griglia — l'agente senza curiosità
   è una macchia densa vicino all'inizio; gli agenti curiosi inondano *entrambe* le stanze.
 
-## Il meccanismo in un'immagine {#the-mechanism-in-one-picture}
+## Il meccanismo in un'immagine
 
 ```
             senza curiosità                       con bonus di curiosità
@@ -143,7 +142,7 @@ agitarsi casualmente. E poiché il bonus si riduce man mano che le cose diventan
 familiari (e `beta` decade), una volta trovata la vera ricompensa l'agente
 smette naturalmente di gironzolare e inizia a sfruttare la conoscenza acquisita.
 
-## Alcuni onesti avvertimenti {#a-few-honest-caveats}
+## Alcuni onesti avvertimenti
 
 - **Il problema della "TV rumorosa" (noisy-TV problem).** Un agente basato sull'errore di previsione può rimanere ipnotizzato
   da una fonte di pura casualità (una TV che mostra statico, il lancio di dadi) — non
@@ -159,7 +158,7 @@ smette naturalmente di gironzolare e inizia a sfruttare la conoscenza acquisita.
   lungo una catena complessa (vedi `compare_exploration.py`). Risolvere il pixel-Montezuma
   ha richiesto una potenza di fuoco extra — RND con rete neurale, DQN bootstrap, Go-Explore.
 
-## Parole chiave da ricordare {#key-words-to-remember}
+## Parole chiave da ricordare
 
 | Parola | Significato |
 |------|---------|
@@ -171,7 +170,7 @@ smette naturalmente di gironzolare e inizia a sfruttare la conoscenza acquisita.
 | **ICM** | Intrinsic Curiosity Module: novità = errore di previsione di un modello predittivo (in uno spazio di caratteristiche appreso) |
 | **`beta`** | Il peso del bonus di curiosità; solitamente ridotto verso 0 così l'agente alla fine sfrutta ciò che ha appreso |
 
-## Riassunto in una frase {#one-sentence-summary}
+## Riassunto in una frase
 
 > **Un bonus di curiosità è una ricompensa auto-attribuita per la novità — genera un
 > segnale denso del tipo "vai a esplorare laggiù" che trascina l'agente attraverso

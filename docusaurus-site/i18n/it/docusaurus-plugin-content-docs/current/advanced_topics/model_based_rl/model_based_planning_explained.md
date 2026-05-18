@@ -1,6 +1,6 @@
 # Usare un Modello Appreso per la Pianificazione (MPC) 🔮
 
-## L'Idea di Base {#the-big-idea}
+## L'Idea di Base
 
 Hai un **modello del mondo** (una rete neurale che predice il futuro). E adesso?
 
@@ -12,7 +12,7 @@ Questo trucco ha un nome: **Model Predictive Control** (MPC).
 
 ---
 
-## Un'Analogia con la Vita Reale {#a-real-life-analogy}
+## Un'Analogia con la Vita Reale
 
 Sei al ristorante e guardi il menu. Non ti impegni subito per un ordine di cinque portate — ordini la prima portata, vedi quanto sei sazio e poi decidi di nuovo per il dolce.
 
@@ -22,7 +22,7 @@ Quel ciclo **pianifica-lontano / agisci-vicino / ripianifica** è l'MPC.
 
 ---
 
-## Come Funziona il "Random Shooting" {#how-random-shooting-works}
+## Come Funziona il "Random Shooting"
 
 Esistono pianificatori più sofisticati — ad esempio:
 - **CEM** (Cross-Entropy Method): affina iterativamente una distribuzione sui piani mantenendo solo i migliori (top-k) ad ogni round.
@@ -47,7 +47,7 @@ Dato lo stato attuale s:
 
 ---
 
-## Perché Ripianificare ad Ogni Passo? {#why-re-plan-every-step}
+## Perché Ripianificare ad Ogni Passo?
 
 Perché il modello è imperfetto. Gli errori si accumulano durante un rollout (come visto nel grafico generato da `world_model.py`, salvato in `outputs/world_model.png`). Il piano al passo 0 è affidabile solo per le prime mosse; al passo 15 il modello sta avendo delle "allucinazioni". Quindi ci fidiamo solo della **prima mossa**, poi aggiorniamo il piano con l'ultimo stato reale.
 
@@ -55,7 +55,7 @@ Questo è lo stesso motivo per cui gli esseri umani non scrivono un piano di sca
 
 ---
 
-## Una Difficoltà: La Ricompensa Deve Dire Qualcosa al Pianificatore {#a-wrinkle-the-reward-has-to-tell-the-planner-something}
+## Una Difficoltà: La Ricompensa Deve Dire Qualcosa al Pianificatore
 
 In CartPole la ricompensa reale è `+1` per ogni passo finché l'asta non cade. Il modello predirebbe fedelmente `+1, +1, +1, ...` per quasi ogni piano, perché i piani casuali raramente terminano rapidamente all'interno del modello — e quindi ogni piano ottiene lo stesso punteggio. Il pianificatore non ha modo di scegliere.
 
@@ -73,7 +73,7 @@ Ora i piani che *porterebbero* a far cadere l'asta ottengono punteggi visibilmen
 
 ---
 
-## Cosa Fa il Nostro Codice {#what-our-code-does}
+## Cosa Fa il Nostro Codice
 
 `model_based_planning.py`:
 
@@ -82,7 +82,7 @@ Ora i piani che *porterebbero* a far cadere l'asta ottengono punteggi visibilmen
 3. **Esegue anche 20 episodi** con una politica uniformemente casuale, come baseline.
 4. **Traccia** entrambi i risultati fianco a fianco e stampa le medie.
 
-### Cosa dovresti vedere quando lo esegui {#what-you-should-see-when-you-run-it}
+### Cosa dovresti vedere quando lo esegui
 
 | Politica | Ricompensa media (passi sopravvissuti) |
 |----------|---------------------------------------:|
@@ -96,13 +96,13 @@ Il grafico `outputs/model_based_planning.png` mostra due barre colorate per epis
 
 ---
 
-## Punti di Forza della Pianificazione Basata su Modelli {#strengths-of-model-based-planning}
+## Punti di Forza della Pianificazione Basata su Modelli
 
 - **Efficienza dei campioni.** Tutto l'apprendimento è stato fatto da un batch di transizioni casuali. Non è stata necessaria alcuna ulteriore interazione con l'ambiente per derivare una politica utile.
 - **Facile da riorientare.** Vuoi controllare l'agente in modo diverso? Cambia la funzione di ricompensa approssimata — non serve riaddestrare. (Prova a massimizzare la velocità del carrello per divertimento).
 - **Interpretabile.** Puoi ispezionare i piani considerati dall'agente, le traiettorie previste e i punteggi.
 
-## Debolezze (e Come Vengono Risolte) {#weaknesses-and-what-people-do-about-them}
+## Debolezze (e Come Vengono Risolte)
 
 - **Il random shooting è rudimentale.** Campiona i piani alla cieca. Per dimensioni più elevate, si passa a **CEM** (Cross-Entropy Method — vedi sopra) o **iLQR** (Iterative Linear-Quadratic Regulator, un classico metodo di controllo ottimo che approssima il modello come localmente lineare e lo risolve analiticamente) o a un pianificatore completo **basato sul gradiente** che migliora le azioni seguendo i gradienti attraverso un modello differenziabile.
 - **Errore cumulativo del modello.** Gli orizzonti lunghi tendono alla deriva. Si usano gli **ensemble probabilistici** (diversi modelli addestrati sugli stessi dati, come in PETS, Chua et al. 2018) in modo che il pianificatore possa notare il disaccordo e penalizzare i piani su cui il modello è incerto.
@@ -110,7 +110,7 @@ Il grafico `outputs/model_based_planning.png` mostra due barre colorate per epis
 
 ---
 
-## Collegamento con i Sistemi Moderni {#how-this-connects-to-modern-systems}
+## Collegamento con i Sistemi Moderni
 
 L'esatta ricetta che hai appena eseguito — **dinamiche apprese + pianificazione** — è la spina dorsale di alcuni dei più forti sistemi di RL nella ricerca moderna sull'IA:
 
@@ -122,7 +122,7 @@ Hai costruito — in poche centinaia di righe — il membro più piccolo di quel
 
 ---
 
-## Parole Chiave {#key-words}
+## Parole Chiave
 
 | Termine | Linguaggio Semplice |
 |------|---------------|
@@ -135,7 +135,7 @@ Hai costruito — in poche centinaia di righe — il membro più piccolo di quel
 
 ---
 
-## Riassunto in Una Sola Frase {#one-sentence-summary}
+## Riassunto in Una Sola Frase
 
 > **Una volta che hai un modello del mondo, la pianificazione consiste semplicemente nel "sognare cento futuri, scegliere il miglior primo passo e ripetere".**
 

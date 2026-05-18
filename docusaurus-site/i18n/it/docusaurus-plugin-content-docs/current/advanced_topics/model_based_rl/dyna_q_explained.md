@@ -1,6 +1,6 @@
 # Dyna-Q: Imparare Più Velocemente Immaginando 🧠
 
-## Cos'è? {#what-is-it}
+## Cos'è?
 
 Immagina una bambina di nome Mia che impara a orientarsi nella sua nuova scuola. Ogni giorno cammina per i corridoi e scopre cose nuove: "La biblioteca è dopo la mensa", "L'aula del signor Smith è al piano di sopra vicino alle scale".
 
@@ -12,7 +12,7 @@ Questo è esattamente ciò che Dyna-Q fa per un agente di RL: impara dall'esperi
 
 ---
 
-## I Tre Ingredienti {#the-three-ingredients}
+## I Tre Ingredienti
 
 Dyna-Q è "Q-learning + modello + pianificazione". Un singolo passo reale svolge **tre** compiti:
 
@@ -24,7 +24,7 @@ Quel terzo passo è la magia. Con `n = 50`, ogni passo reale nel mondo causa **5
 
 ---
 
-## Un'Immagine del Ciclo {#a-picture-of-the-loop}
+## Un'Immagine del Ciclo
 
 ```
                    ┌────────────────────────────────────┐
@@ -42,7 +42,7 @@ Il modello è solo una tabella di consultazione:
 
 ---
 
-## Esempi di Vita Reale {#real-life-examples}
+## Esempi di Vita Reale
 
 - **Studio degli scacchi.** I grandi maestri passano ore a riprodurre le proprie partite e le partite dei maestri nelle loro teste. Ogni riproduzione è "pianificazione" — apprendimento extra da esperienze che sono già avvenute.
 - **Un musicista che prova le scale.** Dopo aver suonato una battuta difficile una volta, la prova mentalmente altre dieci volte prima di andare avanti. Le dita non si muovono, ma il cervello si sta aggiornando.
@@ -50,7 +50,7 @@ Il modello è solo una tabella di consultazione:
 
 ---
 
-## Cosa Fa il Nostro Codice {#what-our-code-does}
+## Cosa Fa il Nostro Codice
 
 Usiamo il classico **Dyna Maze** ([Sutton & Barto, Figura 8.2](http://incompleteideas.net/book/the-book.html)): una griglia 6×9 con alcuni muri, un punto di inizio `S` nella parte centrale sinistra e un obiettivo `G` in alto a destra.
 
@@ -64,7 +64,7 @@ Eseguiamo tre varianti, ciascuna mediata su 30 seed casuali:
 
 Lo script riporta il **numero medio di passi reali per episodio** man mano che l'addestramento procede. Meno passi significano che l'agente ha imparato un percorso più diretto verso l'obiettivo.
 
-### Cosa dovresti vedere quando lo esegui {#what-you-should-see-when-you-run-it}
+### Cosa dovresti vedere quando lo esegui
 
 Il percorso più breve su questo labirinto è di circa 9 passi; con l'esplorazione ε-greedy, un agente ben addestrato ha una media di circa 10 passi per episodio. Esegui per 50 episodi e tutte e tre le impostazioni convergeranno lì — la differenza è *quanto velocemente*:
 
@@ -78,7 +78,7 @@ Il segnale interessante è la *curva di apprendimento*, non il numero finale. Il
 
 ---
 
-## Perché Funziona Così Bene su Questo Labirinto {#why-it-works-so-well-on-this-maze}
+## Perché Funziona Così Bene su Questo Labirinto
 
 Due ragioni:
 
@@ -87,7 +87,7 @@ Due ragioni:
 
 ---
 
-## Dove Dyna-Q Fatica {#where-dyna-q-struggles}
+## Dove Dyna-Q Fatica
 
 - **Ambienti stocastici.** Se `(s, a)` può portare a molti valori diversi di `s'`, un modello che "ricorda l'ultimo risultato" ti darà informazioni errate. Soluzione: memorizzare i conteggi delle visite o addestrare un modello probabilistico.
 - **Ambienti non stazionari.** Se il mondo cambia — ad esempio, una porta che era aperta improvvisamente si chiude, o appare una scorciatoia — il modello diventa obsoleto e fornisce previsioni errate. **Dyna-Q+** risolve questo problema aggiungendo un *bonus di esplorazione*: gli stati che non sono stati rivisitati per molto tempo ricevono una piccola ricompensa extra, spingendo l'agente a tornare e controllare se il mondo è cambiato.
@@ -95,7 +95,7 @@ Due ragioni:
 
 ---
 
-## Parole Chiave da Ricordare {#key-words-to-remember}
+## Parole Chiave da Ricordare
 
 | Parola | Significato |
 |--------|-------------|
@@ -107,7 +107,7 @@ Due ragioni:
 
 ---
 
-## Riassunto in Una Sola Frase {#one-sentence-summary}
+## Riassunto in Una Sola Frase
 
 > **Dyna-Q impara dal fare E dall'immaginare — e immaginare è gratuito.**
 

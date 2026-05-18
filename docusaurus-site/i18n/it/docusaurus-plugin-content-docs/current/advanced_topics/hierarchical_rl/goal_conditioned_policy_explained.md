@@ -1,6 +1,6 @@
 # Politica Condizionata dall'Obiettivo (Goal-Conditioned Policy)
 
-## La grande idea: una politica per domarli tutti {#the-big-idea-one-policy-to-rule-them-all}
+## La grande idea: una politica per domarli tutti
 
 Immagina di essere un corriere. Non hai bisogno di competenze completamente diverse per ogni indirizzo. Sai guidare, leggere una mappa e destreggiarti nel traffico — devi solo inserire la *destinazione di oggi* e andare.
 
@@ -8,7 +8,7 @@ Una **politica condizionata dall'obiettivo (goal-conditioned policy)** funziona 
 
 ---
 
-## Come differisce dall'RL standard {#how-it-differs-from-standard-rl}
+## Come differisce dall'RL standard
 
 Nell'RL standard (trattato nelle fasi precedenti del corso), la funzione di ricompensa è predefinita: "raggiungi la cella (7, 7), ottieni +1". L'agente impara esattamente una cosa: come raggiungere *quella* cella.
 
@@ -20,7 +20,7 @@ L'obiettivo viaggia *con* l'agente, come una destinazione digitata in un'app di 
 
 ---
 
-## Il problema della ricompensa sparsa {#the-sparse-reward-problem}
+## Il problema della ricompensa sparsa
 
 Ecco l'inghippo: imparare da ricompense sparse (solo +1 all'obiettivo, 0 ovunque) è brutalmente difficile. La maggior parte dei tentativi fallisce — l'agente vaga a caso, non si imbatte mai nell'obiettivo e la rete non ottiene nulla di utile da cui imparare.
 
@@ -30,7 +30,7 @@ Immagina di cercare di imparare a lanciare un dardo bendato. Lanci mille volte e
 
 ---
 
-## Hindsight Experience Replay: fallire in avanti {#hindsight-experience-replay-failing-forward}
+## Hindsight Experience Replay: fallire in avanti
 
 Il trucco di HER è meravigliosamente semplice. Dopo un episodio fallito, HER chiede:
 
@@ -44,13 +44,13 @@ Questo trasforma migliaia di "fallimenti" in una ricca libreria di navigazioni *
 
 ---
 
-## Analogia con la vita reale: un bambino che impara a impilare i blocchi {#the-real-life-analogy-toddler-learning-to-stack-blocks}
+## Analogia con la vita reale: un bambino che impara a impilare i blocchi
 
 Un bambino che cerca di mettere un blocco in un secchio sbaglia costantemente. Ma ogni "errore" fa atterrare il blocco da *qualche parte*. Se riproduci ogni errore come "stavi cercando di metterlo *proprio lì* — e l'hai fatto!", il bambino sviluppa abilità motorie fini su tutto il tavolo. Presto potrà posizionare un blocco ovunque — compreso il secchio.
 
 ---
 
-## Cosa fa il nostro codice {#what-our-code-does}
+## Cosa fa il nostro codice
 
 Lo script `goal_conditioned_policy.py` viene eseguito in un **labirinto 7x7** con pareti. All'inizio di ogni episodio, viene scelta una cella obiettivo casuale. L'agente deve trovarla.
 
@@ -64,7 +64,7 @@ L'addestramento dura 3.000 episodi con un tasso di esplorazione decrescente — 
 
 ---
 
-## Cosa mostrano i grafici {#what-the-charts-show}
+## Cosa mostrano i grafici
 
 ![Risultati della Politica Condizionata dall'Obiettivo](outputs/goal_conditioned_policy.png)
 
@@ -74,7 +74,7 @@ L'addestramento dura 3.000 episodi con un tasso di esplorazione decrescente — 
 
 ---
 
-## Dove si applica nel mondo reale {#where-this-shows-up-in-the-real-world}
+## Dove si applica nel mondo reale
 
 | Applicazione | L'"obiettivo" |
 |-------------|------------|
@@ -87,6 +87,6 @@ Le politiche condizionate dall'obiettivo sono uno dei mattoni fondamentali per H
 
 ---
 
-## Riassunto in una frase {#one-sentence-summary}
+## Riassunto in una frase
 
 > **Una politica condizionata dall'obiettivo è un agente in grado di navigare verso qualsiasi destinazione — e HER rende possibile imparare dai fallimenti fingendo che ogni colpo mancato fosse mirato esattamente al punto in cui è atterrato.**

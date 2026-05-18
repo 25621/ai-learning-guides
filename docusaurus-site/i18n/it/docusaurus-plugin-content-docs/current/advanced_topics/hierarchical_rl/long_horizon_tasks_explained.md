@@ -1,6 +1,6 @@
 # Compiti a Lungo Orizzonte (Long-Horizon Tasks)
 
-## La grande idea: quando la ricompensa è molto lontana {#the-big-idea-when-the-reward-is-very-far-away}
+## La grande idea: quando la ricompensa è molto lontana
 
 Immagina di essere uno chef che cerca di imparare una nuova ricetta basandosi esclusivamente sull'assaggio del piatto finale. Segui 40 passaggi — tagliare, saltare, condire, sobbollire, impiattare — ma ricevi un feedback solo alla fine: "Troppo salato". Quale dei 40 passaggi ha causato il problema? Non ne hai idea.
 
@@ -8,7 +8,7 @@ Questo è il **problema a lungo orizzonte (long-horizon problem)**: quando il se
 
 ---
 
-## Perché gli agenti piatti hanno difficoltà {#why-flat-agents-struggle}
+## Perché gli agenti piatti hanno difficoltà
 
 Un agente RL "piatto" (come gli agenti DQN della Fase 3) cerca di imparare il valore di ogni singolo passaggio tutto in una volta. In compiti brevi — bilanciare un'asta, evitare un muro — questo funziona bene. La ricompensa arriva velocemente e l'agente può collegare causa ed effetto.
 
@@ -23,7 +23,7 @@ Con l'esplorazione casuale, la probabilità di completare accidentalmente questa
 
 ---
 
-## La soluzione gerarchica: divide et impera {#the-hierarchical-solution-divide-and-conquer}
+## La soluzione gerarchica: divide et impera
 
 L'RL gerarchico scompone il compito lungo in una **struttura a due livelli**:
 
@@ -41,7 +41,7 @@ Il manager pensa per *punti di controllo (checkpoints)*. Il lavoratore pensa per
 
 ---
 
-## Perché questo supera l'apprendimento piatto nei compiti lunghi {#why-this-beats-flat-learning-on-long-tasks}
+## Perché questo supera l'apprendimento piatto nei compiti lunghi
 
 Il lavoratore deve solo raggiungere il *prossimo sotto-obiettivo* — un compito breve con una ricompensa chiara e vicina. Riceve feedback rapidamente e impara in modo efficiente.
 
@@ -51,7 +51,7 @@ Insieme, i due livelli dividono il difficile problema a lungo orizzonte in due s
 
 ---
 
-## L'esperimento della griglia Chiave-Porta {#the-key-door-grid-experiment}
+## L'esperimento della griglia Chiave-Porta
 
 Il nostro script testa entrambi gli approcci su una **griglia aperta 9x9** con due oggetti:
 
@@ -71,7 +71,7 @@ Due agenti competono:
 
 ---
 
-## Cosa mostrano i grafici {#what-the-charts-show}
+## Cosa mostrano i grafici
 
 ![Risultati del compito a lungo orizzonte](outputs/long_horizon_tasks.png)
 
@@ -81,7 +81,7 @@ Due agenti competono:
 
 ---
 
-## Dove si applica il pensiero a lungo orizzonte {#where-long-horizon-thinking-shows-up}
+## Dove si applica il pensiero a lungo orizzonte
 
 | Dominio | Esempio di lungo orizzonte |
 |--------|---------------------|
@@ -94,7 +94,7 @@ Questo è esattamente il motivo per cui sono state inventate le Feudal Networks 
 
 ---
 
-## Il collegamento con le politiche condizionate dall'obiettivo {#the-connection-to-goal-conditioned-policies}
+## Il collegamento con le politiche condizionate dall'obiettivo
 
 Nota che il **lavoratore** nel nostro agente gerarchico è essenzialmente una **politica condizionata dall'obiettivo (goal-conditioned policy)** — riceve un sotto-obiettivo e naviga verso di esso. Questo è il design standard in HIRO e negli articoli correlati: il manager stabilisce gli obiettivi, il lavoratore è una politica condizionata dall'obiettivo che li insegue.
 
@@ -102,6 +102,6 @@ Le due idee — politiche condizionate dall'obiettivo e struttura gerarchica —
 
 ---
 
-## Riassunto in una frase {#one-sentence-summary}
+## Riassunto in una frase
 
 > **I compiti a lungo orizzonte sono difficili perché la ricompensa arriva troppo tardi per insegnare le singole decisioni — l'RL gerarchico risolve questo problema inserendo sotto-obiettivi vicini che permettono al lavoratore di imparare rapidamente, mentre il manager gestisce la sequenza generale.**

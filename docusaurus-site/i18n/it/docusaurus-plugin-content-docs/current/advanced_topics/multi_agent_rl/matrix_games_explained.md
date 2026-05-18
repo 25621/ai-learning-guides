@@ -122,7 +122,7 @@ Tuttavia, il Q-learning indipendente è il giusto primo passo. Vedi il problema 
 
 ---
 
-## Riassunto in Una Sola Frase {#one-sentence-summary}
+## Riassunto in Una Sola Frase
 
 > **Nei giochi a matrice, l'"ambiente" è un altro agente che impara — quindi la mossa migliore continua a spostarsi.**
 

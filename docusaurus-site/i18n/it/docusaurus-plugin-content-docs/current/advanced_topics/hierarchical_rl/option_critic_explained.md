@@ -1,6 +1,6 @@
 # Architettura Option-Critic
 
-## La grande idea: lavorare per capitoli, non parola per parola {#the-big-idea-working-in-chapters-not-word-by-word}
+## La grande idea: lavorare per capitoli, non parola per parola
 
 Immagina di scrivere un romanzo. Non pianifichi ogni singola parola prima di iniziare. Invece, pensi per **capitoli**: "Il capitolo 1 introduce l'eroe. Il capitolo 2 è la ricerca. Il capitolo 3 è lo scontro finale." All'interno di ogni capitolo, definisci i dettagli man mano che procedi.
 
@@ -8,13 +8,13 @@ Questo è esattamente il modo in cui l'architettura Option-Critic pensa alle dec
 
 ---
 
-## Cos'è un agente "piatto"? {#what-is-a-flat-agent}
+## Cos'è un agente "piatto"?
 
 Un normale agente RL (come quelli delle Fasi 3 e 4 del corso) decide un'azione alla volta, a ogni singolo passo. È come un GPS che ricalcola l'intero percorso da zero ogni volta che ti sposti di un metro. Funziona, ma è faticoso e lento da apprendere.
 
 ---
 
-## Cos'è un'"opzione"? {#what-is-an-option}
+## Cos'è un'"opzione"?
 
 Un'**opzione (option)** è una **competenza con un nome** — una mini-politica che l'agente può eseguire per diversi passaggi di fila prima di restituire il controllo.
 
@@ -32,7 +32,7 @@ Il manager sceglie uno specialista. Lo specialista lavora finché non decide di 
 
 ---
 
-## Le tre parti in movimento {#the-three-moving-parts}
+## Le tre parti in movimento
 
 Ogni opzione ha tre componenti — pensale come la **descrizione del lavoro** dello specialista:
 
@@ -44,7 +44,7 @@ Il bello di Option-Critic è che tutti e tre questi elementi vengono **appresi a
 
 ---
 
-## Una giornata tipo di un agente Option-Critic {#a-day-in-the-life-of-an-option-critic-agent}
+## Una giornata tipo di un agente Option-Critic
 
 1. L'agente entra in una nuova stanza (stato).
 2. Il **Manager** osserva la stanza e sceglie un'opzione — ad esempio, l'Opzione 2.
@@ -57,7 +57,7 @@ Confrontalo con l'agente piatto: l'agente piatto si tormenta per ogni singolo pa
 
 ---
 
-## Perché è d'aiuto? {#why-does-this-help}
+## Perché è d'aiuto?
 
 In un labirinto, l'agente deve raggiungere un obiettivo che può trovarsi a 30–50 passi di distanza. Con l'apprendimento piatto, ogni passo sul percorso è ugualmente "invisibile" finché la ricompensa non arriva finalmente alla fine — quel segnale deve viaggiare all'indietro per dozzine di passi.
 
@@ -67,7 +67,7 @@ Questa è l'idea centrale dietro a tutto l'RL gerarchico — e l'architettura Op
 
 ---
 
-## Cosa fa il nostro codice {#what-our-code-does}
+## Cosa fa il nostro codice
 
 Lo script `option_critic.py` inserisce un agente Option-Critic in un **mondo a griglia 7x7** con un obiettivo fisso. L'agente inizia in un punto qualsiasi della griglia e deve navigare fino alla cella obiettivo.
 
@@ -83,7 +83,7 @@ Nessun essere umano dice mai all'agente cosa debba fare ogni opzione. L'algoritm
 
 ---
 
-## Cosa mostrano i grafici {#what-the-charts-show}
+## Cosa mostrano i grafici
 
 ![Curve di apprendimento Option-Critic](outputs/option_critic.png)
 
@@ -95,6 +95,6 @@ Le curve smussate mostrano la tendenza generale su finestre di 100 episodi — u
 
 ---
 
-## Riassunto in una frase {#one-sentence-summary}
+## Riassunto in una frase
 
 > **Option-Critic insegna a un agente a lavorare per competenze piuttosto che per singoli passi — un manager sceglie quale specialista attivare, ogni specialista fa il suo lavoro e l'intero sistema impara insieme dallo stesso segnale di ricompensa.**

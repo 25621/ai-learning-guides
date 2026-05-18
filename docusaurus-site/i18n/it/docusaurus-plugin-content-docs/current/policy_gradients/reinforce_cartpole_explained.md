@@ -11,7 +11,7 @@ Questa ricetta è chiamata **politica** (π, pi). Nell'apprendimento per rinforz
 
 ---
 
-## Il Vecchio Modo vs. Il Nuovo Modo {#the-old-way-vs-the-new-way}
+## Il Vecchio Modo vs. Il Nuovo Modo
 
 **Vecchio modo (Q-learning / DQN):** Impara quanto è BUONA ogni azione (valori Q), quindi scegli la migliore.
 > "Spingere a SINISTRA ha un punteggio di 7, spingere a DESTRA ha un punteggio di 5 → spingi a SINISTRA!"

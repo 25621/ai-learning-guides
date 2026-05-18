@@ -8,10 +8,10 @@ Una guida completa per comprendere e costruire sistemi di apprendimento per rinf
 
 | Fase | Focus | Durata |
 |-------|-------|----------|
-| 1 | [Fondamenta](#phase-1-foundations-2-4-weeks) | 2-4 settimane |
+| 1 | [Fondamenti](#phase-1-foundations-2-4-weeks) | 2-4 settimane |
 | 2 | [Metodi Tabulari](#phase-2-tabular-methods-3-4-weeks) | 3-4 settimane |
-| 3 | [Approssimazione della Funzione](#phase-3-function-approximation-3-4-weeks) | 3-4 settimane |
-| 4 | [Metodi del Gradiente della Politica](#phase-4-policy-gradient-methods-4-5-weeks) | 4-5 settimane |
+| 3 | [Approssimazione delle Funzioni](#phase-3-function-approximation-3-4-weeks) | 3-4 settimane |
+| 4 | [Gradienti della Politica](#phase-4-policy-gradient-methods-4-5-weeks) | 4-5 settimane |
 | 5 | [Argomenti Avanzati](#phase-5-advanced-topics-6-8-weeks) | 6-8 settimane |
 | 6 | [Livello di Ricerca](#phase-6-research-level-ongoing) | In corso |
 
@@ -19,7 +19,7 @@ Una guida completa per comprendere e costruire sistemi di apprendimento per rinf
 
 ---
 
-## Fase 1: Fondamenta (2-4 settimane) {#phase-1-foundations-2-4-weeks}
+## Fase 1: Fondamenti (2-4 settimane)
 
 ### Obiettivo
 Comprendere i concetti fondamentali senza matematica approfondita.
@@ -51,7 +51,7 @@ Dovresti essere in grado di spiegare la formulazione del problema RL e perché g
 
 ---
 
-## Fase 2: Metodi Tabulari (3-4 settimane) {#phase-2-tabular-methods-3-4-weeks}
+## Fase 2: Metodi Tabulari (3-4 settimane)
 
 ### Obiettivo
 Padroneggiare gli algoritmi classici di RL dove gli spazi di stato/azione sono abbastanza piccoli da essere memorizzati in tabelle.
@@ -94,7 +94,7 @@ Implementare Q-learning da zero e risolvere Frozen Lake con un tasso di successo
 
 ---
 
-## Fase 3: Approssimazione della Funzione (3-4 settimane) {#phase-3-function-approximation-3-4-weeks}
+## Fase 3: Approssimazione delle Funzioni (3-4 settimane)
 
 ### Obiettivo
 Scalare RL oltre i piccoli spazi di stato utilizzando approssimatori di funzione.
@@ -141,7 +141,7 @@ Addestrare un agente DQN che ottenga una ricompensa positiva su Atari Pong.
 
 ---
 
-## Fase 4: Metodi del Gradiente della Politica (4-5 settimane) {#phase-4-policy-gradient-methods-4-5-weeks}
+## Fase 4: Gradienti della Politica (4-5 settimane)
 
 ### Obiettivo
 Imparare a ottimizzare direttamente le politiche senza calcolare le funzioni valore.
@@ -189,17 +189,17 @@ Implementare PPO e risolvere BipedalWalker-v3 (ricompensa > 300).
 
 ---
 
-## Fase 5: Argomenti Avanzati (6-8 settimane) {#phase-5-advanced-topics-6-8-weeks}
+## Fase 5: Argomenti Avanzati (6-8 settimane)
 
 Scegli 2-3 aree in base ai tuoi interessi.
-- [RL Basata su Modello](#model-based-rl)
+- [RL Basato su Modelli](#model-based-rl)
 - [RL Multi-Agente](#multi-agent-rl)
-- [RL Offline/Batch](#offlinebatch-rl)
+- [RL Offline](#offlinebatch-rl)
 - [Esplorazione](#exploration)
-- [RL Gerarchica](#hierarchical-rl)
+- [RL Gerarchico](#hierarchical-rl)
 - [RLHF (RL da Feedback Umano)](#rlhf-rl-from-human-feedback)
 
-### RL Basata su Modello {#model-based-rl}
+### RL Basato su Modelli
 Imparare le dinamiche dell'ambiente per pianificare o generare esperienza sintetica.
 
 **Concetti:**
@@ -221,7 +221,7 @@ Imparare le dinamiche dell'ambiente per pianificare o generare esperienza sintet
 
 ---
 
-### RL Multi-Agente {#multi-agent-rl}
+### RL Multi-Agente
 Più agenti che apprendono simultaneamente in ambienti condivisi.
 
 **Concetti:**
@@ -242,7 +242,7 @@ Più agenti che apprendono simultaneamente in ambienti condivisi.
 
 ---
 
-### RL Offline/Batch {#offlinebatch-rl}
+### RL Offline
 Apprendere da set di dati fissi senza interazione con l'ambiente.
 
 **Concetti:**
@@ -264,7 +264,7 @@ Apprendere da set di dati fissi senza interazione con l'ambiente.
 
 ---
 
-### Esplorazione {#exploration}
+### Esplorazione
 Affrontare ricompense sparse e problemi di esplorazione difficili.
 
 **Concetti:**
@@ -287,7 +287,7 @@ Affrontare ricompense sparse e problemi di esplorazione difficili.
 
 ---
 
-### RL Gerarchica {#hierarchical-rl}
+### RL Gerarchico
 Apprendere a più livelli di astrazione temporale.
 
 **Concetti:**
@@ -308,7 +308,7 @@ Apprendere a più livelli di astrazione temporale.
 
 ---
 
-### RLHF (RL da Feedback Umano) {#rlhf-rl-from-human-feedback}
+### RLHF (RL da Feedback Umano)
 Allineare i modelli con le preferenze umane.
 
 **Concetti:**
@@ -330,7 +330,7 @@ Allineare i modelli con le preferenze umane.
 
 ---
 
-## Fase 6: Livello di Ricerca (In corso) {#phase-6-research-level-ongoing}
+## Fase 6: Livello di Ricerca (In corso)
 
 ### Obiettivo
 Contribuire con lavori originali al campo.

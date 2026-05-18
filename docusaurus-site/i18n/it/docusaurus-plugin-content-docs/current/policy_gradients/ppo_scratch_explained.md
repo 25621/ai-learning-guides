@@ -43,7 +43,7 @@ r(θ) = π_new(a|s) / π_old(a|s)
 
 ---
 
-## Il Trucco del Clipping {#the-clipping-trick}
+## Il Trucco del Clipping
 
 PPO taglia (clip) il rapporto per farlo rimanere all'interno di [1-ε, 1+ε] (tipicamente ε = 0.2):
 
@@ -100,7 +100,7 @@ Con clipping: il gradiente è zero al di fuori di [1-ε, 1+ε], quindi la politi
 
 ---
 
-## GAE: Stime del Vantaggio Più Intelligenti {#gae-smarter-advantage-estimates}
+## GAE: Stime del Vantaggio Più Intelligenti
 
 PPO utilizza la **Generalized Advantage Estimation (GAE)** per calcolare il vantaggio:
 
