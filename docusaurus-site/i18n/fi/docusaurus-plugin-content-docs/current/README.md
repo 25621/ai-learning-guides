@@ -400,7 +400,7 @@ Anna omaperäistä työtä kentälle.
 | Termi | Määritelmä |
 |------|------------|
 | **MDP** | Markovin päätösprosessi - muodollinen kehys RL:lle |
-| **Käytäntö (π)** | Kartoitus tiloista toiminnoiksi |
+| **Käytäntö (π)** | Kartoitus tiloista toimintoihin |
 | **Arvofunktio (V)** | Odotettu tuotto tilasta |
 | **Q-toiminto** | Odotettu tuotto tila-toiminto-parista |
 | **TD-virhe** | Ennustetun ja bootstrapped-arvon välinen ero |
