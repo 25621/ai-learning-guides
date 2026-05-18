@@ -179,7 +179,7 @@ const config = {
           filename: 'sitemap.xml',
         },
         gtag: {
-          trackingID: 'G-VLNEEY6SWG',
+          trackingID: 'G-LEDRXS502H',
           anonymizeIP: true,
         },
       },
