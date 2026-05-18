@@ -54,8 +54,8 @@ Tässä on jotain fiksua: kun Q-Learning päivittää taulukkoaan, se *olettaa a
 täydellinen liike ensi kerralla*, vaikka harjoituksen aikana se joskus tutkii satunnaisia liikkeitä.
 
 Tämä tekee Q-Learningistä **poikkeuksen**: strategian, jonka se *oppii* (valitse aina tunnetuin
-toiminta) on erillinen strategiasta, jota se *seuraa* harjoituksen aikana (joskus valitse satunnainen
-tutkittava toimenpide). Konkreettisesti Q-taulukkopäivitys käyttää seuraavan *maksimi* Q-arvoa
+toiminto) on erillinen strategiasta, jota se *seuraa* harjoituksen aikana (joskus valitsee satunnaisen
+tutkittavan toimenpiteen). Konkreettisesti Q-taulukkopäivitys käyttää seuraavan *maksimi* Q-arvoa
 tila - teoreettinen paras - vaikka robotin todellinen seuraava liike olisi satunnainen.
 
 Yksinkertaisesti sanottuna: robotti saattaa satunnaisesti vaeltaa vasemmalle tutkimaan, mutta se oppii silti

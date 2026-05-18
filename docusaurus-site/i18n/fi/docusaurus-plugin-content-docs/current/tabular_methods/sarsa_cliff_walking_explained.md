@@ -14,23 +14,24 @@ liukastu vahingossa lähelle reunaa tutkiessasi!
 
 ## Suuri idea: oppia siitä, mitä todella teet
 
-SARSA tarkoittaa: **S**tila → **A**toiminta → **R**palkinto → **S**seuraava tila → **A**toiminta
+SARSA tarkoittaa: **S**tila → **A**-toiminto → **R**-palkinto → **S**-seuraava tila → **A**-toiminto
 
 Nämä ovat viisi tietoa, joita SARSA käyttää oppiessaan:
 
 1. **S** — Missä olen juuri nyt? (nykyinen tila)
-2. **A** — Mitä tein?
+2. **A** — Mitä tein? (toiminto)
 3. **R** — Minkä palkinnon sain?
-4. **S** — Mihin päädyin?
-5. **A** — Mihin toimiin *itse asiassa aion ryhtyä seuraavaksi*?
+4. **S** — Mihin päädyin? (seuraava tila)
+5. **A** — Mihin toimiin *itse asiassa aion ryhtyä seuraavaksi*? (seuraava toiminto)
 
-Viimeinen "A" tekee SARSAsta erityisen! Se päivittyy käyttämällä toimintoja, jotka se todella suorittaa
-seuraava* (vaikka se olisi satunnainen tutkiva liike), ei ole täydellinen ihanteellinen toiminta.
+Viimeinen "A" tekee SARSAsta erityisen! Se päivittyy käyttämällä toimintoa, jonka se *todella valitsee
+seuraavaksi* (vaikka se olisi satunnainen tutkiva liike), ei teoreettista parasta toimintoa.
 
-**Tosielämän esimerkki:** Ajattele pyörällä ajamisen oppimista. Jos tiedät, horjut joskus
-satunnaisesti (etsintä), pysyt hieman kauempana pysäköityistä autoista - koska tiedät omasi
-horjuva itse saattaa kääntyä! SARSA tekee tämän: se oppii turvallisen polun, koska se ottaa huomioon
-omia satunnaisia ​​virheitään.
+**Tosielämän esimerkki:** Ajattele pyörällä ajamisen oppimista. Jos tiedät, että horjut joskus
+satunnaisesti (tutkiminen), pysyt hieman kauempana pysäköityistä autoista – koska tiedät, että
+horjuva itsesi saattaa kääntyä! SARSA tekee tämän: se oppii turvallisen polun, koska se ottaa huomioon
+omat satunnaiset virheensä.
+
 
 ---
 
@@ -82,5 +83,4 @@ ylimääräisiä askelia (-21 sijaan -13), mutta tuskin koskaan putoa kalliolta 
 - **Turvallinen polku**: Pidempi polku, joka välttää vaaran ja ottaa huomioon etsintävirheet
 - **TD (Temporal Difference) -ohjaus**: Päivitetään arvot jokaisen vaiheen jälkeen (ei odota koko jaksoa)
 
-Suuri idea: **SARSA on rehellinen – se oppii siitä, mitä se todella tekee, ei siitä, mitä se haluaa
-se tekisi. Tämä tekee siitä varovaisen ja turvallisen lähellä vaaraa!**
+Suuri idea: **SARSA on rehellinen – se oppii siitä, mitä se todella tekee, ei siitä, mitä sen kuuluisi tehdä. Tämä tekee siitä varovaisen ja turvallisen vaaran läheisyydessä!**
