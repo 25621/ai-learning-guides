@@ -45,7 +45,7 @@ const config = {
 
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'de', 'es', 'fi', 'fr', 'hi', 'id', 'ja', 'ko', 'nl', 'pt-BR', 'ru', 'zh-Hans', 'zh-Hant'],
+    locales: ['en', 'de', 'es', 'fi', 'fr', 'hi', 'id', 'it', 'ja', 'ko', 'nl', 'pt-BR', 'ru', 'zh-Hans', 'zh-Hant'],
     localeConfigs: {
       es: {
         label: 'Español (internacional)',
