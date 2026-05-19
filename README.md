@@ -11,10 +11,6 @@ This guide is **complementary to**, not a replacement for:
 
 Do this guide first if you want to understand RL the algorithm. Do the physical-RL guide if you want to apply it to robots. Do both for the full picture.
 
-A companion code repository with runnable implementations is recommended at [`../reinforcement-learning/`](../reinforcement-learning/) (one folder per phase, one notebook or script per project).
-
----
-
 ## Table of Contents
 
 1. [Phase 0: Prerequisites](#phase-0-prerequisites)

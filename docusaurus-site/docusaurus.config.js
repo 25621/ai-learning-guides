@@ -3,7 +3,7 @@ const {themes} = require('prism-react-renderer');
 const siteUrl = 'https://25621.github.io';
 const siteBaseUrl = '/reinforcement-learning/';
 const siteDescription =
-  'Learn reinforcement learning from scratch with a structured 6-month roadmap covering MDPs, dynamic programming, Q-learning, policy gradients, actor-critic methods, PPO, SAC, and modern deep RL — with hands-on Python exercises and curated resources.';
+  'Learn reinforcement learning from scratch with a structured roadmap covering MDPs, dynamic programming, Q-learning, policy gradients, actor-critic methods, PPO, SAC, and modern deep RL.';
 const siteKeywords = [
   'reinforcement learning',
   'reinforcement learning tutorial',
@@ -131,11 +131,6 @@ const config = {
             `https://github.com/25621/reinforcement-learning/edit/main/${docPath}`,
           include: [
             'README.md',
-            'foundations/**/*.md',
-            'tabular_methods/**/*.md',
-            'function_approximation/**/*.md',
-            'policy_gradients/**/*.md',
-            'advanced_topics/**/*.md',
           ],
           exclude: [
             '**/_site/**',
@@ -228,11 +223,6 @@ const config = {
           title: 'Learn',
           items: [
             {label: 'Overview', to: '/'},
-            {label: 'Foundations', to: '/foundations/multi_armed_bandit_explained/'},
-            {label: 'Tabular Methods', to: '/tabular_methods/q_learning_frozen_lake_explained/'},
-            {label: 'Function Approximation', to: '/function_approximation/dqn_cartpole_explained/'},
-            {label: 'Policy Gradients', to: '/policy_gradients/ppo_scratch_explained/'},
-            {label: 'Advanced Topics', to: '/advanced_topics/model_based_rl/dyna_q_explained/'},
           ],
         },
         {
