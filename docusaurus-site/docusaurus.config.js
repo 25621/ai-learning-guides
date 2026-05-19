@@ -43,25 +43,6 @@ const config = {
   },
   trailingSlash: true,
 
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en', 'de', 'es', 'fi', 'fr', 'hi', 'id', 'it', 'ja', 'ko', 'nl', 'pt-BR', 'ru', 'zh-Hans', 'zh-Hant'],
-    localeConfigs: {
-      es: {
-        label: 'Español (internacional)',
-        htmlLang: 'es-419',
-      },
-      fi: {
-        label: 'Suomi',
-        htmlLang: 'fi-FI',
-      },
-      nl: {
-        label: 'Nederlands',
-        htmlLang: 'nl-NL',
-      },
-    },
-  },
-
   headTags: [
     {
       tagName: 'link',
@@ -88,7 +69,7 @@ const config = {
         name: 'Reinforcement Learning: Beginner to Advanced',
         url: `${siteUrl}${siteBaseUrl}`,
         description: siteDescription,
-        inLanguage: ['en', 'de', 'es', 'fi', 'fr', 'hi', 'id', 'it', 'ja', 'ko', 'nl', 'pt-BR', 'ru', 'zh-Hans', 'zh-Hant'],
+        inLanguage: 'en',
         potentialAction: {
           '@type': 'SearchAction',
           target: `${siteUrl}${siteBaseUrl}search?q={search_term_string}`,
@@ -116,7 +97,7 @@ const config = {
         learningResourceType: 'Tutorial',
         teaches: siteKeywords.join(', '),
         isAccessibleForFree: true,
-        inLanguage: ['en', 'de', 'es', 'fi', 'fr', 'hi', 'id', 'it', 'ja', 'ko', 'nl', 'pt-BR', 'ru', 'zh-Hans', 'zh-Hant'],
+        inLanguage: 'en',
       }),
     },
   ],
@@ -146,12 +127,8 @@ const config = {
           routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
           breadcrumbs: true,
-          editUrl: ({locale, docPath}) => {
-            if (locale !== 'en') {
-              return `https://github.com/25621/reinforcement-learning/edit/main/docusaurus-site/i18n/${locale}/docusaurus-plugin-content-docs/current/${docPath}`;
-            }
-            return `https://github.com/25621/reinforcement-learning/edit/main/${docPath}`;
-          },
+          editUrl: ({docPath}) =>
+            `https://github.com/25621/reinforcement-learning/edit/main/${docPath}`,
           include: [
             'README.md',
             'foundations/**/*.md',
@@ -209,20 +186,6 @@ const config = {
       {property: 'og:image:alt', content: 'Reinforcement Learning: Beginner to Advanced — open-source learning roadmap'},
       {property: 'og:url', content: `${siteUrl}${siteBaseUrl}`},
       {property: 'og:locale', content: 'en_US'},
-      {property: 'og:locale:alternate', content: 'de_DE'},
-      {property: 'og:locale:alternate', content: 'es_ES'},
-      {property: 'og:locale:alternate', content: 'fi_FI'},
-      {property: 'og:locale:alternate', content: 'fr_FR'},
-      {property: 'og:locale:alternate', content: 'hi_IN'},
-      {property: 'og:locale:alternate', content: 'id_ID'},
-      {property: 'og:locale:alternate', content: 'it_IT'},
-      {property: 'og:locale:alternate', content: 'ja_JP'},
-      {property: 'og:locale:alternate', content: 'ko_KR'},
-      {property: 'og:locale:alternate', content: 'nl_NL'},
-      {property: 'og:locale:alternate', content: 'pt_BR'},
-      {property: 'og:locale:alternate', content: 'ru_RU'},
-      {property: 'og:locale:alternate', content: 'zh_CN'},
-      {property: 'og:locale:alternate', content: 'zh_TW'},
 
       {name: 'twitter:card', content: 'summary_large_image'},
       {name: 'twitter:title', content: 'Reinforcement Learning: Beginner to Advanced'},
@@ -250,10 +213,6 @@ const config = {
       },
       hideOnScroll: true,
       items: [
-        {
-          type: 'localeDropdown',
-          position: 'right',
-        },
         {
           href: 'https://github.com/25621/reinforcement-learning',
           label: 'GitHub',
