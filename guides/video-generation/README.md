@@ -30,7 +30,7 @@ A comprehensive guide to understanding and building video generation systems —
 
 Video generation is one of the most demanding topics in modern ML. The prerequisites are non-negotiable.
 
-### Concepts You Should Already Know
+### Concepts to Know
 
 - **Diffusion models**: forward/reverse process, DDPM, DDIM, classifier-free guidance, noise schedules
 - **Latent diffusion**: VAE encoder/decoder, training a diffusion model in latent space (i.e., Stable Diffusion)

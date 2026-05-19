@@ -8,7 +8,7 @@ A comprehensive guide to the hardware that makes modern AI possible — from GPU
 
 ## Table of Contents
 
-1. [Phase 0: Prerequisites and Setup](#phase-0-prerequisites-and-setup)
+1. [Phase 0: Prerequisites](#phase-0-prerequisites)
 2. [Phase 1: How a Modern Computer Computes](#phase-1-how-a-modern-computer-computes)
 3. [Phase 2: GPU Architecture, Inside Out](#phase-2-gpu-architecture-inside-out)
 4. [Phase 3: The Memory Hierarchy — Where Your Time Actually Goes](#phase-3-the-memory-hierarchy--where-your-time-actually-goes)
@@ -26,11 +26,11 @@ A comprehensive guide to the hardware that makes modern AI possible — from GPU
 
 ---
 
-## Phase 0: Prerequisites and Setup
+## Phase 0: Prerequisites
 
 The prerequisites here are different from the other guides — you can be a less experienced ML practitioner and still get a lot out of this material, as long as you have systems-programming chops.
 
-### Concepts You Should Already Know
+### Concepts to Know
 
 - **C and basic C++** — enough to read CUDA code; you don't need template metaprogramming
 - **Operating systems basics**: virtual memory, paging, processes vs threads, system calls
@@ -39,7 +39,7 @@ The prerequisites here are different from the other guides — you can be a less
 - **Linear algebra at the FLOP level**: you can count matmul FLOPs in your head (2·M·N·K for an M×K times K×N matrix)
 - **A modern GPU** — owned, rented, or borrowed. Cloud is fine. You will write code that runs.
 
-### What You Need Installed (Recommended)
+### What You Need Installed
 
 - **CUDA Toolkit 12.x+** if working with NVIDIA
 - **Triton** (installed with PyTorch 2.x by default)

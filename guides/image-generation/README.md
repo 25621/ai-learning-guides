@@ -31,7 +31,7 @@ A comprehensive guide to understanding and building image generation systems —
 
 Image generation borrows heavily from probability theory, optimization, and convolutional/transformer architectures. None of it is exotic, but if more than a couple of these are fuzzy, fix that first.
 
-### Concepts You Should Already Know
+### Concepts to Know
 
 - **PyTorch fluency**: `nn.Module`, autograd, mixed precision, basic training loops, profiling
 - **Convolutional networks**: stride/padding/dilation, ResNet-style residual blocks, batch and group normalization

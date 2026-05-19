@@ -51,6 +51,33 @@ The honest answer: pick a project you actually want to build and work backward. 
 
 ---
 
+## Prerequisites
+
+These apply to every guide in this collection. Each guide's **Phase 0: Prerequisites** layers the topic-specific concepts and tooling on top of these.
+
+### Concepts to Know
+
+- **Python**: classes, decorators, context managers, generators, virtual environments
+- **Linear algebra**: matrix multiplication, vector spaces, broadcasting, basic eigenvalue intuition
+- **Calculus**: gradients, chain rule, partial derivatives
+- **Probability**: random variables, expectation, conditional probability
+- **Deep learning basics**: training loops, loss functions, backpropagation, what an `nn.Module` is. The [PyTorch Deep Dive](./guides/pytorch-deep-dive/) is the recommended foundation if any of this feels shaky.
+- **Shell and git**: you will read and clone a lot of repos
+
+### What You Need Installed
+
+- **Python 3.10+**, NumPy, PyTorch
+- **A GPU** — owned, rented, or borrowed. Cloud is fine. Each guide notes its specific VRAM and hardware needs.
+
+### Resources
+
+- [3Blue1Brown — Essence of Linear Algebra](https://www.3blue1brown.com/topics/linear-algebra) — the visual intuition
+- [Goodfellow, Bengio, Courville — Deep Learning Book](https://www.deeplearningbook.org/) — the standard reference
+- [PyTorch official docs](https://pytorch.org/docs/stable/index.html) — your most-used reference across guides
+- [Andrej Karpathy — Neural Networks: Zero to Hero](https://karpathy.ai/zero-to-hero.html) — the cleanest on-ramp to modern deep learning
+
+---
+
 ## Dependency graph
 
 How the guides relate to each other:
@@ -104,10 +131,7 @@ How the guides relate to each other:
 
 ```
 ai-learning-guides/
-├── README.md                     ← you are here
-├── shared/
-│   ├── glossary.md               ← terms used across multiple guides
-│   └── prerequisites.md          ← common Phase 0 material
+├── README.md                     ← you are here (cross-guide Prerequisites + Glossary live in this file)
 ├── guides/
 │   ├── pytorch-deep-dive/
 │   │   ├── README.md             ← the guide itself
@@ -189,6 +213,35 @@ These are rough — real time depends heavily on background and how much you bui
 | The whole thing | All nine guides, in dependency order | 14 – 20 months |
 
 If a phase is taking 3x as long as the guide's suggested timeline, that's a signal — usually a prerequisite is shaky, not that you're slow.
+
+---
+
+## Glossary
+
+Terms that show up across multiple guides. Each guide's own glossary covers the topic-specific terminology that doesn't fit here.
+
+| Term | Definition |
+|------|------------|
+| **Attention** | The operation `softmax(QKᵀ/√d) V` — content-addressable token mixing; the core of every transformer |
+| **DDP** | Distributed Data Parallel — replicate model, split batch, all-reduce gradients |
+| **DPO** | Direct Preference Optimization — closed-form RLHF without a reward model |
+| **FlashAttention** | IO-aware attention kernel; same math, much faster than the naive form |
+| **FSDP** | Fully Sharded Data Parallel — shard params, grads, and optimizer state across ranks |
+| **GQA** | Grouped-Query Attention — share K, V heads across query heads to shrink KV cache |
+| **GRPO** | Group Relative Policy Optimization — value-function-free PPO variant |
+| **HBM** | High-Bandwidth Memory — the memory on a modern GPU; usually the bandwidth bottleneck |
+| **KV cache** | Cached keys and values across decode steps; the working set of the decoder at serving time |
+| **LoRA** | Low-Rank Adaptation — fine-tune by adding small low-rank matrices, freeze the base |
+| **MoE** | Mixture-of-Experts — sparse routing across N expert MLPs; high total params, fixed compute per token |
+| **PPO** | Proximal Policy Optimization — the workhorse on-policy RL algorithm |
+| **Quantization** | Reducing weight / activation precision (FP16, BF16, FP8, INT8, INT4) to save memory and bandwidth |
+| **RLHF** | Reinforcement Learning from Human Feedback — preference learning, classically via PPO + KL |
+| **RLVR** | RL with Verifiable Rewards — RL when the reward is a deterministic checker |
+| **SAC** | Soft Actor-Critic — maximum-entropy continuous-control algorithm |
+| **Transformer** | The decoder-only / encoder-only / encoder-decoder architecture built from attention + MLP blocks |
+| **VAE** | Variational Autoencoder — encoder/decoder pair trained on the ELBO |
+| **VLA** | Vision-Language-Action model — transformer mapping image + instruction → action |
+| **VLM** | Vision-Language Model — image (+ text) in, text out |
 
 ---
 
