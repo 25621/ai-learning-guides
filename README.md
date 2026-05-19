@@ -17,9 +17,10 @@ A collection of long-form, project-driven guides for learning modern AI from fir
 | [Video Generation](./guides/video-generation/) | Video diffusion, latent video, DiTs, world models | 11 | Temporal generative models |
 | [Robotics](./guides/robotics/) | Control, perception, imitation learning, diffusion policies, VLAs, sim-to-real | 11 | Building robot learning systems |
 | [Multimodal Learning](./guides/multimodal-learning/) | CLIP, fusion, VLMs, any-to-any models | 11 | Combining modalities into shared representations |
+| [Inference Systems](./guides/inference-systems/) | KV cache, batching, speculative decoding, quantization, distributed serving | 11 | Putting trained LLMs into production |
 | [AI Hardware](./guides/ai-hardware/) | GPU architecture, CUDA/Triton, quantization, serving | 11 | Making models fast on real silicon |
 
-The order above is a suggested learning progression: foundations first, then single-modality work, then cross-modality and applied tracks, with the systems-heavy AI Hardware guide as an orthogonal endpoint. Each guide is self-contained but cross-references the others where it makes sense. Project folders live under each guide's `projects/` directory — see [the structure section](#repository-structure) below.
+The order above is a suggested learning progression: foundations first, then single-modality work, then cross-modality and applied tracks, with the systems-heavy guides (Inference Systems and AI Hardware) as the production-and-performance endpoint. Each guide is self-contained but cross-references the others where it makes sense. Project folders live under each guide's `projects/` directory — see [the structure section](#repository-structure) below.
 
 ---
 
@@ -31,7 +32,10 @@ There is no single "first" guide. Where to start depends on what you're trying t
 → **[PyTorch Deep Dive](./guides/pytorch-deep-dive/)**. This is the foundation. If `view` vs `reshape`, autograd internals, or `torch.compile` feel hand-wavy to you, fix that first. Nearly every other guide assumes this fluency.
 
 ### "I want to build language models"
-→ **[LLM](./guides/llm/)**, with **[PyTorch Deep Dive](./guides/pytorch-deep-dive/)** as a parallel reference. Hit Phase 6 (post-training / RLHF) and you'll want the RLHF section of the **[Reinforcement Learning](./guides/reinforcement-learning/)** guide too.
+→ **[LLM](./guides/llm/)**, with **[PyTorch Deep Dive](./guides/pytorch-deep-dive/)** as a parallel reference. Hit Phase 6 (post-training / RLHF) and you'll want the RLHF section of the **[Reinforcement Learning](./guides/reinforcement-learning/)** guide too. When you're ready to put a trained model in front of users, continue into **[Inference Systems](./guides/inference-systems/)**.
+
+### "I want to serve LLMs in production"
+→ **[Inference Systems](./guides/inference-systems/)**. Assumes you've done at least Phases 1–3 of the **[LLM](./guides/llm/)** guide ("KV cache" and "decoder-only" should not feel fuzzy). Pair with **[AI Hardware](./guides/ai-hardware/)** Phases 4 + 7 when you hit kernel-level questions.
 
 ### "I want to build agents / robots that learn"
 → **[Reinforcement Learning](./guides/reinforcement-learning/)** for the algorithms, then **[Robotics](./guides/robotics/)** for applying them to physical systems. Robotics also leans on imitation learning and diffusion policies, which don't require RL — you can read robotics first and dip into RL on demand.
@@ -68,25 +72,30 @@ How the guides relate to each other:
        │                │  Robotics  │         │  Video Gen   │
        │                └────────────┘         └──────────────┘
        │                                              │
-       └──────────────┬───────────────────────────────┘
-                      ▼
-              ┌────────────────┐
-              │  Multimodal    │  ← combines modalities;
-              │   Learning     │     read after LLM + Image Gen
-              └────────────────┘
-
-                AI Hardware  ── orthogonal; pair with PyTorch Deep Dive
-                               (systems-programming track, not ML track)
+       ├──────────────────┬───────────────────────────┘
+       │                  │
+       ▼                  ▼
+┌──────────────┐   ┌────────────────┐
+│  Inference   │   │  Multimodal    │  ← combines modalities;
+│   Systems    │   │   Learning     │     read after LLM + Image Gen
+└──────────────┘   └────────────────┘
+       ↕  shares territory (kernels, quantization)
+       ↕
+┌──────────────┐
+│ AI Hardware  │  ← orthogonal systems track;
+└──────────────┘     pair with PyTorch Deep Dive
 ```
 
 **Hard dependencies:**
 - Video Generation assumes Image Generation (diffusion, U-Net, latent diffusion).
 - Robotics borrows continuous-control RL from the RL guide (SAC, PPO, sim-to-real).
 - Multimodal Learning assumes you've seen both a transformer-based LLM and an image encoder.
+- Inference Systems assumes LLM Phases 1–3 (transformer mechanics, KV cache concept).
 
 **Soft dependencies:**
 - LLM Phase 6 (RLHF) reads better after RL Phase 9.
 - Robotics Phase 6 (VLAs) reads better after Multimodal Phase 5 (VLMs).
+- Inference Systems Phases 5–6 (quantization, kernels) overlap with AI Hardware Phases 4 and 7; read together if both interest you.
 
 ---
 
@@ -117,6 +126,7 @@ ai-learning-guides/
 │   ├── multimodal-learning/
 │   ├── image-generation/
 │   ├── video-generation/
+│   ├── inference-systems/
 │   └── ai-hardware/
 └── LICENSE
 ```
@@ -168,11 +178,12 @@ These are rough — real time depends heavily on background and how much you bui
 | Path | Guides | Approx. time (part-time) |
 |---|---|---|
 | LLM engineer track | PyTorch Deep Dive → LLM → RL Phase 9 (RLHF) | 4 – 6 months |
+| LLM serving track | PyTorch Deep Dive → LLM Phases 1–3 → Inference Systems | 3 – 5 months |
 | Generative vision track | PyTorch Deep Dive → Image Gen → Video Gen | 3 – 5 months |
 | Robotics ML track | PyTorch Deep Dive → RL Phases 1–5 → Robotics | 4 – 6 months |
 | Multimodal track | PyTorch Deep Dive → LLM Phases 1–3 → Image Gen Phases 1–5 → Multimodal | 5 – 7 months |
-| Systems track | PyTorch Deep Dive → AI Hardware | 2 – 4 months |
-| The whole thing | All eight guides, in dependency order | 12 – 18 months |
+| Systems track | PyTorch Deep Dive → AI Hardware → Inference Systems | 3 – 5 months |
+| The whole thing | All nine guides, in dependency order | 14 – 20 months |
 
 If a phase is taking 3x as long as the guide's suggested timeline, that's a signal — usually a prerequisite is shaky, not that you're slow.
 
