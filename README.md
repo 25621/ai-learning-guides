@@ -196,4 +196,4 @@ If a phase is taking 3x as long as the guide's suggested timeline, that's a sign
 
 ## License
 
-MIT License. This is the best default for this project because the repository mixes explanatory writing with runnable learning code and benefits from a simple, permissive license that allows reuse, adaptation, and redistribution with minimal friction. See [LICENSE](./LICENSE).
+MIT License. See the [LICENSE](LICENSE) file for details.
