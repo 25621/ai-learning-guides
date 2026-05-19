@@ -12,7 +12,7 @@ A collection of long-form, project-driven guides for learning modern AI from fir
 |---|---|---|---|
 | [PyTorch Deep Dive](./guides/pytorch-deep-dive/) | Tensors, autograd, performance, distributed, custom kernels | 11 | Going from PyTorch user to power user |
 | [LLM](./guides/llm/) | Transformers, GPT from scratch, pretraining, post-training, serving | 11 | Understanding and building language models |
-| [Image Generation](./guides/image-generation/) | Autoencoders, GANs, diffusion | 6 | Generative vision from foundations to diffusion |
+| [Image Generation](./guides/image-generation/) | Autoencoders, VAEs, GANs, diffusion, latent diffusion, DiTs, flow matching | 11 | Generative vision from foundations to frontier |
 | [Reinforcement Learning](./guides/reinforcement-learning/) | MDPs, DQN, PPO, SAC, offline RL, RLHF | 11 | Learning RL as an algorithm family |
 | [Video Generation](./guides/video-generation/) | Video diffusion, latent video, DiTs, world models | 11 | Temporal generative models |
 | [Robotics](./guides/robotics/) | Control, perception, imitation learning, diffusion policies, VLAs, sim-to-real | 11 | Building robot learning systems |
@@ -133,8 +133,6 @@ ai-learning-guides/
 │   └── ai-hardware/
 └── LICENSE
 ```
-
-The `guides/` directories are listed in the same order as the [Guides](#guides) table. That is preferable here because the README presents a deliberate learning progression; alphabetical order would be easier to scan as a filesystem convention, but it would hide the curriculum sequence this repository is organized around.
 
 **Conventions used across all guides:**
 
