@@ -79,8 +79,9 @@ How the guides relate to each other:
 │  Inference   │   │  Multimodal    │  ← combines modalities;
 │   Systems    │   │   Learning     │     read after LLM + Image Gen
 └──────────────┘   └────────────────┘
-       ↕  shares territory (kernels, quantization)
-       ↕
+       │
+       │  shares territory (kernels, quantization)
+       ▼
 ┌──────────────┐
 │ AI Hardware  │  ← orthogonal systems track;
 └──────────────┘     pair with PyTorch Deep Dive
@@ -108,28 +109,32 @@ ai-learning-guides/
 │   ├── glossary.md               ← terms used across multiple guides
 │   └── prerequisites.md          ← common Phase 0 material
 ├── guides/
-│   ├── llm/
+│   ├── pytorch-deep-dive/
 │   │   ├── README.md             ← the guide itself
 │   │   ├── projects/
-│   │   │   ├── 01-bigram-language-model/
+│   │   │   ├── 01-stride-explorer/
 │   │   │   │   ├── README.md     ← project explanation
 │   │   │   │   ├── run.py        ← entry point
 │   │   │   │   └── ...
-│   │   │   ├── 02-tokenizer-bpe/
+│   │   │   ├── 02-micrograd-pytorch-style/
 │   │   │   └── ...
 │   │   ├── requirements.txt
 │   │   └── STATUS.md             ← last-tested dates per project
+│   ├── llm/
+│   │   └── ... (same shape)
+│   ├── image-generation/
+│   │   └── ... (same shape)
 │   ├── reinforcement-learning/
 │   │   └── ... (same shape)
-│   ├── pytorch-deep-dive/
+│   ├── video-generation/
 │   ├── robotics/
 │   ├── multimodal-learning/
-│   ├── image-generation/
-│   ├── video-generation/
 │   ├── inference-systems/
 │   └── ai-hardware/
 └── LICENSE
 ```
+
+The `guides/` directories are listed in the same order as the [Guides](#guides) table. That is preferable here because the README presents a deliberate learning progression; alphabetical order would be easier to scan as a filesystem convention, but it would hide the curriculum sequence this repository is organized around.
 
 **Conventions used across all guides:**
 
@@ -191,4 +196,4 @@ If a phase is taking 3x as long as the guide's suggested timeline, that's a sign
 
 ## License
 
-This guide is provided for educational purposes. Feel free to share and adapt.
+MIT License. This is the best default for this project because the repository mixes explanatory writing with runnable learning code and benefits from a simple, permissive license that allows reuse, adaptation, and redistribution with minimal friction. See [LICENSE](./LICENSE).
