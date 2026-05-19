@@ -1,7 +1,7 @@
 const {themes} = require('prism-react-renderer');
 
 const siteUrl = 'https://25621.github.io';
-const siteBaseUrl = '/reinforcement-learning/';
+const siteBaseUrl = '/ai-learning-guides/';
 const siteDescription =
   'Learn reinforcement learning from scratch with a structured roadmap covering MDPs, dynamic programming, Q-learning, policy gradients, actor-critic methods, PPO, SAC, and modern deep RL.';
 const siteKeywords = [
@@ -32,7 +32,7 @@ const config = {
   url: siteUrl,
   baseUrl: siteBaseUrl,
   organizationName: '25621',
-  projectName: 'reinforcement-learning',
+  projectName: 'ai-learning-guides',
 
   onBrokenLinks: 'warn',
   markdown: {
@@ -128,7 +128,7 @@ const config = {
           sidebarPath: require.resolve('./sidebars.js'),
           breadcrumbs: true,
           editUrl: ({docPath}) =>
-            `https://github.com/25621/reinforcement-learning/edit/main/${docPath}`,
+            `https://github.com/25621/ai-learning-guides/edit/main/${docPath}`,
           include: [
             'README.md',
           ],
@@ -209,7 +209,7 @@ const config = {
       hideOnScroll: true,
       items: [
         {
-          href: 'https://github.com/25621/reinforcement-learning',
+          href: 'https://github.com/25621/ai-learning-guides',
           label: 'GitHub',
           position: 'right',
           'aria-label': 'GitHub repository',
@@ -230,7 +230,7 @@ const config = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/25621/reinforcement-learning',
+              href: 'https://github.com/25621/ai-learning-guides',
             },
           ],
         },
