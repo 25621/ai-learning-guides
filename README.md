@@ -1,417 +1,199 @@
-# Reinforcement Learning: From Beginner to Advanced
+# AI Learning Guides
 
-A comprehensive guide to understanding and building reinforcement learning systems, from fundamental concepts to research-level understanding.
+A collection of long-form, project-driven guides for learning modern AI from first principles. Each guide takes a single topic from "I've heard of this" to "I can build it and debug it," organized into phases with runnable projects at every step.
 
----
-
-## Overview
-
-| Phase | Focus | Duration |
-|-------|-------|----------|
-| 1 | [Foundations](#phase-1-foundations-2-4-weeks) | 2-4 weeks |
-| 2 | [Tabular Methods](#phase-2-tabular-methods-3-4-weeks) | 3-4 weeks |
-| 3 | [Function Approximation](#phase-3-function-approximation-3-4-weeks) | 3-4 weeks |
-| 4 | [Policy Gradient Methods](#phase-4-policy-gradient-methods-4-5-weeks) | 4-5 weeks |
-| 5 | [Advanced Topics](#phase-5-advanced-topics-6-8-weeks) | 6-8 weeks |
-| 6 | [Research-Level](#phase-6-research-level-ongoing) | Ongoing |
-
-**Total Time to Proficiency:** ~6 months
+> Built and maintained by a solo developer as personal learning notes — published in case they're useful to others. Code is runnable; expect rough edges.
 
 ---
 
-## Phase 1: Foundations (2-4 weeks) {#phase-1-foundations-2-4-weeks}
+## Guides
 
-### Goal
-Understand core concepts without deep math.
+| Guide | Topic | Phases | Best for |
+|---|---|---|---|
+| [PyTorch Deep Dive](./guides/pytorch-deep-dive/) | Tensors, autograd, performance, distributed, custom kernels | 11 | Going from PyTorch user to power user |
+| [LLM](./guides/llm/) | Transformers, GPT from scratch, pretraining, post-training, serving | 11 | Understanding and building language models |
+| [Image Generation](./guides/image-generation/) | Autoencoders, GANs, diffusion | 6 | Generative vision from foundations to diffusion |
+| [Reinforcement Learning](./guides/reinforcement-learning/) | MDPs, DQN, PPO, SAC, offline RL, RLHF | 11 | Learning RL as an algorithm family |
+| [Video Generation](./guides/video-generation/) | Video diffusion, latent video, DiTs, world models | 11 | Temporal generative models |
+| [Robotics](./guides/robotics/) | Control, perception, imitation learning, diffusion policies, VLAs, sim-to-real | 11 | Building robot learning systems |
+| [Multimodal Learning](./guides/multimodal-learning/) | CLIP, fusion, VLMs, any-to-any models | 11 | Combining modalities into shared representations |
+| [Inference Systems](./guides/inference-systems/) | KV cache, batching, speculative decoding, quantization, distributed serving | 11 | Putting trained LLMs into production |
+| [AI Hardware](./guides/ai-hardware/) | GPU architecture, CUDA/Triton, quantization, serving | 11 | Making models fast on real silicon |
 
-### Concepts to Learn
-- Agent, environment, state, action, reward
-- Markov Decision Processes (MDP)
-- Return and discount factor (γ)
-- Policy vs value function
-- Exploration vs exploitation tradeoff
-
-### Practical Work
-- [ ] [Implement a simple multi-armed bandit problem from scratch](foundations/multi_armed_bandit_explained.md)
-- [ ] [Solve Frozen Lake with random policy, observe results](foundations/frozen_lake_explained.md)
-- [ ] [Visualize state-value functions on a simple grid](foundations/state_value_visualization_explained.md)
-
-### Tools
-- Python
-- NumPy
-- Matplotlib (for visualization)
-
-### Resources
-- 📖 [Sutton & Barto](http://incompleteideas.net/book/the-book.html) - Chapters 1-3
-- 🎥 [David Silver Lectures](https://www.youtube.com/watch?v=2pWv7GOvuf0) - Lectures 1-2
-- 📝 [OpenAI Spinning Up - Introduction](https://spinningup.openai.com/en/latest/spinningup/rl_intro.html)
-
-### Milestone
-You should be able to explain the RL problem formulation and why MDPs are the standard framework.
+The order above is a suggested learning progression: foundations first, then single-modality work, then cross-modality and applied tracks, with the systems-heavy guides (Inference Systems and AI Hardware) as the production-and-performance endpoint. Each guide is self-contained but cross-references the others where it makes sense. Project folders live under each guide's `projects/` directory — see [the structure section](#repository-structure) below.
 
 ---
 
-## Phase 2: Tabular Methods (3-4 weeks) {#phase-2-tabular-methods-3-4-weeks}
+## Where to start
 
-### Goal
-Master classical RL algorithms where state/action spaces are small enough to store in tables.
+There is no single "first" guide. Where to start depends on what you're trying to build. A few common paths:
 
-### Concepts to Learn
-- Dynamic Programming
-  - Policy Evaluation
-  - Policy Iteration
-  - Value Iteration
-- Monte Carlo Methods
-  - First-visit vs every-visit MC
-  - MC control with exploring starts
-- Temporal Difference Learning
-  - TD(0) prediction
-  - SARSA (on-policy TD control)
-  - Q-learning (off-policy TD control)
-- Eligibility Traces and TD(λ)
+### "I'm comfortable with deep learning basics, I want to actually understand what I'm using"
+→ **[PyTorch Deep Dive](./guides/pytorch-deep-dive/)**. This is the foundation. If `view` vs `reshape`, autograd internals, or `torch.compile` feel hand-wavy to you, fix that first. Nearly every other guide assumes this fluency.
 
-### Practical Work
-- [ ] [Implement policy iteration for GridWorld](tabular_methods/policy_iteration_gridworld_explained.md)
-- [ ] [Build Q-learning agent for Frozen Lake](tabular_methods/q_learning_frozen_lake_explained.md)
-- [ ] [Implement SARSA for Cliff Walking](tabular_methods/sarsa_cliff_walking_explained.md)
-- [ ] [Compare SARSA vs Q-learning behavior (safe vs optimal paths)](tabular_methods/sarsa_vs_qlearning_explained.md)
-- [ ] [Implement Monte Carlo control for Blackjack](tabular_methods/monte_carlo_blackjack_explained.md)
+### "I want to build language models"
+→ **[LLM](./guides/llm/)**, with **[PyTorch Deep Dive](./guides/pytorch-deep-dive/)** as a parallel reference. Hit Phase 6 (post-training / RLHF) and you'll want the RLHF section of the **[Reinforcement Learning](./guides/reinforcement-learning/)** guide too. When you're ready to put a trained model in front of users, continue into **[Inference Systems](./guides/inference-systems/)**.
 
-### Key Insight
-Understand the backup diagrams—they clarify how each algorithm updates values.
+### "I want to serve LLMs in production"
+→ **[Inference Systems](./guides/inference-systems/)**. Assumes you've done at least Phases 1–3 of the **[LLM](./guides/llm/)** guide ("KV cache" and "decoder-only" should not feel fuzzy). Pair with **[AI Hardware](./guides/ai-hardware/)** Phases 4 + 7 when you hit kernel-level questions.
 
-### Tools
-- NumPy
-- Gymnasium (for environments)
+### "I want to build agents / robots that learn"
+→ **[Reinforcement Learning](./guides/reinforcement-learning/)** for the algorithms, then **[Robotics](./guides/robotics/)** for applying them to physical systems. Robotics also leans on imitation learning and diffusion policies, which don't require RL — you can read robotics first and dip into RL on demand.
 
-### Resources
-- 📖 Sutton & Barto - Chapters 4-7
-- 🎥 David Silver Lectures 3-5
-- 💻 [Denny Britz's RL Repository](https://github.com/dennybritz/reinforcement-learning)
+### "I want to build generative models for vision"
+→ **[Image Generation](./guides/image-generation/)** first (autoencoders → GANs → diffusion). Then **[Video Generation](./guides/video-generation/)**, which assumes image-side diffusion fluency. **[Multimodal Learning](./guides/multimodal-learning/)** is the natural next step if you want text↔image↔video.
 
-### Milestone
-Implement Q-learning from scratch and solve Frozen Lake with >70% success rate.
+### "I want to make models actually fast"
+→ **[AI Hardware](./guides/ai-hardware/)**. Different prerequisite stack from the others — systems-programming chops matter more than ML depth. Pair with **[PyTorch Deep Dive](./guides/pytorch-deep-dive/)** Phases 5–6 (performance, custom kernels).
+
+### "I'm starting from scratch"
+The honest answer: pick a project you actually want to build and work backward. Generic "learn AI" curricula tend to stall. If you want a default, do **[PyTorch Deep Dive](./guides/pytorch-deep-dive/)** → **[LLM](./guides/llm/)** Phases 1–3 → pick a direction.
 
 ---
 
-## Phase 3: Function Approximation (3-4 weeks) {#phase-3-function-approximation-3-4-weeks}
+## Dependency graph
 
-### Goal
-Scale RL beyond small state spaces using function approximators.
+How the guides relate to each other:
 
-### Concepts to Learn
-- Why tabular methods fail at scale
-- Linear function approximation
-- Neural networks as function approximators
-- Deep Q-Networks (DQN)
-  - Experience replay
-  - Target networks
-  - Reward clipping
-- DQN Improvements
-  - Double DQN
-  - Dueling DQN
-  - Prioritized Experience Replay
-  - Rainbow DQN
+```
+                    ┌──────────────────────┐
+                    │  PyTorch Deep Dive   │  ← foundation for everything
+                    └──────────┬───────────┘
+                               │
+        ┌──────────────────────┼──────────────────────┐
+        │                      │                      │
+        ▼                      ▼                      ▼
+  ┌──────────┐          ┌────────────┐         ┌──────────────┐
+  │   LLM    │          │     RL     │         │  Image Gen   │
+  └────┬─────┘          └──────┬─────┘         └──────┬───────┘
+       │                       │                      │
+       │                       ▼                      ▼
+       │                ┌────────────┐         ┌──────────────┐
+       │                │  Robotics  │         │  Video Gen   │
+       │                └────────────┘         └──────────────┘
+       │                                              │
+       ├──────────────────┬───────────────────────────┘
+       │                  │
+       ▼                  ▼
+┌──────────────┐   ┌────────────────┐
+│  Inference   │   │  Multimodal    │  ← combines modalities;
+│   Systems    │   │   Learning     │     read after LLM + Image Gen
+└──────────────┘   └────────────────┘
+       │
+       │  shares territory (kernels, quantization)
+       ▼
+┌──────────────┐
+│ AI Hardware  │  ← orthogonal systems track;
+└──────────────┘     pair with PyTorch Deep Dive
+```
 
-### Practical Work
-- [ ] [Solve CartPole with linear Q-learning](function_approximation/linear_q_cartpole_explained.md)
-- [ ] [Implement DQN from scratch for CartPole](function_approximation/dqn_cartpole_explained.md)
-- [ ] [Add experience replay, observe stability improvement](function_approximation/dqn_experience_replay_explained.md)
-- [ ] [Add target network, compare learning curves](function_approximation/dqn_target_network_explained.md)
-- [ ] [Train DQN on Atari Pong (use ALE-Py)](function_approximation/dqn_atari_pong_explained.md)
-- [ ] [Implement Double DQN, compare with vanilla DQN](function_approximation/double_dqn_cartpole_explained.md)
+**Hard dependencies:**
+- Video Generation assumes Image Generation (diffusion, U-Net, latent diffusion).
+- Robotics borrows continuous-control RL from the RL guide (SAC, PPO, sim-to-real).
+- Multimodal Learning assumes you've seen both a transformer-based LLM and an image encoder.
+- Inference Systems assumes LLM Phases 1–3 (transformer mechanics, KV cache concept).
 
-### Key Insight
-The "deadly triad" (function approximation + bootstrapping + off-policy) causes instability. DQN innovations address this.
-
-### Tools
-- PyTorch or TensorFlow
-- Gymnasium
-- ALE-Py (for Atari)
-- Weights & Biases (for experiment tracking)
-
-### Resources
-- 📖 Sutton & Barto - Chapters 9-11
-- 📄 [DQN Paper (Mnih et al., 2015)](https://www.nature.com/articles/nature14236)
-- 📄 [Rainbow Paper](https://arxiv.org/abs/1710.02298)
-- 💻 [CleanRL Implementations](https://github.com/vwxyzjn/cleanrl)
-
-### Milestone
-Train a DQN agent that achieves positive reward on Atari Pong.
-
----
-
-## Phase 4: Policy Gradient Methods (4-5 weeks) {#phase-4-policy-gradient-methods-4-5-weeks}
-
-### Goal
-Learn to optimize policies directly without computing value functions.
-
-### Concepts to Learn
-- Policy Gradient Theorem
-- REINFORCE algorithm
-- Variance reduction techniques
-  - Baselines
-  - Reward-to-go
-- Actor-Critic Methods
-  - A2C (Advantage Actor-Critic)
-  - A3C (Asynchronous variant)
-- Generalized Advantage Estimation (GAE)
-- Trust Region Methods
-  - TRPO (Trust Region Policy Optimization)
-  - PPO (Proximal Policy Optimization)
-
-### Practical Work
-- [ ] [Implement REINFORCE for CartPole](policy_gradients/reinforce_cartpole_explained.md)
-- [ ] [Add baseline, measure variance reduction](policy_gradients/reinforce_baseline_explained.md)
-- [ ] [Build A2C for LunarLander](policy_gradients/a2c_lunarlander_explained.md)
-- [ ] [Implement PPO from scratch](policy_gradients/ppo_scratch_explained.md)
-- [ ] [Train PPO on continuous control (BipedalWalker or MuJoCo)](policy_gradients/ppo_continuous_explained.md)
-- [ ] [Compare PPO hyperparameter sensitivity](policy_gradients/ppo_hyperparams_explained.md)
-
-### Key Insight
-PPO is the workhorse of modern RL—understand its clipping mechanism deeply.
-
-### Tools
-- PyTorch
-- Gymnasium
-- Stable-Baselines3 (for reference)
-- MuJoCo or Box2D (for continuous control)
-
-### Resources
-- 📖 Sutton & Barto - Chapter 13
-- 📝 [OpenAI Spinning Up - Policy Gradients](https://spinningup.openai.com/en/latest/spinningup/rl_intro3.html)
-- 📄 [PPO Paper (Schulman et al., 2017)](https://arxiv.org/abs/1707.06347)
-- 📄 [GAE Paper](https://arxiv.org/abs/1506.02438)
-- 🎥 [Pieter Abbeel's Deep RL Bootcamp](https://sites.google.com/view/deep-rl-bootcamp/lectures)
-
-### Milestone
-Implement PPO and solve BipedalWalker-v3 (reward > 300).
+**Soft dependencies:**
+- LLM Phase 6 (RLHF) reads better after RL Phase 9.
+- Robotics Phase 6 (VLAs) reads better after Multimodal Phase 5 (VLMs).
+- Inference Systems Phases 5–6 (quantization, kernels) overlap with AI Hardware Phases 4 and 7; read together if both interest you.
 
 ---
 
-## Phase 5: Advanced Topics (6-8 weeks) {#phase-5-advanced-topics-6-8-weeks}
+## Repository structure
 
-Choose 2-3 areas based on your interests.
-- [Model-Based RL](#model-based-rl)
-- [Multi-Agent RL](#multi-agent-rl)
-- [Offline/Batch RL](#offlinebatch-rl)
-- [Exploration](#exploration)
-- [Hierarchical RL](#hierarchical-rl)
-- [RLHF (RL from Human Feedback)](#rlhf-rl-from-human-feedback)
+```
+ai-learning-guides/
+├── README.md                     ← you are here
+├── shared/
+│   ├── glossary.md               ← terms used across multiple guides
+│   └── prerequisites.md          ← common Phase 0 material
+├── guides/
+│   ├── pytorch-deep-dive/
+│   │   ├── README.md             ← the guide itself
+│   │   ├── projects/
+│   │   │   ├── 01-stride-explorer/
+│   │   │   │   ├── README.md     ← project explanation
+│   │   │   │   ├── run.py        ← entry point
+│   │   │   │   └── ...
+│   │   │   ├── 02-micrograd-pytorch-style/
+│   │   │   └── ...
+│   │   ├── requirements.txt
+│   │   └── STATUS.md             ← last-tested dates per project
+│   ├── llm/
+│   │   └── ... (same shape)
+│   ├── image-generation/
+│   │   └── ... (same shape)
+│   ├── reinforcement-learning/
+│   │   └── ... (same shape)
+│   ├── video-generation/
+│   ├── robotics/
+│   ├── multimodal-learning/
+│   ├── inference-systems/
+│   └── ai-hardware/
+└── LICENSE
+```
 
-### Model-Based RL {#model-based-rl}
-Learn environment dynamics to plan or generate synthetic experience.
+The `guides/` directories are listed in the same order as the [Guides](#guides) table. That is preferable here because the README presents a deliberate learning progression; alphabetical order would be easier to scan as a filesystem convention, but it would hide the curriculum sequence this repository is organized around.
 
-**Concepts:**
-- Dyna architecture
-- World models
-- Model Predictive Control (MPC)
-- MuZero, Dreamer
+**Conventions used across all guides:**
 
-**Practical Work:**
-- [ ] [Implement Dyna-Q](advanced_topics/model_based_rl/dyna_q_explained.md)
-- [ ] [Train a world model on a simple environment](advanced_topics/model_based_rl/world_model_explained.md)
-- [ ] [Use learned model for planning](advanced_topics/model_based_rl/model_based_planning_explained.md)
-
-**Resources:**
-- 📖 Sutton & Barto - Chapter 8
-- 📄 [World Models Paper](https://arxiv.org/abs/1803.10122)
-- 📄 [MuZero Paper](https://arxiv.org/abs/1911.08265)
-- 📄 [DreamerV3 Paper](https://arxiv.org/abs/2301.04104)
-
----
-
-### Multi-Agent RL {#multi-agent-rl}
-Multiple agents learning simultaneously in shared environments.
-
-**Concepts:**
-- Independent learners
-- Centralized training, decentralized execution (CTDE)
-- Self-play
-- Emergent communication
-
-**Practical Work:**
-- [ ] [Train agents in simple matrix games](advanced_topics/multi_agent_rl/matrix_games_explained.md)
-- [ ] [Implement self-play for a board game](advanced_topics/multi_agent_rl/self_play_tic_tac_toe_explained.md)
-- [ ] [Explore PettingZoo environments](advanced_topics/multi_agent_rl/pettingzoo_explore_explained.md)
-
-**Resources:**
-- 📄 [Multi-Agent RL Survey](https://arxiv.org/abs/1911.10635)
-- 📄 [OpenAI Five](https://arxiv.org/abs/1912.06680)
-- 💻 [PettingZoo Library](https://pettingzoo.farama.org/)
+- **Phases.** Each guide is split into ~6–11 phases that go from foundations to frontier. Phase 0, when present, is prerequisites.
+- **Projects.** Each phase ends with a projects table. Projects are difficulty-rated (⭐ to ⭐⭐⭐⭐⭐) and live as folders under `guides/<topic>/projects/`, numbered sequentially across the whole guide (not per phase).
+- **Bidirectional links.** Every project README links back to its phase; every phase links forward to its projects.
+- **Runnable, not tested.** Code is meant to run, but there's no CI. Each guide's `STATUS.md` notes when projects were last verified.
+- **Pinned dependencies.** Each guide has its own `requirements.txt`. Versions are pinned loosely (`>=X,<Y`) — strict enough to avoid silent rot, loose enough not to break weekly.
 
 ---
 
-### Offline/Batch RL {#offlinebatch-rl}
-Learn from fixed datasets without environment interaction.
+## Project difficulty legend
 
-**Concepts:**
-- Distribution shift problem
-- Conservative Q-Learning (CQL)
-- Implicit Q-Learning (IQL)
-- Decision Transformer
+| Tier | Meaning | Typical time |
+|---|---|---|
+| ⭐ | "Make sure you understand the concept" — single file, a few dozen lines | 30 min – 2 hours |
+| ⭐⭐ | "Build a working version" — multiple files, real implementation | 2 – 8 hours |
+| ⭐⭐⭐ | "Build something non-trivial" — design choices matter, debugging matters | 1 – 3 days |
+| ⭐⭐⭐⭐ | "Reproduce a paper" — published result on a small scale; expect to fight your tooling | 1 – 2 weeks |
+| ⭐⭐⭐⭐⭐ | "Research-level" — open-ended, likely no reference implementation matches yours exactly | 2+ weeks, often much more |
 
-**Practical Work:**
-- [ ] [Train on D4RL benchmark datasets](advanced_topics/offline_rl/d4rl_dataset_explained.md)
-- [ ] [Implement CQL](advanced_topics/offline_rl/cql_explained.md)
-- [ ] [Compare with behavioral cloning](advanced_topics/offline_rl/behavioral_cloning_explained.md)
-
-**Resources:**
-- 📄 [Offline RL Tutorial](https://arxiv.org/abs/2005.01643)
-- 📄 [CQL Paper](https://arxiv.org/abs/2006.04779)
-- 📄 [Decision Transformer](https://arxiv.org/abs/2106.01345)
-- 💻 [D4RL Benchmark](https://github.com/Farama-Foundation/D4RL)
+These are guidelines, not promises. ⭐⭐⭐⭐ projects routinely overrun their estimates; ⭐⭐⭐⭐⭐ projects are graded on what you learned, not whether they "worked."
 
 ---
 
-### Exploration {#exploration}
-Address sparse reward and hard exploration problems.
+## Philosophy
 
-**Concepts:**
-- Intrinsic motivation
-- Curiosity-driven exploration (ICM)
-- Random Network Distillation (RND)
-- Count-based exploration
-- Go-Explore
+A few opinions that shape every guide here:
 
-**Practical Work:**
-- [ ] [Implement curiosity bonus](advanced_topics/exploration/curiosity_bonus_explained.md)
-- [ ] [Train on Montezuma's Revenge](advanced_topics/exploration/montezuma_revenge_explained.md)
-- [ ] [Compare exploration strategies](advanced_topics/exploration/compare_exploration_explained.md)
+**Build first, derive later.** You learn faster when you have working code in front of you. Each phase opens with concepts, then code, then projects — in that order, but the projects are where it sticks.
 
-**Resources:**
-- 📄 [ICM Paper](https://arxiv.org/abs/1705.05363)
-- 📄 [RND Paper](https://arxiv.org/abs/1810.12894)
-- 📄 [Go-Explore](https://arxiv.org/abs/1901.10995)
-- 📄 [Deep Exploration via Bootstrapped DQN](https://arxiv.org/abs/1602.04621) — source of the DeepSea task
+**Explicit over magic.** Where there's a choice between calling a library and writing the loop, the guides write the loop at least once. You can use the library afterward with eyes open.
+
+**Equations are checkpoints, not décor.** When an equation appears, it's because you'll need to recognize it in code five pages later. If you can't connect the math to the implementation, slow down.
+
+**Frontier topics are flagged honestly.** The "Phase 10: Frontier" sections describe things actively being researched. They go stale fastest. Treat them as starting points, not conclusions.
+
+**No prestige hierarchy of topics.** A working bigram model is more valuable than a half-built MoE. The ⭐ projects are not throwaway — they're the foundation the ⭐⭐⭐⭐⭐ ones rest on.
 
 ---
 
-### Hierarchical RL {#hierarchical-rl}
-Learn at multiple levels of temporal abstraction.
+## Suggested learning timelines
 
-**Concepts:**
-- Options framework
-- Goal-conditioned policies
-- Feudal networks
-- HIRO, HAM
+These are rough — real time depends heavily on background and how much you build vs. read.
 
-**Practical Work:**
-- [ ] [Implement option-critic architecture](advanced_topics/hierarchical_rl/option_critic_explained.md)
-- [ ] [Train goal-conditioned policy](advanced_topics/hierarchical_rl/goal_conditioned_policy_explained.md)
-- [ ] [Test on long-horizon tasks](advanced_topics/hierarchical_rl/long_horizon_tasks_explained.md)
+| Path | Guides | Approx. time (part-time) |
+|---|---|---|
+| LLM engineer track | PyTorch Deep Dive → LLM → RL Phase 9 (RLHF) | 4 – 6 months |
+| LLM serving track | PyTorch Deep Dive → LLM Phases 1–3 → Inference Systems | 3 – 5 months |
+| Generative vision track | PyTorch Deep Dive → Image Gen → Video Gen | 3 – 5 months |
+| Robotics ML track | PyTorch Deep Dive → RL Phases 1–5 → Robotics | 4 – 6 months |
+| Multimodal track | PyTorch Deep Dive → LLM Phases 1–3 → Image Gen Phases 1–5 → Multimodal | 5 – 7 months |
+| Systems track | PyTorch Deep Dive → AI Hardware → Inference Systems | 3 – 5 months |
+| The whole thing | All nine guides, in dependency order | 14 – 20 months |
 
-**Resources:**
-- 📖 Sutton & Barto - Chapter 12 (Options)
-- 📄 [Option-Critic Paper](https://arxiv.org/abs/1609.05140)
-- 📄 [HIRO Paper](https://arxiv.org/abs/1805.08296)
-
----
-
-### RLHF (RL from Human Feedback) {#rlhf-rl-from-human-feedback}
-Align models with human preferences.
-
-**Concepts:**
-- Reward modeling from comparisons
-- KL-constrained policy optimization
-- Constitutional AI
-- DPO (Direct Preference Optimization)
-
-**Practical Work:**
-- [ ] [Train a reward model from preference data](advanced_topics/rlhf/reward_modeling_explained.md)
-- [ ] [Fine-tune a small LM with PPO](advanced_topics/rlhf/ppo_fine_tuning_explained.md)
-- [ ] [Implement DPO](advanced_topics/rlhf/dpo_implementation_explained.md)
-
-**Resources:**
-- 📄 [InstructGPT Paper](https://arxiv.org/abs/2203.02155)
-- 📄 [Constitutional AI](https://arxiv.org/abs/2212.08073)
-- 📄 [DPO Paper](https://arxiv.org/abs/2305.18290)
-- 💻 [TRL Library](https://github.com/huggingface/trl)
-
----
-
-## Phase 6: Research-Level (Ongoing) {#phase-6-research-level-ongoing}
-
-### Goal
-Contribute original work to the field.
-
-### Activities
-- Read papers from NeurIPS, ICML, ICLR regularly
-- Reproduce key results from recent papers
-- Identify open problems and limitations
-- Run rigorous experiments with proper evaluation
-- Consider sample efficiency, generalization, safety
-
-### Landmark Papers to Study
-- [ ] [AlphaGo (Silver et al., 2016)](https://www.nature.com/articles/nature16961)
-- [ ] [AlphaZero (Silver et al., 2018)](https://www.science.org/doi/10.1126/science.aar6404)
-- [ ] [MuZero (Schrittwieser et al., 2020)](https://arxiv.org/abs/1911.08265)
-- [ ] [Decision Transformer (Chen et al., 2021)](https://arxiv.org/abs/2106.01345)
-- [ ] [InstructGPT (Ouyang et al., 2022)](https://arxiv.org/abs/2203.02155)
-- [ ] [DreamerV3 (Hafner et al., 2023)](https://arxiv.org/abs/2301.04104)
-
-### Where to Publish
-- NeurIPS, ICML, ICLR (top venues)
-- AAAI, IJCAI
-- CoRL (robotics focus)
-- Workshop papers for early work
-
----
-
-## Tools Summary
-
-| Phase | Recommended Tools |
-|-------|-------------------|
-| 1-2 | NumPy, Matplotlib |
-| 3 | PyTorch, Gymnasium, ALE-Py, W&B |
-| 4 | Stable-Baselines3, MuJoCo/Box2D |
-| 5-6 | Custom code, Ray/RLlib, JAX (for speed) |
-
----
-
-## Tips for Success
-
-1. **Implement from scratch first** — Use libraries only after you understand the algorithm
-2. **Debug with simple environments** — CartPole before Atari, always
-3. **Log everything** — Rewards, losses, gradients, episode lengths
-4. **Visualize learning** — Plot learning curves, render episodes
-5. **Read the Sutton & Barto book** — It's the bible of RL
-6. **Understand the math** — At least policy gradient theorem and Bellman equations
-7. **Be patient** — RL is notoriously unstable; failed runs are normal
-8. **Use seeds** — Reproducibility matters; average over multiple seeds
-9. **Join communities** — r/reinforcementlearning, RL Discord, Twitter/X
-
----
-
-## Common Pitfalls to Avoid
-
-- ❌ Skipping fundamentals to jump into deep RL
-- ❌ Not normalizing observations/rewards
-- ❌ Using too large/small learning rates
-- ❌ Forgetting to set evaluation mode during testing
-- ❌ Not using enough seeds for experiments
-- ❌ Implementing from papers without checking reference code
-- ❌ Giving up after one failed training run
-
----
-
-## Glossary
-
-| Term | Definition |
-|------|------------|
-| **MDP** | Markov Decision Process - formal framework for RL |
-| **Policy (π)** | Mapping from states to actions |
-| **Value Function (V)** | Expected return from a state |
-| **Q-Function** | Expected return from a state-action pair |
-| **TD Error** | Difference between predicted and bootstrapped value |
-| **GAE** | Generalized Advantage Estimation |
-| **PPO** | Proximal Policy Optimization |
-| **RLHF** | Reinforcement Learning from Human Feedback |
+If a phase is taking 3x as long as the guide's suggested timeline, that's a signal — usually a prerequisite is shaky, not that you're slow.
 
 ---
 
 ## License
 
-This guide is provided for educational purposes. Feel free to share and adapt.
-
----
+MIT License. See the [LICENSE](LICENSE) file for details.
