@@ -4,15 +4,6 @@ A comprehensive guide to robotics as a *subject* — not just as the hobbyist Ar
 
 > **An honest framing.** Most of the "magic" of modern robotics is not a single breakthrough — it is the compounding of a few simple ideas (rigid-body transforms, feedback control, probabilistic estimation, learned policies) executed against the unforgiving thermodynamics of the real world. The math is mostly undergraduate; the engineering is not. This guide teaches kinematics and dynamics deeply because you cannot debug a wobbling robot you do not understand, and then teaches perception, planning, learning, and systems work that the textbook chapters either skip or treat in isolation.
 
-This guide is **complementary to**, not a replacement for:
-- The [Reinforcement Learning Guide](reinforcement-learning-guide.md), whose chapters on policy gradients, model-based RL, and sim-to-real overlap with Phase 8 here. Read the RL guide if you want the algorithmic depth behind learned control.
-- The [LLM Guide](llm-guide.md), whose Phase 7 (tools and agents) and Phase 10 (multimodal frontiers) connect to vision-language-action models in Phase 10 here.
-- The [Multimodal Learning Guide](multimodal-learning-guide.md), which covers the perception backbones that get pretrained off-robot and fine-tuned for embodied tasks.
-
-Do this guide first if you want to understand robotics the system. Do the RL guide if you want to understand the policy-learning loop. Do both for the full picture.
-
-A companion code repository with runnable implementations is recommended at [`../robotics/`](../robotics/) (one folder per phase, one notebook or script per project, with both a simulator track and a hardware track).
-
 ---
 
 ## Table of Contents
@@ -1546,4 +1537,4 @@ The capabilities frontier of robotics is dominated by *integration*, not by any 
 
 ## License
 
-This guide is provided for educational purposes. Feel free to share and adapt.
+MIT License. See the [LICENSE](../../LICENSE) file for details.

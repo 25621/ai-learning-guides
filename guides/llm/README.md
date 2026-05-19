@@ -4,15 +4,6 @@ A comprehensive guide to large language models as a *subject* — not just as th
 
 > **An honest framing.** Most of the "magic" of modern LLMs is not a single breakthrough — it is the compounding of a few simple ideas (next-token prediction, the transformer, scaling) executed at enormous cost with enormous care. The math is mostly undergraduate; the engineering is not. This guide teaches the architecture and the objectives because you cannot debug what you do not understand, and then teaches the data, infrastructure, alignment, and inference work that the textbook chapters skip.
 
-This guide is **complementary to**, not a replacement for:
-- The [Reinforcement Learning Guide](reinforcement-learning-guide.md), whose Phase 9 (RLHF / DPO / GRPO / RLVR) overlaps with Phase 5 here. Read the RL guide if you want the algorithmic depth behind the alignment stack.
-- The [Multimodal Learning Guide](multimodal-learning-guide.md), which covers vision-language and audio-language models.
-- The [Inference Systems Guide](inference-systems-guide.md), which covers serving, KV caches, and speculative decoding at production depth.
-
-Do this guide first if you want to understand LLMs the system. Do the RL guide if you want to understand the alignment loop. Do both for the full picture.
-
-A companion code repository with runnable implementations is recommended at [`../llm/`](../llm/) (one folder per phase, one notebook or script per project).
-
 ---
 
 ## Table of Contents
@@ -1358,4 +1349,4 @@ The capabilities frontier is well-understood and well-funded. The hard problems 
 
 ## License
 
-This guide is provided for educational purposes. Feel free to share and adapt.
+MIT License. See the [LICENSE](../../LICENSE) file for details.

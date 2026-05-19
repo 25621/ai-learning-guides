@@ -4,8 +4,6 @@ A comprehensive guide to understanding PyTorch as a *system* — not just as the
 
 > **Why this guide exists.** Every other modern AI guide — text generation, image generation, LLMs, robotics, multimodal — assumes PyTorch fluency. None teaches PyTorch as its own subject. The result is that most practitioners can write `loss.backward()` but cannot explain what the autograd engine is doing, profile a training step, or fix a hang in distributed training. This guide closes that gap.
 
-A companion code repository with runnable implementations is recommended at [`../pytorch-deep-dive/`](../pytorch-deep-dive/) (one folder per phase, one notebook or script per project).
-
 ---
 
 ## Table of Contents
@@ -870,4 +868,4 @@ PyTorch is a Python frontend over a C++ library. The Python you write is convert
 
 ## License
 
-This guide is provided for educational purposes. Feel free to share and adapt.
+MIT License. See the [LICENSE](../../LICENSE) file for details.

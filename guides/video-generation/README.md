@@ -4,10 +4,6 @@ A comprehensive guide to understanding and building video generation systems —
 
 > **Video generation = image generation + time.** That one sentence is both true and dangerously misleading. The "+ time" introduces problems that have no image-gen analog: temporal consistency, motion priors, enormous compute (a 5-second 720p clip is ~150 images), and the brutal scarcity of high-quality paired video-text data. This guide is about how the field solved (and is still solving) those problems.
 
-This guide assumes you have already worked through, or are comfortable with, the [Image Generation Guide](image-generation-guide.md) and the [Multimodal Learning Guide](multimodal-learning-guide.md) — at minimum you should understand U-Nets, diffusion training and sampling, latent diffusion (Stable Diffusion-style), and text conditioning via cross-attention. If those are unfamiliar, do them first. Video generation is image generation with a third axis; if the third axis is the only thing you're new to, you'll move fast.
-
-A companion code repository with runnable implementations is recommended at [`../video-generation/`](../video-generation/) (one folder per phase).
-
 ---
 
 ## Table of Contents
@@ -896,4 +892,4 @@ Video generation in 2026 is where text generation was around 2021 — extraordin
 
 ## License
 
-This guide is provided for educational purposes. Feel free to share and adapt.
+MIT License. See the [LICENSE](../../LICENSE) file for details.

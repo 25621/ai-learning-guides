@@ -4,15 +4,6 @@ A comprehensive guide to **serving** large language models — the layer between
 
 > **An honest framing.** Training is a fixed cost; serving is a forever cost. A modest production system serves more tokens in its first month than the model ever saw during fine-tuning. The math that makes a serving system economically viable is *almost entirely* about how cleverly you handle memory bandwidth, batch heterogeneity, and the KV cache. The model architecture you can copy from the [LLM Guide](llm-guide.md). The serving system you cannot copy from anywhere — every workload is different, and the right stack for a chatbot is the wrong stack for a code-completion sidecar.
 
-This guide is **complementary to**, not a replacement for:
-- The [Large Language Models Guide](llm-guide.md), whose Phase 9 sketches inference at a high level. This guide is the production-depth version of that one phase.
-- The [Reinforcement Learning Guide](reinforcement-learning-guide.md), if you also do post-training (RL rollouts share an inference engine with serving and have their own quirks).
-- The [Multimodal Learning Guide](multimodal-learning-guide.md), which covers serving multimodal models (image encoders, audio chunkers, etc.) and is mostly out of scope here.
-
-Do the LLM guide first if the words "KV cache" and "decoder-only" feel fuzzy. Then come back here.
-
-A companion code repository with runnable implementations is recommended at [`../inference/`](../inference/) (one folder per phase, one notebook or script per project).
-
 ---
 
 ## Table of Contents
@@ -1421,4 +1412,4 @@ The frontier of inference systems is not bigger models — it is **smarter use o
 
 ## License
 
-This guide is provided for educational purposes. Feel free to share and adapt.
+MIT License. See the [LICENSE](../../LICENSE) file for details.

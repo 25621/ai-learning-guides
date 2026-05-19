@@ -4,10 +4,6 @@ A comprehensive guide to the hardware that makes modern AI possible — from GPU
 
 > **An honest framing.** This guide covers AI hardware as it exists in 2026, not as it's marketed. Most of "DIY AI hardware" is *assembling and programming* hardware that already exists — building a multi-GPU workstation, writing custom CUDA/Triton kernels, fine-tuning quantization. *Fabricating your own GPU/TPU/HBM is not a thing for individuals* — single GPUs cost billions of dollars to design and tens of millions per wafer to manufacture. The achievable DIY frontier is custom inference ASICs via tinytapeout-style flows, FPGA acceleration, and serious system integration. This guide is honest about that distinction.
 
-This is the capstone of the curriculum. The earlier guides — [PyTorch Deep Dive](pytorch-deep-dive-guide.md), [LLM](llm-guide.md), [Video Generation](video-generation-guide.md), [Robotics](robotics-guide.md) — assume hardware as a given. This guide is about *why* the hardware is the way it is, and *how* to program it intentionally instead of treating it as a black box.
-
-A companion code repository with kernel examples and benchmarks is recommended at [`../ai-hardware/`](../ai-hardware/) (one folder per phase).
-
 ---
 
 ## Table of Contents
@@ -1022,4 +1018,4 @@ Power and cooling, not silicon, are increasingly the binding constraint on AI bu
 
 ## License
 
-This guide is provided for educational purposes. Feel free to share and adapt.
+MIT License. See the [LICENSE](../../LICENSE) file for details.

@@ -4,15 +4,6 @@ A comprehensive guide to reinforcement learning as a *subject* — not just as t
 
 > **An honest framing.** Classical RL — the part of the field taught in textbooks — is a beautiful theory built on Markov decision processes, dynamic programming, and stochastic approximation. Most of it does not work directly on the problems people actually care about in 2026. What *does* work is a handful of robust algorithms (PPO, SAC, GRPO, MuZero-style search, DPO) applied with a mountain of practical knowledge about reward shaping, exploration, normalization, and infrastructure. This guide teaches the theory because you cannot debug what you do not understand, and then teaches the practice that the theory does not cover.
 
-This guide is **complementary to**, not a replacement for:
-- The [Physical Reinforcement Learning Guide](physical-reinforcement-learning-guide.md), which covers RL on real robots and the control-theoretic foundations that go with it.
-- The [Robotics Guide](robotics-guide.md), which covers robot learning more broadly (imitation, diffusion policies, VLAs).
-- The [Multimodal Learning Guide](multimodal-learning-guide.md), whose RLHF section overlaps with Phase 9 here.
-
-Do this guide first if you want to understand RL the algorithm. Do the physical-RL guide if you want to apply it to robots. Do both for the full picture.
-
-A companion code repository with runnable implementations is recommended at [`../reinforcement-learning/`](../reinforcement-learning/) (one folder per phase, one notebook or script per project).
-
 ---
 
 ## Table of Contents
@@ -1159,4 +1150,4 @@ Sample complexity bounds, regret bounds, PAC-RL, distributional shifts. Currentl
 
 ## License
 
-This guide is provided for educational purposes. Feel free to share and adapt.
+MIT License. See the [LICENSE](../../LICENSE) file for details.

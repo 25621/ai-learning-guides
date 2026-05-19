@@ -4,10 +4,6 @@ A comprehensive guide to understanding and building image generation systems —
 
 > **Image generation is density estimation in disguise.** You are trying to learn `p(image)` — or more usefully, `p(image | text)` — over a space with millions of dimensions, where almost every point is noise and the manifold of "real-looking pictures" is vanishingly thin. The history of the field is the history of finding tractable surrogates for that intractable objective: adversarial games, variational bounds, denoising scores. Diffusion won; understanding *why* it won is the point of this guide.
 
-This guide is one of the foundations of the [AI Learning Guides](../../README.md) repository. It assumes PyTorch fluency (see the [PyTorch Deep Dive](../pytorch-deep-dive/) guide) and basic familiarity with transformers — but nothing else specifically about generative modeling. It is also a hard prerequisite for the [Video Generation Guide](../video-generation/) and a soft prerequisite for the [Multimodal Learning Guide](../multimodal-learning/), both of which build directly on the diffusion machinery developed here.
-
-A companion code repository with runnable implementations is recommended at [`../image-generation/`](../image-generation/) (one folder per phase).
-
 ---
 
 ## Table of Contents
@@ -1348,4 +1344,6 @@ Image generation in 2026 is converging *fast*. The architectural recipe (VAE + D
 
 ---
 
-*This guide is part of the [AI Learning Guides](../../README.md) repository. For corrections, issues, or contributions, see the repository's main README.*
+## License
+
+MIT License. See the [LICENSE](../../LICENSE) file for details.

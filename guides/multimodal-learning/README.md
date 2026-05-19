@@ -4,10 +4,6 @@ A comprehensive guide to understanding and building systems that learn from and 
 
 > **"Multimodal learning"** is the slice of machine learning that operates on more than one input/output type. A model that reads an image and writes a caption is multimodal. A model that listens to audio and produces text is multimodal. A model that takes a text prompt and a reference image and produces a video is *very* multimodal. This guide is about how those systems work, how to train them, and where the field is going.
 
-This guide assumes you have already worked through, or are comfortable with, the material in the [Text Generation Guide](text-generation-guide.md) and [Image Generation Guide](image-generation-guide.md) — or at least a solid grasp of transformers and PyTorch. If those are unfamiliar, do them first. Multimodal models are *fusions* of text and vision systems; you cannot fuse what you don't yet understand.
-
-A companion code repository with runnable implementations is recommended at [`../multimodal-learning/`](../multimodal-learning/) (one folder per phase).
-
 ---
 
 ## Table of Contents
@@ -950,4 +946,4 @@ Visual jailbreaks (typographic attacks, adversarial images), CSAM detection, dee
 
 ## License
 
-This guide is provided for educational purposes. Feel free to share and adapt.
+MIT License. See the [LICENSE](../../LICENSE) file for details.
