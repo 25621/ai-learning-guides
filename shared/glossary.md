@@ -574,6 +574,9 @@ Encoder-decoder architecture with skip connections; the standard diffusion backb
 ### URDF / MJCF / USD {#urdf--mjcf--usd}
 Robot description formats (ROS, MuJoCo, NVIDIA respectively)
 
+### underflow {#underflow}
+Condition where a floating-point value is too small to be represented and rounds to zero; common with `float16` when accumulating very small gradients
+
 ### V2V {#v2v}
 Video-to-Video
 

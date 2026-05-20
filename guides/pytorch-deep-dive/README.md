@@ -118,7 +118,7 @@ the indexing formula above):
 | Stride explorer | Print `.shape`, `.stride()`, `.storage_offset()`, `.is_contiguous()` after every reshape/transpose/permute on a few tensors | ⭐ |
 | View vs copy detective | Modify a tensor through a view, observe the original; find operations that silently copy | ⭐⭐ |
 | Manual indexing | Given `(shape, stride, offset)`, compute the flat storage index for `[i, j, k]` by hand and check with `.data_ptr()` | ⭐⭐ |
-| dtype precision study | Compare `float32`, `float16`, `bfloat16` on a sum of 1M small numbers; observe loss-of-precision and underflow | ⭐⭐ |
+| dtype precision study | Compare `float32`, `float16`, `bfloat16` on a sum of 1M small numbers; observe loss-of-precision and [underflow](/shared/glossary/#underflow) | ⭐⭐ |
 | Broadcasting bug hunt | Construct 5 expressions where broadcasting produces a result you didn't intend; write the rule you violated | ⭐⭐ |
 
 ### Sample Code: Strides in Action
