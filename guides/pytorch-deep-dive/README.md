@@ -115,11 +115,11 @@ the indexing formula above):
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Stride explorer | Print `.shape`, `.stride()`, `.storage_offset()`, `.is_contiguous()` after every reshape/transpose/permute on a few tensors | ⭐ |
-| View vs copy detective | Modify a tensor through a view, observe the original; find operations that silently copy | ⭐⭐ |
-| Manual indexing | Given `(shape, stride, offset)`, compute the flat storage index for `[i, j, k]` by hand and check with `.data_ptr()` | ⭐⭐ |
-| dtype precision study | Compare `float32`, `float16`, `bfloat16` on a sum of 1M small numbers; observe loss-of-precision and [underflow](/shared/glossary/#underflow) | ⭐⭐ |
-| Broadcasting bug hunt | Construct 5 expressions where broadcasting produces a result you didn't intend; write the rule you violated | ⭐⭐ |
+| [Stride explorer](projects/01-stride-explorer/README.md) | Print `.shape`, `.stride()`, `.storage_offset()`, `.is_contiguous()` after every reshape/transpose/permute on a few tensors | ⭐ |
+| [View vs copy detective](projects/02-view-vs-copy-detective/README.md) | Modify a tensor through a view, observe the original; find operations that silently copy | ⭐⭐ |
+| [Manual indexing](projects/03-manual-indexing/README.md) | Given `(shape, stride, offset)`, compute the flat storage index for `[i, j, k]` by hand and check with `.data_ptr()` | ⭐⭐ |
+| [dtype precision study](projects/04-dtype-precision-study/README.md) | Compare `float32`, `float16`, `bfloat16` on a sum of 1M small numbers; observe loss-of-precision and [underflow](/shared/glossary/#underflow) | ⭐⭐ |
+| [Broadcasting bug hunt](projects/05-broadcasting-bug-hunt/README.md) | Construct 5 expressions where broadcasting produces a result you didn't intend; write the rule you violated | ⭐⭐ |
 
 ### Sample Code: Strides in Action
 
