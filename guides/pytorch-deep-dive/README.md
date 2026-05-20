@@ -191,12 +191,12 @@ and produces gradients for its inputs.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Micrograd in PyTorch style | Reimplement a scalar autograd engine with `Value` objects that build a DAG and traverse it backward | ⭐⭐ |
-| Manual backprop | Train a 2-layer MLP without ever calling `.backward()` — compute gradients by hand and compare to autograd | ⭐⭐⭐ |
-| Custom `autograd.Function` | Implement a `ReLU` and a `Sigmoid` as `torch.autograd.Function` subclasses with `forward` and `backward` | ⭐⭐ |
-| Straight-through estimator | Implement a non-differentiable `round` operation that passes gradients through as if it were identity | ⭐⭐⭐ |
-| Gradient checkpointing | Manually checkpoint a deep network with `torch.utils.checkpoint` and measure the memory/time tradeoff | ⭐⭐⭐ |
-| Double backward | Compute ∇(‖∇L‖²) — the gradient of the gradient norm — for a small model | ⭐⭐⭐⭐ |
+| [Micrograd in PyTorch style](projects/06-micrograd-in-pytorch-style/README.md) | Reimplement a scalar autograd engine with `Value` objects that build a DAG and traverse it backward | ⭐⭐ |
+| [Manual backprop](projects/07-manual-backprop/README.md) | Train a 2-layer MLP without ever calling `.backward()` — compute gradients by hand and compare to autograd | ⭐⭐⭐ |
+| [Custom `autograd.Function`](projects/08-custom-autograd-function/README.md) | Implement a `ReLU` and a `Sigmoid` as `torch.autograd.Function` subclasses with `forward` and `backward` | ⭐⭐ |
+| [Straight-through estimator](projects/09-straight-through-estimator/README.md) | Implement a non-differentiable `round` operation that passes gradients through as if it were identity | ⭐⭐⭐ |
+| [Gradient checkpointing](projects/10-gradient-checkpointing/README.md) | Manually checkpoint a deep network with `torch.utils.checkpoint` and measure the memory/time tradeoff | ⭐⭐⭐ |
+| [Double backward](projects/11-double-backward/README.md) | Compute ∇(‖∇L‖²) — the gradient of the gradient norm — for a small model | ⭐⭐⭐⭐ |
 
 ### Sample Code: A Custom Autograd Function
 
