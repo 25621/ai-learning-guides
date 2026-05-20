@@ -571,11 +571,11 @@ Time to first token — dominated by prefill plus queue wait
 ### U-Net {#u-net}
 Encoder-decoder architecture with skip connections; the standard diffusion backbone before DiT
 
+### Underflow {#underflow}
+Condition where a floating-point value is too small to be represented and rounds to zero; common with `float16` when accumulating very small gradients
+
 ### URDF / MJCF / USD {#urdf--mjcf--usd}
 Robot description formats (ROS, MuJoCo, NVIDIA respectively)
-
-### underflow {#underflow}
-Condition where a floating-point value is too small to be represented and rounds to zero; common with `float16` when accumulating very small gradients
 
 ### V2V {#v2v}
 Video-to-Video
