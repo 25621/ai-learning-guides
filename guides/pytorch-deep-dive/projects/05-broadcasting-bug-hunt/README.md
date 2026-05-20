@@ -14,9 +14,3 @@ Broadcasting is *so* helpful that PyTorch will happily "stretch" tensors across 
 ## Why This Matters
 
 A shape mismatch that *crashes* is easy to debug: you see the error, you fix the shape. A shape mismatch that *silently produces wrong values* can travel unnoticed through dozens of layers, corrupt a loss function, and only reveal itself as "the model isn't learning" — days later.
-
-## The Rule Worth Memorizing
-
-> Shapes align from the **right**. A dimension of size `1` is a wildcard. Everything else must match exactly.
-
-When a broadcast operation succeeds but the result is larger than you expected, that is the moment to stop and question your shapes.
