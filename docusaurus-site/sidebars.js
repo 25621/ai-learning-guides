@@ -7,11 +7,6 @@ const sidebars = {
       label: 'Introduction',
     },
     {
-      type: 'doc',
-      id: 'shared/glossary',
-      label: 'Glossary',
-    },
-    {
       type: 'category',
       label: 'Guides',
       collapsed: false,
@@ -25,6 +20,14 @@ const sidebars = {
         {type: 'doc', id: 'guides/multimodal-learning/README', label: 'Multimodal Learning'},
         {type: 'doc', id: 'guides/inference-systems/README', label: 'Inference Systems'},
         {type: 'doc', id: 'guides/ai-hardware/README', label: 'AI Hardware'},
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Reference',
+      collapsed: true,
+      items: [
+        {type: 'doc', id: 'shared/glossary', label: 'Glossary'},
       ],
     },
   ],
