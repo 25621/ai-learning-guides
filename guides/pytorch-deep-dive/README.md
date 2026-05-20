@@ -64,14 +64,14 @@ The tensor is the foundational object. Most surprising performance bugs in PyTor
 
 ### Concepts to Learn
 
-- [**Storage**](/shared/glossary/#storage) vs [**Tensor**](/shared/glossary/#tensor): a tensor is a *view* into a 1-D storage buffer
-- [**Shape**](/shared/glossary/#shape), [**stride**](/shared/glossary/#stride), [**offset**](/shared/glossary/#offset): how multidimensional [indexing](/shared/glossary/#indexing) maps to a flat buffer
+- **Storage** vs **Tensor**: a tensor is a *view* into a 1-D storage buffer
+- **Shape**, **stride**, **offset**: how multidimensional indexing maps to a flat buffer
 - **Contiguous vs non-contiguous tensors**: when `.contiguous()` is needed and why
-- **[`view`](/shared/glossary/#view) vs [`reshape`](/shared/glossary/#reshape) vs [`permute`](/shared/glossary/#permute) vs [`transpose`](/shared/glossary/#transpose)**: which copy, which don't
-- [**dtype**](/shared/glossary/#dtype): `float32`, `float16`, `bfloat16`, `int8`, `bool`, when each is appropriate
-- **Device**: CPU vs [CUDA](/shared/glossary/#cuda) vs [MPS](/shared/glossary/#mps) vs [XLA](/shared/glossary/#xla); pinned memory; [`non_blocking=True`](/shared/glossary/#non_blocking)
+- **`view` vs `reshape` vs `permute` vs `transpose`**: which copy, which don't
+- **dtype**: `float32`, `float16`, `bfloat16`, `int8`, `bool`, when each is appropriate
+- **Device**: CPU vs CUDA vs MPS vs XLA; pinned memory; `non_blocking=True`
 - **Broadcasting rules** and the silent bugs they cause
-- **In-place operations** (`add_`, `mul_`) and when they break [autograd](/shared/glossary/#autograd)
+- **In-place operations** (`add_`, `mul_`) and when they break autograd
 
 ### The Mental Model
 
@@ -118,7 +118,7 @@ the indexing formula above):
 | [Stride explorer](projects/01-stride-explorer/README.md) | Print `.shape`, `.stride()`, `.storage_offset()`, `.is_contiguous()` after every reshape/transpose/permute on a few tensors | ⭐ |
 | [View vs copy detective](projects/02-view-vs-copy-detective/README.md) | Modify a tensor through a view, observe the original; find operations that silently copy | ⭐⭐ |
 | [Manual indexing](projects/03-manual-indexing/README.md) | Given `(shape, stride, offset)`, compute the flat storage index for `[i, j, k]` by hand and check with `.data_ptr()` | ⭐⭐ |
-| [dtype precision study](projects/04-dtype-precision-study/README.md) | Compare `float32`, `float16`, `bfloat16` on a sum of 1M small numbers; observe loss-of-precision and [underflow](/shared/glossary/#underflow) | ⭐⭐ |
+| [dtype precision study](projects/04-dtype-precision-study/README.md) | Compare `float32`, `float16`, `bfloat16` on a sum of 1M small numbers; observe loss-of-precision and underflow | ⭐⭐ |
 | [Broadcasting bug hunt](projects/05-broadcasting-bug-hunt/README.md) | Construct 5 expressions where broadcasting produces a result you didn't intend; write the rule you violated | ⭐⭐ |
 
 ### Sample Code: Strides in Action
