@@ -112,6 +112,9 @@ The maximum number of tokens the model can attend over in one forward pass
 ### ControlNet {#controlnet}
 Architecture that adds an auxiliary conditioning branch (depth, pose, edges, …) to a frozen diffusion model
 
+### copy {#copy}
+A tensor that owns its own storage, independent of any source tensor; created by `.clone()`, or automatically by operations like `.contiguous()` and `reshape` when a view is not possible
+
 ### CoT {#cot}
 Chain of Thought — prompting / training the model to produce intermediate reasoning
 
@@ -198,6 +201,12 @@ Forward / Inverse Kinematics — compute end-effector pose from joints or vice v
 
 ### FlashAttention {#flashattention}
 IO-aware attention kernel that avoids materializing the T×T score matrix in HBM
+
+### float16 {#float16}
+16-bit floating-point format (`fp16`); saves memory and can be fast on GPUs, but has a limited range (max ~65,504) that can cause [underflow](/shared/glossary/#underflow) when accumulating very small values
+
+### float32 {#float32}
+32-bit floating-point format (`fp32`); the standard default precision for PyTorch tensors — wide enough range and enough precision for most training and inference tasks
 
 ### Flow matching {#flow-matching}
 Training a velocity field that transports noise to data via an ODE; modern alternative to DDPM
