@@ -864,32 +864,6 @@ Video generation in 2026 is where text generation was around 2021 — extraordin
 
 ---
 
-## Glossary
-
-| Term | Definition |
-|------|------------|
-| **(2+1)D** | Factorized spatiotemporal architecture: separate spatial and temporal layers |
-| **3D VAE** | Variational autoencoder that compresses video in time as well as space |
-| **AdaLN** | Adaptive layer normalization; the conditioning mechanism in DiT |
-| **CFG** | Classifier-free guidance |
-| **DiT** | Diffusion Transformer; transformer backbone for diffusion models |
-| **Flow Matching** | Modern alternative to DDPM training; better-behaved at scale |
-| **FVD** | Fréchet Video Distance; the standard (and flawed) automatic eval metric |
-| **I2V** | Image-to-Video |
-| **Latent video** | Compressed (T', H', W', C) tensor produced by a 3D VAE |
-| **MagViT-v2** | The strongest open recipe for discrete video tokenization |
-| **MMDiT** | Multi-Modal DiT; text and video tokens share attention (from SD3) |
-| **Patchification** | Splitting a (latent) tensor into a sequence of patch tokens for a transformer |
-| **Plücker coordinates** | 6D representation of a camera ray; standard for camera-conditioning |
-| **Rectified Flow** | A flow-matching training objective; popular in 2024+ video models |
-| **T2V** | Text-to-Video |
-| **Temporal inflation** | Adding time-axis layers to a pretrained 2D model |
-| **V2V** | Video-to-Video |
-| **VBench** | Comprehensive open evaluation suite for video generation |
-| **World Model** | Action-conditioned generative model of the world; a video model with actions |
-
----
-
 ## License
 
 MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.

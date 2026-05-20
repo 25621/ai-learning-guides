@@ -216,35 +216,6 @@ If a phase is taking 3x as long as the guide's suggested timeline, that's a sign
 
 ---
 
-## Glossary
-
-Terms that show up across multiple guides. Each guide's own glossary covers the topic-specific terminology that doesn't fit here.
-
-| Term | Definition |
-|------|------------|
-| **Attention** | The operation `softmax(QKᵀ/√d) V` — content-addressable token mixing; the core of every transformer |
-| **DDP** | Distributed Data Parallel — replicate model, split batch, all-reduce gradients |
-| **DPO** | Direct Preference Optimization — closed-form RLHF without a reward model |
-| **FlashAttention** | IO-aware attention kernel; same math, much faster than the naive form |
-| **FSDP** | Fully Sharded Data Parallel — shard params, grads, and optimizer state across ranks |
-| **GQA** | Grouped-Query Attention — share K, V heads across query heads to shrink KV cache |
-| **GRPO** | Group Relative Policy Optimization — value-function-free PPO variant |
-| **HBM** | High-Bandwidth Memory — the memory on a modern GPU; usually the bandwidth bottleneck |
-| **KV cache** | Cached keys and values across decode steps; the working set of the decoder at serving time |
-| **LoRA** | Low-Rank Adaptation — fine-tune by adding small low-rank matrices, freeze the base |
-| **MoE** | Mixture-of-Experts — sparse routing across N expert MLPs; high total params, fixed compute per token |
-| **PPO** | Proximal Policy Optimization — the workhorse on-policy RL algorithm |
-| **Quantization** | Reducing weight / activation precision (FP16, BF16, FP8, INT8, INT4) to save memory and bandwidth |
-| **RLHF** | Reinforcement Learning from Human Feedback — preference learning, classically via PPO + KL |
-| **RLVR** | RL with Verifiable Rewards — RL when the reward is a deterministic checker |
-| **SAC** | Soft Actor-Critic — maximum-entropy continuous-control algorithm |
-| **Transformer** | The decoder-only / encoder-only / encoder-decoder architecture built from attention + MLP blocks |
-| **VAE** | Variational Autoencoder — encoder/decoder pair trained on the ELBO |
-| **VLA** | Vision-Language-Action model — transformer mapping image + instruction → action |
-| **VLM** | Vision-Language Model — image (+ text) in, text out |
-
----
-
 ## License
 
 MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.

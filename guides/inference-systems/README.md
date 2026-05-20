@@ -1376,42 +1376,6 @@ The frontier of inference systems is not bigger models — it is **smarter use o
 
 ---
 
-## Glossary
-
-This glossary covers terms used heavily in this guide. For repository-wide terms, see the [root glossary](../../README.md#glossary).
-
-| Term | Definition |
-|------|------------|
-| **Admission control** | Refusing requests early when capacity is saturated, to protect SLOs for accepted requests |
-| **AWQ** | Activation-aware Weight Quantization — preserve weights important to large activations |
-| **Chunked prefill** | Splitting long prompts across multiple iterations to interleave with decode steps |
-| **Continuous batching** | Iteration-level scheduling that adds/removes requests from the in-flight batch each step |
-| **Disaggregated serving** | Running prefill and decode on separate GPU pools with KV cache transfer between them |
-| **EAGLE / Medusa** | Self-speculation: extra heads on the target model propose tokens, no separate draft model |
-| **Expert parallelism (EP)** | For MoE models, distributing experts across GPUs with all-to-all token routing |
-| **FlashAttention** | IO-aware attention kernel that avoids materializing the T×T score matrix in HBM |
-| **FP8** | 8-bit floating point (E4M3 / E5M2 on Hopper+); the modern default serving precision |
-| **GQA** | Grouped-Query Attention — sharing K/V heads across query heads; primary KV-cache saver at serving time |
-| **GPTQ** | Hessian-based per-row PTQ minimizing layer-wise reconstruction error |
-| **HBM** | High-Bandwidth Memory — the GPU's off-chip DRAM; the bandwidth bottleneck for decode |
-| **ITL / TPOT** | Inter-token latency / time per output token — steady-state per-token decode time |
-| **KV cache** | Cached keys and values per past token per layer; the working set of the decoder |
-| **Lorax / S-LoRA** | Multi-LoRA serving engines; one base model + many adapters in HBM |
-| **Multi-LoRA** | Serving many fine-tuned adapters on a single shared base model |
-| **PagedAttention** | KV cache managed as fixed-size physical blocks with per-request block tables |
-| **Prefill** | One-shot forward pass over the entire prompt before any token is decoded |
-| **Prefix cache** | Sharing KV cache across requests that begin with the same tokens (e.g., system prompts) |
-| **Quantization** | Storing weights / activations / KV in lower precision (INT8 / INT4 / FP8 / FP4) |
-| **RadixAttention** | sglang's KV cache organized as a radix tree keyed on prompt prefixes for automatic sharing |
-| **Roofline** | The compute-vs-bandwidth ceiling diagram; identifies whether a kernel is FLOPs- or memory-bound |
-| **Speculative decoding** | A small draft proposes tokens; the target verifies in one pass; accepted tokens are appended |
-| **SLO** | Service Level Objective — a quantified commitment (e.g., P95 TTFT < 500 ms) |
-| **TTFT** | Time to first token — dominated by prefill plus queue wait |
-| **Tensor parallelism (TP)** | Sharding each layer's weights across GPUs with all-reduce at attention/MLP boundaries |
-| **vLLM** | The reference open-source inference engine with PagedAttention and continuous batching |
-
----
-
 ## License
 
 MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.

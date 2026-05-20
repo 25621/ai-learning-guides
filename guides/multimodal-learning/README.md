@@ -921,31 +921,6 @@ Visual jailbreaks (typographic attacks, adversarial images), CSAM detection, dee
 
 ---
 
-## Glossary
-
-This glossary covers terms used heavily in this guide. For repository-wide terms, see the [root glossary](../../README.md#glossary).
-
-| Term | Definition |
-|------|------------|
-| **Alignment (multimodal)** | Making embeddings from different modalities comparable in a shared space |
-| **AnyRes** | Dynamic-resolution input handling (tile images at native aspect ratio) |
-| **CLIP** | Contrastive Language-Image Pretraining — paired text-image dual encoder |
-| **Cross-attention** | Attention where queries come from one modality and keys/values from another |
-| **Fusion (early/middle/late)** | When in the network different modalities are combined |
-| **Grounding** | Producing spatial outputs (boxes, points) referring to image regions |
-| **InfoNCE** | The contrastive loss used by CLIP; softmax over a similarity matrix |
-| **Modality gap** | Empirical finding that different-modality embeddings stay in separable regions |
-| **Native multimodal** | A model trained from scratch on all modalities with a unified vocabulary |
-| **Projector** | The (usually small) network that maps one modality's features into another's space |
-| **Q-Former** | BLIP-2's learnable-query cross-attention module for distilling images into LLM tokens |
-| **SigLIP** | Sigmoid-loss CLIP variant; scales better and works at smaller batch sizes |
-| **Token (visual/audio)** | Discrete code from a VQ-VAE or neural codec; lets transformers treat the modality like language |
-| **VLA** | Vision-Language-Action model; outputs robot/agent actions instead of text |
-| **VLM** | Vision-Language Model; image (+ text) in, text out |
-| **VQ-VAE** | Vector-Quantized Variational Autoencoder; tokenizes continuous data into discrete codes |
-
----
-
 ## License
 
 MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.

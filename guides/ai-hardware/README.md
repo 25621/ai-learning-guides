@@ -987,35 +987,6 @@ Power and cooling, not silicon, are increasingly the binding constraint on AI bu
 
 ---
 
-## Glossary
-
-| Term | Definition |
-|------|------------|
-| **AI (arithmetic intensity)** | FLOPs per byte of memory accessed; determines roofline position |
-| **BF16** | Brain Floating Point 16; same range as FP32, less precision; modern training default |
-| **CDNA / RDNA** | AMD's datacenter / consumer GPU architectures |
-| **CUTLASS** | NVIDIA's open template library for matmul kernels |
-| **FP8** | 8-bit floating point; E4M3 or E5M2 variants; modern inference default |
-| **HBM** | High-Bandwidth Memory; stacked DRAM with TSV interconnects |
-| **InfiniBand (IB)** | High-speed network with RDMA; standard for AI clusters |
-| **KV cache** | Cached keys/values from prior tokens; grows linearly with context |
-| **NCCL** | NVIDIA Collective Communications Library |
-| **NVLink** | NVIDIA's GPU-GPU interconnect; much faster than PCIe |
-| **NVSwitch** | NVLink switch chip; full-bandwidth all-to-all within a node |
-| **PagedAttention** | Page-based KV cache management (vLLM) |
-| **PCIe** | The standard CPU-GPU connection (and slower GPU-GPU when no NVLink) |
-| **PTQ / QAT** | Post-Training / Quantization-Aware Training |
-| **Roofline** | Performance model: min(peak FLOPs, BW × AI) |
-| **SIMT** | Single Instruction Multiple Threads; NVIDIA's execution model |
-| **SM** | Streaming Multiprocessor; the GPU's "core" |
-| **Systolic array** | Data-flow matmul fabric used in TPUs |
-| **Tensor Core** | Specialized matmul unit in NVIDIA GPUs since Volta |
-| **TFLOPs** | Tera (10¹²) floating-point operations per second |
-| **Triton** | Python-flavored GPU kernel language |
-| **Warp** | 32 threads scheduled in lockstep on NVIDIA GPUs |
-
----
-
 ## License
 
 MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.

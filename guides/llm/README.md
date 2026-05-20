@@ -1310,45 +1310,6 @@ The capabilities frontier is well-understood and well-funded. The hard problems 
 
 ---
 
-## Glossary
-
-This glossary covers terms used heavily in this guide. For repository-wide terms, see the [root glossary](../../README.md#glossary).
-
-| Term | Definition |
-|------|------------|
-| **Attention** | The operation `softmax(QKᵀ/√d) V` — content-addressable token mixing |
-| **BPE** | Byte-Pair Encoding — subword tokenization by greedy frequent-pair merges |
-| **Chinchilla** | The scaling law showing compute-optimal training uses ~20 tokens per parameter |
-| **Chat template** | The structured format (system/user/assistant) the model is fine-tuned on |
-| **CoT** | Chain of Thought — prompting / training the model to produce intermediate reasoning |
-| **Context window** | The maximum number of tokens the model can attend over in one forward pass |
-| **DPO** | Direct Preference Optimization — closed-form RLHF as a supervised loss |
-| **FlashAttention** | IO-aware attention kernel; same math, 2–10× faster |
-| **FSDP** | Fully Sharded Data Parallel — PyTorch's optimizer / grad / param sharding |
-| **GQA** | Grouped-Query Attention — share K, V heads across query heads to shrink KV cache |
-| **GRPO** | Group Relative Policy Optimization — value-function-free PPO variant; DeepSeek lineage |
-| **KV cache** | Cached keys and values across decode steps; the memory dominator at serving time |
-| **LoRA** | Low-Rank Adapter — fine-tune by adding small low-rank matrices, freeze the base |
-| **MoE** | Mixture-of-Experts — sparse routing across N expert MLPs; high total params, fixed compute per token |
-| **PPO** | Proximal Policy Optimization — the workhorse on-policy RL algorithm, used in classic RLHF |
-| **Pretraining** | Self-supervised training on a large unlabeled corpus to predict the next token |
-| **Prefill** | Processing the prompt in one parallel forward pass before decoding begins |
-| **Quantization** | Reducing weight / activation precision to save memory and bandwidth |
-| **RAG** | Retrieval-Augmented Generation — fetch documents, prepend to prompt, then generate |
-| **Reward hacking** | Policy exploits a quirk of the reward signal rather than doing what was intended |
-| **RLHF** | Reinforcement Learning from Human Feedback — preference learning via PPO + KL |
-| **RLVR** | RL with Verifiable Rewards — RL when the reward is a deterministic checker |
-| **RMSNorm** | Root-Mean-Square LayerNorm without mean-centering; the modern default |
-| **RoPE** | Rotary Position Embedding — encodes position by rotating Q, K vectors |
-| **SAE** | Sparse Autoencoder — interpretability tool decomposing activations into monosemantic features |
-| **SFT** | Supervised Fine-Tuning — train on demonstration data with cross-entropy |
-| **Speculative decoding** | Use a draft model to propose tokens; verify with the target in one parallel pass |
-| **SwiGLU** | Gated MLP activation `(xW) · σ(xV)` — the modern default FFN |
-| **Tokenizer** | The mapping from string to integer IDs; trained, frozen, part of the model contract |
-| **vLLM** | Production LLM inference engine with PagedAttention and continuous batching |
-
----
-
 ## License
 
 MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.

@@ -1485,58 +1485,6 @@ The capabilities frontier of robotics is dominated by *integration*, not by any 
 
 ---
 
-## Glossary
-
-This glossary covers terms used heavily in this guide. For repository-wide terms, see the [root glossary](../../README.md#glossary).
-
-| Term | Definition |
-|------|------------|
-| **ABA** | Articulated-Body Algorithm — `O(n)` forward dynamics for rigid-body chains |
-| **AprilTag** | Square fiducial marker with a known code; widely used for pose ground truth |
-| **BC** | Behavior Cloning — supervised imitation of demonstrator actions |
-| **CBF** | Control Barrier Function — runtime safety filter via a constraint on `ḣ` |
-| **Collision mesh** | Simplified geometry used for collision tests, distinct from visual mesh |
-| **C-space** | Configuration space — the abstract space of joint configurations |
-| **DH parameters** | Denavit-Hartenberg parameters — textbook arm-geometry description |
-| **EKF** | Extended Kalman Filter — Kalman filter linearized about the current estimate |
-| **F/T sensor** | Force/Torque sensor — six-axis force and moment at a wrist or fingertip |
-| **FK / IK** | Forward / Inverse Kinematics — compute end-effector pose from joints or vice versa |
-| **GTSAM** | Factor-graph SLAM library; the standard back-end for many modern systems |
-| **Holonomic** | A vehicle whose instantaneous motion can be any direction (mecanum, omni) |
-| **Impedance control** | Command a virtual spring-damper between end-effector and reference |
-| **IMU** | Inertial Measurement Unit — gyroscope + accelerometer (often + magnetometer) |
-| **Isaac Lab** | NVIDIA GPU-parallel robotics simulation platform |
-| **Jacobian** | Linear map from joint velocities to end-effector spatial velocity |
-| **KF** | Kalman Filter — optimal linear-Gaussian Bayes filter |
-| **LiDAR** | Light Detection And Ranging — laser range scanner |
-| **LQR** | Linear-Quadratic Regulator — optimal linear feedback for quadratic cost |
-| **Manipulability** | Scalar measure of how "easy" motion is from a given configuration (e.g. `sqrt(det(JJᵀ))`) |
-| **MoveIt** | ROS 2 manipulation-planning framework |
-| **MPC** | Model Predictive Control — re-solved finite-horizon optimization at each step |
-| **MuJoCo** | Open-source physics engine; the de facto manipulation/locomotion simulator |
-| **Nav2** | ROS 2 navigation stack |
-| **OMPL** | Open Motion Planning Library — sampling-based planners |
-| **PID** | Proportional-Integral-Derivative — the workhorse linear controller |
-| **Pinocchio** | Fast rigid-body dynamics library (CRBA, RNEA, ABA) |
-| **PPO** | Proximal Policy Optimization — the workhorse on-policy RL algorithm |
-| **PRM** | Probabilistic Roadmap — multi-query sampling-based planner |
-| **RNEA** | Recursive Newton-Euler — `O(n)` inverse-dynamics algorithm |
-| **ROS / ROS 2** | Robot Operating System — robotics middleware (ROS 2 is the modern version) |
-| **RRT** | Rapidly-exploring Random Tree — single-query sampling-based planner |
-| **SAC** | Soft Actor-Critic — off-policy maximum-entropy RL |
-| **SDF** | Signed Distance Field — scalar field giving distance to nearest obstacle (negative inside) |
-| **SE(3) / SO(3)** | Special Euclidean / Orthogonal group — rigid-body motions / rotations in 3D |
-| **SLAM** | Simultaneous Localization and Mapping |
-| **TCP** | Tool Center Point — the configurable point on a tool whose pose tracking controls |
-| **TOPP** | Time-Optimal Path Parameterization — time-parameterize a geometric path under bounds |
-| **URDF / MJCF / USD** | Robot description formats (ROS, MuJoCo, NVIDIA respectively) |
-| **VIO** | Visual-Inertial Odometry — fuse camera and IMU for high-rate ego-motion |
-| **VLA** | Vision-Language-Action model — transformer mapping image + instruction → action |
-| **WBC** | Whole-Body Control — fast QP solving for joint torques from task-space goals |
-| **ZMP** | Zero-Moment Point — classical biped balance criterion |
-
----
-
 ## License
 
 MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.

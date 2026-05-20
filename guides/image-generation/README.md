@@ -1302,48 +1302,6 @@ Image generation in 2026 is converging *fast*. The architectural recipe (VAE + D
 
 ---
 
-## Glossary
-
-| Term | Definition |
-|------|------------|
-| **AdaLN-Zero** | DiT's conditioning mechanism: layer norm modulated by shift/scale/gate, all initialized to zero |
-| **ADD (Adversarial Diffusion Distillation)** | SDXL Turbo's recipe: distill a multi-step diffusion model into a 1–4-step student using a discriminator loss |
-| **bpd (bits per dimension)** | Standard likelihood metric for image models; `-log₂ p(x) / D` |
-| **CFG (classifier-free guidance)** | Inference trick: combine conditional and unconditional model outputs to amplify conditioning |
-| **Consistency model** | A diffusion-derived model that samples in 1–4 steps via consistency distillation |
-| **ControlNet** | Architecture that adds an auxiliary conditioning branch (depth, pose, edges, ...) to a frozen diffusion model |
-| **Cross-attention** | Attention where queries come from one modality (image) and keys/values from another (text) |
-| **DDIM** | Deterministic, accelerated sampler for diffusion models |
-| **DDPM** | Denoising Diffusion Probabilistic Models — the foundational 2020 paper and training recipe |
-| **DiT** | Diffusion Transformer — Peebles & Xie's transformer-based diffusion backbone |
-| **DreamBooth** | Fine-tuning recipe for subject personalization; updates the whole model on a few subject images |
-| **EDM** | Karras et al. 2022 — a reformulation of diffusion in σ-space with clean preconditioning |
-| **ELBO** | Evidence Lower Bound — the variational objective trained by VAEs |
-| **EMA weights** | Exponential moving average of model weights; samples better than the live weights |
-| **FID** | Fréchet Inception Distance — the standard sample-quality metric for image generation |
-| **Flow matching** | Training a velocity field that transports noise to data via an ODE; modern alternative to DDPM |
-| **FSQ** | Finite Scalar Quantization — codebook-free discrete tokenization |
-| **LCM** | Latent Consistency Model — consistency-distilled few-step latent diffusion |
-| **LDM** | Latent Diffusion Model — diffusion in the latent space of a VAE (i.e., Stable Diffusion) |
-| **LoRA** | Low-Rank Adaptation — parameter-efficient fine-tuning via low-rank weight deltas |
-| **MMDiT** | Multi-Modal Diffusion Transformer — joint text+image attention layers, used in SD3 and Flux |
-| **Mode collapse** | GAN failure mode: generator produces few distinct outputs |
-| **Perceptual loss (LPIPS)** | Loss computed in the feature space of a pretrained classifier; sharper than pixel MSE |
-| **Posterior collapse** | VAE failure mode: encoder collapses to the prior; latent carries no information |
-| **Probability flow ODE** | The deterministic ODE equivalent of the reverse-time diffusion SDE |
-| **Rectified flow** | A specific flow-matching parameterization with straight-line trajectories |
-| **Reparameterization trick** | `z = μ + σ · ε` — lets gradients flow through a random sample |
-| **Score** | `∇_x log p(x)` — diffusion training implicitly learns this |
-| **U-Net** | Encoder-decoder architecture with skip connections; the standard diffusion backbone before DiT |
-| **VAE (variational autoencoder)** | Encoder/decoder pair trained on the ELBO; used as a compressor in latent diffusion |
-| **VP / VE SDE** | Variance-Preserving / Variance-Exploding — the two SDE families for diffusion |
-| **VQ-VAE** | Vector-quantized VAE — discrete latent codes from a learned codebook |
-| **VQ-GAN** | VQ-VAE trained with perceptual + adversarial losses; SD's VAE recipe descends from this |
-| **σ-schedule (Karras)** | The EDM reformulation: parameterize diffusion by noise standard deviation σ rather than discrete timestep |
-| **Zero-conv** | A 1×1 convolution with zero-initialized weights and bias; used by ControlNet to add a branch without disturbing init |
-
----
-
 ## License
 
 MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.

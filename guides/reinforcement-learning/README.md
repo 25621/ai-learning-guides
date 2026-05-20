@@ -1116,40 +1116,6 @@ Sample complexity bounds, regret bounds, PAC-RL, distributional shifts. Currentl
 
 ---
 
-## Glossary
-
-This glossary covers terms used heavily in this guide. For repository-wide terms, see the [root glossary](../../README.md#glossary).
-
-| Term | Definition |
-|------|------------|
-| **Advantage** | `A(s, a) = Q(s, a) − V(s)`. How much better than the baseline this action is |
-| **Behavior policy** | The policy that generated the data, in off-policy or offline RL |
-| **Bellman equation** | The recursive consistency condition `V(s) = E[r + γV(s')]` |
-| **Bootstrapping** | Using a current estimate (e.g., `V(s')`) in the target instead of a full return |
-| **CQL** | Conservative Q-Learning — offline RL with a pessimistic Q penalty |
-| **DDPG** | Deep Deterministic Policy Gradient — the first deep-RL continuous-control algorithm |
-| **Deadly triad** | Function approximation + bootstrapping + off-policy data → instability |
-| **DQN** | Deep Q-Network — Q-learning with neural-net function approximation + experience replay + target network |
-| **DPO** | Direct Preference Optimization — closed-form RLHF without a reward model or PPO |
-| **GAE** | Generalized Advantage Estimation — TD(λ) for advantages |
-| **GRPO** | Group Relative Policy Optimization — DeepSeek's value-function-free PPO variant |
-| **IQL** | Implicit Q-Learning — offline RL that never queries `Q` at OOD actions |
-| **KL divergence** | The regularizer that keeps RLHF policies near the reference model |
-| **MDP** | Markov Decision Process — the tuple `(S, A, P, R, γ)` |
-| **MPC** | Model Predictive Control — use a learned model to plan at decision time |
-| **Off-policy** | The data comes from a different policy than the one being optimized |
-| **On-policy** | The data comes from the same policy being optimized (PPO, REINFORCE) |
-| **PPO** | Proximal Policy Optimization — the workhorse on-policy algorithm |
-| **Reward hacking** | A policy that maximizes the reward signal without doing what was intended |
-| **RLHF** | Reinforcement Learning from Human Feedback — the post-training recipe for LLMs |
-| **RLVR** | RL with Verifiable Rewards — RLHF when the reward is a deterministic checker |
-| **SAC** | Soft Actor-Critic — maximum-entropy continuous-control algorithm; the modern default |
-| **TD error** | `δ_t = r_t + γV(s_{t+1}) − V(s_t)`; the signal that drives every TD update |
-| **TD3** | Twin Delayed DDPG — DDPG plus three stability fixes |
-| **Value function** | Expected return; `V(s)` for state-value, `Q(s, a)` for action-value |
-
----
-
 ## License
 
 MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.
