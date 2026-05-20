@@ -1,20 +1,15 @@
-# dtype Precision Study
+# The Precision Trade-off
 
 ---
 
-> "Not all zeroes are created equal. Some of them used to be real numbers."
+> Smaller numbers are faster, but they can't always tell the truth.
 
 ---
 
 ## Key Insight
 
-A tensor's [dtype](/shared/glossary/#dtype) controls how each number is stored in memory: smaller formats use less memory and can be faster on modern GPUs, but they can silently discard tiny values — and in deep learning, tiny values often matter.
+A tensor's [dtype](/shared/glossary/#dtype) determines its memory size and accuracy. Low-precision types (like `float16`) save space but can "round off" important small values to zero.
 
 ## Why This Matters
 
-Most production training today uses `float16` or `bfloat16` for speed. If you don't understand their limits, you can end up with:
-- Gradients that become zero (underflow) and stop learning
-- Loss values that explode to `inf` or become `nan`
-- Results that seem correct but are subtly wrong
-
-This project makes you *see* those problems directly, before you encounter them in a real model.
+In deep learning, small values (like gradients) are everything. Choosing the wrong precision can cause your model to stop learning or explode with "NaN" errors.

@@ -1,18 +1,15 @@
-# Manual Indexing
+# The Indexing Formula
 
 ---
 
-> The moment you can compute a flat storage index by hand is the moment tensors stop feeling like magic.
+> Under the hood, every 5D tensor is just a 1D list.
 
 ---
 
 ## Key Insight
 
-Multidimensional [indexing](/shared/glossary/#indexing) is just one formula: `flat_index = offset + i*stride[0] + j*stride[1] + k*stride[2]` — every PyTorch tensor operation is built on top of this arithmetic.
+PyTorch uses a simple math formula to find data in memory: [`flat_index = offset + Σ(index * stride)`](/shared/glossary/#indexing). Mastering this formula demystifies how tensors actually work.
 
 ## Why This Matters
 
-When you understand this formula, you can:
-- Predict exactly why `.view()` fails on a non-contiguous tensor
-- Understand why a sliced tensor and the original share memory
-- Debug shape and stride bugs without guessing
+This formula is why PyTorch is fast. Knowing it helps you predict when operations will be efficient and why "non-contiguous" errors happen.

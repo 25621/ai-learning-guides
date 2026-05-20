@@ -2,14 +2,14 @@
 
 ---
 
-> "If you understand strides, you understand tensors. Everything else is commentary."
+> Tensors don't store grids; they store lines and use "strides" to jump through them.
 
 ---
 
 ## Key Insight
 
-A [tensor](/shared/glossary/#tensor) is just a labeled window over a flat [storage](/shared/glossary/#storage) buffer: changing its [shape](/shared/glossary/#shape), [stride](/shared/glossary/#stride), or [offset](/shared/glossary/#offset) shifts how you read the same data — the data itself never moves.
+A [tensor](/shared/glossary/#tensor) is a view into a flat [storage](/shared/glossary/#storage) buffer. By changing [strides](/shared/glossary/#stride), PyTorch can "re-shape" data instantly without moving a single byte.
 
 ## Why This Matters
 
-Most surprising bugs in PyTorch — "why is my view failing?", "why did editing this tensor change another?" — come from not knowing the current stride layout. After this project, you will instinctively check strides whenever something feels wrong.
+Understanding strides explains why some operations (like `.view()`) fail and why others (like `.transpose()`) are free. It is the secret to writing fast, memory-efficient code.
