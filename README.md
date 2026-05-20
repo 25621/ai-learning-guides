@@ -247,4 +247,4 @@ Terms that show up across multiple guides. Each guide's own glossary covers the 
 
 ## License
 
-MIT License. See the [LICENSE](LICENSE) file for details.
+MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.

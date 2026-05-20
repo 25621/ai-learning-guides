@@ -131,6 +131,7 @@ const config = {
             `https://github.com/25621/ai-learning-guides/edit/main/${docPath}`,
           include: [
             'README.md',
+            'guides/*/README.md',
           ],
           exclude: [
             '**/_site/**',
