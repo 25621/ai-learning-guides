@@ -7,6 +7,11 @@ const sidebars = {
       label: 'Introduction',
     },
     {
+      type: 'doc',
+      id: 'shared/glossary',
+      label: 'Glossary',
+    },
+    {
       type: 'category',
       label: 'Guides',
       collapsed: false,

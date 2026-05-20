@@ -22,7 +22,7 @@ A comprehensive guide to understanding PyTorch as a *system* — not just as the
 12. [Suggested Timeline](#suggested-timeline)
 13. [Key Advice](#key-advice)
 14. [Additional Resources](#additional-resources)
-15. [Glossary](#glossary)
+15. [Glossary](/shared/glossary/)
 
 ---
 
@@ -64,12 +64,12 @@ The tensor is the foundational object. Most surprising performance bugs in PyTor
 
 ### Concepts to Learn
 
-- [**Storage**](#storage) vs [**Tensor**](#tensor): a tensor is a *view* into a 1-D storage buffer
-- [**Shape**](#shape), [**stride**](#stride), [**offset**](#offset): how multidimensional [indexing](#indexing) maps to a flat buffer
+- [**Storage**](/shared/glossary/#storage) vs [**Tensor**](/shared/glossary/#tensor): a tensor is a *view* into a 1-D storage buffer
+- [**Shape**](/shared/glossary/#shape), [**stride**](/shared/glossary/#stride), [**offset**](/shared/glossary/#offset): how multidimensional [indexing](/shared/glossary/#indexing) maps to a flat buffer
 - **Contiguous vs non-contiguous tensors**: when `.contiguous()` is needed and why
-- **[`view`](#view) vs [`reshape`](#reshape) vs [`permute`](#permute) vs [`transpose`](#transpose)**: which copy, which don't
-- [**dtype**](#dtype): `float32`, `float16`, `bfloat16`, `int8`, `bool`, when each is appropriate
-- **Device**: CPU vs [CUDA](#cuda) vs [MPS](#mps) vs [XLA](#xla); pinned memory; [`non_blocking=True`](#non_blocking)
+- **[`view`](/shared/glossary/#view) vs [`reshape`](/shared/glossary/#reshape) vs [`permute`](/shared/glossary/#permute) vs [`transpose`](/shared/glossary/#transpose)**: which copy, which don't
+- [**dtype**](/shared/glossary/#dtype): `float32`, `float16`, `bfloat16`, `int8`, `bool`, when each is appropriate
+- **Device**: CPU vs [CUDA](/shared/glossary/#cuda) vs [MPS](/shared/glossary/#mps) vs [XLA](/shared/glossary/#xla); pinned memory; [`non_blocking=True`](/shared/glossary/#non_blocking)
 - **Broadcasting rules** and the silent bugs they cause
 - **In-place operations** (`add_`, `mul_`) and when they break autograd
 

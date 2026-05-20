@@ -23,7 +23,7 @@ A comprehensive guide to large language models as a *subject* — not just as th
 13. [Key Advice](#key-advice)
 14. [Common Pitfalls](#common-pitfalls)
 15. [Additional Resources](#additional-resources)
-16. [Glossary](#glossary)
+16. [Glossary](/shared/glossary/)
 
 ---
 

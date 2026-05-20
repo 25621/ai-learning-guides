@@ -23,7 +23,7 @@ A comprehensive guide to understanding and building image generation systems —
 13. [Key Advice](#key-advice)
 14. [Common Pitfalls to Avoid](#common-pitfalls-to-avoid)
 15. [Additional Resources](#additional-resources)
-16. [Glossary](#glossary)
+16. [Glossary](/shared/glossary/)
 
 ---
 

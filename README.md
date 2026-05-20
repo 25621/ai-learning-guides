@@ -131,7 +131,9 @@ How the guides relate to each other:
 
 ```
 ai-learning-guides/
-├── README.md                     ← you are here (cross-guide Prerequisites + Glossary live in this file)
+├── README.md                     ← you are here (cross-guide Prerequisites live in this file)
+├── shared/
+│   └── glossary.md               ← consolidated glossary for all guides
 ├── guides/
 │   ├── pytorch-deep-dive/
 │   │   ├── README.md             ← the guide itself
