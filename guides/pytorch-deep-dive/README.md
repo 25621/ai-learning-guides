@@ -71,7 +71,7 @@ The tensor is the foundational object. Most surprising performance bugs in PyTor
 - [**dtype**](/shared/glossary/#dtype): `float32`, `float16`, `bfloat16`, `int8`, `bool`, when each is appropriate
 - **Device**: CPU vs [CUDA](/shared/glossary/#cuda) vs [MPS](/shared/glossary/#mps) vs [XLA](/shared/glossary/#xla); pinned memory; [`non_blocking=True`](/shared/glossary/#non_blocking)
 - **Broadcasting rules** and the silent bugs they cause
-- **In-place operations** (`add_`, `mul_`) and when they break autograd
+- **In-place operations** (`add_`, `mul_`) and when they break [autograd](/shared/glossary/#autograd)
 
 ### The Mental Model
 
