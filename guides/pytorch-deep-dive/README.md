@@ -87,11 +87,29 @@ The tensor is the foundational object. Most surprising performance bugs in PyTor
 │                                                     │
 │  Element [i, j] → storage[offset + i*stride[0]      │
 │                                  + j*stride[1]]    │
-│                                                     │
+└─────────────────────────────────────────────────────┘
+```
+
+- **`shape=(2, 3)`** — 2 rows, 3 columns (the logical grid seen by Python code).
+- **`stride=(3, 1)`** — moving one step along dim-0 (rows) jumps **3** positions in
+  the flat storage buffer; moving one step along dim-1 (columns) jumps **1** position.
+  For example, `[0, 0] → storage[0]`, `[1, 0] → storage[3]`, `[0, 2] → storage[2]`.
+
+After calling `.transpose(0, 1)` on this tensor (a separate operation — not part of
+the indexing formula above):
+
+```
+┌─────────────────────────────────────────────────────┐
 │  .transpose(0, 1) → shape=(3, 2), stride=(1, 3)     │
 │  (same storage, different view — NOT contiguous)    │
 └─────────────────────────────────────────────────────┘
 ```
+
+- **`.transpose(0, 1)`** — swaps axis 0 and axis 1. The logical grid flips from
+  2×3 to 3×2 and the strides swap accordingly: `stride=(1, 3)`. No data is copied;
+  PyTorch just updates the shape and stride metadata. Because the new stride order
+  no longer matches the row-major memory layout, the result is **not contiguous**
+  and cannot be passed directly to `.view()`.
 
 ### Projects
 
