@@ -64,16 +64,14 @@ The tensor is the foundational object. Most surprising performance bugs in PyTor
 
 ### Concepts to Learn
 
-- **Storage** vs **Tensor**: a tensor is a *view* into a 1-D storage buffer
-- **Shape, stride, offset**: how multidimensional indexing maps to a flat buffer
+- [**Storage**](#glossary) vs [**Tensor**](#glossary): a tensor is a *view* into a 1-D storage buffer
+- [**Shape**](#glossary), [**stride**](#glossary), [**offset**](#glossary): how multidimensional [indexing](#glossary) maps to a flat buffer
 - **Contiguous vs non-contiguous tensors**: when `.contiguous()` is needed and why
-- **`view` vs `reshape` vs `permute` vs `transpose`**: which copy, which don't
-- **dtype**: `float32`, `float16`, `bfloat16`, `int8`, `bool`, when each is appropriate
-- **Device**: CPU vs CUDA vs MPS vs XLA; pinned memory; `non_blocking=True`
+- **[`view`](#glossary) vs [`reshape`](#glossary) vs [`permute`](#glossary) vs [`transpose`](#glossary)**: which copy, which don't
+- [**dtype**](#glossary): `float32`, `float16`, `bfloat16`, `int8`, `bool`, when each is appropriate
+- **Device**: CPU vs [CUDA](#glossary) vs [MPS](#glossary) vs [XLA](#glossary); pinned memory; [`non_blocking=True`](#glossary)
 - **Broadcasting rules** and the silent bugs they cause
 - **In-place operations** (`add_`, `mul_`) and when they break autograd
-
-> New to any of these? The [Glossary](#glossary) gives one-line definitions of tensor, shape, stride, offset, indexing, view, reshape, permute, transpose, dtype, and the device backends (CUDA, MPS, XLA, `non_blocking`).
 
 ### The Mental Model
 
