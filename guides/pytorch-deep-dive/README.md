@@ -86,7 +86,7 @@ The tensor is the foundational object. Most surprising performance bugs in PyTor
 │   0  1  2  3  4  5                                  │
 │                                                     │
 │  Element [i, j] → storage[offset + i*stride[0]      │
-│                                  + j*stride[1]]    │
+│                                  + j*stride[1]]     │
 └─────────────────────────────────────────────────────┘
 ```
 
