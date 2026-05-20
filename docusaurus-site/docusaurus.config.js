@@ -24,7 +24,7 @@ const siteKeywords = [
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Reinforcement Learning: Beginner to Advanced',
+  title: 'AI Learning Guides',
   tagline:
     'A free, open-source roadmap and tutorial for mastering reinforcement learning — from fundamentals to research-level deep RL.',
   favicon: 'img/favicon.ico',
@@ -66,7 +66,7 @@ const config = {
       innerHTML: JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'WebSite',
-        name: 'Reinforcement Learning: Beginner to Advanced',
+        name: 'AI Learning Guides',
         url: `${siteUrl}${siteBaseUrl}`,
         description: siteDescription,
         inLanguage: 'en',
@@ -85,7 +85,7 @@ const config = {
       innerHTML: JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'Course',
-        name: 'Reinforcement Learning: Beginner to Advanced',
+        name: 'AI Learning Guides',
         description: siteDescription,
         url: `${siteUrl}${siteBaseUrl}`,
         provider: {
@@ -131,6 +131,8 @@ const config = {
             `https://github.com/25621/ai-learning-guides/edit/main/${docPath}`,
           include: [
             'README.md',
+            'guides/*/README.md',
+            'shared/glossary.md',
           ],
           exclude: [
             '**/_site/**',
@@ -174,19 +176,19 @@ const config = {
       {name: 'format-detection', content: 'telephone=no'},
 
       {property: 'og:type', content: 'website'},
-      {property: 'og:site_name', content: 'Reinforcement Learning: Beginner to Advanced'},
-      {property: 'og:title', content: 'Reinforcement Learning: Beginner to Advanced'},
+      {property: 'og:site_name', content: 'AI Learning Guides'},
+      {property: 'og:title', content: 'AI Learning Guides'},
       {property: 'og:description', content: siteDescription},
       {property: 'og:image', content: `${siteUrl}${siteBaseUrl}img/social-card.svg`},
-      {property: 'og:image:alt', content: 'Reinforcement Learning: Beginner to Advanced — open-source learning roadmap'},
+      {property: 'og:image:alt', content: 'AI Learning Guides — open-source learning roadmap'},
       {property: 'og:url', content: `${siteUrl}${siteBaseUrl}`},
       {property: 'og:locale', content: 'en_US'},
 
       {name: 'twitter:card', content: 'summary_large_image'},
-      {name: 'twitter:title', content: 'Reinforcement Learning: Beginner to Advanced'},
+      {name: 'twitter:title', content: 'AI Learning Guides'},
       {name: 'twitter:description', content: siteDescription},
       {name: 'twitter:image', content: `${siteUrl}${siteBaseUrl}img/social-card.svg`},
-      {name: 'twitter:image:alt', content: 'Reinforcement Learning: Beginner to Advanced — open-source learning roadmap'},
+      {name: 'twitter:image:alt', content: 'AI Learning Guides — open-source learning roadmap'},
     ],
     colorMode: {
       defaultMode: 'light',
@@ -199,9 +201,9 @@ const config = {
       },
     },
     navbar: {
-      title: 'Reinforcement Learning',
+      title: 'AI Learning Guides',
       logo: {
-        alt: 'Reinforcement Learning: Beginner to Advanced logo',
+        alt: 'AI Learning Guides logo',
         src: 'img/logo.svg',
         width: 32,
         height: 32,

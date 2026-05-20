@@ -2,16 +2,7 @@
 
 A comprehensive guide to **serving** large language models — the layer between a trained checkpoint sitting on disk and a user typing into a chat box and seeing tokens stream back. The goal is to take you from "I have called an API" to "I can stand up a production inference cluster, explain every hop a token takes from prompt to client, debug a P99 latency regression, and make a defensible cost-per-million-tokens commitment to a CFO."
 
-> **An honest framing.** Training is a fixed cost; serving is a forever cost. A modest production system serves more tokens in its first month than the model ever saw during fine-tuning. The math that makes a serving system economically viable is *almost entirely* about how cleverly you handle memory bandwidth, batch heterogeneity, and the KV cache. The model architecture you can copy from the [LLM Guide](llm-guide.md). The serving system you cannot copy from anywhere — every workload is different, and the right stack for a chatbot is the wrong stack for a code-completion sidecar.
-
-This guide is **complementary to**, not a replacement for:
-- The [Large Language Models Guide](llm-guide.md), whose Phase 9 sketches inference at a high level. This guide is the production-depth version of that one phase.
-- The [Reinforcement Learning Guide](reinforcement-learning-guide.md), if you also do post-training (RL rollouts share an inference engine with serving and have their own quirks).
-- The [Multimodal Learning Guide](multimodal-learning-guide.md), which covers serving multimodal models (image encoders, audio chunkers, etc.) and is mostly out of scope here.
-
-Do the LLM guide first if the words "KV cache" and "decoder-only" feel fuzzy. Then come back here.
-
-A companion code repository with runnable implementations is recommended at [`../inference/`](../inference/) (one folder per phase, one notebook or script per project).
+> **An honest framing.** Training is a fixed cost; serving is a forever cost. A modest production system serves more tokens in its first month than the model ever saw during fine-tuning. The math that makes a serving system economically viable is *almost entirely* about how cleverly you handle memory bandwidth, batch heterogeneity, and the KV cache. The model architecture you can copy from the [LLM guide](../llm/). The serving system you cannot copy from anywhere — every workload is different, and the right stack for a chatbot is the wrong stack for a code-completion sidecar.
 
 ---
 
@@ -32,7 +23,7 @@ A companion code repository with runnable implementations is recommended at [`..
 13. [Key Advice](#key-advice)
 14. [Common Pitfalls](#common-pitfalls)
 15. [Additional Resources](#additional-resources)
-16. [Glossary](#glossary)
+16. [Glossary](/shared/glossary/)
 
 ---
 
@@ -42,7 +33,7 @@ Inference systems sit at the intersection of deep learning, GPU programming, dis
 
 ### Concepts to Know
 
-- **Transformer basics**: decoder-only stack, multi-head attention, MLP block, the fact that decoding produces one token at a time conditioning on the prefix. If shaky, do Phases 1–2 of the [LLM Guide](llm-guide.md) first
+- **Transformer basics**: decoder-only stack, multi-head attention, MLP block, the fact that decoding produces one token at a time conditioning on the prefix. If shaky, do Phases 1–2 of the [LLM guide](../llm/) first
 - **Memory hierarchies on a GPU**: registers, shared memory / SRAM, L2, HBM. Roughly: SRAM is ~100× faster than HBM and ~1000× smaller; everything in inference is a fight over which numbers live where
 - **Roofline thinking**: a kernel is either *compute-bound* (limited by FLOPs/s) or *memory-bound* (limited by bytes/s). The single most important diagnostic question in inference is "which side of the roofline am I on?"
 - **Async, batching, and queues**: requests arrive at random times with random lengths; you serve a fixed-throughput accelerator. Everything in the middle is queueing-theory dressed up as Python
@@ -1385,40 +1376,6 @@ The frontier of inference systems is not bigger models — it is **smarter use o
 
 ---
 
-## Glossary
-
-| Term | Definition |
-|------|------------|
-| **Admission control** | Refusing requests early when capacity is saturated, to protect SLOs for accepted requests |
-| **AWQ** | Activation-aware Weight Quantization — preserve weights important to large activations |
-| **Chunked prefill** | Splitting long prompts across multiple iterations to interleave with decode steps |
-| **Continuous batching** | Iteration-level scheduling that adds/removes requests from the in-flight batch each step |
-| **Disaggregated serving** | Running prefill and decode on separate GPU pools with KV cache transfer between them |
-| **EAGLE / Medusa** | Self-speculation: extra heads on the target model propose tokens, no separate draft model |
-| **Expert parallelism (EP)** | For MoE models, distributing experts across GPUs with all-to-all token routing |
-| **FlashAttention** | IO-aware attention kernel that avoids materializing the T×T score matrix in HBM |
-| **FP8** | 8-bit floating point (E4M3 / E5M2 on Hopper+); the modern default serving precision |
-| **GQA** | Grouped-Query Attention — sharing K/V heads across query heads; primary KV-cache saver at serving time |
-| **GPTQ** | Hessian-based per-row PTQ minimizing layer-wise reconstruction error |
-| **HBM** | High-Bandwidth Memory — the GPU's off-chip DRAM; the bandwidth bottleneck for decode |
-| **ITL / TPOT** | Inter-token latency / time per output token — steady-state per-token decode time |
-| **KV cache** | Cached keys and values per past token per layer; the working set of the decoder |
-| **Lorax / S-LoRA** | Multi-LoRA serving engines; one base model + many adapters in HBM |
-| **Multi-LoRA** | Serving many fine-tuned adapters on a single shared base model |
-| **PagedAttention** | KV cache managed as fixed-size physical blocks with per-request block tables |
-| **Prefill** | One-shot forward pass over the entire prompt before any token is decoded |
-| **Prefix cache** | Sharing KV cache across requests that begin with the same tokens (e.g., system prompts) |
-| **Quantization** | Storing weights / activations / KV in lower precision (INT8 / INT4 / FP8 / FP4) |
-| **RadixAttention** | sglang's KV cache organized as a radix tree keyed on prompt prefixes for automatic sharing |
-| **Roofline** | The compute-vs-bandwidth ceiling diagram; identifies whether a kernel is FLOPs- or memory-bound |
-| **Speculative decoding** | A small draft proposes tokens; the target verifies in one pass; accepted tokens are appended |
-| **SLO** | Service Level Objective — a quantified commitment (e.g., P95 TTFT < 500 ms) |
-| **TTFT** | Time to first token — dominated by prefill plus queue wait |
-| **Tensor parallelism (TP)** | Sharding each layer's weights across GPUs with all-reduce at attention/MLP boundaries |
-| **vLLM** | The reference open-source inference engine with PagedAttention and continuous batching |
-
----
-
 ## License
 
-This guide is provided for educational purposes. Feel free to share and adapt.
+MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.

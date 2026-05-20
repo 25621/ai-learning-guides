@@ -4,10 +4,6 @@ A comprehensive guide to understanding and building video generation systems —
 
 > **Video generation = image generation + time.** That one sentence is both true and dangerously misleading. The "+ time" introduces problems that have no image-gen analog: temporal consistency, motion priors, enormous compute (a 5-second 720p clip is ~150 images), and the brutal scarcity of high-quality paired video-text data. This guide is about how the field solved (and is still solving) those problems.
 
-This guide assumes you have already worked through, or are comfortable with, the [Image Generation Guide](image-generation-guide.md) and the [Multimodal Learning Guide](multimodal-learning-guide.md) — at minimum you should understand U-Nets, diffusion training and sampling, latent diffusion (Stable Diffusion-style), and text conditioning via cross-attention. If those are unfamiliar, do them first. Video generation is image generation with a third axis; if the third axis is the only thing you're new to, you'll move fast.
-
-A companion code repository with runnable implementations is recommended at [`../video-generation/`](../video-generation/) (one folder per phase).
-
 ---
 
 ## Table of Contents
@@ -26,7 +22,7 @@ A companion code repository with runnable implementations is recommended at [`..
 12. [Suggested Timeline](#suggested-timeline)
 13. [Key Advice](#key-advice)
 14. [Additional Resources](#additional-resources)
-15. [Glossary](#glossary)
+15. [Glossary](/shared/glossary/)
 
 ---
 
@@ -34,7 +30,7 @@ A companion code repository with runnable implementations is recommended at [`..
 
 Video generation is one of the most demanding topics in modern ML. The prerequisites are non-negotiable.
 
-### Concepts You Should Already Know
+### Concepts to Know
 
 - **Diffusion models**: forward/reverse process, DDPM, DDIM, classifier-free guidance, noise schedules
 - **Latent diffusion**: VAE encoder/decoder, training a diffusion model in latent space (i.e., Stable Diffusion)
@@ -65,7 +61,7 @@ big enough to be useful without compute exploding cubically.
 
 ### Resources
 
-- [Image Generation Guide](image-generation-guide.md) — strongly recommended prerequisite
+- [Image Generation guide](../image-generation/) — strongly recommended prerequisite
 - [Lilian Weng — What are Diffusion Models?](https://lilianweng.github.io/posts/2021-07-11-diffusion-models/) — the canonical primer
 - [Sora Technical Report (OpenAI, 2024)](https://openai.com/index/video-generation-models-as-world-simulators/) — read once now, again at the end of Phase 6
 - [Stable Video Diffusion paper](https://arxiv.org/abs/2311.15127) — practical entry point
@@ -683,7 +679,7 @@ is the empty string.
 
 ### Key Insight
 
-World models are the convergence point of three lines of research that are usually taught separately: video generation, model-based RL, and simulation. Each of those communities approaches the same object from a different angle — generation people care about visual fidelity, RL people care about action conditioning and rollouts, simulation people care about physical realism. The 2025–2026 frontier is increasingly the same model used in all three roles. If you've completed the [Reinforcement Learning Guide](reinforcement-learning-guide.md) and now this guide, you're well-positioned to work at that intersection.
+World models are the convergence point of three lines of research that are usually taught separately: video generation, model-based RL, and simulation. Each of those communities approaches the same object from a different angle — generation people care about visual fidelity, RL people care about action conditioning and rollouts, simulation people care about physical realism. The 2025–2026 frontier is increasingly the same model used in all three roles. If you've completed the [Reinforcement Learning Guide](../reinforcement-learning/) and now this guide, you're well-positioned to work at that intersection.
 
 ### Resources
 
@@ -868,32 +864,6 @@ Video generation in 2026 is where text generation was around 2021 — extraordin
 
 ---
 
-## Glossary
-
-| Term | Definition |
-|------|------------|
-| **(2+1)D** | Factorized spatiotemporal architecture: separate spatial and temporal layers |
-| **3D VAE** | Variational autoencoder that compresses video in time as well as space |
-| **AdaLN** | Adaptive layer normalization; the conditioning mechanism in DiT |
-| **CFG** | Classifier-free guidance |
-| **DiT** | Diffusion Transformer; transformer backbone for diffusion models |
-| **Flow Matching** | Modern alternative to DDPM training; better-behaved at scale |
-| **FVD** | Fréchet Video Distance; the standard (and flawed) automatic eval metric |
-| **I2V** | Image-to-Video |
-| **Latent video** | Compressed (T', H', W', C) tensor produced by a 3D VAE |
-| **MagViT-v2** | The strongest open recipe for discrete video tokenization |
-| **MMDiT** | Multi-Modal DiT; text and video tokens share attention (from SD3) |
-| **Patchification** | Splitting a (latent) tensor into a sequence of patch tokens for a transformer |
-| **Plücker coordinates** | 6D representation of a camera ray; standard for camera-conditioning |
-| **Rectified Flow** | A flow-matching training objective; popular in 2024+ video models |
-| **T2V** | Text-to-Video |
-| **Temporal inflation** | Adding time-axis layers to a pretrained 2D model |
-| **V2V** | Video-to-Video |
-| **VBench** | Comprehensive open evaluation suite for video generation |
-| **World Model** | Action-conditioned generative model of the world; a video model with actions |
-
----
-
 ## License
 
-This guide is provided for educational purposes. Feel free to share and adapt.
+MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.

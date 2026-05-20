@@ -4,15 +4,6 @@ A comprehensive guide to reinforcement learning as a *subject* — not just as t
 
 > **An honest framing.** Classical RL — the part of the field taught in textbooks — is a beautiful theory built on Markov decision processes, dynamic programming, and stochastic approximation. Most of it does not work directly on the problems people actually care about in 2026. What *does* work is a handful of robust algorithms (PPO, SAC, GRPO, MuZero-style search, DPO) applied with a mountain of practical knowledge about reward shaping, exploration, normalization, and infrastructure. This guide teaches the theory because you cannot debug what you do not understand, and then teaches the practice that the theory does not cover.
 
-This guide is **complementary to**, not a replacement for:
-- The [Physical Reinforcement Learning Guide](physical-reinforcement-learning-guide.md), which covers RL on real robots and the control-theoretic foundations that go with it.
-- The [Robotics Guide](robotics-guide.md), which covers robot learning more broadly (imitation, diffusion policies, VLAs).
-- The [Multimodal Learning Guide](multimodal-learning-guide.md), whose RLHF section overlaps with Phase 9 here.
-
-Do this guide first if you want to understand RL the algorithm. Do the physical-RL guide if you want to apply it to robots. Do both for the full picture.
-
-A companion code repository with runnable implementations is recommended at [`../reinforcement-learning/`](../reinforcement-learning/) (one folder per phase, one notebook or script per project).
-
 ---
 
 ## Table of Contents
@@ -32,7 +23,7 @@ A companion code repository with runnable implementations is recommended at [`..
 13. [Key Advice](#key-advice)
 14. [Common Pitfalls](#common-pitfalls)
 15. [Additional Resources](#additional-resources)
-16. [Glossary](#glossary)
+16. [Glossary](/shared/glossary/)
 
 ---
 
@@ -46,7 +37,7 @@ RL combines probability, optimization, and deep learning under a deceptively sim
 - **Linear algebra**: matrix multiplication, eigenvalues (for contraction arguments), vector norms
 - **Calculus**: gradients, chain rule, the log-derivative trick (`∇ log p = ∇p / p`) — you'll use this constantly
 - **Optimization**: SGD, Adam, learning rates, the difference between an objective you maximize vs. minimize
-- **Deep learning**: training loops, `nn.Module`, basic CNNs and transformers. If shaky, do the [PyTorch Deep Dive](pytorch-deep-dive-guide.md) first
+- **Deep learning**: training loops, `nn.Module`, basic CNNs and transformers. If shaky, do the [PyTorch Deep Dive](../pytorch-deep-dive/) first
 - **Some programming maturity**: you will debug stochastic, asynchronous code where the bug only appears every 50k steps
 
 ### The One Equation Everything Comes Back To
@@ -583,7 +574,7 @@ Everything so far has been **model-free**: learn a policy or value function from
   - **A learned forward dynamics network** `f_θ(s, a) → s', r`
   - **An ensemble** of forward dynamics networks (the standard way to estimate uncertainty)
   - **A latent dynamics model**: encoder `s → z`, transition `z, a → z'`, decoder `z → o` (image obs); the **Dreamer** family
-  - **A generative video model** doing the same job (world models — see Phase 9 of the [Video Generation Guide](video-generation-guide.md))
+  - **A generative video model** doing the same job (world models — see Phase 9 of the [Video Generation Guide](../video-generation/))
 - **Three ways to use a model**:
   - **Dyna-style** — generate fake transitions to augment a model-free learner's replay buffer (MBPO is the modern version)
   - **Planning** — use the model directly at decision time (MPC, CEM, MPPI)
@@ -976,10 +967,10 @@ Cooperative (StarCraft II, hide-and-seek), competitive (Go, poker), and mixed (n
 Learning to learn: RL² (an LSTM as the inner RL algorithm), MAML, PEARL. Increasingly subsumed by in-context learning in foundation-model policies.
 
 ### Hierarchical RL
-Options, sub-goals, feudal networks. The dream of compositional skills has been hard to realize cleanly, but VLAs and language-conditioned policies are achieving similar effects through different means (Phase 6 of the [Robotics Guide](robotics-guide.md)).
+Options, sub-goals, feudal networks. The dream of compositional skills has been hard to realize cleanly, but VLAs and language-conditioned policies are achieving similar effects through different means (Phase 6 of the [Robotics Guide](../robotics/)).
 
 ### World Models and Generative RL
-Generative video models that are also simulators. Crosses directly into [Video Generation Guide Phase 9](video-generation-guide.md#phase-9-world-models). Genie 2, Sora-style for sim-replacement, Dreamer-class for control. The convergence of generative modeling and RL.
+Generative video models that are also simulators. Crosses directly into [Video Generation Guide Phase 9](../video-generation/#phase-9-world-models-and-interactive-video). Genie 2, Sora-style for sim-replacement, Dreamer-class for control. The convergence of generative modeling and RL.
 
 ### Inverse RL and Reward Learning
 When the reward is unknown but the demonstrations exist: GAIL, AIRL, MaxEnt IRL. Connects to the preference modeling in RLHF and to safety (learning what humans value).
@@ -1125,38 +1116,6 @@ Sample complexity bounds, regret bounds, PAC-RL, distributional shifts. Currentl
 
 ---
 
-## Glossary
-
-| Term | Definition |
-|------|------------|
-| **Advantage** | `A(s, a) = Q(s, a) − V(s)`. How much better than the baseline this action is |
-| **Behavior policy** | The policy that generated the data, in off-policy or offline RL |
-| **Bellman equation** | The recursive consistency condition `V(s) = E[r + γV(s')]` |
-| **Bootstrapping** | Using a current estimate (e.g., `V(s')`) in the target instead of a full return |
-| **CQL** | Conservative Q-Learning — offline RL with a pessimistic Q penalty |
-| **DDPG** | Deep Deterministic Policy Gradient — the first deep-RL continuous-control algorithm |
-| **Deadly triad** | Function approximation + bootstrapping + off-policy data → instability |
-| **DQN** | Deep Q-Network — Q-learning with neural-net function approximation + experience replay + target network |
-| **DPO** | Direct Preference Optimization — closed-form RLHF without a reward model or PPO |
-| **GAE** | Generalized Advantage Estimation — TD(λ) for advantages |
-| **GRPO** | Group Relative Policy Optimization — DeepSeek's value-function-free PPO variant |
-| **IQL** | Implicit Q-Learning — offline RL that never queries `Q` at OOD actions |
-| **KL divergence** | The regularizer that keeps RLHF policies near the reference model |
-| **MDP** | Markov Decision Process — the tuple `(S, A, P, R, γ)` |
-| **MPC** | Model Predictive Control — use a learned model to plan at decision time |
-| **Off-policy** | The data comes from a different policy than the one being optimized |
-| **On-policy** | The data comes from the same policy being optimized (PPO, REINFORCE) |
-| **PPO** | Proximal Policy Optimization — the workhorse on-policy algorithm |
-| **Reward hacking** | A policy that maximizes the reward signal without doing what was intended |
-| **RLHF** | Reinforcement Learning from Human Feedback — the post-training recipe for LLMs |
-| **RLVR** | RL with Verifiable Rewards — RLHF when the reward is a deterministic checker |
-| **SAC** | Soft Actor-Critic — maximum-entropy continuous-control algorithm; the modern default |
-| **TD error** | `δ_t = r_t + γV(s_{t+1}) − V(s_t)`; the signal that drives every TD update |
-| **TD3** | Twin Delayed DDPG — DDPG plus three stability fixes |
-| **Value function** | Expected return; `V(s)` for state-value, `Q(s, a)` for action-value |
-
----
-
 ## License
 
-This guide is provided for educational purposes. Feel free to share and adapt.
+MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.

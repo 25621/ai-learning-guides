@@ -4,8 +4,6 @@ A comprehensive guide to understanding PyTorch as a *system* — not just as the
 
 > **Why this guide exists.** Every other modern AI guide — text generation, image generation, LLMs, robotics, multimodal — assumes PyTorch fluency. None teaches PyTorch as its own subject. The result is that most practitioners can write `loss.backward()` but cannot explain what the autograd engine is doing, profile a training step, or fix a hang in distributed training. This guide closes that gap.
 
-A companion code repository with runnable implementations is recommended at [`../pytorch-deep-dive/`](../pytorch-deep-dive/) (one folder per phase, one notebook or script per project).
-
 ---
 
 ## Table of Contents
@@ -24,7 +22,7 @@ A companion code repository with runnable implementations is recommended at [`..
 12. [Suggested Timeline](#suggested-timeline)
 13. [Key Advice](#key-advice)
 14. [Additional Resources](#additional-resources)
-15. [Glossary](#glossary)
+15. [Glossary](/shared/glossary/)
 
 ---
 
@@ -66,14 +64,14 @@ The tensor is the foundational object. Most surprising performance bugs in PyTor
 
 ### Concepts to Learn
 
-- **Storage** vs **Tensor**: a tensor is a *view* into a 1-D storage buffer
-- **Shape, stride, offset**: how multidimensional indexing maps to a flat buffer
+- [**Storage**](/shared/glossary/#storage) vs [**Tensor**](/shared/glossary/#tensor): a tensor is a *view* into a 1-D storage buffer
+- [**Shape**](/shared/glossary/#shape), [**stride**](/shared/glossary/#stride), [**offset**](/shared/glossary/#offset): how multidimensional [indexing](/shared/glossary/#indexing) maps to a flat buffer
 - **Contiguous vs non-contiguous tensors**: when `.contiguous()` is needed and why
-- **`view` vs `reshape` vs `permute` vs `transpose`**: which copy, which don't
-- **dtype**: `float32`, `float16`, `bfloat16`, `int8`, `bool`, when each is appropriate
-- **Device**: CPU vs CUDA vs MPS vs XLA; pinned memory; `non_blocking=True`
+- **[`view`](/shared/glossary/#view) vs [`reshape`](/shared/glossary/#reshape) vs [`permute`](/shared/glossary/#permute) vs [`transpose`](/shared/glossary/#transpose)**: which copy, which don't
+- [**dtype**](/shared/glossary/#dtype): `float32`, `float16`, `bfloat16`, `int8`, `bool`, when each is appropriate
+- **Device**: CPU vs [CUDA](/shared/glossary/#cuda) vs [MPS](/shared/glossary/#mps) vs [XLA](/shared/glossary/#xla); pinned memory; [`non_blocking=True`](/shared/glossary/#non_blocking)
 - **Broadcasting rules** and the silent bugs they cause
-- **In-place operations** (`add_`, `mul_`) and when they break autograd
+- **In-place operations** (`add_`, `mul_`) and when they break [autograd](/shared/glossary/#autograd)
 
 ### The Mental Model
 
@@ -846,28 +844,6 @@ PyTorch is a Python frontend over a C++ library. The Python you write is convert
 
 ---
 
-## Glossary
-
-| Term | Definition |
-|------|------------|
-| **ATen** | The C++ tensor library underneath PyTorch's Python frontend |
-| **autograd** | The reverse-mode automatic differentiation engine |
-| **AllReduce** | A collective op that sums tensors across all ranks and gives every rank the result |
-| **bf16 / bfloat16** | 16-bit float with fp32's exponent range — the modern default for training |
-| **c10** | PyTorch's core C++ library (the "core ten[sor]" library) |
-| **DDP** | Distributed Data Parallel — replicate model, split batch, all-reduce gradients |
-| **Dispatcher** | The PyTorch component that routes `torch.foo(...)` calls to the right backend/dtype kernel |
-| **FSDP** | Fully Sharded Data Parallel — shard params, grads, and optimizer state across ranks |
-| **HBM** | High-Bandwidth Memory — the memory on a modern GPU, the usual bottleneck |
-| **NCCL** | NVIDIA Collective Communications Library — does AllReduce etc. on NVIDIA GPUs |
-| **Stride** | The number of storage elements to step over for each dimension of a tensor |
-| **Storage** | The 1-D buffer that a tensor is a view into |
-| **Triton** | A Python-flavored language for writing GPU kernels, developed by OpenAI |
-| **TorchScript** | The legacy serialization/IR for PyTorch; superseded by `torch.export` |
-| **ZeRO** | DeepSpeed's parameter/gradient/state sharding scheme — comparable to FSDP |
-
----
-
 ## License
 
-This guide is provided for educational purposes. Feel free to share and adapt.
+MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.

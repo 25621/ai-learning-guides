@@ -4,15 +4,6 @@ A comprehensive guide to large language models as a *subject* — not just as th
 
 > **An honest framing.** Most of the "magic" of modern LLMs is not a single breakthrough — it is the compounding of a few simple ideas (next-token prediction, the transformer, scaling) executed at enormous cost with enormous care. The math is mostly undergraduate; the engineering is not. This guide teaches the architecture and the objectives because you cannot debug what you do not understand, and then teaches the data, infrastructure, alignment, and inference work that the textbook chapters skip.
 
-This guide is **complementary to**, not a replacement for:
-- The [Reinforcement Learning Guide](reinforcement-learning-guide.md), whose Phase 9 (RLHF / DPO / GRPO / RLVR) overlaps with Phase 5 here. Read the RL guide if you want the algorithmic depth behind the alignment stack.
-- The [Multimodal Learning Guide](multimodal-learning-guide.md), which covers vision-language and audio-language models.
-- The [Inference Systems Guide](inference-systems-guide.md), which covers serving, KV caches, and speculative decoding at production depth.
-
-Do this guide first if you want to understand LLMs the system. Do the RL guide if you want to understand the alignment loop. Do both for the full picture.
-
-A companion code repository with runnable implementations is recommended at [`../llm/`](../llm/) (one folder per phase, one notebook or script per project).
-
 ---
 
 ## Table of Contents
@@ -32,7 +23,7 @@ A companion code repository with runnable implementations is recommended at [`..
 13. [Key Advice](#key-advice)
 14. [Common Pitfalls](#common-pitfalls)
 15. [Additional Resources](#additional-resources)
-16. [Glossary](#glossary)
+16. [Glossary](/shared/glossary/)
 
 ---
 
@@ -46,7 +37,7 @@ LLMs combine probability, deep learning, distributed systems, and a surprising a
 - **Linear algebra**: matrix multiplication, broadcasting, attention is `softmax(QKᵀ/√d)V` and you should be able to read that without flinching
 - **Calculus**: gradients, chain rule, the difference between `log p(x)` and `log p(x | context)`
 - **Optimization**: SGD, Adam/AdamW, learning-rate schedules, gradient clipping, mixed-precision training
-- **Deep learning**: training loops, `nn.Module`, layer normalization, residual connections, dropout. If shaky, do the [PyTorch Deep Dive](pytorch-deep-dive-guide.md) first
+- **Deep learning**: training loops, `nn.Module`, layer normalization, residual connections, dropout. If shaky, do the [PyTorch Deep Dive](../pytorch-deep-dive/) first
 - **Programming maturity**: you will read other people's training code at 3 a.m. trying to figure out which of 14 norms is misplaced
 
 ### The One Equation Everything Comes Back To
@@ -544,7 +535,7 @@ Scaling laws are the closest thing ML has to a physical theory: they predict the
 
 ## Phase 5: Post-training — SFT, RLHF, DPO, GRPO, RLVR
 
-A base pretrained model is a brilliant autocomplete. It will continue a prompt with whatever pattern matches; it will not "follow instructions" in the sense users expect. Post-training is the family of techniques that turns autocomplete into an assistant. This phase overlaps heavily with **Phase 9 of the [Reinforcement Learning Guide](reinforcement-learning-guide.md)** — read that for the RL theory, this for the LLM-specific recipe.
+A base pretrained model is a brilliant autocomplete. It will continue a prompt with whatever pattern matches; it will not "follow instructions" in the sense users expect. Post-training is the family of techniques that turns autocomplete into an assistant. This phase overlaps heavily with **Phase 9 of the [Reinforcement Learning Guide](../reinforcement-learning/)** — read that for the RL theory, this for the LLM-specific recipe.
 
 ### Concepts to Learn
 
@@ -1319,43 +1310,6 @@ The capabilities frontier is well-understood and well-funded. The hard problems 
 
 ---
 
-## Glossary
-
-| Term | Definition |
-|------|------------|
-| **Attention** | The operation `softmax(QKᵀ/√d) V` — content-addressable token mixing |
-| **BPE** | Byte-Pair Encoding — subword tokenization by greedy frequent-pair merges |
-| **Chinchilla** | The scaling law showing compute-optimal training uses ~20 tokens per parameter |
-| **Chat template** | The structured format (system/user/assistant) the model is fine-tuned on |
-| **CoT** | Chain of Thought — prompting / training the model to produce intermediate reasoning |
-| **Context window** | The maximum number of tokens the model can attend over in one forward pass |
-| **DPO** | Direct Preference Optimization — closed-form RLHF as a supervised loss |
-| **FlashAttention** | IO-aware attention kernel; same math, 2–10× faster |
-| **FSDP** | Fully Sharded Data Parallel — PyTorch's optimizer / grad / param sharding |
-| **GQA** | Grouped-Query Attention — share K, V heads across query heads to shrink KV cache |
-| **GRPO** | Group Relative Policy Optimization — value-function-free PPO variant; DeepSeek lineage |
-| **KV cache** | Cached keys and values across decode steps; the memory dominator at serving time |
-| **LoRA** | Low-Rank Adapter — fine-tune by adding small low-rank matrices, freeze the base |
-| **MoE** | Mixture-of-Experts — sparse routing across N expert MLPs; high total params, fixed compute per token |
-| **PPO** | Proximal Policy Optimization — the workhorse on-policy RL algorithm, used in classic RLHF |
-| **Pretraining** | Self-supervised training on a large unlabeled corpus to predict the next token |
-| **Prefill** | Processing the prompt in one parallel forward pass before decoding begins |
-| **Quantization** | Reducing weight / activation precision to save memory and bandwidth |
-| **RAG** | Retrieval-Augmented Generation — fetch documents, prepend to prompt, then generate |
-| **Reward hacking** | Policy exploits a quirk of the reward signal rather than doing what was intended |
-| **RLHF** | Reinforcement Learning from Human Feedback — preference learning via PPO + KL |
-| **RLVR** | RL with Verifiable Rewards — RL when the reward is a deterministic checker |
-| **RMSNorm** | Root-Mean-Square LayerNorm without mean-centering; the modern default |
-| **RoPE** | Rotary Position Embedding — encodes position by rotating Q, K vectors |
-| **SAE** | Sparse Autoencoder — interpretability tool decomposing activations into monosemantic features |
-| **SFT** | Supervised Fine-Tuning — train on demonstration data with cross-entropy |
-| **Speculative decoding** | Use a draft model to propose tokens; verify with the target in one parallel pass |
-| **SwiGLU** | Gated MLP activation `(xW) · σ(xV)` — the modern default FFN |
-| **Tokenizer** | The mapping from string to integer IDs; trained, frozen, part of the model contract |
-| **vLLM** | Production LLM inference engine with PagedAttention and continuous batching |
-
----
-
 ## License
 
-This guide is provided for educational purposes. Feel free to share and adapt.
+MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.

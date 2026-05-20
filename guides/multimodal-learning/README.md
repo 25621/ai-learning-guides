@@ -4,10 +4,6 @@ A comprehensive guide to understanding and building systems that learn from and 
 
 > **"Multimodal learning"** is the slice of machine learning that operates on more than one input/output type. A model that reads an image and writes a caption is multimodal. A model that listens to audio and produces text is multimodal. A model that takes a text prompt and a reference image and produces a video is *very* multimodal. This guide is about how those systems work, how to train them, and where the field is going.
 
-This guide assumes you have already worked through, or are comfortable with, the material in the [Text Generation Guide](text-generation-guide.md) and [Image Generation Guide](image-generation-guide.md) — or at least a solid grasp of transformers and PyTorch. If those are unfamiliar, do them first. Multimodal models are *fusions* of text and vision systems; you cannot fuse what you don't yet understand.
-
-A companion code repository with runnable implementations is recommended at [`../multimodal-learning/`](../multimodal-learning/) (one folder per phase).
-
 ---
 
 ## Table of Contents
@@ -26,7 +22,7 @@ A companion code repository with runnable implementations is recommended at [`..
 12. [Suggested Timeline](#suggested-timeline)
 13. [Key Advice](#key-advice)
 14. [Additional Resources](#additional-resources)
-15. [Glossary](#glossary)
+15. [Glossary](/shared/glossary/)
 
 ---
 
@@ -925,29 +921,6 @@ Visual jailbreaks (typographic attacks, adversarial images), CSAM detection, dee
 
 ---
 
-## Glossary
-
-| Term | Definition |
-|------|------------|
-| **Alignment (multimodal)** | Making embeddings from different modalities comparable in a shared space |
-| **AnyRes** | Dynamic-resolution input handling (tile images at native aspect ratio) |
-| **CLIP** | Contrastive Language-Image Pretraining — paired text-image dual encoder |
-| **Cross-attention** | Attention where queries come from one modality and keys/values from another |
-| **Fusion (early/middle/late)** | When in the network different modalities are combined |
-| **Grounding** | Producing spatial outputs (boxes, points) referring to image regions |
-| **InfoNCE** | The contrastive loss used by CLIP; softmax over a similarity matrix |
-| **Modality gap** | Empirical finding that different-modality embeddings stay in separable regions |
-| **Native multimodal** | A model trained from scratch on all modalities with a unified vocabulary |
-| **Projector** | The (usually small) network that maps one modality's features into another's space |
-| **Q-Former** | BLIP-2's learnable-query cross-attention module for distilling images into LLM tokens |
-| **SigLIP** | Sigmoid-loss CLIP variant; scales better and works at smaller batch sizes |
-| **Token (visual/audio)** | Discrete code from a VQ-VAE or neural codec; lets transformers treat the modality like language |
-| **VLA** | Vision-Language-Action model; outputs robot/agent actions instead of text |
-| **VLM** | Vision-Language Model; image (+ text) in, text out |
-| **VQ-VAE** | Vector-Quantized Variational Autoencoder; tokenizes continuous data into discrete codes |
-
----
-
 ## License
 
-This guide is provided for educational purposes. Feel free to share and adapt.
+MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.

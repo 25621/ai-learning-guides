@@ -4,15 +4,11 @@ A comprehensive guide to the hardware that makes modern AI possible — from GPU
 
 > **An honest framing.** This guide covers AI hardware as it exists in 2026, not as it's marketed. Most of "DIY AI hardware" is *assembling and programming* hardware that already exists — building a multi-GPU workstation, writing custom CUDA/Triton kernels, fine-tuning quantization. *Fabricating your own GPU/TPU/HBM is not a thing for individuals* — single GPUs cost billions of dollars to design and tens of millions per wafer to manufacture. The achievable DIY frontier is custom inference ASICs via tinytapeout-style flows, FPGA acceleration, and serious system integration. This guide is honest about that distinction.
 
-This is the capstone of the curriculum. The earlier guides — [PyTorch Deep Dive](pytorch-deep-dive-guide.md), [LLM](llm-guide.md), [Video Generation](video-generation-guide.md), [Robotics](robotics-guide.md) — assume hardware as a given. This guide is about *why* the hardware is the way it is, and *how* to program it intentionally instead of treating it as a black box.
-
-A companion code repository with kernel examples and benchmarks is recommended at [`../ai-hardware/`](../ai-hardware/) (one folder per phase).
-
 ---
 
 ## Table of Contents
 
-1. [Phase 0: Prerequisites and Setup](#phase-0-prerequisites-and-setup)
+1. [Phase 0: Prerequisites](#phase-0-prerequisites)
 2. [Phase 1: How a Modern Computer Computes](#phase-1-how-a-modern-computer-computes)
 3. [Phase 2: GPU Architecture, Inside Out](#phase-2-gpu-architecture-inside-out)
 4. [Phase 3: The Memory Hierarchy — Where Your Time Actually Goes](#phase-3-the-memory-hierarchy--where-your-time-actually-goes)
@@ -26,24 +22,24 @@ A companion code repository with kernel examples and benchmarks is recommended a
 12. [Suggested Timeline](#suggested-timeline)
 13. [Key Advice](#key-advice)
 14. [Additional Resources](#additional-resources)
-15. [Glossary](#glossary)
+15. [Glossary](/shared/glossary/)
 
 ---
 
-## Phase 0: Prerequisites and Setup
+## Phase 0: Prerequisites
 
 The prerequisites here are different from the other guides — you can be a less experienced ML practitioner and still get a lot out of this material, as long as you have systems-programming chops.
 
-### Concepts You Should Already Know
+### Concepts to Know
 
 - **C and basic C++** — enough to read CUDA code; you don't need template metaprogramming
 - **Operating systems basics**: virtual memory, paging, processes vs threads, system calls
 - **Computer architecture basics**: caches (L1/L2/L3), pipelining, SIMD, instruction-level parallelism — if these are blanks, do [CS:APP](https://csapp.cs.cmu.edu/) Ch. 5–6 first
-- **PyTorch fluency**: you've trained models and profiled at least one — see the [PyTorch Deep Dive Guide](pytorch-deep-dive-guide.md)
+- **PyTorch fluency**: you've trained models and profiled at least one — see the [PyTorch Deep Dive guide](../pytorch-deep-dive/)
 - **Linear algebra at the FLOP level**: you can count matmul FLOPs in your head (2·M·N·K for an M×K times K×N matrix)
 - **A modern GPU** — owned, rented, or borrowed. Cloud is fine. You will write code that runs.
 
-### What You Need Installed (Recommended)
+### What You Need Installed
 
 - **CUDA Toolkit 12.x+** if working with NVIDIA
 - **Triton** (installed with PyTorch 2.x by default)
@@ -440,7 +436,7 @@ The two most expensive lines a GPU programmer writes are not `__global__` and `t
 - [Triton tutorials](https://triton-lang.org/main/getting-started/tutorials/index.html) — start at vector add, end at FlashAttention
 - [CUTLASS](https://github.com/NVIDIA/cutlass) — the matmul template library
 - [GPU MODE lectures](https://github.com/gpu-mode/lectures) — best community for kernel work
-- [PyTorch Deep Dive Guide — Phase 6](pytorch-deep-dive-guide.md#phase-6-custom-kernels--c-cuda-and-triton-extensions)
+- [PyTorch Deep Dive guide — Phase 6](../pytorch-deep-dive/#phase-6-custom-kernels--c-cuda-and-triton-extensions)
 - [Lei Mao's blog](https://leimao.github.io/) — clear walkthroughs of CUDA topics
 
 ---
@@ -586,7 +582,7 @@ In a 2026 frontier training cluster, the network is *the* design constraint. Eve
 - [`nccl-tests`](https://github.com/NVIDIA/nccl-tests)
 - [NVIDIA NVLink and NVSwitch overview](https://www.nvidia.com/en-us/data-center/nvlink/)
 - [Mellanox / NVIDIA Networking docs](https://docs.nvidia.com/networking/)
-- [PyTorch Deep Dive Guide — Phase 7](pytorch-deep-dive-guide.md#phase-7-distributed-training--ddp-fsdp-and-beyond)
+- [PyTorch Deep Dive guide — Phase 7](../pytorch-deep-dive/#phase-7-distributed-training--ddp-fsdp-and-beyond)
 
 ---
 
@@ -991,35 +987,6 @@ Power and cooling, not silicon, are increasingly the binding constraint on AI bu
 
 ---
 
-## Glossary
-
-| Term | Definition |
-|------|------------|
-| **AI (arithmetic intensity)** | FLOPs per byte of memory accessed; determines roofline position |
-| **BF16** | Brain Floating Point 16; same range as FP32, less precision; modern training default |
-| **CDNA / RDNA** | AMD's datacenter / consumer GPU architectures |
-| **CUTLASS** | NVIDIA's open template library for matmul kernels |
-| **FP8** | 8-bit floating point; E4M3 or E5M2 variants; modern inference default |
-| **HBM** | High-Bandwidth Memory; stacked DRAM with TSV interconnects |
-| **InfiniBand (IB)** | High-speed network with RDMA; standard for AI clusters |
-| **KV cache** | Cached keys/values from prior tokens; grows linearly with context |
-| **NCCL** | NVIDIA Collective Communications Library |
-| **NVLink** | NVIDIA's GPU-GPU interconnect; much faster than PCIe |
-| **NVSwitch** | NVLink switch chip; full-bandwidth all-to-all within a node |
-| **PagedAttention** | Page-based KV cache management (vLLM) |
-| **PCIe** | The standard CPU-GPU connection (and slower GPU-GPU when no NVLink) |
-| **PTQ / QAT** | Post-Training / Quantization-Aware Training |
-| **Roofline** | Performance model: min(peak FLOPs, BW × AI) |
-| **SIMT** | Single Instruction Multiple Threads; NVIDIA's execution model |
-| **SM** | Streaming Multiprocessor; the GPU's "core" |
-| **Systolic array** | Data-flow matmul fabric used in TPUs |
-| **Tensor Core** | Specialized matmul unit in NVIDIA GPUs since Volta |
-| **TFLOPs** | Tera (10¹²) floating-point operations per second |
-| **Triton** | Python-flavored GPU kernel language |
-| **Warp** | 32 threads scheduled in lockstep on NVIDIA GPUs |
-
----
-
 ## License
 
-This guide is provided for educational purposes. Feel free to share and adapt.
+MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.

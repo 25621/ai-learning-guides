@@ -12,7 +12,7 @@ A collection of long-form, project-driven guides for learning modern AI from fir
 |---|---|---|---|
 | [PyTorch Deep Dive](./guides/pytorch-deep-dive/) | Tensors, autograd, performance, distributed, custom kernels | 11 | Going from PyTorch user to power user |
 | [LLM](./guides/llm/) | Transformers, GPT from scratch, pretraining, post-training, serving | 11 | Understanding and building language models |
-| [Image Generation](./guides/image-generation/) | Autoencoders, GANs, diffusion | 6 | Generative vision from foundations to diffusion |
+| [Image Generation](./guides/image-generation/) | Autoencoders, VAEs, GANs, diffusion, latent diffusion, DiTs, flow matching | 11 | Generative vision from foundations to frontier |
 | [Reinforcement Learning](./guides/reinforcement-learning/) | MDPs, DQN, PPO, SAC, offline RL, RLHF | 11 | Learning RL as an algorithm family |
 | [Video Generation](./guides/video-generation/) | Video diffusion, latent video, DiTs, world models | 11 | Temporal generative models |
 | [Robotics](./guides/robotics/) | Control, perception, imitation learning, diffusion policies, VLAs, sim-to-real | 11 | Building robot learning systems |
@@ -48,6 +48,33 @@ There is no single "first" guide. Where to start depends on what you're trying t
 
 ### "I'm starting from scratch"
 The honest answer: pick a project you actually want to build and work backward. Generic "learn AI" curricula tend to stall. If you want a default, do **[PyTorch Deep Dive](./guides/pytorch-deep-dive/)** → **[LLM](./guides/llm/)** Phases 1–3 → pick a direction.
+
+---
+
+## Prerequisites
+
+These apply to every guide in this collection. Each guide's **Phase 0: Prerequisites** layers the topic-specific concepts and tooling on top of these.
+
+### Concepts to Know
+
+- **Python**: classes, decorators, context managers, generators, virtual environments
+- **Linear algebra**: matrix multiplication, vector spaces, broadcasting, basic eigenvalue intuition
+- **Calculus**: gradients, chain rule, partial derivatives
+- **Probability**: random variables, expectation, conditional probability
+- **Deep learning basics**: training loops, loss functions, backpropagation, what an `nn.Module` is. The [PyTorch Deep Dive](./guides/pytorch-deep-dive/) is the recommended foundation if any of this feels shaky.
+- **Shell and git**: you will read and clone a lot of repos
+
+### What You Need Installed
+
+- **Python 3.10+**, NumPy, PyTorch
+- **A GPU** — owned, rented, or borrowed. Cloud is fine. Each guide notes its specific VRAM and hardware needs.
+
+### Resources
+
+- [3Blue1Brown — Essence of Linear Algebra](https://www.3blue1brown.com/topics/linear-algebra) — the visual intuition
+- [Goodfellow, Bengio, Courville — Deep Learning Book](https://www.deeplearningbook.org/) — the standard reference
+- [PyTorch official docs](https://pytorch.org/docs/stable/index.html) — your most-used reference across guides
+- [Andrej Karpathy — Neural Networks: Zero to Hero](https://karpathy.ai/zero-to-hero.html) — the cleanest on-ramp to modern deep learning
 
 ---
 
@@ -104,10 +131,9 @@ How the guides relate to each other:
 
 ```
 ai-learning-guides/
-├── README.md                     ← you are here
+├── README.md                     ← you are here (cross-guide Prerequisites live in this file)
 ├── shared/
-│   ├── glossary.md               ← terms used across multiple guides
-│   └── prerequisites.md          ← common Phase 0 material
+│   └── glossary.md               ← consolidated glossary for all guides
 ├── guides/
 │   ├── pytorch-deep-dive/
 │   │   ├── README.md             ← the guide itself
@@ -133,8 +159,6 @@ ai-learning-guides/
 │   └── ai-hardware/
 └── LICENSE
 ```
-
-The `guides/` directories are listed in the same order as the [Guides](#guides) table. That is preferable here because the README presents a deliberate learning progression; alphabetical order would be easier to scan as a filesystem convention, but it would hide the curriculum sequence this repository is organized around.
 
 **Conventions used across all guides:**
 
@@ -196,4 +220,4 @@ If a phase is taking 3x as long as the guide's suggested timeline, that's a sign
 
 ## License
 
-MIT License. See the [LICENSE](LICENSE) file for details.
+MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.
