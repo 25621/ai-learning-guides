@@ -64,12 +64,12 @@ The tensor is the foundational object. Most surprising performance bugs in PyTor
 
 ### Concepts to Learn
 
-- [**Storage**](#glossary) vs [**Tensor**](#glossary): a tensor is a *view* into a 1-D storage buffer
-- [**Shape**](#glossary), [**stride**](#glossary), [**offset**](#glossary): how multidimensional [indexing](#glossary) maps to a flat buffer
+- [**Storage**](#storage) vs [**Tensor**](#tensor): a tensor is a *view* into a 1-D storage buffer
+- [**Shape**](#shape), [**stride**](#stride), [**offset**](#offset): how multidimensional [indexing](#indexing) maps to a flat buffer
 - **Contiguous vs non-contiguous tensors**: when `.contiguous()` is needed and why
-- **[`view`](#glossary) vs [`reshape`](#glossary) vs [`permute`](#glossary) vs [`transpose`](#glossary)**: which copy, which don't
-- [**dtype**](#glossary): `float32`, `float16`, `bfloat16`, `int8`, `bool`, when each is appropriate
-- **Device**: CPU vs [CUDA](#glossary) vs [MPS](#glossary) vs [XLA](#glossary); pinned memory; [`non_blocking=True`](#glossary)
+- **[`view`](#view) vs [`reshape`](#reshape) vs [`permute`](#permute) vs [`transpose`](#transpose)**: which copy, which don't
+- [**dtype**](#dtype): `float32`, `float16`, `bfloat16`, `int8`, `bool`, when each is appropriate
+- **Device**: CPU vs [CUDA](#cuda) vs [MPS](#mps) vs [XLA](#xla); pinned memory; [`non_blocking=True`](#non_blocking)
 - **Broadcasting rules** and the silent bugs they cause
 - **In-place operations** (`add_`, `mul_`) and when they break autograd
 
@@ -848,36 +848,89 @@ PyTorch is a Python frontend over a C++ library. The Python you write is convert
 
 This glossary covers terms used heavily in this guide. For repository-wide terms, see the [root glossary](../../README.md#glossary).
 
-| Term | Definition |
-|------|------------|
-| **AllReduce** | A collective op that sums tensors across all ranks and gives every rank the result |
-| **ATen** | The C++ tensor library underneath PyTorch's Python frontend |
-| **autograd** | The reverse-mode automatic differentiation engine |
-| **bf16 / bfloat16** | 16-bit float with fp32's exponent range — the modern default for training |
-| **c10** | PyTorch's core C++ library (the "core ten[sor]" library) |
-| **CUDA** | NVIDIA's GPU compute backend; tensors on the `cuda` device run their kernels here |
-| **DDP** | Distributed Data Parallel — replicate model, split batch, all-reduce gradients |
-| **Dispatcher** | The PyTorch component that routes `torch.foo(...)` calls to the right backend/dtype kernel |
-| **dtype** | A tensor's element data type — e.g. `float32`, `float16`, `bfloat16`, `int8`, `bool` |
-| **FSDP** | Fully Sharded Data Parallel — shard params, grads, and optimizer state across ranks |
-| **HBM** | High-Bandwidth Memory — the memory on a modern GPU, the usual bottleneck |
-| **indexing** | Mapping a multidimensional index `[i, j, …]` to a flat storage position via `offset + Σ iₖ·strideₖ` |
-| **MPS** | Metal Performance Shaders — the GPU backend for Apple Silicon |
-| **NCCL** | NVIDIA Collective Communications Library — does AllReduce etc. on NVIDIA GPUs |
-| **non_blocking** | The `non_blocking=True` flag on `.to()` / `.cuda()` that lets a host→device copy run asynchronously from pinned memory |
-| **offset** | The starting index into the underlying storage where a tensor's data begins (`.storage_offset()`) |
-| **permute** | Reorders all of a tensor's dimensions by rewriting strides — never copies |
-| **reshape** | Returns a tensor with a new shape, copying only when a no-copy view isn't possible |
-| **Shape** | The size of a tensor along each dimension; the tuple returned by `.shape` |
-| **Storage** | The 1-D buffer that a tensor is a view into |
-| **Stride** | The number of storage elements to step over for each dimension of a tensor |
-| **Tensor** | A multidimensional array — a (storage, shape, stride, offset, dtype, device, requires_grad) tuple that views a 1-D storage buffer |
-| **TorchScript** | The legacy serialization/IR for PyTorch; superseded by `torch.export` |
-| **transpose** | Swaps two dimensions by rewriting strides — never copies; the result is usually non-contiguous |
-| **Triton** | A Python-flavored language for writing GPU kernels, developed by OpenAI |
-| **view** | A no-copy alias that shares storage with its source; requires a contiguous-compatible layout |
-| **XLA** | Accelerated Linear Algebra — a compiler backend (e.g. for TPUs) used via `torch_xla` |
-| **ZeRO** | DeepSpeed's parameter/gradient/state sharding scheme — comparable to FSDP |
+### AllReduce {#allreduce}
+A collective op that sums tensors across all ranks and gives every rank the result
+
+### ATen {#aten}
+The C++ tensor library underneath PyTorch's Python frontend
+
+### autograd {#autograd}
+The reverse-mode automatic differentiation engine
+
+### bfloat16 {#bfloat16}
+16-bit float with fp32's exponent range — the modern default for training (also written bf16)
+
+### c10 {#c10}
+PyTorch's core C++ library (the "core ten[sor]" library)
+
+### CUDA {#cuda}
+NVIDIA's GPU compute backend; tensors on the `cuda` device run their kernels here
+
+### DDP {#ddp}
+Distributed Data Parallel — replicate model, split batch, all-reduce gradients
+
+### Dispatcher {#dispatcher}
+The PyTorch component that routes `torch.foo(...)` calls to the right backend/dtype kernel
+
+### dtype {#dtype}
+A tensor's element data type — e.g. `float32`, `float16`, `bfloat16`, `int8`, `bool`
+
+### FSDP {#fsdp}
+Fully Sharded Data Parallel — shard params, grads, and optimizer state across ranks
+
+### HBM {#hbm}
+High-Bandwidth Memory — the memory on a modern GPU, the usual bottleneck
+
+### Indexing {#indexing}
+Mapping a multidimensional index `[i, j, …]` to a flat storage position via `offset + Σ iₖ·strideₖ`
+
+### MPS {#mps}
+Metal Performance Shaders — the GPU backend for Apple Silicon
+
+### NCCL {#nccl}
+NVIDIA Collective Communications Library — does AllReduce etc. on NVIDIA GPUs
+
+### non_blocking {#non_blocking}
+The `non_blocking=True` flag on `.to()` / `.cuda()` that lets a host→device copy run asynchronously from pinned memory
+
+### Offset {#offset}
+The starting index into the underlying storage where a tensor's data begins (`.storage_offset()`)
+
+### permute {#permute}
+Reorders all of a tensor's dimensions by rewriting strides — never copies
+
+### reshape {#reshape}
+Returns a tensor with a new shape, copying only when a no-copy view isn't possible
+
+### Shape {#shape}
+The size of a tensor along each dimension; the tuple returned by `.shape`
+
+### Storage {#storage}
+The 1-D buffer that a tensor is a view into
+
+### Stride {#stride}
+The number of storage elements to step over for each dimension of a tensor
+
+### Tensor {#tensor}
+A multidimensional array — a (storage, shape, stride, offset, dtype, device, requires_grad) tuple that views a 1-D storage buffer
+
+### TorchScript {#torchscript}
+The legacy serialization/IR for PyTorch; superseded by `torch.export`
+
+### transpose {#transpose}
+Swaps two dimensions by rewriting strides — never copies; the result is usually non-contiguous
+
+### Triton {#triton}
+A Python-flavored language for writing GPU kernels, developed by OpenAI
+
+### view {#view}
+A no-copy alias that shares storage with its source; requires a contiguous-compatible layout
+
+### XLA {#xla}
+Accelerated Linear Algebra — a compiler backend (e.g. for TPUs) used via `torch_xla`
+
+### ZeRO {#zero}
+DeepSpeed's parameter/gradient/state sharding scheme — comparable to FSDP
 
 ---
 
