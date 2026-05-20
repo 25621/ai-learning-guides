@@ -1122,7 +1122,7 @@ Robot learning works when (a) data is sufficient and on-distribution, (b) the re
 ### Resources
 
 - *Reinforcement Learning: An Introduction* (Sutton & Barto) — foundations
-- The [Reinforcement Learning Guide](reinforcement-learning-guide.md) — algorithmic depth
+- The [Reinforcement Learning Guide](../reinforcement-learning/) — algorithmic depth
 - *Algorithms for Decision Making* (Kochenderfer et al.) — decision-making spanning POMDPs to RL
 - Sergey Levine's deep-RL course (UC Berkeley CS285)
 - Karol Hausman et al. RT-2 / RT-X papers
@@ -1539,4 +1539,4 @@ This glossary covers terms used heavily in this guide. For repository-wide terms
 
 ## License
 
-MIT License. See the [LICENSE](../../LICENSE) file for details.
+MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.

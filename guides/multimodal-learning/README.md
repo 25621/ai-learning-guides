@@ -948,4 +948,4 @@ This glossary covers terms used heavily in this guide. For repository-wide terms
 
 ## License
 
-MIT License. See the [LICENSE](../../LICENSE) file for details.
+MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.

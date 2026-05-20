@@ -535,7 +535,7 @@ Scaling laws are the closest thing ML has to a physical theory: they predict the
 
 ## Phase 5: Post-training — SFT, RLHF, DPO, GRPO, RLVR
 
-A base pretrained model is a brilliant autocomplete. It will continue a prompt with whatever pattern matches; it will not "follow instructions" in the sense users expect. Post-training is the family of techniques that turns autocomplete into an assistant. This phase overlaps heavily with **Phase 9 of the [Reinforcement Learning Guide](reinforcement-learning-guide.md)** — read that for the RL theory, this for the LLM-specific recipe.
+A base pretrained model is a brilliant autocomplete. It will continue a prompt with whatever pattern matches; it will not "follow instructions" in the sense users expect. Post-training is the family of techniques that turns autocomplete into an assistant. This phase overlaps heavily with **Phase 9 of the [Reinforcement Learning Guide](../reinforcement-learning/)** — read that for the RL theory, this for the LLM-specific recipe.
 
 ### Concepts to Learn
 
@@ -1351,4 +1351,4 @@ This glossary covers terms used heavily in this guide. For repository-wide terms
 
 ## License
 
-MIT License. See the [LICENSE](../../LICENSE) file for details.
+MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.

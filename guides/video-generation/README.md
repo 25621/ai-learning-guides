@@ -679,7 +679,7 @@ is the empty string.
 
 ### Key Insight
 
-World models are the convergence point of three lines of research that are usually taught separately: video generation, model-based RL, and simulation. Each of those communities approaches the same object from a different angle — generation people care about visual fidelity, RL people care about action conditioning and rollouts, simulation people care about physical realism. The 2025–2026 frontier is increasingly the same model used in all three roles. If you've completed the [Reinforcement Learning Guide](reinforcement-learning-guide.md) and now this guide, you're well-positioned to work at that intersection.
+World models are the convergence point of three lines of research that are usually taught separately: video generation, model-based RL, and simulation. Each of those communities approaches the same object from a different angle — generation people care about visual fidelity, RL people care about action conditioning and rollouts, simulation people care about physical realism. The 2025–2026 frontier is increasingly the same model used in all three roles. If you've completed the [Reinforcement Learning Guide](../reinforcement-learning/) and now this guide, you're well-positioned to work at that intersection.
 
 ### Resources
 
@@ -892,4 +892,4 @@ Video generation in 2026 is where text generation was around 2021 — extraordin
 
 ## License
 
-MIT License. See the [LICENSE](../../LICENSE) file for details.
+MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.

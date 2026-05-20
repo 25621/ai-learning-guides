@@ -574,7 +574,7 @@ Everything so far has been **model-free**: learn a policy or value function from
   - **A learned forward dynamics network** `f_θ(s, a) → s', r`
   - **An ensemble** of forward dynamics networks (the standard way to estimate uncertainty)
   - **A latent dynamics model**: encoder `s → z`, transition `z, a → z'`, decoder `z → o` (image obs); the **Dreamer** family
-  - **A generative video model** doing the same job (world models — see Phase 9 of the [Video Generation Guide](video-generation-guide.md))
+  - **A generative video model** doing the same job (world models — see Phase 9 of the [Video Generation Guide](../video-generation/))
 - **Three ways to use a model**:
   - **Dyna-style** — generate fake transitions to augment a model-free learner's replay buffer (MBPO is the modern version)
   - **Planning** — use the model directly at decision time (MPC, CEM, MPPI)
@@ -967,10 +967,10 @@ Cooperative (StarCraft II, hide-and-seek), competitive (Go, poker), and mixed (n
 Learning to learn: RL² (an LSTM as the inner RL algorithm), MAML, PEARL. Increasingly subsumed by in-context learning in foundation-model policies.
 
 ### Hierarchical RL
-Options, sub-goals, feudal networks. The dream of compositional skills has been hard to realize cleanly, but VLAs and language-conditioned policies are achieving similar effects through different means (Phase 6 of the [Robotics Guide](robotics-guide.md)).
+Options, sub-goals, feudal networks. The dream of compositional skills has been hard to realize cleanly, but VLAs and language-conditioned policies are achieving similar effects through different means (Phase 6 of the [Robotics Guide](../robotics/)).
 
 ### World Models and Generative RL
-Generative video models that are also simulators. Crosses directly into [Video Generation Guide Phase 9](video-generation-guide.md#phase-9-world-models). Genie 2, Sora-style for sim-replacement, Dreamer-class for control. The convergence of generative modeling and RL.
+Generative video models that are also simulators. Crosses directly into [Video Generation Guide Phase 9](../video-generation/#phase-9-world-models-and-interactive-video). Genie 2, Sora-style for sim-replacement, Dreamer-class for control. The convergence of generative modeling and RL.
 
 ### Inverse RL and Reward Learning
 When the reward is unknown but the demonstrations exist: GAIL, AIRL, MaxEnt IRL. Connects to the preference modeling in RLHF and to safety (learning what humans value).
@@ -1152,4 +1152,4 @@ This glossary covers terms used heavily in this guide. For repository-wide terms
 
 ## License
 
-MIT License. See the [LICENSE](../../LICENSE) file for details.
+MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.

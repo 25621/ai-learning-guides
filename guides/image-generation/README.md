@@ -1346,4 +1346,4 @@ Image generation in 2026 is converging *fast*. The architectural recipe (VAE + D
 
 ## License
 
-MIT License. See the [LICENSE](../../LICENSE) file for details.
+MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.
