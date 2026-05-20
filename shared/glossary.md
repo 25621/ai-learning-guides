@@ -13,6 +13,9 @@ Variational autoencoder that compresses video in time as well as space
 ### ABA {#aba}
 Articulated-Body Algorithm — `O(n)` forward dynamics for rigid-body chains
 
+### Activations {#activations}
+The intermediate tensor outputs produced by the layers of a neural network during the forward pass.
+
 ### AdaLN {#adaln}
 Adaptive layer normalization; the conditioning mechanism in DiT
 
@@ -55,6 +58,9 @@ The reverse-mode automatic differentiation engine
 ### AWQ {#awq}
 Activation-aware Weight Quantization — preserve weights important to large activations
 
+### Backward pass {#backward-pass}
+The process of traversing the computation graph in reverse to compute gradients using the chain rule.
+
 ### BC {#bc}
 Behavior Cloning — supervised imitation of demonstrator actions
 
@@ -70,11 +76,14 @@ The recursive consistency condition `V(s) = E[r + γV(s')]`
 ### Bootstrapping {#bootstrapping}
 Using a current estimate (e.g., `V(s')`) in the target instead of a full return
 
+### bpd (bits per dimension) {#bpd-bits-per-dimension}
+Standard likelihood metric for image models; `-log₂ p(x) / D`
+
 ### BPE {#bpe}
 Byte-Pair Encoding — subword tokenization by greedy frequent-pair merges
 
-### bpd (bits per dimension) {#bpd-bits-per-dimension}
-Standard likelihood metric for image models; `-log₂ p(x) / D`
+### C-space {#c-space}
+Configuration space — the abstract space of joint configurations
 
 ### c10 {#c10}
 PyTorch's core C++ library (the "core ten[sor]" library)
@@ -87,6 +96,9 @@ AMD's datacenter / consumer GPU architectures
 
 ### CFG (classifier-free guidance) {#cfg-classifier-free-guidance}
 Inference trick: combine conditional and unconditional model outputs to amplify conditioning
+
+### Chain rule {#chain-rule}
+A calculus principle used to compute the derivative of a composite function by multiplying the derivatives of its parts.
 
 ### Chat template {#chat-template}
 The structured format (system/user/assistant) the model is fine-tuned on
@@ -124,20 +136,17 @@ Conservative Q-Learning — offline RL with a pessimistic Q penalty
 ### Cross-attention {#cross-attention}
 Attention where queries come from one modality and keys/values from another
 
-### C-space {#c-space}
-Configuration space — the abstract space of joint configurations
-
 ### CUDA {#cuda}
 NVIDIA's GPU compute backend; tensors on the `cuda` device run their kernels here
 
 ### CUTLASS {#cutlass}
 NVIDIA's open template library for matmul kernels
 
-### DDP {#ddp}
-Distributed Data Parallel — replicate model, split batch, all-reduce gradients
-
 ### DDIM {#ddim}
 Deterministic, accelerated sampler for diffusion models
+
+### DDP {#ddp}
+Distributed Data Parallel — replicate model, split batch, all-reduce gradients
 
 ### DDPG {#ddpg}
 Deep Deterministic Policy Gradient — the first deep-RL continuous-control algorithm
@@ -160,6 +169,9 @@ The PyTorch component that routes `torch.foo(...)` calls to the right backend/dt
 ### DiT {#dit}
 Diffusion Transformer — Peebles & Xie's transformer-based diffusion backbone
 
+### Double backward {#double-backward}
+Computing the gradient of a gradient by tracking the backward pass operations in a new computation graph.
+
 ### DPO {#dpo}
 Direct Preference Optimization — closed-form RLHF without a reward model or PPO
 
@@ -171,6 +183,9 @@ Fine-tuning recipe for subject personalization; updates the whole model on a few
 
 ### dtype {#dtype}
 A tensor's element data type — e.g. `float32`, `float16`, `bfloat16`, `int8`, `bool`
+
+### Dynamic computation graph {#dynamic-computation-graph}
+A graph of operations built on-the-fly as code executes, representing the forward pass used for autograd.
 
 ### EAGLE / Medusa {#eagle--medusa}
 Self-speculation: extra heads on the target model propose tokens, no separate draft model
@@ -235,6 +250,9 @@ Hessian-based per-row PTQ minimizing layer-wise reconstruction error
 ### GQA {#gqa}
 Grouped-Query Attention — sharing K/V heads across query heads; primary KV-cache saver at serving time
 
+### Gradient checkpointing {#gradient-checkpointing}
+A memory-saving technique that discards intermediate activations during the forward pass and recomputes them during the backward pass.
+
 ### Grounding {#grounding}
 Producing spatial outputs (boxes, points) referring to image regions
 
@@ -262,11 +280,11 @@ Inertial Measurement Unit — gyroscope + accelerometer (often + magnetometer)
 ### Indexing {#indexing}
 Mapping a multidimensional index `[i, j, …]` to a flat storage position via `offset + Σ iₖ·strideₖ`
 
-### InfoNCE {#infonce}
-The contrastive loss used by CLIP; softmax over a similarity matrix
-
 ### InfiniBand (IB) {#infiniband-ib}
 High-speed network with RDMA; standard for AI clusters
+
+### InfoNCE {#infonce}
+The contrastive loss used by CLIP; softmax over a similarity matrix
 
 ### IQL {#iql}
 Implicit Q-Learning — offline RL that never queries `Q` at OOD actions
@@ -319,14 +337,17 @@ Scalar measure of how "easy" motion is from a given configuration (e.g. `sqrt(de
 ### MDP {#mdp}
 Markov Decision Process — the tuple `(S, A, P, R, γ)`
 
+### Micrograd {#micrograd}
+A tiny, educational autograd engine implemented in basic Python by Andrej Karpathy to illustrate how reverse-mode differentiation works.
+
 ### MMDiT {#mmdit}
 Multi-Modal Diffusion Transformer — joint text+image attention layers, used in SD3 and Flux
 
-### Mode collapse {#mode-collapse}
-GAN failure mode: generator produces few distinct outputs
-
 ### Modality gap {#modality-gap}
 Empirical finding that different-modality embeddings stay in separable regions
+
+### Mode collapse {#mode-collapse}
+GAN failure mode: generator produces few distinct outputs
 
 ### MoE {#moe}
 Mixture-of-Experts — sparse routing across N expert MLPs; high total params, fixed compute per token
@@ -415,14 +436,14 @@ Sharing KV cache across requests that begin with the same tokens (e.g., system p
 ### Pretraining {#pretraining}
 Self-supervised training on a large unlabeled corpus to predict the next token
 
+### PRM {#prm}
+Probabilistic Roadmap — multi-query sampling-based planner
+
 ### Probability flow ODE {#probability-flow-ode}
 The deterministic ODE equivalent of the reverse-time diffusion SDE
 
 ### Projector {#projector}
 The (usually small) network that maps one modality's features into another's space
-
-### PRM {#prm}
-Probabilistic Roadmap — multi-query sampling-based planner
 
 ### PTQ / QAT {#ptq--qat}
 Post-Training Quantization / Quantization-Aware Training
@@ -433,11 +454,11 @@ BLIP-2's learnable-query cross-attention module for distilling images into LLM t
 ### Quantization {#quantization}
 Reducing weight / activation precision (FP16, BF16, FP8, INT8, INT4) to save memory and bandwidth
 
-### RAG {#rag}
-Retrieval-Augmented Generation — fetch documents, prepend to prompt, then generate
-
 ### RadixAttention {#radixattention}
 sglang's KV cache organized as a radix tree keyed on prompt prefixes for automatic sharing
+
+### RAG {#rag}
+Retrieval-Augmented Generation — fetch documents, prepend to prompt, then generate
 
 ### Rectified flow {#rectified-flow}
 A flow-matching parameterization with straight-line trajectories; popular in 2024+ models
@@ -516,6 +537,9 @@ Use a draft model to propose tokens; verify with the target in one parallel pass
 
 ### Storage {#storage}
 The 1-D buffer that a tensor is a view into
+
+### Straight-through estimator {#straight-through-estimator}
+A technique used to bypass non-differentiable operations by passing gradients unchanged through the operation during the backward pass.
 
 ### Stride {#stride}
 The number of storage elements to step over for each dimension of a tensor
@@ -607,11 +631,11 @@ Visual-Inertial Odometry — fuse camera and IMU for high-rate ego-motion
 ### VLA {#vla}
 Vision-Language-Action model — transformer mapping image + instruction → action
 
-### VLM {#vlm}
-Vision-Language Model — image (+ text) in, text out
-
 ### vLLM {#vllm}
 The reference open-source inference engine with PagedAttention and continuous batching
+
+### VLM {#vlm}
+Vision-Language Model — image (+ text) in, text out
 
 ### VP / VE SDE {#vp--ve-sde}
 Variance-Preserving / Variance-Exploding — the two SDE families for diffusion
