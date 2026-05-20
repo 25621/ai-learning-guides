@@ -846,6 +846,8 @@ PyTorch is a Python frontend over a C++ library. The Python you write is convert
 
 ## Glossary
 
+This glossary covers terms used heavily in this guide. For repository-wide terms, see the [root glossary](../../README.md#glossary).
+
 | Term | Definition |
 |------|------------|
 | **ATen** | The C++ tensor library underneath PyTorch's Python frontend |

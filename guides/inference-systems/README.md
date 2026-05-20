@@ -2,7 +2,7 @@
 
 A comprehensive guide to **serving** large language models — the layer between a trained checkpoint sitting on disk and a user typing into a chat box and seeing tokens stream back. The goal is to take you from "I have called an API" to "I can stand up a production inference cluster, explain every hop a token takes from prompt to client, debug a P99 latency regression, and make a defensible cost-per-million-tokens commitment to a CFO."
 
-> **An honest framing.** Training is a fixed cost; serving is a forever cost. A modest production system serves more tokens in its first month than the model ever saw during fine-tuning. The math that makes a serving system economically viable is *almost entirely* about how cleverly you handle memory bandwidth, batch heterogeneity, and the KV cache. The model architecture you can copy from the [LLM Guide](llm-guide.md). The serving system you cannot copy from anywhere — every workload is different, and the right stack for a chatbot is the wrong stack for a code-completion sidecar.
+> **An honest framing.** Training is a fixed cost; serving is a forever cost. A modest production system serves more tokens in its first month than the model ever saw during fine-tuning. The math that makes a serving system economically viable is *almost entirely* about how cleverly you handle memory bandwidth, batch heterogeneity, and the KV cache. The model architecture you can copy from the [LLM guide](../llm/). The serving system you cannot copy from anywhere — every workload is different, and the right stack for a chatbot is the wrong stack for a code-completion sidecar.
 
 ---
 
@@ -33,7 +33,7 @@ Inference systems sit at the intersection of deep learning, GPU programming, dis
 
 ### Concepts to Know
 
-- **Transformer basics**: decoder-only stack, multi-head attention, MLP block, the fact that decoding produces one token at a time conditioning on the prefix. If shaky, do Phases 1–2 of the [LLM Guide](llm-guide.md) first
+- **Transformer basics**: decoder-only stack, multi-head attention, MLP block, the fact that decoding produces one token at a time conditioning on the prefix. If shaky, do Phases 1–2 of the [LLM guide](../llm/) first
 - **Memory hierarchies on a GPU**: registers, shared memory / SRAM, L2, HBM. Roughly: SRAM is ~100× faster than HBM and ~1000× smaller; everything in inference is a fight over which numbers live where
 - **Roofline thinking**: a kernel is either *compute-bound* (limited by FLOPs/s) or *memory-bound* (limited by bytes/s). The single most important diagnostic question in inference is "which side of the roofline am I on?"
 - **Async, batching, and queues**: requests arrive at random times with random lengths; you serve a fixed-throughput accelerator. Everything in the middle is queueing-theory dressed up as Python
@@ -1377,6 +1377,8 @@ The frontier of inference systems is not bigger models — it is **smarter use o
 ---
 
 ## Glossary
+
+This glossary covers terms used heavily in this guide. For repository-wide terms, see the [root glossary](../../README.md#glossary).
 
 | Term | Definition |
 |------|------------|

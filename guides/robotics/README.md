@@ -1487,6 +1487,8 @@ The capabilities frontier of robotics is dominated by *integration*, not by any 
 
 ## Glossary
 
+This glossary covers terms used heavily in this guide. For repository-wide terms, see the [root glossary](../../README.md#glossary).
+
 | Term | Definition |
 |------|------------|
 | **ABA** | Articulated-Body Algorithm — `O(n)` forward dynamics for rigid-body chains |

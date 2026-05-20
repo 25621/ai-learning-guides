@@ -37,7 +37,7 @@ RL combines probability, optimization, and deep learning under a deceptively sim
 - **Linear algebra**: matrix multiplication, eigenvalues (for contraction arguments), vector norms
 - **Calculus**: gradients, chain rule, the log-derivative trick (`∇ log p = ∇p / p`) — you'll use this constantly
 - **Optimization**: SGD, Adam, learning rates, the difference between an objective you maximize vs. minimize
-- **Deep learning**: training loops, `nn.Module`, basic CNNs and transformers. If shaky, do the [PyTorch Deep Dive](pytorch-deep-dive-guide.md) first
+- **Deep learning**: training loops, `nn.Module`, basic CNNs and transformers. If shaky, do the [PyTorch Deep Dive](../pytorch-deep-dive/) first
 - **Some programming maturity**: you will debug stochastic, asynchronous code where the bug only appears every 50k steps
 
 ### The One Equation Everything Comes Back To
@@ -1117,6 +1117,8 @@ Sample complexity bounds, regret bounds, PAC-RL, distributional shifts. Currentl
 ---
 
 ## Glossary
+
+This glossary covers terms used heavily in this guide. For repository-wide terms, see the [root glossary](../../README.md#glossary).
 
 | Term | Definition |
 |------|------------|

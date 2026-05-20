@@ -923,6 +923,8 @@ Visual jailbreaks (typographic attacks, adversarial images), CSAM detection, dee
 
 ## Glossary
 
+This glossary covers terms used heavily in this guide. For repository-wide terms, see the [root glossary](../../README.md#glossary).
+
 | Term | Definition |
 |------|------------|
 | **Alignment (multimodal)** | Making embeddings from different modalities comparable in a shared space |

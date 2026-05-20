@@ -35,7 +35,7 @@ The prerequisites here are different from the other guides — you can be a less
 - **C and basic C++** — enough to read CUDA code; you don't need template metaprogramming
 - **Operating systems basics**: virtual memory, paging, processes vs threads, system calls
 - **Computer architecture basics**: caches (L1/L2/L3), pipelining, SIMD, instruction-level parallelism — if these are blanks, do [CS:APP](https://csapp.cs.cmu.edu/) Ch. 5–6 first
-- **PyTorch fluency**: you've trained models and profiled at least one — see the [PyTorch Deep Dive Guide](pytorch-deep-dive-guide.md)
+- **PyTorch fluency**: you've trained models and profiled at least one — see the [PyTorch Deep Dive guide](../pytorch-deep-dive/)
 - **Linear algebra at the FLOP level**: you can count matmul FLOPs in your head (2·M·N·K for an M×K times K×N matrix)
 - **A modern GPU** — owned, rented, or borrowed. Cloud is fine. You will write code that runs.
 
@@ -436,7 +436,7 @@ The two most expensive lines a GPU programmer writes are not `__global__` and `t
 - [Triton tutorials](https://triton-lang.org/main/getting-started/tutorials/index.html) — start at vector add, end at FlashAttention
 - [CUTLASS](https://github.com/NVIDIA/cutlass) — the matmul template library
 - [GPU MODE lectures](https://github.com/gpu-mode/lectures) — best community for kernel work
-- [PyTorch Deep Dive Guide — Phase 6](pytorch-deep-dive-guide.md#phase-6-custom-kernels--c-cuda-and-triton-extensions)
+- [PyTorch Deep Dive guide — Phase 6](../pytorch-deep-dive/#phase-6-custom-kernels--c-cuda-and-triton-extensions)
 - [Lei Mao's blog](https://leimao.github.io/) — clear walkthroughs of CUDA topics
 
 ---
@@ -582,7 +582,7 @@ In a 2026 frontier training cluster, the network is *the* design constraint. Eve
 - [`nccl-tests`](https://github.com/NVIDIA/nccl-tests)
 - [NVIDIA NVLink and NVSwitch overview](https://www.nvidia.com/en-us/data-center/nvlink/)
 - [Mellanox / NVIDIA Networking docs](https://docs.nvidia.com/networking/)
-- [PyTorch Deep Dive Guide — Phase 7](pytorch-deep-dive-guide.md#phase-7-distributed-training--ddp-fsdp-and-beyond)
+- [PyTorch Deep Dive guide — Phase 7](../pytorch-deep-dive/#phase-7-distributed-training--ddp-fsdp-and-beyond)
 
 ---
 

@@ -61,7 +61,7 @@ big enough to be useful without compute exploding cubically.
 
 ### Resources
 
-- [Image Generation Guide](image-generation-guide.md) — strongly recommended prerequisite
+- [Image Generation guide](../image-generation/) — strongly recommended prerequisite
 - [Lilian Weng — What are Diffusion Models?](https://lilianweng.github.io/posts/2021-07-11-diffusion-models/) — the canonical primer
 - [Sora Technical Report (OpenAI, 2024)](https://openai.com/index/video-generation-models-as-world-simulators/) — read once now, again at the end of Phase 6
 - [Stable Video Diffusion paper](https://arxiv.org/abs/2311.15127) — practical entry point

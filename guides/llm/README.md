@@ -37,7 +37,7 @@ LLMs combine probability, deep learning, distributed systems, and a surprising a
 - **Linear algebra**: matrix multiplication, broadcasting, attention is `softmax(QKᵀ/√d)V` and you should be able to read that without flinching
 - **Calculus**: gradients, chain rule, the difference between `log p(x)` and `log p(x | context)`
 - **Optimization**: SGD, Adam/AdamW, learning-rate schedules, gradient clipping, mixed-precision training
-- **Deep learning**: training loops, `nn.Module`, layer normalization, residual connections, dropout. If shaky, do the [PyTorch Deep Dive](pytorch-deep-dive-guide.md) first
+- **Deep learning**: training loops, `nn.Module`, layer normalization, residual connections, dropout. If shaky, do the [PyTorch Deep Dive](../pytorch-deep-dive/) first
 - **Programming maturity**: you will read other people's training code at 3 a.m. trying to figure out which of 14 norms is misplaced
 
 ### The One Equation Everything Comes Back To
@@ -1311,6 +1311,8 @@ The capabilities frontier is well-understood and well-funded. The hard problems 
 ---
 
 ## Glossary
+
+This glossary covers terms used heavily in this guide. For repository-wide terms, see the [root glossary](../../README.md#glossary).
 
 | Term | Definition |
 |------|------------|
