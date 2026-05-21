@@ -8,7 +8,7 @@
 
 ## Key Insight
 
-Some operations, like rounding or thresholding, are non-differentiable because their derivative is zero almost everywhere. A [straight-through estimator](/shared/glossary/#straight-through-estimator) (STE) solves this by using the non-differentiable operation in the forward pass, but passing the gradients straight through unchanged during the [backward pass](/shared/glossary/#backward-pass) as if the operation was an identity function.
+Some operations, like rounding or thresholding, are non-differentiable because their derivative is zero almost everywhere. A [straight-through estimator](/shared/glossary/#straight-through-estimator) (STE) solves this by using the non-differentiable operation in the forward pass, but passing the gradients straight through unchanged during the [backward pass](/shared/glossary/#backward-pass) as if the operation was an [identity function](/shared/glossary/#identity-function).
 
 ## Why This Matters
 

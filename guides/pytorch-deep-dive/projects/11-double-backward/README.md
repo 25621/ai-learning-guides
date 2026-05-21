@@ -12,4 +12,4 @@ PyTorch's [autograd](/shared/glossary/#autograd) engine is capable of computing 
 
 ## Why This Matters
 
-Higher-order derivatives are required for advanced techniques like gradient penalty in generative adversarial networks (GANs), meta-learning, and optimizing learning rates. Understanding double backward unlocks these cutting-edge optimization methods.
+Higher-order derivatives are required for advanced techniques like gradient penalty in generative adversarial networks ([GANs](/shared/glossary/#gans)), [meta-learning](/shared/glossary/#meta-learning), and optimizing learning rates. Understanding double backward unlocks these cutting-edge optimization methods.

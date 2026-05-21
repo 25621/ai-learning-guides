@@ -8,7 +8,7 @@
 
 ## Key Insight
 
-You are not limited to PyTorch's built-in operations. By subclassing `torch.autograd.Function`, you can define custom forward and [backward pass](/shared/glossary/#backward-pass) logic. You explicitly save required inputs using `ctx.save_for_backward()` and provide the exact derivative computation.
+You are not limited to PyTorch's built-in operations. By subclassing `torch.autograd.Function`, you can define custom forward and [backward pass](/shared/glossary/#backward-pass) logic. You explicitly save required inputs using `ctx.save_for_backward()` and provide the exact [derivative](/shared/glossary/#derivative) computation.
 
 ## Why This Matters
 

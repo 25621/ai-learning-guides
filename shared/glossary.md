@@ -157,6 +157,9 @@ Denoising Diffusion Probabilistic Models — the foundational 2020 paper and tra
 ### Deadly triad {#deadly-triad}
 Function approximation + bootstrapping + off-policy data → instability
 
+### Derivative {#derivative}
+The instantaneous rate of change of a function with respect to its input. In deep learning, derivatives are computed via the chain rule during backpropagation to produce gradients used to update model parameters.
+
 ### DH parameters {#dh-parameters}
 Denavit-Hartenberg parameters — textbook arm-geometry description
 
@@ -244,6 +247,9 @@ Fréchet Video Distance — the standard (and flawed) automatic eval metric for 
 ### GAE {#gae}
 Generalized Advantage Estimation — TD(λ) for advantages
 
+### GANs (Generative Adversarial Networks) {#gans}
+A class of generative models in which a generator network and a discriminator network are trained adversarially. The generator learns to produce realistic samples to fool the discriminator, which learns to distinguish real from generated data.
+
 ### GPTQ {#gptq}
 Hessian-based per-row PTQ minimizing layer-wise reconstruction error
 
@@ -270,6 +276,9 @@ A vehicle whose instantaneous motion can be any direction (mecanum, omni)
 
 ### I2V {#i2v}
 Image-to-Video
+
+### Identity function {#identity-function}
+A function that returns its input unchanged: `f(x) = x`. In the context of straight-through estimators, gradients are passed through a non-differentiable operation as if it were the identity function.
 
 ### Impedance control {#impedance-control}
 Command a virtual spring-damper between end-effector and reference
@@ -336,6 +345,9 @@ Scalar measure of how "easy" motion is from a given configuration (e.g. `sqrt(de
 
 ### MDP {#mdp}
 Markov Decision Process — the tuple `(S, A, P, R, γ)`
+
+### Meta-learning {#meta-learning}
+"Learning to learn" — training a model to adapt quickly to new tasks with few examples. Many meta-learning algorithms, such as MAML, rely on higher-order gradients to optimize across tasks.
 
 ### Micrograd {#micrograd}
 A tiny, educational autograd engine implemented in basic Python by Andrej Karpathy to illustrate how reverse-mode differentiation works.
