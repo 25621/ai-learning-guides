@@ -157,6 +157,9 @@ Denoising Diffusion Probabilistic Models — the foundational 2020 paper and tra
 ### Deadly triad {#deadly-triad}
 Function approximation + bootstrapping + off-policy data → instability
 
+### Detached tensor {#detached-tensor}
+A tensor that has been removed from the [dynamic computation graph](/shared/glossary/#dynamic-computation-graph) via the `.detach()` method, meaning operations performed on it will not be tracked for [autograd](/shared/glossary/#autograd).
+
 ### Derivative {#derivative}
 The instantaneous rate of change of a function with respect to its input. In deep learning, derivatives are computed via the chain rule during backpropagation to produce gradients used to update model parameters.
 
@@ -256,6 +259,9 @@ Hessian-based per-row PTQ minimizing layer-wise reconstruction error
 ### GQA {#gqa}
 Grouped-Query Attention — sharing K/V heads across query heads; primary KV-cache saver at serving time
 
+### Gradients {#gradients}
+The vector of partial derivatives of a function with respect to its inputs. In neural networks, gradients represent the direction and magnitude of the change required to minimize the [loss function](/shared/glossary/#loss-function).
+
 ### Gradient checkpointing {#gradient-checkpointing}
 A memory-saving technique that discards intermediate activations during the forward pass and recomputes them during the backward pass.
 
@@ -331,6 +337,9 @@ Light Detection And Ranging — laser range scanner
 ### LoRA {#lora}
 Low-Rank Adaptation — fine-tune by adding small low-rank matrices, freeze the base
 
+### Loss function {#loss-function}
+A mathematical function that measures the difference between a model's prediction and the actual target. The goal of training is to minimize this value using [gradients](/shared/glossary/#gradients).
+
 ### Lorax / S-LoRA {#lorax--s-lora}
 Multi-LoRA serving engines; one base model + many adapters in HBM
 
@@ -348,6 +357,9 @@ Markov Decision Process — the tuple `(S, A, P, R, γ)`
 
 ### Meta-learning {#meta-learning}
 "Learning to learn" — training a model to adapt quickly to new tasks with few examples. Many meta-learning algorithms, such as MAML, rely on higher-order gradients to optimize across tasks.
+
+### Memory leak {#memory-leak}
+An unintended increase in memory usage over time, often caused in PyTorch by holding onto references to the [loss function](/shared/glossary/#loss-function) or other parts of the [dynamic computation graph](/shared/glossary/#dynamic-computation-graph) across training iterations.
 
 ### Micrograd {#micrograd}
 A tiny, educational autograd engine implemented in basic Python by Andrej Karpathy to illustrate how reverse-mode differentiation works.
@@ -379,8 +391,14 @@ Open-source physics engine; the de facto manipulation/locomotion simulator
 ### Multi-LoRA {#multi-lora}
 Serving many fine-tuned adapters on a single shared base model
 
+### NaN {#nan}
+"Not a Number" — a floating-point value representing an undefined or unrepresentable result (e.g., `0/0` or `inf - inf`). In PyTorch, NaNs often appear when [gradients](/shared/glossary/#gradients) explode or when taking the logarithm of zero/negative numbers.
+
 ### Native multimodal {#native-multimodal}
 A model trained from scratch on all modalities with a unified vocabulary
+
+### Numerical issues {#numerical-issues}
+Problems arising from the finite precision of floating-point numbers, such as [underflow](/shared/glossary/#underflow), overflow, or loss of precision, which can lead to unstable training or [NaN](/shared/glossary/#nan) values.
 
 ### Nav2 {#nav2}
 ROS 2 navigation stack
@@ -625,6 +643,9 @@ Robot description formats (ROS, MuJoCo, NVIDIA respectively)
 ### V2V {#v2v}
 Video-to-Video
 
+### Vanishing gradients {#vanishing-gradients}
+A problem during training where [gradients](/shared/glossary/#gradients) become extremely small, effectively preventing the weights from changing their value and stalling the learning process.
+
 ### VAE {#vae}
 Variational Autoencoder — encoder/decoder pair trained on the ELBO
 
@@ -687,3 +708,4 @@ The EDM reformulation: parameterize diffusion by noise standard deviation σ rat
 ## License
 
 MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.
+://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.
