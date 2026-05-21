@@ -16,9 +16,9 @@
       }
     },
     {
-      "label": "Docusaurus: Stop Serve",
+      "label": "Docusaurus: Stop",
       "type": "shell",
-      "command": "pkill -f 'docusaurus (serve|start)' || true",
+      "command": "pkill -f 'docusaurus start' || true",
       "problemMatcher": [],
       "presentation": {
         "panel": "dedicated",
@@ -26,9 +26,9 @@
       }
     },
     {
-      "label": "Docusaurus: Serve",
+      "label": "Docusaurus: Start",
       "type": "shell",
-      "command": "npm run serve",
+      "command": "npm run start",
       "options": {
         "cwd": "${workspaceFolder}/docusaurus-site"
       },
@@ -40,7 +40,7 @@
         },
         "background": {
           "activeOnStart": true,
-          "beginsPattern": ".*Serving.*",
+          "beginsPattern": ".*Starting.*",
           "endsPattern": ".*(Server running|Local:).*"
         }
       },
@@ -53,9 +53,9 @@
       "label": "Docusaurus: Build and Restart",
       "dependsOrder": "sequence",
       "dependsOn": [
-        "Docusaurus: Stop Serve",
+        "Docusaurus: Stop",
         "Docusaurus: Build",
-        "Docusaurus: Serve"
+        "Docusaurus: Start"
       ],
       "group": {
         "kind": "build",
