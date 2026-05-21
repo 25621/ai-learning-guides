@@ -22,6 +22,9 @@ Adaptive layer normalization; the conditioning mechanism in DiT
 ### AdaLN-Zero {#adaln-zero}
 DiT's conditioning mechanism: layer norm modulated by shift/scale/gate, all initialized to zero
 
+### Adam {#adam}
+Adaptive Moment Estimation — gradient-descent optimizer that maintains per-parameter running averages of the first (mean) and second (uncentered variance) moments of the gradients to compute individual adaptive learning rates.
+
 ### AdamW {#adamw}
 Adam optimizer with decoupled weight decay: the regularization term shrinks the parameter directly rather than being folded into the gradient update
 
@@ -162,6 +165,9 @@ Denoising Diffusion Probabilistic Models — the foundational 2020 paper and tra
 
 ### Deadly triad {#deadly-triad}
 Function approximation + bootstrapping + off-policy data → instability
+
+### Decoupled {#decoupled}
+A training technique where two effects that are mathematically equivalent in standard SGD are separated into independent operations. In AdamW, weight decay is decoupled from the gradient update so that the regularization strength is not scaled by the adaptive learning rate.
 
 ### Detached tensor {#detached-tensor}
 A tensor that has been removed from the [dynamic computation graph](/shared/glossary/#dynamic-computation-graph) via the `.detach()` method, meaning operations performed on it will not be tracked for [autograd](/shared/glossary/#autograd).
@@ -333,6 +339,9 @@ The regularizer that keeps RLHF policies near the reference model
 
 ### KV cache {#kv-cache}
 Cached keys and values per past token per layer; the working set of the decoder
+
+### L2 regularization {#l2-regularization}
+A regularization technique that adds a penalty proportional to the squared magnitude of model weights to the loss function, encouraging smaller weights and reducing overfitting. In standard adaptive optimizers such as [Adam](/shared/glossary/#adam), this penalty is folded into the gradient and scaled by the adaptive learning rate, which is why [AdamW](/shared/glossary/#adamw) uses [decoupled](/shared/glossary/#decoupled) weight decay instead.
 
 ### Latent video {#latent-video}
 Compressed (T', H', W', C) tensor produced by a 3D VAE
