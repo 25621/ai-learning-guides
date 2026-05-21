@@ -22,6 +22,9 @@ Adaptive layer normalization; the conditioning mechanism in DiT
 ### AdaLN-Zero {#adaln-zero}
 DiT's conditioning mechanism: layer norm modulated by shift/scale/gate, all initialized to zero
 
+### AdamW {#adamw}
+Adam optimizer with decoupled weight decay: the regularization term shrinks the parameter directly rather than being folded into the gradient update
+
 ### ADD (Adversarial Diffusion Distillation) {#add-adversarial-diffusion-distillation}
 SDXL Turbo's recipe: distill a multi-step diffusion model into a 1–4-step student using a discriminator loss
 
@@ -72,6 +75,9 @@ The recursive consistency condition `V(s) = E[r + γV(s')]`
 
 ### bfloat16 {#bfloat16}
 16-bit float with fp32's exponent range — the modern default for training (also written bf16, BF16)
+
+### Bias correction {#bias-correction}
+An adjustment applied in the Adam family of optimizers to counteract the zero-initialization of moment estimates; without it, early steps would be artificially small
 
 ### Bootstrapping {#bootstrapping}
 Using a current estimate (e.g., `V(s')`) in the target instead of a full return
@@ -163,6 +169,9 @@ A tensor that has been removed from the [dynamic computation graph](/shared/glos
 ### Derivative {#derivative}
 The instantaneous rate of change of a function with respect to its input. In deep learning, derivatives are computed via the chain rule during backpropagation to produce gradients used to update model parameters.
 
+### Deterministic algorithms {#deterministic-algorithms}
+Operations that produce bit-identical outputs for identical inputs every time; enabled in PyTorch via `torch.use_deterministic_algorithms(True)` at the cost of some performance
+
 ### DH parameters {#dh-parameters}
 Denavit-Hartenberg parameters — textbook arm-geometry description
 
@@ -231,6 +240,9 @@ IO-aware attention kernel that avoids materializing the T×T score matrix in HBM
 
 ### Flow matching {#flow-matching}
 Training a velocity field that transports noise to data via an ODE; modern alternative to DDPM
+
+### Forward hook {#forward-hook}
+A callback registered on an `nn.Module` that PyTorch calls automatically after the module's forward pass, receiving the input and output tensors; used for capturing activations and debugging
 
 ### FP8 {#fp8}
 8-bit floating point (E4M3 / E5M2 on Hopper+); the modern default serving precision
@@ -376,6 +388,9 @@ GAN failure mode: generator produces few distinct outputs
 ### MoE {#moe}
 Mixture-of-Experts — sparse routing across N expert MLPs; high total params, fixed compute per token
 
+### Momentum {#momentum}
+A technique that accumulates a moving average of past gradients to dampen oscillations and accelerate gradient descent in consistent directions
+
 ### MoveIt {#moveit}
 ROS 2 manipulation-planning framework
 
@@ -406,6 +421,9 @@ ROS 2 navigation stack
 ### NCCL {#nccl}
 NVIDIA Collective Communications Library — does AllReduce etc. on NVIDIA GPUs
 
+### nn.Module {#nnmodule}
+PyTorch's base class for all neural network components; acts as a registry that automatically tracks sub-modules, parameters, and buffers assigned in `__init__`
+
 ### non_blocking {#non_blocking}
 The `non_blocking=True` flag on `.to()` / `.cuda()` that lets a host→device copy run asynchronously from pinned memory
 
@@ -426,6 +444,9 @@ Open Motion Planning Library — sampling-based planners
 
 ### On-policy {#on-policy}
 The data comes from the same policy being optimized (PPO, REINFORCE)
+
+### Optimizer {#optimizer}
+An algorithm that updates model parameters using computed gradients; in PyTorch, a subclass of `torch.optim.Optimizer` that holds parameter groups and per-parameter state
 
 ### PagedAttention {#pagedattention}
 KV cache managed as fixed-size physical blocks with per-request block tables
@@ -544,6 +565,9 @@ Special Euclidean / Orthogonal group — rigid-body motions / rotations in 3D
 ### SFT {#sft}
 Supervised Fine-Tuning — train on demonstration data with cross-entropy
 
+### SGD {#sgd}
+Stochastic Gradient Descent — updates parameters by subtracting a scaled gradient computed on a mini-batch; the simplest optimizer and the basis for more advanced methods
+
 ### Shape {#shape}
 The size of a tensor along each dimension; the tuple returned by `.shape`
 
@@ -564,6 +588,9 @@ Streaming Multiprocessor; the GPU's "core"
 
 ### Speculative decoding {#speculative-decoding}
 Use a draft model to propose tokens; verify with the target in one parallel pass; accepted tokens are appended
+
+### State dict {#state-dict}
+A Python `OrderedDict` that maps every parameter and buffer name to its tensor value; the standard format for saving, loading, and transplanting PyTorch model weights
 
 ### Storage {#storage}
 The 1-D buffer that a tensor is a view into
@@ -684,6 +711,9 @@ Vector-quantized VAE — discrete latent codes from a learned codebook
 
 ### WBC {#wbc}
 Whole-Body Control — fast QP solving for joint torques from task-space goals
+
+### Weight decay {#weight-decay}
+A regularization technique that shrinks model parameters toward zero at each update step, discouraging large weights and improving generalization
 
 ### World Model {#world-model}
 Action-conditioned generative model of the world; a video model with actions

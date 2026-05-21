@@ -274,12 +274,12 @@ optimizer.step()           # 5. read each .grad, update parameters in place
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Module introspection | Walk a pretrained model with `named_modules()` and print its full parameter shape and count | ⭐ |
-| Hook-based feature extractor | Use a forward hook to grab intermediate activations from a ResNet without modifying it | ⭐⭐ |
-| Custom optimizer | Implement SGD-with-momentum as an `optim.Optimizer` subclass | ⭐⭐ |
-| Implement AdamW from scratch | Including bias correction and decoupled weight decay | ⭐⭐⭐ |
-| State dict surgery | Load weights from one architecture into a slightly different one, mapping keys manually | ⭐⭐⭐ |
-| Reproducible training | Train the same model twice with full determinism and verify bit-exact outputs | ⭐⭐⭐ |
+| [Module introspection](projects/12-module-introspection/README.md) | Walk a pretrained model with `named_modules()` and print its full parameter shape and count | ⭐ |
+| [Hook-based feature extractor](projects/13-hook-based-feature-extractor/README.md) | Use a forward hook to grab intermediate activations from a ResNet without modifying it | ⭐⭐ |
+| [Custom optimizer](projects/14-custom-optimizer/README.md) | Implement SGD-with-momentum as an `optim.Optimizer` subclass | ⭐⭐ |
+| [Implement AdamW from scratch](projects/15-implement-adamw-from-scratch/README.md) | Including bias correction and decoupled weight decay | ⭐⭐⭐ |
+| [State dict surgery](projects/16-state-dict-surgery/README.md) | Load weights from one architecture into a slightly different one, mapping keys manually | ⭐⭐⭐ |
+| [Reproducible training](projects/17-reproducible-training/README.md) | Train the same model twice with full determinism and verify bit-exact outputs | ⭐⭐⭐ |
 
 ### Sample Code: A Custom Optimizer
 
