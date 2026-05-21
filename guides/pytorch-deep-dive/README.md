@@ -487,7 +487,7 @@ You will need this when an existing op is too slow, doesn't exist, or you want t
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| [C++ extension for elementwise add](projects/30-c-extension-for-elementwise-add/README.md) | Write `add_cuda` as a C++ extension, register it, call from Python | ⭐⭐ |
+| [C++ extension for elementwise add](projects/30-cpp-extension-for-elementwise-add/README.md) | Write `add_cuda` as a C++ extension, register it, call from Python | ⭐⭐ |
 | [Triton softmax](projects/31-triton-softmax/README.md) | Implement softmax in Triton, compare against `F.softmax` on a 4096-wide tensor | ⭐⭐⭐ |
 | [Triton matmul](projects/32-triton-matmul/README.md) | Tile-based matmul in Triton; aim for >50% of cuBLAS throughput | ⭐⭐⭐⭐ |
 | [Fused MLP](projects/33-fused-mlp/README.md) | One Triton kernel: matmul → bias → gelu → matmul; compare against unfused | ⭐⭐⭐⭐ |

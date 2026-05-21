@@ -79,7 +79,7 @@ const sidebars = {
               type: 'category',
               label: 'Phase 6: Custom Kernels',
               items: [
-                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/c-extension-for-elementwise-add/README', label: 'C++ extension for elementwise add'},
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/cpp-extension-for-elementwise-add/README', label: 'C++ extension for elementwise add'},
                 {type: 'doc', id: 'guides/pytorch-deep-dive/projects/triton-softmax/README', label: 'Triton softmax'},
                 {type: 'doc', id: 'guides/pytorch-deep-dive/projects/triton-matmul/README', label: 'Triton matmul'},
                 {type: 'doc', id: 'guides/pytorch-deep-dive/projects/fused-mlp/README', label: 'Fused MLP'},
