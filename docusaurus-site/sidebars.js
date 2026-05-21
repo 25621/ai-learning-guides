@@ -75,6 +75,18 @@ const sidebars = {
                 {type: 'doc', id: 'guides/pytorch-deep-dive/projects/bottleneck-fix/README', label: 'Bottleneck fix'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 6: Custom Kernels',
+              items: [
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/c-extension-for-elementwise-add/README', label: 'C++ extension for elementwise add'},
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/triton-softmax/README', label: 'Triton softmax'},
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/triton-matmul/README', label: 'Triton matmul'},
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/fused-mlp/README', label: 'Fused MLP'},
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/mini-flashattention/README', label: 'Mini FlashAttention'},
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/custom-op-registration/README', label: 'Custom op registration'},
+              ],
+            },
           ],
         },
         {type: 'doc', id: 'guides/llm/README', label: 'LLM'},

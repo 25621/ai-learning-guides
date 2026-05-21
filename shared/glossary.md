@@ -97,6 +97,9 @@ Standard likelihood metric for image models; `-log₂ p(x) / D`
 ### BPE {#bpe}
 Byte-Pair Encoding — subword tokenization by greedy frequent-pair merges
 
+### C++ extension {#c-extension}
+A custom operation written in C++ (optionally with CUDA), compiled and loaded so it can be called from Python like a built-in PyTorch op.
+
 ### C-space {#c-space}
 Configuration space — the abstract space of joint configurations
 
@@ -154,8 +157,14 @@ Conservative Q-Learning — offline RL with a pessimistic Q penalty
 ### Cross-attention {#cross-attention}
 Attention where queries come from one modality and keys/values from another
 
+### cuBLAS {#cublas}
+NVIDIA's optimized library of dense linear-algebra [kernels](/shared/glossary/#kernel); PyTorch calls it for matrix multiplication on [CUDA](/shared/glossary/#cuda).
+
 ### CUDA {#cuda}
 NVIDIA's GPU compute backend; tensors on the `cuda` device run their kernels here
+
+### Custom op {#custom-op}
+A user-defined operation registered with PyTorch (e.g. via `torch.library.custom_op`) so it behaves like a built-in — including working with [`torch.compile`](/shared/glossary/#torchcompile).
 
 ### CUTLASS {#cutlass}
 NVIDIA's open template library for matmul kernels
@@ -235,6 +244,9 @@ Extended Kalman Filter — Kalman filter linearized about the current estimate
 ### ELBO {#elbo}
 Evidence Lower Bound — the variational objective trained by VAEs
 
+### Elementwise operation {#elementwise-operation}
+An operation applied independently to each element of a tensor (e.g. add, multiply, ReLU), where output position `i` depends only on input position `i`.
+
 ### EMA weights {#ema-weights}
 Exponential moving average of model weights; samples better than the live weights
 
@@ -285,6 +297,9 @@ Generalized Advantage Estimation — TD(λ) for advantages
 
 ### GANs (Generative Adversarial Networks) {#gans}
 A class of generative models in which a generator network and a discriminator network are trained adversarially. The generator learns to produce realistic samples to fool the discriminator, which learns to distinguish real from generated data.
+
+### GELU {#gelu}
+Gaussian Error Linear Unit — a smooth activation function widely used in transformer [MLPs](/shared/glossary/#mlp).
 
 ### GPTQ {#gptq}
 Hessian-based per-row PTQ minimizing layer-wise reconstruction error
@@ -402,6 +417,9 @@ The strongest open recipe for discrete video tokenization
 
 ### Manipulability {#manipulability}
 Scalar measure of how "easy" motion is from a given configuration (e.g. `sqrt(det(JJᵀ))`)
+
+### matmul {#matmul}
+Matrix multiplication — the dominant compute operation in neural networks; written `A @ B` in PyTorch.
 
 ### MDP {#mdp}
 Markov Decision Process — the tuple `(S, A, P, R, γ)`
@@ -649,6 +667,9 @@ Service Level Objective — a quantified commitment (e.g., P95 TTFT < 500 ms)
 ### SM {#sm}
 Streaming Multiprocessor; the GPU's "core"
 
+### softmax {#softmax}
+The function that turns a vector of scores into a probability distribution (each value in 0–1, summing to 1); the core of [attention](/shared/glossary/#attention) and classification heads.
+
 ### Speculative decoding {#speculative-decoding}
 Use a draft model to propose tokens; verify with the target in one parallel pass; accepted tokens are appended
 
@@ -699,6 +720,9 @@ Tera (10¹²) floating-point operations per second
 
 ### Throughput {#throughput}
 How much work is completed per unit of time — for training, the number of examples processed per second.
+
+### Tiling {#tiling}
+Splitting a large computation into small blocks ("tiles") that fit in fast on-chip memory, so a [kernel](/shared/glossary/#kernel) reads slow memory fewer times.
 
 ### Token (visual/audio) {#token-visualaudio}
 Discrete code from a VQ-VAE or neural codec; lets transformers treat the modality like language
