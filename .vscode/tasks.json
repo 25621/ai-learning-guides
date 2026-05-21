@@ -26,9 +26,9 @@
       }
     },
     {
-      "label": "Docusaurus: Restart",
+      "label": "Docusaurus: Start",
       "type": "shell",
-      "command": "pkill -f 'docusaurus start' || true && npm run start",
+      "command": "npm run start",
       "options": {
         "cwd": "${workspaceFolder}/docusaurus-site"
       },
@@ -48,6 +48,15 @@
         "panel": "dedicated",
         "reveal": "always"
       }
+    },
+    {
+      "label": "Docusaurus: Restart",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Docusaurus: Stop",
+        "Docusaurus: Start"
+      ],
+      "problemMatcher": []
     },
     {
       "label": "Docusaurus: Build and Restart",
