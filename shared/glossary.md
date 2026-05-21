@@ -46,6 +46,9 @@ Making embeddings from different modalities comparable in a shared space
 ### AllReduce {#allreduce}
 A collective op that sums tensors across all ranks and gives every rank the result
 
+### AMP {#amp}
+Automatic Mixed Precision — running operations in 16-bit floats ([float16](/shared/glossary/#float16) or [bfloat16](/shared/glossary/#bfloat16)) where it is safe, to save memory and speed up training while keeping a [float32](/shared/glossary/#float32) copy of the weights.
+
 ### AnyRes {#anyres}
 Dynamic-resolution input handling (tile images at native aspect ratio)
 
@@ -217,6 +220,9 @@ A tensor's element data type — e.g. `float32`, `float16`, `bfloat16`, `int8`, 
 ### Dynamic computation graph {#dynamic-computation-graph}
 A graph of operations built on-the-fly as code executes, representing the forward pass used for autograd.
 
+### Eager mode {#eager-mode}
+PyTorch's default execution, where each operation runs immediately as its Python line is reached — flexible and easy to debug, but without the cross-operation optimizations a compiler can apply.
+
 ### EAGLE / Medusa {#eagle--medusa}
 Self-speculation: extra heads on the target model propose tokens, no separate draft model
 
@@ -286,11 +292,20 @@ Hessian-based per-row PTQ minimizing layer-wise reconstruction error
 ### GQA {#gqa}
 Grouped-Query Attention — sharing K/V heads across query heads; primary KV-cache saver at serving time
 
+### Gradient accumulation {#gradient-accumulation}
+Summing the [gradients](/shared/glossary/#gradients) from several small batches before calling the [optimizer](/shared/glossary/#optimizer), so the update matches a larger effective batch size without its memory cost.
+
 ### Gradients {#gradients}
 The vector of partial derivatives of a function with respect to its inputs. In neural networks, gradients represent the direction and magnitude of the change required to minimize the [loss function](/shared/glossary/#loss-function).
 
 ### Gradient checkpointing {#gradient-checkpointing}
 A memory-saving technique that discards intermediate activations during the forward pass and recomputes them during the backward pass.
+
+### GradScaler {#gradscaler}
+A helper used with [float16](/shared/glossary/#float16) mixed-precision training that multiplies the loss before the backward pass, preventing small gradients from rounding to zero ([underflow](/shared/glossary/#underflow)).
+
+### Graph break {#graph-break}
+A point where [`torch.compile`](/shared/glossary/#torchcompile) cannot trace the code (e.g. a `print` or a data-dependent branch), forcing it to split the model and fall back to [eager mode](/shared/glossary/#eager-mode) — a common cause of lost speedup.
 
 ### Grounding {#grounding}
 Producing spatial outputs (boxes, points) referring to image regions
@@ -339,6 +354,12 @@ Inter-token latency / time per output token — steady-state per-token decode ti
 
 ### Jacobian {#jacobian}
 Linear map from joint velocities to end-effector spatial velocity
+
+### Kernel {#kernel}
+A single function that runs on the GPU (or CPU) to carry out one operation, such as a matrix multiply or an element-wise add.
+
+### Kernel fusion {#kernel-fusion}
+Combining several small operations into one [kernel](/shared/glossary/#kernel) so the hardware reads and writes memory fewer times and pays fewer launch costs.
 
 ### KF {#kf}
 Kalman Filter — optimal linear-Gaussian Bayes filter
@@ -468,6 +489,9 @@ The data comes from the same policy being optimized (PPO, REINFORCE)
 
 ### Optimizer {#optimizer}
 An algorithm that updates model parameters using computed gradients; in PyTorch, a subclass of `torch.optim.Optimizer` that holds parameter groups and per-parameter state
+
+### Optimizer state {#optimizer-state}
+The extra per-parameter values an [optimizer](/shared/glossary/#optimizer) stores between steps — for example, [Adam](/shared/glossary/#adam) keeps two (the first- and second-moment estimates) — which adds to training memory.
 
 ### Padding {#padding}
 Filling shorter sequences with a placeholder value so that every sample in a batch has the same length.
@@ -681,6 +705,9 @@ The mapping from string to integer IDs; trained, frozen, part of the model contr
 
 ### TOPP {#topp}
 Time-Optimal Path Parameterization — time-parameterize a geometric path under bounds
+
+### torch.compile {#torchcompile}
+The PyTorch 2.x API that traces a model into a graph and generates optimized, [fused kernels](/shared/glossary/#kernel-fusion), speeding up [eager mode](/shared/glossary/#eager-mode) code with a single call.
 
 ### TorchScript {#torchscript}
 The legacy serialization/IR for PyTorch; superseded by `torch.export`

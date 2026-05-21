@@ -420,12 +420,12 @@ bf16:  exponent 8 bits, mantissa 7 bits    — same range as fp32, less precisio
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Profile a training step | Capture a profiler trace of one forward+backward+step, identify the top 3 kernels by time | ⭐⭐ |
-| AMP speedup study | Train the same model in fp32, fp16+GradScaler, bf16; compare throughput and final accuracy | ⭐⭐ |
-| `torch.compile` test | Compile a transformer block, measure forward+backward time vs eager | ⭐⭐ |
-| Memory breakdown | For a transformer, compute the expected memory for params + grads + optimizer state + activations; verify with `memory_summary` | ⭐⭐⭐ |
-| Gradient accumulation | Train with effective batch size 4× larger than fits in memory; verify gradients are identical to a large-batch run | ⭐⭐⭐ |
-| Bottleneck fix | Take a model where `torch.compile` makes things *slower*; find out why (usually graph breaks) and fix it | ⭐⭐⭐⭐ |
+| [Profile a training step](projects/24-profile-a-training-step/README.md) | Capture a profiler trace of one forward+backward+step, identify the top 3 kernels by time | ⭐⭐ |
+| [AMP speedup study](projects/25-amp-speedup-study/README.md) | Train the same model in fp32, fp16+GradScaler, bf16; compare throughput and final accuracy | ⭐⭐ |
+| [`torch.compile` test](projects/26-torch-compile-test/README.md) | Compile a transformer block, measure forward+backward time vs eager | ⭐⭐ |
+| [Memory breakdown](projects/27-memory-breakdown/README.md) | For a transformer, compute the expected memory for params + grads + optimizer state + activations; verify with `memory_summary` | ⭐⭐⭐ |
+| [Gradient accumulation](projects/28-gradient-accumulation/README.md) | Train with effective batch size 4× larger than fits in memory; verify gradients are identical to a large-batch run | ⭐⭐⭐ |
+| [Bottleneck fix](projects/29-bottleneck-fix/README.md) | Take a model where `torch.compile` makes things *slower*; find out why (usually graph breaks) and fix it | ⭐⭐⭐⭐ |
 
 ### Sample Code: Mixed Precision Training
 
