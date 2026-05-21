@@ -64,14 +64,14 @@ The tensor is the foundational object. Most surprising performance bugs in PyTor
 
 ### Concepts to Learn
 
-- [**Storage**](/shared/glossary/#storage) vs [**Tensor**](/shared/glossary/#tensor): a tensor is a *view* into a 1-D storage buffer
-- [**Shape**](/shared/glossary/#shape), [**stride**](/shared/glossary/#stride), [**offset**](/shared/glossary/#offset): how multidimensional [indexing](/shared/glossary/#indexing) maps to a flat buffer
+- **Storage** vs **Tensor**: a tensor is a *view* into a 1-D storage buffer
+- **Shape**, **stride**, **offset**: how multidimensional indexing maps to a flat buffer
 - **Contiguous vs non-contiguous tensors**: when `.contiguous()` is needed and why
-- **[`view`](/shared/glossary/#view) vs [`reshape`](/shared/glossary/#reshape) vs [`permute`](/shared/glossary/#permute) vs [`transpose`](/shared/glossary/#transpose)**: which copy, which don't
-- [**dtype**](/shared/glossary/#dtype): `float32`, `float16`, `bfloat16`, `int8`, `bool`, when each is appropriate
-- **Device**: CPU vs [CUDA](/shared/glossary/#cuda) vs [MPS](/shared/glossary/#mps) vs [XLA](/shared/glossary/#xla); pinned memory; [`non_blocking=True`](/shared/glossary/#non_blocking)
+- **`view` vs `reshape` vs `permute` vs `transpose`**: which copy, which don't
+- **dtype**: `float32`, `float16`, `bfloat16`, `int8`, `bool`, when each is appropriate
+- **Device**: CPU vs CUDA vs MPS vs XLA; pinned memory; `non_blocking=True`
 - **Broadcasting rules** and the silent bugs they cause
-- **In-place operations** (`add_`, `mul_`) and when they break [autograd](/shared/glossary/#autograd)
+- **In-place operations** (`add_`, `mul_`) and when they break autograd
 
 ### The Mental Model
 
@@ -86,22 +86,40 @@ The tensor is the foundational object. Most surprising performance bugs in PyTor
 │   0  1  2  3  4  5                                  │
 │                                                     │
 │  Element [i, j] → storage[offset + i*stride[0]      │
-│                                  + j*stride[1]]    │
-│                                                     │
+│                                  + j*stride[1]]     │
+└─────────────────────────────────────────────────────┘
+```
+
+- **`shape=(2, 3)`** — 2 rows, 3 columns (the logical grid seen by Python code).
+- **`stride=(3, 1)`** — moving one step along dim-0 (rows) jumps **3** positions in
+  the flat storage buffer; moving one step along dim-1 (columns) jumps **1** position.
+  For example, `[0, 0] → storage[0]`, `[1, 0] → storage[3]`, `[0, 2] → storage[2]`.
+
+After calling `.transpose(0, 1)` on this tensor (a separate operation — not part of
+the indexing formula above):
+
+```
+┌─────────────────────────────────────────────────────┐
 │  .transpose(0, 1) → shape=(3, 2), stride=(1, 3)     │
 │  (same storage, different view — NOT contiguous)    │
 └─────────────────────────────────────────────────────┘
 ```
 
+- **`.transpose(0, 1)`** — swaps axis 0 and axis 1. The logical grid flips from
+  2×3 to 3×2 and the strides swap accordingly: `stride=(1, 3)`. No data is copied;
+  PyTorch just updates the shape and stride metadata. Because the new stride order
+  no longer matches the row-major memory layout, the result is **not contiguous**
+  and cannot be passed directly to `.view()`.
+
 ### Projects
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Stride explorer | Print `.shape`, `.stride()`, `.storage_offset()`, `.is_contiguous()` after every reshape/transpose/permute on a few tensors | ⭐ |
-| View vs copy detective | Modify a tensor through a view, observe the original; find operations that silently copy | ⭐⭐ |
-| Manual indexing | Given `(shape, stride, offset)`, compute the flat storage index for `[i, j, k]` by hand and check with `.data_ptr()` | ⭐⭐ |
-| dtype precision study | Compare `float32`, `float16`, `bfloat16` on a sum of 1M small numbers; observe loss-of-precision and underflow | ⭐⭐ |
-| Broadcasting bug hunt | Construct 5 expressions where broadcasting produces a result you didn't intend; write the rule you violated | ⭐⭐ |
+| [Stride explorer](projects/01-stride-explorer/README.md) | Print `.shape`, `.stride()`, `.storage_offset()`, `.is_contiguous()` after every reshape/transpose/permute on a few tensors | ⭐ |
+| [View vs copy detective](projects/02-view-vs-copy-detective/README.md) | Modify a tensor through a view, observe the original; find operations that silently copy | ⭐⭐ |
+| [Manual indexing](projects/03-manual-indexing/README.md) | Given `(shape, stride, offset)`, compute the flat storage index for `[i, j, k]` by hand and check with `.data_ptr()` | ⭐⭐ |
+| [dtype precision study](projects/04-dtype-precision-study/README.md) | Compare `float32`, `float16`, `bfloat16` on a sum of 1M small numbers; observe loss-of-precision and underflow | ⭐⭐ |
+| [Broadcasting bug hunt](projects/05-broadcasting-bug-hunt/README.md) | Construct 5 expressions where broadcasting produces a result you didn't intend; write the rule you violated | ⭐⭐ |
 
 ### Sample Code: Strides in Action
 
@@ -173,12 +191,12 @@ and produces gradients for its inputs.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Micrograd in PyTorch style | Reimplement a scalar autograd engine with `Value` objects that build a DAG and traverse it backward | ⭐⭐ |
-| Manual backprop | Train a 2-layer MLP without ever calling `.backward()` — compute gradients by hand and compare to autograd | ⭐⭐⭐ |
-| Custom `autograd.Function` | Implement a `ReLU` and a `Sigmoid` as `torch.autograd.Function` subclasses with `forward` and `backward` | ⭐⭐ |
-| Straight-through estimator | Implement a non-differentiable `round` operation that passes gradients through as if it were identity | ⭐⭐⭐ |
-| Gradient checkpointing | Manually checkpoint a deep network with `torch.utils.checkpoint` and measure the memory/time tradeoff | ⭐⭐⭐ |
-| Double backward | Compute ∇(‖∇L‖²) — the gradient of the gradient norm — for a small model | ⭐⭐⭐⭐ |
+| [Micrograd in PyTorch style](projects/06-micrograd-in-pytorch-style/README.md) | Reimplement a scalar autograd engine with `Value` objects that build a DAG and traverse it backward | ⭐⭐ |
+| [Manual backprop](projects/07-manual-backprop/README.md) | Train a 2-layer MLP without ever calling `.backward()` — compute gradients by hand and compare to autograd | ⭐⭐⭐ |
+| [Custom `autograd.Function`](projects/08-custom-autograd-function/README.md) | Implement a `ReLU` and a `Sigmoid` as `torch.autograd.Function` subclasses with `forward` and `backward` | ⭐⭐ |
+| [Straight-through estimator](projects/09-straight-through-estimator/README.md) | Implement a non-differentiable `round` operation that passes gradients through as if it were identity | ⭐⭐⭐ |
+| [Gradient checkpointing](projects/10-gradient-checkpointing/README.md) | Manually checkpoint a deep network with `torch.utils.checkpoint` and measure the memory/time tradeoff | ⭐⭐⭐ |
+| [Double backward](projects/11-double-backward/README.md) | Compute ∇(‖∇L‖²) — the gradient of the gradient norm — for a small model | ⭐⭐⭐⭐ |
 
 ### Sample Code: A Custom Autograd Function
 
@@ -256,12 +274,12 @@ optimizer.step()           # 5. read each .grad, update parameters in place
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Module introspection | Walk a pretrained model with `named_modules()` and print its full parameter shape and count | ⭐ |
-| Hook-based feature extractor | Use a forward hook to grab intermediate activations from a ResNet without modifying it | ⭐⭐ |
-| Custom optimizer | Implement SGD-with-momentum as an `optim.Optimizer` subclass | ⭐⭐ |
-| Implement AdamW from scratch | Including bias correction and decoupled weight decay | ⭐⭐⭐ |
-| State dict surgery | Load weights from one architecture into a slightly different one, mapping keys manually | ⭐⭐⭐ |
-| Reproducible training | Train the same model twice with full determinism and verify bit-exact outputs | ⭐⭐⭐ |
+| [Module introspection](projects/12-module-introspection/README.md) | Walk a pretrained model with `named_modules()` and print its full parameter shape and count | ⭐ |
+| [Hook-based feature extractor](projects/13-hook-based-feature-extractor/README.md) | Use a forward hook to grab intermediate activations from a ResNet without modifying it | ⭐⭐ |
+| [Custom optimizer](projects/14-custom-optimizer/README.md) | Implement SGD-with-momentum as an `optim.Optimizer` subclass | ⭐⭐ |
+| [Implement AdamW from scratch](projects/15-implement-adamw-from-scratch/README.md) | Including bias correction and decoupled weight decay | ⭐⭐⭐ |
+| [State dict surgery](projects/16-state-dict-surgery/README.md) | Load weights from one architecture into a slightly different one, mapping keys manually | ⭐⭐⭐ |
+| [Reproducible training](projects/17-reproducible-training/README.md) | Train the same model twice with full determinism and verify bit-exact outputs | ⭐⭐⭐ |
 
 ### Sample Code: A Custom Optimizer
 
@@ -329,12 +347,12 @@ GPU utilization high + slow training                  → compute bound, optimiz
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Naive vs optimized loader | Train ResNet on a subset of ImageNet with `num_workers=0`, then 4, 8, 16; plot throughput | ⭐⭐ |
-| Custom collate | Write a collate_fn that pads variable-length token sequences to the longest in the batch | ⭐⭐ |
-| Weighted sampler | Implement class-balanced sampling on an imbalanced classification dataset | ⭐⭐ |
-| Streaming WebDataset | Load a sharded `.tar` dataset with WebDataset, train without unpacking | ⭐⭐⭐ |
-| Memory-mapped tokens | Tokenize a large text corpus to a single `.bin` file, train an LLM from `np.memmap` | ⭐⭐⭐ |
-| Profile and fix | Take a slow training script, profile the data loader with the PyTorch profiler, fix it | ⭐⭐⭐ |
+| [Naive vs optimized loader](projects/18-naive-vs-optimized-loader/README.md) | Train ResNet on a subset of ImageNet with `num_workers=0`, then 4, 8, 16; plot throughput | ⭐⭐ |
+| [Custom collate](projects/19-custom-collate/README.md) | Write a collate_fn that pads variable-length token sequences to the longest in the batch | ⭐⭐ |
+| [Weighted sampler](projects/20-weighted-sampler/README.md) | Implement class-balanced sampling on an imbalanced classification dataset | ⭐⭐ |
+| [Streaming WebDataset](projects/21-streaming-webdataset/README.md) | Load a sharded `.tar` dataset with WebDataset, train without unpacking | ⭐⭐⭐ |
+| [Memory-mapped tokens](projects/22-memory-mapped-tokens/README.md) | Tokenize a large text corpus to a single `.bin` file, train an LLM from `np.memmap` | ⭐⭐⭐ |
+| [Profile and fix](projects/23-profile-and-fix/README.md) | Take a slow training script, profile the data loader with the PyTorch profiler, fix it | ⭐⭐⭐ |
 
 ### Sample Code: A Streaming Token Dataset
 
@@ -402,12 +420,12 @@ bf16:  exponent 8 bits, mantissa 7 bits    — same range as fp32, less precisio
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Profile a training step | Capture a profiler trace of one forward+backward+step, identify the top 3 kernels by time | ⭐⭐ |
-| AMP speedup study | Train the same model in fp32, fp16+GradScaler, bf16; compare throughput and final accuracy | ⭐⭐ |
-| `torch.compile` test | Compile a transformer block, measure forward+backward time vs eager | ⭐⭐ |
-| Memory breakdown | For a transformer, compute the expected memory for params + grads + optimizer state + activations; verify with `memory_summary` | ⭐⭐⭐ |
-| Gradient accumulation | Train with effective batch size 4× larger than fits in memory; verify gradients are identical to a large-batch run | ⭐⭐⭐ |
-| Bottleneck fix | Take a model where `torch.compile` makes things *slower*; find out why (usually graph breaks) and fix it | ⭐⭐⭐⭐ |
+| [Profile a training step](projects/24-profile-a-training-step/README.md) | Capture a profiler trace of one forward+backward+step, identify the top 3 kernels by time | ⭐⭐ |
+| [AMP speedup study](projects/25-amp-speedup-study/README.md) | Train the same model in fp32, fp16+GradScaler, bf16; compare throughput and final accuracy | ⭐⭐ |
+| [`torch.compile` test](projects/26-torch-compile-test/README.md) | Compile a transformer block, measure forward+backward time vs eager | ⭐⭐ |
+| [Memory breakdown](projects/27-memory-breakdown/README.md) | For a transformer, compute the expected memory for params + grads + optimizer state + activations; verify with `memory_summary` | ⭐⭐⭐ |
+| [Gradient accumulation](projects/28-gradient-accumulation/README.md) | Train with effective batch size 4× larger than fits in memory; verify gradients are identical to a large-batch run | ⭐⭐⭐ |
+| [Bottleneck fix](projects/29-bottleneck-fix/README.md) | Take a model where `torch.compile` makes things *slower*; find out why (usually graph breaks) and fix it | ⭐⭐⭐⭐ |
 
 ### Sample Code: Mixed Precision Training
 

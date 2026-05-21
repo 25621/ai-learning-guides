@@ -132,6 +132,7 @@ const config = {
           include: [
             'README.md',
             'guides/*/README.md',
+            'guides/*/projects/*/README.md',
             'shared/glossary.md',
           ],
           exclude: [
