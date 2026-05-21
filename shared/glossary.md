@@ -59,7 +59,7 @@ Square fiducial marker with a known code; widely used for pose ground truth
 The C++ tensor library underneath PyTorch's Python frontend
 
 ### Attention {#attention}
-The operation `softmax(QKᵀ/√d) V` — content-addressable token mixing; the core of every transformer
+The operation `softmax(QKᵀ/√d) V` — [content-addressable token mixing](/shared/glossary/#content-addressable-token-mixing); the core of every [transformer](/shared/glossary/#transformer)
 
 ### autograd {#autograd}
 The reverse-mode automatic differentiation engine
@@ -138,6 +138,9 @@ Simplified geometry used for collision tests, distinct from visual mesh
 
 ### Consistency model {#consistency-model}
 A diffusion-derived model that samples in 1–4 steps via consistency distillation
+
+### Content-addressable token mixing {#content-addressable-token-mixing}
+The routing and retrieval of information between tokens based on their query-key similarity (as in [attention](/shared/glossary/#attention)) rather than their positions
 
 ### Context window {#context-window}
 The maximum number of tokens the model can attend over in one forward pass
@@ -253,6 +256,9 @@ Exponential moving average of model weights; samples better than the live weight
 ### Expert parallelism (EP) {#expert-parallelism-ep}
 For MoE models, distributing experts across GPUs with all-to-all token routing
 
+### FFN {#ffn}
+Feed-Forward Network — a position-wise neural network block (often referred to as an [MLP](/shared/glossary/#mlp)) in a [transformer](/shared/glossary/#transformer) that processes each token independently.
+
 ### F/T sensor {#ft-sensor}
 Force/Torque sensor — six-axis force and moment at a wrist or fingertip
 
@@ -270,6 +276,9 @@ IO-aware attention kernel that avoids materializing the T×T score matrix in HBM
 
 ### float32 {#float32}
 32-bit floating-point format (`fp32`); the standard default precision for PyTorch tensors — wide enough range and enough precision for most training and inference tasks
+
+### FLOPs {#flops}
+Floating-Point Operations — a measure of computational complexity representing the number of individual arithmetic operations (additions or multiplications) performed.
 
 ### Flow matching {#flow-matching}
 Training a velocity field that transports noise to data via an ODE; modern alternative to DDPM
@@ -297,6 +306,9 @@ Generalized Advantage Estimation — TD(λ) for advantages
 
 ### GANs (Generative Adversarial Networks) {#gans}
 A class of generative models in which a generator network and a discriminator network are trained adversarially. The generator learns to produce realistic samples to fool the discriminator, which learns to distinguish real from generated data.
+
+### Gated {#gated}
+An operation where one path of a neural network modulates the information flow in another path via element-wise multiplication (e.g. in a [SwiGLU](/shared/glossary/#swiglu) block).
 
 ### GELU {#gelu}
 Gaussian Error Linear Unit — a smooth activation function widely used in transformer [MLPs](/shared/glossary/#mlp).
@@ -505,6 +517,9 @@ The starting index into the underlying storage where a tensor's data begins (`.s
 ### OMPL {#ompl}
 Open Motion Planning Library — sampling-based planners
 
+### Online softmax {#online-softmax}
+An incremental method for computing [softmax](/shared/glossary/#softmax) that maintains running maximum and sum statistics, enabling single-pass computation over tiled inputs without materializing the full exponent sum beforehand.
+
 ### On-policy {#on-policy}
 The data comes from the same policy being optimized (PPO, REINFORCE)
 
@@ -686,7 +701,7 @@ A technique used to bypass non-differentiable operations by passing gradients un
 The number of storage elements to step over for each dimension of a tensor
 
 ### SwiGLU {#swiglu}
-Gated [MLP](/shared/glossary/#mlp) activation `(xW) · σ(xV)` — the modern default FFN
+[Gated](/shared/glossary/#gated) [MLP](/shared/glossary/#mlp) activation `(xW) · σ(xV)` — the modern default [FFN](/shared/glossary/#ffn)
 
 ### Systolic array {#systolic-array}
 Data-flow matmul fabric used in TPUs
