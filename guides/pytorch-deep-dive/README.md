@@ -347,12 +347,12 @@ GPU utilization high + slow training                  → compute bound, optimiz
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Naive vs optimized loader | Train ResNet on a subset of ImageNet with `num_workers=0`, then 4, 8, 16; plot throughput | ⭐⭐ |
-| Custom collate | Write a collate_fn that pads variable-length token sequences to the longest in the batch | ⭐⭐ |
-| Weighted sampler | Implement class-balanced sampling on an imbalanced classification dataset | ⭐⭐ |
-| Streaming WebDataset | Load a sharded `.tar` dataset with WebDataset, train without unpacking | ⭐⭐⭐ |
-| Memory-mapped tokens | Tokenize a large text corpus to a single `.bin` file, train an LLM from `np.memmap` | ⭐⭐⭐ |
-| Profile and fix | Take a slow training script, profile the data loader with the PyTorch profiler, fix it | ⭐⭐⭐ |
+| [Naive vs optimized loader](projects/18-naive-vs-optimized-loader/README.md) | Train ResNet on a subset of ImageNet with `num_workers=0`, then 4, 8, 16; plot throughput | ⭐⭐ |
+| [Custom collate](projects/19-custom-collate/README.md) | Write a collate_fn that pads variable-length token sequences to the longest in the batch | ⭐⭐ |
+| [Weighted sampler](projects/20-weighted-sampler/README.md) | Implement class-balanced sampling on an imbalanced classification dataset | ⭐⭐ |
+| [Streaming WebDataset](projects/21-streaming-webdataset/README.md) | Load a sharded `.tar` dataset with WebDataset, train without unpacking | ⭐⭐⭐ |
+| [Memory-mapped tokens](projects/22-memory-mapped-tokens/README.md) | Tokenize a large text corpus to a single `.bin` file, train an LLM from `np.memmap` | ⭐⭐⭐ |
+| [Profile and fix](projects/23-profile-and-fix/README.md) | Take a slow training script, profile the data loader with the PyTorch profiler, fix it | ⭐⭐⭐ |
 
 ### Sample Code: A Streaming Token Dataset
 

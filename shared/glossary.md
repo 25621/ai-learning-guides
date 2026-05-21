@@ -85,6 +85,9 @@ An adjustment applied in the Adam family of optimizers to counteract the zero-in
 ### Bootstrapping {#bootstrapping}
 Using a current estimate (e.g., `V(s')`) in the target instead of a full return
 
+### Bottleneck {#bottleneck}
+The single slowest stage in a pipeline, which caps the overall speed; in training this is often the data loader rather than the model.
+
 ### bpd (bits per dimension) {#bpd-bits-per-dimension}
 Standard likelihood metric for image models; `-log₂ p(x) / D`
 
@@ -121,6 +124,9 @@ Splitting long prompts across multiple iterations to interleave with decode step
 ### CLIP {#clip}
 Contrastive Language-Image Pretraining — paired text-image dual encoder
 
+### Collate function {#collate-function}
+The function a [DataLoader](/shared/glossary/#dataloader) uses to combine a list of individual samples into one batched tensor; a custom one can pad variable-length data.
+
 ### Collision mesh {#collision-mesh}
 Simplified geometry used for collision tests, distinct from visual mesh
 
@@ -150,6 +156,9 @@ NVIDIA's GPU compute backend; tensors on the `cuda` device run their kernels her
 
 ### CUTLASS {#cutlass}
 NVIDIA's open template library for matmul kernels
+
+### DataLoader {#dataloader}
+PyTorch's iterator that pulls samples from a Dataset, groups them into batches, and can load them in parallel using [worker processes](/shared/glossary/#worker-processes).
 
 ### DDIM {#ddim}
 Deterministic, accelerated sampler for diffusion models
@@ -382,6 +391,9 @@ Markov Decision Process — the tuple `(S, A, P, R, γ)`
 ### Memory leak {#memory-leak}
 An unintended increase in memory usage over time, often caused in PyTorch by holding onto references to the [loss function](/shared/glossary/#loss-function) or other parts of the [dynamic computation graph](/shared/glossary/#dynamic-computation-graph) across training iterations.
 
+### Memory mapping {#memory-mapping}
+Accessing a file on disk as if it were an in-memory array, reading slices on demand without loading the whole file into RAM (e.g. `numpy.memmap`).
+
 ### Micrograd {#micrograd}
 A tiny, educational autograd engine implemented in basic Python by Andrej Karpathy to illustrate how reverse-mode differentiation works.
 
@@ -457,6 +469,9 @@ The data comes from the same policy being optimized (PPO, REINFORCE)
 ### Optimizer {#optimizer}
 An algorithm that updates model parameters using computed gradients; in PyTorch, a subclass of `torch.optim.Optimizer` that holds parameter groups and per-parameter state
 
+### Padding {#padding}
+Filling shorter sequences with a placeholder value so that every sample in a batch has the same length.
+
 ### PagedAttention {#pagedattention}
 KV cache managed as fixed-size physical blocks with per-request block tables
 
@@ -474,6 +489,9 @@ Reorders all of a tensor's dimensions by rewriting strides — never copies
 
 ### PID {#pid}
 Proportional-Integral-Derivative — the workhorse linear controller
+
+### Pinned memory {#pinned-memory}
+Page-locked CPU memory that enables faster, asynchronous transfers to the GPU; enabled with `pin_memory=True` on a [DataLoader](/shared/glossary/#dataloader).
 
 ### Pinocchio {#pinocchio}
 Fast rigid-body dynamics library (CRBA, RNEA, ABA)
@@ -501,6 +519,9 @@ Probabilistic Roadmap — multi-query sampling-based planner
 
 ### Probability flow ODE {#probability-flow-ode}
 The deterministic ODE equivalent of the reverse-time diffusion SDE
+
+### Profiler {#profiler}
+A tool (`torch.profiler`) that records how long each operation in a training step takes, used to locate performance [bottlenecks](/shared/glossary/#bottleneck).
 
 ### Projector {#projector}
 The (usually small) network that maps one modality's features into another's space
@@ -562,6 +583,9 @@ Soft Actor-Critic — maximum-entropy continuous-control algorithm; the modern d
 ### SAE {#sae}
 Sparse Autoencoder — interpretability tool decomposing activations into monosemantic features
 
+### Sampler {#sampler}
+The component that decides the order in which a [DataLoader](/shared/glossary/#dataloader) visits dataset examples (e.g. random, sequential, or class-weighted).
+
 ### Score {#score}
 `∇_x log p(x)` — diffusion training implicitly learns this
 
@@ -579,6 +603,9 @@ Stochastic Gradient Descent — updates parameters by subtracting a scaled gradi
 
 ### Shape {#shape}
 The size of a tensor along each dimension; the tuple returned by `.shape`
+
+### Sharding {#sharding}
+Splitting a dataset (or model) into many smaller pieces so they can be stored, loaded, or processed in parallel.
 
 ### SigLIP {#siglip}
 Sigmoid-loss CLIP variant; scales better and works at smaller batch sizes
@@ -642,6 +669,9 @@ Sharding each layer's weights across GPUs with all-reduce at attention/MLP bound
 
 ### TFLOPs {#tflops}
 Tera (10¹²) floating-point operations per second
+
+### Throughput {#throughput}
+How much work is completed per unit of time — for training, the number of examples processed per second.
 
 ### Token (visual/audio) {#token-visualaudio}
 Discrete code from a VQ-VAE or neural codec; lets transformers treat the modality like language
@@ -721,8 +751,14 @@ Vector-quantized VAE — discrete latent codes from a learned codebook
 ### WBC {#wbc}
 Whole-Body Control — fast QP solving for joint torques from task-space goals
 
+### WebDataset {#webdataset}
+A library that streams training data directly from sharded `.tar` archives, avoiding the need to unpack millions of individual files.
+
 ### Weight decay {#weight-decay}
 A regularization technique that shrinks model parameters toward zero at each update step, discouraging large weights and improving generalization
+
+### Worker processes {#worker-processes}
+Background subprocesses that a [DataLoader](/shared/glossary/#dataloader) spawns to load and preprocess data in parallel with GPU computation.
 
 ### World Model {#world-model}
 Action-conditioned generative model of the world; a video model with actions
