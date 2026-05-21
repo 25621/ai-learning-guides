@@ -418,6 +418,9 @@ Accessing a file on disk as if it were an in-memory array, reading slices on dem
 ### Micrograd {#micrograd}
 A tiny, educational autograd engine implemented in basic Python by Andrej Karpathy to illustrate how reverse-mode differentiation works.
 
+### MLP {#mlp}
+Multi-Layer Perceptron — a feedforward neural network of one or more fully-connected (linear) layers separated by non-linear activations. In transformer architectures, each block contains an attention sublayer followed by an MLP sublayer (often using [SwiGLU](/shared/glossary/#swiglu) activation).
+
 ### MMDiT {#mmdit}
 Multi-Modal Diffusion Transformer — joint text+image attention layers, used in SD3 and Flux
 
@@ -428,7 +431,7 @@ Empirical finding that different-modality embeddings stay in separable regions
 GAN failure mode: generator produces few distinct outputs
 
 ### MoE {#moe}
-Mixture-of-Experts — sparse routing across N expert MLPs; high total params, fixed compute per token
+Mixture-of-Experts — sparse routing across N expert [MLPs](/shared/glossary/#mlp); high total params, fixed compute per token
 
 ### Momentum {#momentum}
 A technique that accumulates a moving average of past gradients to dampen oscillations and accelerate gradient descent in consistent directions
@@ -662,7 +665,7 @@ A technique used to bypass non-differentiable operations by passing gradients un
 The number of storage elements to step over for each dimension of a tensor
 
 ### SwiGLU {#swiglu}
-Gated MLP activation `(xW) · σ(xV)` — the modern default FFN
+Gated [MLP](/shared/glossary/#mlp) activation `(xW) · σ(xV)` — the modern default FFN
 
 ### Systolic array {#systolic-array}
 Data-flow matmul fabric used in TPUs
@@ -689,7 +692,7 @@ A multidimensional array — a (storage, shape, stride, offset, dtype, device, r
 Specialized matmul unit in NVIDIA GPUs since Volta
 
 ### Tensor parallelism (TP) {#tensor-parallelism-tp}
-Sharding each layer's weights across GPUs with all-reduce at attention/MLP boundaries
+Sharding each layer's weights across GPUs with all-reduce at attention/[MLP](/shared/glossary/#mlp) boundaries
 
 ### TFLOPs {#tflops}
 Tera (10¹²) floating-point operations per second
@@ -713,7 +716,7 @@ The PyTorch 2.x API that traces a model into a graph and generates optimized, [f
 The legacy serialization/IR for PyTorch; superseded by `torch.export`
 
 ### Transformer {#transformer}
-The decoder-only / encoder-only / encoder-decoder architecture built from attention + MLP blocks
+The decoder-only / encoder-only / encoder-decoder architecture built from [attention](/shared/glossary/#attention) + [MLP](/shared/glossary/#mlp) blocks
 
 ### transpose {#transpose}
 Swaps two dimensions by rewriting strides — never copies; the result is usually non-contiguous
