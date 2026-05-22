@@ -49,6 +49,9 @@ A collective op that sums tensors across all ranks and gives every rank the resu
 ### AMP {#amp}
 Automatic Mixed Precision — running operations in 16-bit floats ([float16](/shared/glossary/#float16) or [bfloat16](/shared/glossary/#bfloat16)) where it is safe, to save memory and speed up training while keeping a [float32](/shared/glossary/#float32) copy of the weights.
 
+### AOTInductor {#aotinductor}
+Ahead-of-Time Inductor — a deployment path built on [`torch.export`](/shared/glossary/#torchexport) that compiles a captured model graph into a standalone shared library (`.so`) ahead of time, enabling C++-only inference without a Python runtime.
+
 ### AnyRes {#anyres}
 Dynamic-resolution input handling (tile images at native aspect ratio)
 
@@ -70,6 +73,9 @@ Activation-aware Weight Quantization — preserve weights important to large act
 ### Backward pass {#backward-pass}
 The process of traversing the computation graph in reverse to compute gradients using the chain rule.
 
+### Batching {#batching}
+Grouping multiple inference requests together into a single forward pass so the GPU processes them in parallel, increasing [throughput](/shared/glossary/#throughput) at a small cost to [latency](/shared/glossary/#latency). Production servers like [Triton Inference Server](/shared/glossary/#triton-inference-server) perform batching automatically.
+
 ### BC {#bc}
 Behavior Cloning — supervised imitation of demonstrator actions
 
@@ -84,6 +90,9 @@ The recursive consistency condition `V(s) = E[r + γV(s')]`
 
 ### Bias correction {#bias-correction}
 An adjustment applied in the Adam family of optimizers to counteract the zero-initialization of moment estimates; without it, early steps would be artificially small
+
+### Biases {#biases}
+The additive [parameter](/shared/glossary/#parameters) vectors in a linear layer (the `b` in `y = xW + b`). Each output neuron has one bias value, which shifts the result independently of the input.
 
 ### Bootstrapping {#bootstrapping}
 Using a current estimate (e.g., `V(s')`) in the target instead of a full return
@@ -575,7 +584,7 @@ The extra per-parameter values an [optimizer](/shared/glossary/#optimizer) store
 Filling shorter sequences with a placeholder value so that every sample in a batch has the same length.
 
 ### Parameters {#parameters}
-The learnable [tensors](/shared/glossary/#tensor) inside a model (such as [weights](/shared/glossary/#weights) and biases) that are updated by the [optimizer](/shared/glossary/#optimizer) during training. In PyTorch, they are instances of `nn.Parameter` and are automatically registered when assigned to an [`nn.Module`](/shared/glossary/#nnmodule).
+The learnable [tensors](/shared/glossary/#tensor) inside a model (such as [weights](/shared/glossary/#weights) and [biases](/shared/glossary/#biases)) that are updated by the [optimizer](/shared/glossary/#optimizer) during training. In PyTorch, they are instances of `nn.Parameter` and are automatically registered when assigned to an [`nn.Module`](/shared/glossary/#nnmodule).
 
 ### PagedAttention {#pagedattention}
 KV cache managed as fixed-size physical blocks with per-request block tables
@@ -806,7 +815,7 @@ Time-Optimal Path Parameterization — time-parameterize a geometric path under 
 The PyTorch 2.x API that traces a model into a graph and generates optimized, [fused kernels](/shared/glossary/#kernel-fusion), speeding up [eager mode](/shared/glossary/#eager-mode) code with a single call.
 
 ### torch.export {#torchexport}
-The modern PyTorch API that captures a model into a standalone graph; the foundation for deployment paths like [ExecuTorch](/shared/glossary/#executorch) and AOTInductor.
+The modern PyTorch API that captures a model into a standalone graph; the foundation for deployment paths like [ExecuTorch](/shared/glossary/#executorch) and [AOTInductor](/shared/glossary/#aotinductor).
 
 ### torchrun {#torchrun}
 PyTorch's launcher command that starts one process per GPU and sets the `RANK`, `LOCAL_RANK`, and `WORLD_SIZE` environment variables those processes need to find each other.
@@ -824,7 +833,7 @@ Swaps two dimensions by rewriting strides — never copies; the result is usuall
 A Python-flavored language for writing GPU kernels, developed by OpenAI
 
 ### Triton Inference Server {#triton-inference-server}
-NVIDIA's production server for hosting models behind an HTTP/gRPC API, with batching and multi-model support; unrelated to the [Triton](/shared/glossary/#triton) kernel language despite the shared name.
+NVIDIA's production server for hosting models behind an HTTP/gRPC API, with [batching](/shared/glossary/#batching) and multi-model support; unrelated to the [Triton](/shared/glossary/#triton) kernel language despite the shared name.
 
 ### TTFT {#ttft}
 Time to first token — dominated by prefill plus queue wait
@@ -863,7 +872,7 @@ Visual-Inertial Odometry — fuse camera and IMU for high-rate ego-motion
 Vision-Language-Action model — transformer mapping image + instruction → action
 
 ### vLLM {#vllm}
-The reference open-source inference engine with PagedAttention and continuous batching
+The reference open-source inference engine with PagedAttention and continuous [batching](/shared/glossary/#batching)
 
 ### VLM {#vlm}
 Vision-Language Model — image (+ text) in, text out
