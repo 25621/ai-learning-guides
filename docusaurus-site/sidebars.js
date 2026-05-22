@@ -99,6 +99,18 @@ const sidebars = {
                 {type: 'doc', id: 'guides/pytorch-deep-dive/projects/multi-node-setup/README', label: 'Multi-node setup'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 8: Deployment',
+              items: [
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/export-to-onnx/README', label: 'Export to ONNX'},
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/mobile-deployment/README', label: 'Mobile deployment'},
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/dynamic-quantization/README', label: 'Dynamic quantization'},
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/static-quantization-ptq/README', label: 'Static quantization (PTQ)'},
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/build-a-triton-server/README', label: 'Build a Triton server'},
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/latency-profiling/README', label: 'Latency profiling'},
+              ],
+            },
           ],
         },
         {type: 'doc', id: 'guides/llm/README', label: 'LLM'},

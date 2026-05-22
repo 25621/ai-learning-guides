@@ -106,6 +106,9 @@ Configuration space — the abstract space of joint configurations
 ### c10 {#c10}
 PyTorch's core C++ library (the "core ten[sor]" library)
 
+### Calibration {#calibration}
+Running a few representative batches of data through a model to measure the typical range of its [activations](/shared/glossary/#activations), so that static [quantization](/shared/glossary/#quantization) can pick fixed [int8](/shared/glossary/#int8) scales.
+
 ### CBF {#cbf}
 Control Barrier Function — runtime safety filter via a constraint on `ḣ`
 
@@ -129,6 +132,9 @@ Splitting long prompts across multiple iterations to interleave with decode step
 
 ### CLIP {#clip}
 Contrastive Language-Image Pretraining — paired text-image dual encoder
+
+### CNN {#cnn}
+Convolutional Neural Network — a neural network built mainly from convolution layers; the standard architecture for image tasks.
 
 ### Collate function {#collate-function}
 The function a [DataLoader](/shared/glossary/#dataloader) uses to combine a list of individual samples into one batched tensor; a custom one can pad variable-length data.
@@ -238,6 +244,9 @@ A tensor's element data type — e.g. `float32`, `float16`, `bfloat16`, `int8`, 
 ### Dynamic computation graph {#dynamic-computation-graph}
 A graph of operations built on-the-fly as code executes, representing the forward pass used for autograd.
 
+### Dynamic quantization {#dynamic-quantization}
+A [quantization](/shared/glossary/#quantization) method that stores [weights](/shared/glossary/#weights) as [int8](/shared/glossary/#int8) ahead of time but computes each layer's [activation](/shared/glossary/#activations) scale at runtime, just before the layer runs.
+
 ### Eager mode {#eager-mode}
 PyTorch's default execution, where each operation runs immediately as its Python line is reached — flexible and easy to debug, but without the cross-operation optimizations a compiler can apply.
 
@@ -258,6 +267,9 @@ An operation applied independently to each element of a tensor (e.g. add, multip
 
 ### EMA weights {#ema-weights}
 Exponential moving average of model weights; samples better than the live weights
+
+### ExecuTorch {#executorch}
+PyTorch's lightweight runtime for running models on mobile and edge devices, built on the graph captured by [`torch.export`](/shared/glossary/#torchexport).
 
 ### Expert parallelism (EP) {#expert-parallelism-ep}
 For MoE models, distributing experts across GPUs with all-to-all token routing
@@ -379,6 +391,9 @@ High-speed network with RDMA; standard for AI clusters
 ### InfoNCE {#infonce}
 The contrastive loss used by CLIP; softmax over a similarity matrix
 
+### int8 {#int8}
+8-bit integer format; storing [weights](/shared/glossary/#weights) or [activations](/shared/glossary/#activations) as int8 uses a quarter of the memory of [float32](/shared/glossary/#float32) and can run faster, at some cost in precision.
+
 ### IQL {#iql}
 Implicit Q-Learning — offline RL that never queries `Q` at OOD actions
 
@@ -409,6 +424,9 @@ Cached keys and values per past token per layer; the working set of the decoder
 ### L2 regularization {#l2-regularization}
 A regularization technique that adds a penalty proportional to the squared magnitude of model weights to the loss function, encouraging smaller weights and reducing overfitting. In standard adaptive optimizers such as [Adam](/shared/glossary/#adam), this penalty is folded into the gradient and scaled by the adaptive learning rate, which is why [AdamW](/shared/glossary/#adamw) uses [decoupled](/shared/glossary/#decoupled) weight decay instead.
 
+### Latency {#latency}
+The time it takes to complete a single request, from input to output; distinct from [throughput](/shared/glossary/#throughput), which counts how many requests finish per second.
+
 ### Latent video {#latent-video}
 Compressed (T', H', W', C) tensor produced by a 3D VAE
 
@@ -420,6 +438,9 @@ Latent Diffusion Model — diffusion in the latent space of a VAE (i.e., Stable 
 
 ### LiDAR {#lidar}
 Light Detection And Ranging — laser range scanner
+
+### LLM {#llm}
+Large Language Model — a [transformer](/shared/glossary/#transformer) trained on large amounts of text to predict and generate language.
 
 ### LoRA {#lora}
 Low-Rank Adaptation — fine-tune by adding small low-rank matrices, freeze the base
@@ -534,6 +555,12 @@ Open Motion Planning Library — sampling-based planners
 
 ### Online softmax {#online-softmax}
 An incremental method for computing [softmax](/shared/glossary/#softmax) that maintains running maximum and sum statistics, enabling single-pass computation over tiled inputs without materializing the full exponent sum beforehand.
+
+### ONNX {#onnx}
+Open Neural Network Exchange — a framework-neutral file format that stores a model as a graph of operations, so it can run outside the framework that trained it.
+
+### ONNX Runtime {#onnx-runtime}
+A fast, cross-platform engine that runs models saved in the [ONNX](/shared/glossary/#onnx) format, without needing the original framework like PyTorch.
 
 ### On-policy {#on-policy}
 The data comes from the same policy being optimized (PPO, REINFORCE)
@@ -712,6 +739,9 @@ Use a draft model to propose tokens; verify with the target in one parallel pass
 ### State dict {#state-dict}
 A Python `OrderedDict` that maps every parameter and buffer name to its tensor value; the standard format for saving, loading, and transplanting PyTorch model weights
 
+### Static quantization (PTQ) {#static-quantization-ptq}
+A [quantization](/shared/glossary/#quantization) method that converts both [weights](/shared/glossary/#weights) and [activations](/shared/glossary/#activations) to [int8](/shared/glossary/#int8) before serving, using a [calibration](/shared/glossary/#calibration) pass to fix the activation scales in advance.
+
 ### Storage {#storage}
 The 1-D buffer that a tensor is a view into
 
@@ -729,6 +759,9 @@ Data-flow matmul fabric used in TPUs
 
 ### T2V {#t2v}
 Text-to-Video
+
+### Tail latency {#tail-latency}
+The [latency](/shared/glossary/#latency) of the slowest requests (for example the p95 or p99 percentiles) rather than the median (p50); it is what users notice most.
 
 ### TCP {#tcp}
 Tool Center Point — the configurable point on a tool whose pose tracking controls
@@ -772,6 +805,9 @@ Time-Optimal Path Parameterization — time-parameterize a geometric path under 
 ### torch.compile {#torchcompile}
 The PyTorch 2.x API that traces a model into a graph and generates optimized, [fused kernels](/shared/glossary/#kernel-fusion), speeding up [eager mode](/shared/glossary/#eager-mode) code with a single call.
 
+### torch.export {#torchexport}
+The modern PyTorch API that captures a model into a standalone graph; the foundation for deployment paths like [ExecuTorch](/shared/glossary/#executorch) and AOTInductor.
+
 ### torchrun {#torchrun}
 PyTorch's launcher command that starts one process per GPU and sets the `RANK`, `LOCAL_RANK`, and `WORLD_SIZE` environment variables those processes need to find each other.
 
@@ -786,6 +822,9 @@ Swaps two dimensions by rewriting strides — never copies; the result is usuall
 
 ### Triton {#triton}
 A Python-flavored language for writing GPU kernels, developed by OpenAI
+
+### Triton Inference Server {#triton-inference-server}
+NVIDIA's production server for hosting models behind an HTTP/gRPC API, with batching and multi-model support; unrelated to the [Triton](/shared/glossary/#triton) kernel language despite the shared name.
 
 ### TTFT {#ttft}
 Time to first token — dominated by prefill plus queue wait

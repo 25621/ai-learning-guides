@@ -640,12 +640,12 @@ Training is half the job. The other half is shipping the model somewhere it can 
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Export to ONNX | Export a CNN to ONNX, run it with `onnxruntime`, verify numerical match with PyTorch | ⭐⭐ |
-| Mobile deployment | Use ExecuTorch to run a small model on an Android device | ⭐⭐⭐⭐ |
-| Dynamic quantization | Quantize an LLM to int8 with dynamic quantization, measure speedup and quality loss | ⭐⭐⭐ |
-| Static quantization (PTQ) | Calibrate static int8 quantization on a CNN, compare to dynamic | ⭐⭐⭐ |
-| Build a Triton server | Wrap a model in NVIDIA Triton Inference Server, query it over HTTP | ⭐⭐⭐ |
-| Latency profiling | Measure p50/p95/p99 latency for batch sizes 1, 8, 32 on the same model | ⭐⭐ |
+| [Export to ONNX](projects/42-export-to-onnx/README.md) | Export a CNN to ONNX, run it with `onnxruntime`, verify numerical match with PyTorch | ⭐⭐ |
+| [Mobile deployment](projects/43-mobile-deployment/README.md) | Use ExecuTorch to run a small model on an Android device | ⭐⭐⭐⭐ |
+| [Dynamic quantization](projects/44-dynamic-quantization/README.md) | Quantize an LLM to int8 with dynamic quantization, measure speedup and quality loss | ⭐⭐⭐ |
+| [Static quantization (PTQ)](projects/45-static-quantization-ptq/README.md) | Calibrate static int8 quantization on a CNN, compare to dynamic | ⭐⭐⭐ |
+| [Build a Triton server](projects/46-build-a-triton-server/README.md) | Wrap a model in NVIDIA Triton Inference Server, query it over HTTP | ⭐⭐⭐ |
+| [Latency profiling](projects/47-latency-profiling/README.md) | Measure p50/p95/p99 latency for batch sizes 1, 8, 32 on the same model | ⭐⭐ |
 
 ### Sample Code: Export + ONNX Inference
 
