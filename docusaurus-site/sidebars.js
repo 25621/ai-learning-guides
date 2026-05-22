@@ -122,6 +122,17 @@ const sidebars = {
                 {type: 'doc', id: 'guides/pytorch-deep-dive/projects/eager-vs-compile-diff/README', label: 'Eager vs compile diff'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 10: Reading the PyTorch Source',
+              items: [
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/trace-one-op-end-to-end/README', label: 'Trace one op end to end'},
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/read-native-functions-yaml/README', label: 'Read native_functions.yaml'},
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/build-pytorch-from-source/README', label: 'Build PyTorch from source'},
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/patch-and-rebuild/README', label: 'Patch and rebuild'},
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/fix-a-good-first-issue/README', label: 'Fix a "good first issue"'},
+              ],
+            },
           ],
         },
         {type: 'doc', id: 'guides/llm/README', label: 'LLM'},
