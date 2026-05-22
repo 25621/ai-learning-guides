@@ -111,6 +111,17 @@ const sidebars = {
                 {type: 'doc', id: 'guides/pytorch-deep-dive/projects/latency-profiling/README', label: 'Latency profiling'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 9: Debugging Hard Problems',
+              items: [
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/nan-forensics/README', label: 'NaN forensics'},
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/memory-leak-hunt/README', label: 'Memory leak hunt'},
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/determinism-audit/README', label: 'Determinism audit'},
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/hang-diagnosis/README', label: 'Hang diagnosis'},
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/eager-vs-compile-diff/README', label: 'Eager vs compile diff'},
+              ],
+            },
           ],
         },
         {type: 'doc', id: 'guides/llm/README', label: 'LLM'},

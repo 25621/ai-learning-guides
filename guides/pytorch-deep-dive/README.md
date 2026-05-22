@@ -711,11 +711,11 @@ When things go wrong in PyTorch, the error messages are sometimes a paragraph lo
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| NaN forensics | Take a model that NaNs; use anomaly mode to find the layer; explain why | ⭐⭐⭐ |
-| Memory leak hunt | Write a training loop with a subtle leak; find it with memory snapshots | ⭐⭐⭐ |
-| Determinism audit | Make a training run bit-exact reproducible; document every flag needed | ⭐⭐⭐ |
-| Hang diagnosis | Intentionally hang a 2-rank DDP job; diagnose with NCCL_DEBUG | ⭐⭐⭐ |
-| Eager vs compile diff | Find a case where eager and compiled outputs differ; narrow it to a single op | ⭐⭐⭐⭐ |
+| [NaN forensics](projects/48-nan-forensics/README.md) | Take a model that NaNs; use anomaly mode to find the layer; explain why | ⭐⭐⭐ |
+| [Memory leak hunt](projects/49-memory-leak-hunt/README.md) | Write a training loop with a subtle leak; find it with memory snapshots | ⭐⭐⭐ |
+| [Determinism audit](projects/50-determinism-audit/README.md) | Make a training run bit-exact reproducible; document every flag needed | ⭐⭐⭐ |
+| [Hang diagnosis](projects/51-hang-diagnosis/README.md) | Intentionally hang a 2-rank DDP job; diagnose with NCCL_DEBUG | ⭐⭐⭐ |
+| [Eager vs compile diff](projects/52-eager-vs-compile-diff/README.md) | Find a case where eager and compiled outputs differ; narrow it to a single op | ⭐⭐⭐⭐ |
 
 ### Key Insight
 

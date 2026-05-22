@@ -49,6 +49,9 @@ A collective op that sums tensors across all ranks and gives every rank the resu
 ### AMP {#amp}
 Automatic Mixed Precision — running operations in 16-bit floats ([float16](/shared/glossary/#float16) or [bfloat16](/shared/glossary/#bfloat16)) where it is safe, to save memory and speed up training while keeping a [float32](/shared/glossary/#float32) copy of the weights.
 
+### Anomaly detection {#anomaly-detection}
+A debugging mode (`torch.autograd.set_detect_anomaly(True)`) that makes [autograd](/shared/glossary/#autograd) check each operation and raise an error at the exact line that first produces a [NaN](/shared/glossary/#nan) or infinite [gradient](/shared/glossary/#gradients).
+
 ### AOTInductor {#aotinductor}
 Ahead-of-Time Inductor — a deployment path built on [`torch.export`](/shared/glossary/#torchexport) that compiles a captured model graph into a standalone shared library (`.so`) ahead of time, enabling C++-only inference without a Python runtime.
 
@@ -484,6 +487,9 @@ An unintended increase in memory usage over time, often caused in PyTorch by hol
 ### Memory mapping {#memory-mapping}
 Accessing a file on disk as if it were an in-memory array, reading slices on demand without loading the whole file into RAM (e.g. `numpy.memmap`).
 
+### Memory snapshot {#memory-snapshot}
+A recording of how much GPU memory is allocated at one moment; comparing snapshots taken across training steps reveals a steadily growing [memory leak](/shared/glossary/#memory-leak).
+
 ### Megatron {#megatron}
 NVIDIA's approach to [tensor parallelism](/shared/glossary/#tensor-parallelism-tp) that splits [attention](/shared/glossary/#attention) and [MLP](/shared/glossary/#mlp) layers [column-wise](/shared/glossary/#column-wise-partitioning) and row-wise across GPUs with carefully placed [AllReduce](/shared/glossary/#allreduce) collectives, allowing efficient intra-layer parallelism.
 
@@ -711,6 +717,9 @@ Signed Distance Field — scalar field giving distance to nearest obstacle (nega
 
 ### SE(3) / SO(3) {#se3--so3}
 Special Euclidean / Orthogonal group — rigid-body motions / rotations in 3D
+
+### Seed {#seed}
+A fixed starting number for a random-number generator; setting the same seed makes random operations (shuffling, initialization, dropout) produce the identical sequence every run.
 
 ### SFT {#sft}
 Supervised Fine-Tuning — train on demonstration data with cross-entropy
