@@ -133,6 +133,9 @@ Contrastive Language-Image Pretraining — paired text-image dual encoder
 ### Collate function {#collate-function}
 The function a [DataLoader](/shared/glossary/#dataloader) uses to combine a list of individual samples into one batched tensor; a custom one can pad variable-length data.
 
+### Collective operation {#collective-operation}
+A communication step that all processes ([ranks](/shared/glossary/#rank)) in a distributed job perform together — such as [AllReduce](/shared/glossary/#allreduce); if one rank skips it, the others wait forever.
+
 ### Collision mesh {#collision-mesh}
 Simplified geometry used for collision tests, distinct from visual mesh
 
@@ -499,6 +502,9 @@ NVIDIA Collective Communications Library — does AllReduce etc. on NVIDIA GPUs
 ### nn.Module {#nnmodule}
 PyTorch's base class for all neural network components; acts as a registry that automatically tracks sub-modules, parameters, and buffers assigned in `__init__`
 
+### Node (distributed) {#node-distributed}
+One physical machine (server) in a distributed job, usually holding several GPUs; multi-node training spreads work across several of them over a network.
+
 ### non_blocking {#non_blocking}
 The `non_blocking=True` flag on `.to()` / `.cuda()` that lets a host→device copy run asynchronously from pinned memory
 
@@ -600,6 +606,9 @@ sglang's KV cache organized as a radix tree keyed on prompt prefixes for automat
 
 ### RAG {#rag}
 Retrieval-Augmented Generation — fetch documents, prepend to prompt, then generate
+
+### rank {#rank}
+The unique integer ID of a process in a distributed job. `RANK` is the global ID across all machines; `LOCAL_RANK` is the ID within one machine; `WORLD_SIZE` is the total number of processes.
 
 ### Rectified flow {#rectified-flow}
 A flow-matching parameterization with straight-line trajectories; popular in 2024+ models
@@ -750,6 +759,9 @@ Time-Optimal Path Parameterization — time-parameterize a geometric path under 
 
 ### torch.compile {#torchcompile}
 The PyTorch 2.x API that traces a model into a graph and generates optimized, [fused kernels](/shared/glossary/#kernel-fusion), speeding up [eager mode](/shared/glossary/#eager-mode) code with a single call.
+
+### torchrun {#torchrun}
+PyTorch's launcher command that starts one process per GPU and sets the `RANK`, `LOCAL_RANK`, and `WORLD_SIZE` environment variables those processes need to find each other.
 
 ### TorchScript {#torchscript}
 The legacy serialization/IR for PyTorch; superseded by `torch.export`

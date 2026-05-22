@@ -87,6 +87,18 @@ const sidebars = {
                 {type: 'doc', id: 'guides/pytorch-deep-dive/projects/custom-op-registration/README', label: 'Custom op registration'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 7: Distributed Training',
+              items: [
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/two-gpu-ddp/README', label: 'Two-GPU DDP'},
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/implement-gradient-allreduce/README', label: 'Implement gradient AllReduce'},
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/fsdp-a-transformer/README', label: 'FSDP a transformer'},
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/tensor-parallel-attention/README', label: 'Tensor parallel attention'},
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/debug-a-hang/README', label: 'Debug a hang'},
+                {type: 'doc', id: 'guides/pytorch-deep-dive/projects/multi-node-setup/README', label: 'Multi-node setup'},
+              ],
+            },
           ],
         },
         {type: 'doc', id: 'guides/llm/README', label: 'LLM'},

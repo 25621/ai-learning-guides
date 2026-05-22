@@ -568,12 +568,12 @@ You have hundreds of GPUs across nodes               → 3D parallelism (Megatro
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Two-GPU DDP | Train a ResNet on 2 GPUs with `torchrun`, observe near-linear speedup | ⭐⭐ |
-| Implement gradient AllReduce | From scratch with `torch.distributed.all_reduce`, verify it matches DDP | ⭐⭐⭐ |
-| FSDP a transformer | Train a 1B-parameter LLM with FSDP, verify it works on hardware that can't fit it under DDP | ⭐⭐⭐⭐ |
-| Tensor parallel attention | Split a multi-head attention layer column-wise across 2 GPUs (Megatron-style) | ⭐⭐⭐⭐ |
-| Debug a hang | Intentionally introduce a rank-imbalanced call, watch it hang, fix it; use `TORCH_NCCL_BLOCKING_WAIT=1` and `NCCL_DEBUG=INFO` | ⭐⭐⭐ |
-| Multi-node setup | Set up a 2-node cluster (cloud or two boxes on a LAN), run a DDP job that crosses node boundaries | ⭐⭐⭐⭐ |
+| [Two-GPU DDP](projects/36-two-gpu-ddp/README.md) | Train a ResNet on 2 GPUs with `torchrun`, observe near-linear speedup | ⭐⭐ |
+| [Implement gradient AllReduce](projects/37-implement-gradient-allreduce/README.md) | From scratch with `torch.distributed.all_reduce`, verify it matches DDP | ⭐⭐⭐ |
+| [FSDP a transformer](projects/38-fsdp-a-transformer/README.md) | Train a 1B-parameter LLM with FSDP, verify it works on hardware that can't fit it under DDP | ⭐⭐⭐⭐ |
+| [Tensor parallel attention](projects/39-tensor-parallel-attention/README.md) | Split a multi-head attention layer column-wise across 2 GPUs (Megatron-style) | ⭐⭐⭐⭐ |
+| [Debug a hang](projects/40-debug-a-hang/README.md) | Intentionally introduce a rank-imbalanced call, watch it hang, fix it; use `TORCH_NCCL_BLOCKING_WAIT=1` and `NCCL_DEBUG=INFO` | ⭐⭐⭐ |
+| [Multi-node setup](projects/41-multi-node-setup/README.md) | Set up a 2-node cluster (cloud or two boxes on a LAN), run a DDP job that crosses node boundaries | ⭐⭐⭐⭐ |
 
 ### Sample Code: A Minimal DDP Script
 
