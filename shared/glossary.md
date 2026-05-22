@@ -463,6 +463,9 @@ Low-Rank Adaptation — fine-tune by adding small low-rank matrices, freeze the 
 ### Loss function {#loss-function}
 A mathematical function that measures the difference between a model's prediction and the actual target. The goal of training is to minimize this value using [gradients](/shared/glossary/#gradients).
 
+### Loss value {#loss-value}
+The single scalar number produced by evaluating the [loss function](/shared/glossary/#loss-function) on a model's predictions. [autograd](/shared/glossary/#autograd)'s [backward pass](/shared/glossary/#backward-pass) computes [gradients](/shared/glossary/#gradients) of this one scalar with respect to every [parameter](/shared/glossary/#parameters), which is what makes [reverse-mode](/shared/glossary/#reverse-mode) differentiation efficient.
+
 ### Lorax / S-LoRA {#lorax--s-lora}
 Multi-LoRA serving engines; one base model + many adapters in HBM
 
@@ -677,7 +680,7 @@ A flow-matching parameterization with straight-line trajectories; popular in 202
 Returns a tensor with a new shape, copying only when a no-copy view isn't possible
 
 ### reverse-mode {#reverse-mode}
-The order [autograd](/shared/glossary/#autograd) walks the computation graph when differentiating: the forward pass first, then a single [backward pass](/shared/glossary/#backward-pass) that propagates [gradients](/shared/glossary/#gradients) from the scalar output back to every input. It is the efficient choice when a model has many parameters but only one loss value.
+The order [autograd](/shared/glossary/#autograd) walks the computation graph when differentiating: the forward pass first, then a single [backward pass](/shared/glossary/#backward-pass) that propagates [gradients](/shared/glossary/#gradients) from the scalar output back to every input. It is the efficient choice when a model has many parameters but only one [loss value](/shared/glossary/#loss-value).
 
 ### Reward hacking {#reward-hacking}
 A policy that maximizes the reward signal without doing what was intended
