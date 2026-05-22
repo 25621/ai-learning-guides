@@ -44,17 +44,6 @@ const config = {
   trailingSlash: true,
 
   headTags: [
-    // Ensure window.gtag is always a function so route-change analytics calls
-    // never throw when the gtag bootstrap is absent — e.g. local dev (the gtag
-    // plugin is disabled when NODE_ENV !== 'production') or a blocked gtag.js.
-    // In production the gtag plugin reuses this same window.dataLayer, so no
-    // events are lost.
-    {
-      tagName: 'script',
-      innerHTML:
-        'window.dataLayer = window.dataLayer || [];' +
-        'window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };',
-    },
     {
       tagName: 'link',
       attributes: {
