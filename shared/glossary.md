@@ -73,6 +73,9 @@ The [reverse-mode](/shared/glossary/#reverse-mode) automatic differentiation eng
 ### AWQ {#awq}
 Activation-aware Weight Quantization — preserve weights important to large activations
 
+### Backend {#backend}
+A device- or library-specific implementation that actually executes an operation's [kernel](/shared/glossary/#kernel) — for example the CPU, [CUDA](/shared/glossary/#cuda), or [MPS](/shared/glossary/#mps) backend. The [dispatcher](/shared/glossary/#dispatcher) routes each call to the correct backend based on the tensor's device and [dtype](/shared/glossary/#dtype).
+
 ### Backward pass {#backward-pass}
 The process of traversing the computation graph in reverse to compute gradients using the chain rule.
 

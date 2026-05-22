@@ -12,4 +12,4 @@
 
 ## Why This Matters
 
-This one file is the table of contents for [ATen](/shared/glossary/#aten). Knowing how to read it lets you discover exactly what an op does, which backends support it, and where its real implementation lives.
+This one file is the table of contents for [ATen](/shared/glossary/#aten). Knowing how to read it lets you discover exactly what an op does, which [backends](/shared/glossary/#backend) support it, and where its real implementation lives.
