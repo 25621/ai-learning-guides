@@ -1,4 +1,4 @@
-# NaN Forensics
+# NaN [Forensics](/shared/glossary/#forensics)
 
 ---
 

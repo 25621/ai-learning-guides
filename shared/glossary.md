@@ -68,7 +68,7 @@ The C++ tensor library underneath PyTorch's Python frontend
 The operation `softmax(QKᵀ/√d) V` — [content-addressable token mixing](/shared/glossary/#content-addressable-token-mixing); the core of every [transformer](/shared/glossary/#transformer)
 
 ### autograd {#autograd}
-The reverse-mode automatic differentiation engine
+The [reverse-mode](/shared/glossary/#reverse-mode) automatic differentiation engine
 
 ### AWQ {#awq}
 Activation-aware Weight Quantization — preserve weights important to large activations
@@ -312,6 +312,9 @@ Floating-Point Operations — a measure of computational complexity representing
 
 ### Flow matching {#flow-matching}
 Training a velocity field that transports noise to data via an ODE; modern alternative to DDPM
+
+### Forensics {#forensics}
+Working backward from a training failure to the operation that first caused it, instead of chasing the visible symptom. In PyTorch this means turning on [autograd](/shared/glossary/#autograd) [anomaly detection](/shared/glossary/#anomaly-detection) to halt at the first [NaN](/shared/glossary/#nan) or bad [gradient](/shared/glossary/#gradients).
 
 ### Forward hook {#forward-hook}
 A callback registered on an `nn.Module` that PyTorch calls automatically after the module's forward pass, receiving the input and output tensors; used for capturing activations and debugging
@@ -672,6 +675,9 @@ A flow-matching parameterization with straight-line trajectories; popular in 202
 
 ### reshape {#reshape}
 Returns a tensor with a new shape, copying only when a no-copy view isn't possible
+
+### reverse-mode {#reverse-mode}
+The order [autograd](/shared/glossary/#autograd) walks the computation graph when differentiating: the forward pass first, then a single [backward pass](/shared/glossary/#backward-pass) that propagates [gradients](/shared/glossary/#gradients) from the scalar output back to every input. It is the efficient choice when a model has many parameters but only one loss value.
 
 ### Reward hacking {#reward-hacking}
 A policy that maximizes the reward signal without doing what was intended
