@@ -487,12 +487,12 @@ You will need this when an existing op is too slow, doesn't exist, or you want t
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| C++ extension for elementwise add | Write `add_cuda` as a C++ extension, register it, call from Python | ⭐⭐ |
-| Triton softmax | Implement softmax in Triton, compare against `F.softmax` on a 4096-wide tensor | ⭐⭐⭐ |
-| Triton matmul | Tile-based matmul in Triton; aim for >50% of cuBLAS throughput | ⭐⭐⭐⭐ |
-| Fused MLP | One Triton kernel: matmul → bias → gelu → matmul; compare against unfused | ⭐⭐⭐⭐ |
-| Mini FlashAttention | Tiled, online-softmax attention kernel; verify numerical match with eager attention | ⭐⭐⭐⭐⭐ |
-| Custom op registration | Wrap your kernel as a `torch.library.custom_op` so `torch.compile` can use it | ⭐⭐⭐ |
+| [C++ extension for elementwise add](projects/30-cpp-extension-for-elementwise-add/README.md) | Write `add_cuda` as a C++ extension, register it, call from Python | ⭐⭐ |
+| [Triton softmax](projects/31-triton-softmax/README.md) | Implement softmax in Triton, compare against `F.softmax` on a 4096-wide tensor | ⭐⭐⭐ |
+| [Triton matmul](projects/32-triton-matmul/README.md) | Tile-based matmul in Triton; aim for >50% of cuBLAS throughput | ⭐⭐⭐⭐ |
+| [Fused MLP](projects/33-fused-mlp/README.md) | One Triton kernel: matmul → bias → gelu → matmul; compare against unfused | ⭐⭐⭐⭐ |
+| [Mini FlashAttention](projects/34-mini-flashattention/README.md) | Tiled, online-softmax attention kernel; verify numerical match with eager attention | ⭐⭐⭐⭐⭐ |
+| [Custom op registration](projects/35-custom-op-registration/README.md) | Wrap your kernel as a `torch.library.custom_op` so `torch.compile` can use it | ⭐⭐⭐ |
 
 ### Sample Code: A Triton Vector Add
 
@@ -568,12 +568,12 @@ You have hundreds of GPUs across nodes               → 3D parallelism (Megatro
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Two-GPU DDP | Train a ResNet on 2 GPUs with `torchrun`, observe near-linear speedup | ⭐⭐ |
-| Implement gradient AllReduce | From scratch with `torch.distributed.all_reduce`, verify it matches DDP | ⭐⭐⭐ |
-| FSDP a transformer | Train a 1B-parameter LLM with FSDP, verify it works on hardware that can't fit it under DDP | ⭐⭐⭐⭐ |
-| Tensor parallel attention | Split a multi-head attention layer column-wise across 2 GPUs (Megatron-style) | ⭐⭐⭐⭐ |
-| Debug a hang | Intentionally introduce a rank-imbalanced call, watch it hang, fix it; use `TORCH_NCCL_BLOCKING_WAIT=1` and `NCCL_DEBUG=INFO` | ⭐⭐⭐ |
-| Multi-node setup | Set up a 2-node cluster (cloud or two boxes on a LAN), run a DDP job that crosses node boundaries | ⭐⭐⭐⭐ |
+| [Two-GPU DDP](projects/36-two-gpu-ddp/README.md) | Train a ResNet on 2 GPUs with `torchrun`, observe near-linear speedup | ⭐⭐ |
+| [Implement gradient AllReduce](projects/37-implement-gradient-allreduce/README.md) | From scratch with `torch.distributed.all_reduce`, verify it matches DDP | ⭐⭐⭐ |
+| [FSDP a transformer](projects/38-fsdp-a-transformer/README.md) | Train a 1B-parameter LLM with FSDP, verify it works on hardware that can't fit it under DDP | ⭐⭐⭐⭐ |
+| [Tensor parallel attention](projects/39-tensor-parallel-attention/README.md) | Split a multi-head attention layer column-wise across 2 GPUs (Megatron-style) | ⭐⭐⭐⭐ |
+| [Debug a hang](projects/40-debug-a-hang/README.md) | Intentionally introduce a rank-imbalanced call, watch it hang, fix it; use `TORCH_NCCL_BLOCKING_WAIT=1` and `NCCL_DEBUG=INFO` | ⭐⭐⭐ |
+| [Multi-node setup](projects/41-multi-node-setup/README.md) | Set up a 2-node cluster (cloud or two boxes on a LAN), run a DDP job that crosses node boundaries | ⭐⭐⭐⭐ |
 
 ### Sample Code: A Minimal DDP Script
 
@@ -640,12 +640,12 @@ Training is half the job. The other half is shipping the model somewhere it can 
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Export to ONNX | Export a CNN to ONNX, run it with `onnxruntime`, verify numerical match with PyTorch | ⭐⭐ |
-| Mobile deployment | Use ExecuTorch to run a small model on an Android device | ⭐⭐⭐⭐ |
-| Dynamic quantization | Quantize an LLM to int8 with dynamic quantization, measure speedup and quality loss | ⭐⭐⭐ |
-| Static quantization (PTQ) | Calibrate static int8 quantization on a CNN, compare to dynamic | ⭐⭐⭐ |
-| Build a Triton server | Wrap a model in NVIDIA Triton Inference Server, query it over HTTP | ⭐⭐⭐ |
-| Latency profiling | Measure p50/p95/p99 latency for batch sizes 1, 8, 32 on the same model | ⭐⭐ |
+| [Export to ONNX](projects/42-export-to-onnx/README.md) | Export a CNN to ONNX, run it with `onnxruntime`, verify numerical match with PyTorch | ⭐⭐ |
+| [Mobile deployment](projects/43-mobile-deployment/README.md) | Use ExecuTorch to run a small model on an Android device | ⭐⭐⭐⭐ |
+| [Dynamic quantization](projects/44-dynamic-quantization/README.md) | Quantize an LLM to int8 with dynamic quantization, measure speedup and quality loss | ⭐⭐⭐ |
+| [Static quantization (PTQ)](projects/45-static-quantization-ptq/README.md) | Calibrate static int8 quantization on a CNN, compare to dynamic | ⭐⭐⭐ |
+| [Build a Triton server](projects/46-build-a-triton-server/README.md) | Wrap a model in NVIDIA Triton Inference Server, query it over HTTP | ⭐⭐⭐ |
+| [Latency profiling](projects/47-latency-profiling/README.md) | Measure p50/p95/p99 latency for batch sizes 1, 8, 32 on the same model | ⭐⭐ |
 
 ### Sample Code: Export + ONNX Inference
 
@@ -711,11 +711,11 @@ When things go wrong in PyTorch, the error messages are sometimes a paragraph lo
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| NaN forensics | Take a model that NaNs; use anomaly mode to find the layer; explain why | ⭐⭐⭐ |
-| Memory leak hunt | Write a training loop with a subtle leak; find it with memory snapshots | ⭐⭐⭐ |
-| Determinism audit | Make a training run bit-exact reproducible; document every flag needed | ⭐⭐⭐ |
-| Hang diagnosis | Intentionally hang a 2-rank DDP job; diagnose with NCCL_DEBUG | ⭐⭐⭐ |
-| Eager vs compile diff | Find a case where eager and compiled outputs differ; narrow it to a single op | ⭐⭐⭐⭐ |
+| [NaN forensics](projects/48-nan-forensics/README.md) | Take a model that NaNs; use anomaly mode to find the layer; explain why | ⭐⭐⭐ |
+| [Memory leak hunt](projects/49-memory-leak-hunt/README.md) | Write a training loop with a subtle leak; find it with memory snapshots | ⭐⭐⭐ |
+| [Determinism audit](projects/50-determinism-audit/README.md) | Make a training run bit-exact reproducible; document every flag needed | ⭐⭐⭐ |
+| [Hang diagnosis](projects/51-hang-diagnosis/README.md) | Intentionally hang a 2-rank DDP job; diagnose with NCCL_DEBUG | ⭐⭐⭐ |
+| [Eager vs compile diff](projects/52-eager-vs-compile-diff/README.md) | Find a case where eager and compiled outputs differ; narrow it to a single op | ⭐⭐⭐⭐ |
 
 ### Key Insight
 
@@ -747,11 +747,11 @@ The final unlock. PyTorch's source code is large but well-organized. Once you ca
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Trace one op end to end | Pick `torch.add`; trace from Python call → dispatcher → CPU kernel | ⭐⭐⭐⭐ |
-| Read `native_functions.yaml` | Find five ops you use daily; understand their dispatch entries | ⭐⭐⭐ |
-| Build PyTorch from source | At least once, to demystify it | ⭐⭐⭐⭐ |
-| Patch and rebuild | Add a `printf` to a CUDA kernel, rebuild, see your patch run | ⭐⭐⭐⭐ |
-| Fix a "good first issue" | Pick one from the PyTorch GitHub issue tracker | ⭐⭐⭐⭐⭐ |
+| [Trace one op end to end](projects/53-trace-one-op-end-to-end/README.md) | Pick `torch.add`; trace from Python call → dispatcher → CPU kernel | ⭐⭐⭐⭐ |
+| [Read `native_functions.yaml`](projects/54-read-native-functions-yaml/README.md) | Find five ops you use daily; understand their dispatch entries | ⭐⭐⭐ |
+| [Build PyTorch from source](projects/55-build-pytorch-from-source/README.md) | At least once, to demystify it | ⭐⭐⭐⭐ |
+| [Patch and rebuild](projects/56-patch-and-rebuild/README.md) | Add a `printf` to a CUDA kernel, rebuild, see your patch run | ⭐⭐⭐⭐ |
+| [Fix a "good first issue"](projects/57-fix-a-good-first-issue/README.md) | Pick one from the PyTorch GitHub issue tracker | ⭐⭐⭐⭐⭐ |
 
 ### Key Insight
 

@@ -49,6 +49,12 @@ A collective op that sums tensors across all ranks and gives every rank the resu
 ### AMP {#amp}
 Automatic Mixed Precision — running operations in 16-bit floats ([float16](/shared/glossary/#float16) or [bfloat16](/shared/glossary/#bfloat16)) where it is safe, to save memory and speed up training while keeping a [float32](/shared/glossary/#float32) copy of the weights.
 
+### Anomaly detection {#anomaly-detection}
+A debugging mode (`torch.autograd.set_detect_anomaly(True)`) that makes [autograd](/shared/glossary/#autograd) check each operation and raise an error at the exact line that first produces a [NaN](/shared/glossary/#nan) or infinite [gradient](/shared/glossary/#gradients).
+
+### AOTInductor {#aotinductor}
+Ahead-of-Time Inductor — a deployment path built on [`torch.export`](/shared/glossary/#torchexport) that compiles a captured model graph into a standalone shared library (`.so`) ahead of time, enabling C++-only inference without a Python runtime.
+
 ### AnyRes {#anyres}
 Dynamic-resolution input handling (tile images at native aspect ratio)
 
@@ -59,16 +65,19 @@ Square fiducial marker with a known code; widely used for pose ground truth
 The C++ tensor library underneath PyTorch's Python frontend
 
 ### Attention {#attention}
-The operation `softmax(QKᵀ/√d) V` — content-addressable token mixing; the core of every transformer
+The operation `softmax(QKᵀ/√d) V` — [content-addressable token mixing](/shared/glossary/#content-addressable-token-mixing); the core of every [transformer](/shared/glossary/#transformer)
 
 ### autograd {#autograd}
-The reverse-mode automatic differentiation engine
+The [reverse-mode](/shared/glossary/#reverse-mode) automatic differentiation engine
 
 ### AWQ {#awq}
 Activation-aware Weight Quantization — preserve weights important to large activations
 
 ### Backward pass {#backward-pass}
 The process of traversing the computation graph in reverse to compute gradients using the chain rule.
+
+### Batching {#batching}
+Grouping multiple inference requests together into a single forward pass so the GPU processes them in parallel, increasing [throughput](/shared/glossary/#throughput) at a small cost to [latency](/shared/glossary/#latency). Production servers like [Triton Inference Server](/shared/glossary/#triton-inference-server) perform batching automatically.
 
 ### BC {#bc}
 Behavior Cloning — supervised imitation of demonstrator actions
@@ -85,6 +94,9 @@ The recursive consistency condition `V(s) = E[r + γV(s')]`
 ### Bias correction {#bias-correction}
 An adjustment applied in the Adam family of optimizers to counteract the zero-initialization of moment estimates; without it, early steps would be artificially small
 
+### Biases {#biases}
+The additive [parameter](/shared/glossary/#parameters) vectors in a linear layer (the `b` in `y = xW + b`). Each output neuron has one bias value, which shifts the result independently of the input.
+
 ### Bootstrapping {#bootstrapping}
 Using a current estimate (e.g., `V(s')`) in the target instead of a full return
 
@@ -97,11 +109,17 @@ Standard likelihood metric for image models; `-log₂ p(x) / D`
 ### BPE {#bpe}
 Byte-Pair Encoding — subword tokenization by greedy frequent-pair merges
 
+### C++ extension {#c-extension}
+A custom operation written in C++ (optionally with CUDA), compiled and loaded so it can be called from Python like a built-in PyTorch op.
+
 ### C-space {#c-space}
 Configuration space — the abstract space of joint configurations
 
 ### c10 {#c10}
 PyTorch's core C++ library (the "core ten[sor]" library)
+
+### Calibration {#calibration}
+Running a few representative batches of data through a model to measure the typical range of its [activations](/shared/glossary/#activations), so that static [quantization](/shared/glossary/#quantization) can pick fixed [int8](/shared/glossary/#int8) scales.
 
 ### CBF {#cbf}
 Control Barrier Function — runtime safety filter via a constraint on `ḣ`
@@ -127,14 +145,26 @@ Splitting long prompts across multiple iterations to interleave with decode step
 ### CLIP {#clip}
 Contrastive Language-Image Pretraining — paired text-image dual encoder
 
+### CNN {#cnn}
+Convolutional Neural Network — a neural network built mainly from convolution layers; the standard architecture for image tasks.
+
 ### Collate function {#collate-function}
 The function a [DataLoader](/shared/glossary/#dataloader) uses to combine a list of individual samples into one batched tensor; a custom one can pad variable-length data.
+
+### Collective operation {#collective-operation}
+A communication step that all processes ([ranks](/shared/glossary/#rank)) in a distributed job perform together — such as [AllReduce](/shared/glossary/#allreduce); if one rank skips it, the others wait forever.
 
 ### Collision mesh {#collision-mesh}
 Simplified geometry used for collision tests, distinct from visual mesh
 
+### Column-wise partitioning {#column-wise-partitioning}
+Splitting a weight matrix along its column (output) dimension so that each GPU holds a vertical slice and computes part of the output independently — the standard first step in [Megatron](/shared/glossary/#megatron)-style [tensor parallelism](/shared/glossary/#tensor-parallelism-tp).
+
 ### Consistency model {#consistency-model}
 A diffusion-derived model that samples in 1–4 steps via consistency distillation
+
+### Content-addressable token mixing {#content-addressable-token-mixing}
+The routing and retrieval of information between tokens based on their query-key similarity (as in [attention](/shared/glossary/#attention)) rather than their positions
 
 ### Context window {#context-window}
 The maximum number of tokens the model can attend over in one forward pass
@@ -154,8 +184,14 @@ Conservative Q-Learning — offline RL with a pessimistic Q penalty
 ### Cross-attention {#cross-attention}
 Attention where queries come from one modality and keys/values from another
 
+### cuBLAS {#cublas}
+NVIDIA's optimized library of dense linear-algebra [kernels](/shared/glossary/#kernel); PyTorch calls it for matrix multiplication on [CUDA](/shared/glossary/#cuda).
+
 ### CUDA {#cuda}
 NVIDIA's GPU compute backend; tensors on the `cuda` device run their kernels here
+
+### Custom op {#custom-op}
+A user-defined operation registered with PyTorch (e.g. via `torch.library.custom_op`) so it behaves like a built-in — including working with [`torch.compile`](/shared/glossary/#torchcompile).
 
 ### CUTLASS {#cutlass}
 NVIDIA's open template library for matmul kernels
@@ -220,6 +256,9 @@ A tensor's element data type — e.g. `float32`, `float16`, `bfloat16`, `int8`, 
 ### Dynamic computation graph {#dynamic-computation-graph}
 A graph of operations built on-the-fly as code executes, representing the forward pass used for autograd.
 
+### Dynamic quantization {#dynamic-quantization}
+A [quantization](/shared/glossary/#quantization) method that stores [weights](/shared/glossary/#weights) as [int8](/shared/glossary/#int8) ahead of time but computes each layer's [activation](/shared/glossary/#activations) scale at runtime, just before the layer runs.
+
 ### Eager mode {#eager-mode}
 PyTorch's default execution, where each operation runs immediately as its Python line is reached — flexible and easy to debug, but without the cross-operation optimizations a compiler can apply.
 
@@ -235,11 +274,20 @@ Extended Kalman Filter — Kalman filter linearized about the current estimate
 ### ELBO {#elbo}
 Evidence Lower Bound — the variational objective trained by VAEs
 
+### Elementwise operation {#elementwise-operation}
+An operation applied independently to each element of a tensor (e.g. add, multiply, ReLU), where output position `i` depends only on input position `i`.
+
 ### EMA weights {#ema-weights}
 Exponential moving average of model weights; samples better than the live weights
 
+### ExecuTorch {#executorch}
+PyTorch's lightweight runtime for running models on mobile and edge devices, built on the graph captured by [`torch.export`](/shared/glossary/#torchexport).
+
 ### Expert parallelism (EP) {#expert-parallelism-ep}
 For MoE models, distributing experts across GPUs with all-to-all token routing
+
+### FFN {#ffn}
+Feed-Forward Network — a position-wise neural network block (often referred to as an [MLP](/shared/glossary/#mlp)) in a [transformer](/shared/glossary/#transformer) that processes each token independently.
 
 ### F/T sensor {#ft-sensor}
 Force/Torque sensor — six-axis force and moment at a wrist or fingertip
@@ -259,8 +307,14 @@ IO-aware attention kernel that avoids materializing the T×T score matrix in HBM
 ### float32 {#float32}
 32-bit floating-point format (`fp32`); the standard default precision for PyTorch tensors — wide enough range and enough precision for most training and inference tasks
 
+### FLOPs {#flops}
+Floating-Point Operations — a measure of computational complexity representing the number of individual arithmetic operations (additions or multiplications) performed.
+
 ### Flow matching {#flow-matching}
 Training a velocity field that transports noise to data via an ODE; modern alternative to DDPM
+
+### Forensics {#forensics}
+Working backward from a training failure to the operation that first caused it, instead of chasing the visible symptom. In PyTorch this means turning on [autograd](/shared/glossary/#autograd) [anomaly detection](/shared/glossary/#anomaly-detection) to halt at the first [NaN](/shared/glossary/#nan) or bad [gradient](/shared/glossary/#gradients).
 
 ### Forward hook {#forward-hook}
 A callback registered on an `nn.Module` that PyTorch calls automatically after the module's forward pass, receiving the input and output tensors; used for capturing activations and debugging
@@ -285,6 +339,12 @@ Generalized Advantage Estimation — TD(λ) for advantages
 
 ### GANs (Generative Adversarial Networks) {#gans}
 A class of generative models in which a generator network and a discriminator network are trained adversarially. The generator learns to produce realistic samples to fool the discriminator, which learns to distinguish real from generated data.
+
+### Gated {#gated}
+An operation where one path of a neural network modulates the information flow in another path via element-wise multiplication (e.g. in a [SwiGLU](/shared/glossary/#swiglu) block).
+
+### GELU {#gelu}
+Gaussian Error Linear Unit — a smooth activation function widely used in transformer [MLPs](/shared/glossary/#mlp).
 
 ### GPTQ {#gptq}
 Hessian-based per-row PTQ minimizing layer-wise reconstruction error
@@ -319,6 +379,9 @@ Factor-graph SLAM library; the standard back-end for many modern systems
 ### HBM {#hbm}
 High-Bandwidth Memory — stacked DRAM on a modern GPU; usually the bandwidth bottleneck
 
+### Heads (attention) {#heads}
+The independent, parallel [attention](/shared/glossary/#attention) sub-computations in multi-head attention. Each head operates on its own learned projections of queries, keys, and values, allowing the model to attend to different representation subspaces simultaneously.
+
 ### Holonomic {#holonomic}
 A vehicle whose instantaneous motion can be any direction (mecanum, omni)
 
@@ -342,6 +405,9 @@ High-speed network with RDMA; standard for AI clusters
 
 ### InfoNCE {#infonce}
 The contrastive loss used by CLIP; softmax over a similarity matrix
+
+### int8 {#int8}
+8-bit integer format; storing [weights](/shared/glossary/#weights) or [activations](/shared/glossary/#activations) as int8 uses a quarter of the memory of [float32](/shared/glossary/#float32) and can run faster, at some cost in precision.
 
 ### IQL {#iql}
 Implicit Q-Learning — offline RL that never queries `Q` at OOD actions
@@ -373,6 +439,9 @@ Cached keys and values per past token per layer; the working set of the decoder
 ### L2 regularization {#l2-regularization}
 A regularization technique that adds a penalty proportional to the squared magnitude of model weights to the loss function, encouraging smaller weights and reducing overfitting. In standard adaptive optimizers such as [Adam](/shared/glossary/#adam), this penalty is folded into the gradient and scaled by the adaptive learning rate, which is why [AdamW](/shared/glossary/#adamw) uses [decoupled](/shared/glossary/#decoupled) weight decay instead.
 
+### Latency {#latency}
+The time it takes to complete a single request, from input to output; distinct from [throughput](/shared/glossary/#throughput), which counts how many requests finish per second.
+
 ### Latent video {#latent-video}
 Compressed (T', H', W', C) tensor produced by a 3D VAE
 
@@ -385,11 +454,17 @@ Latent Diffusion Model — diffusion in the latent space of a VAE (i.e., Stable 
 ### LiDAR {#lidar}
 Light Detection And Ranging — laser range scanner
 
+### LLM {#llm}
+Large Language Model — a [transformer](/shared/glossary/#transformer) trained on large amounts of text to predict and generate language.
+
 ### LoRA {#lora}
 Low-Rank Adaptation — fine-tune by adding small low-rank matrices, freeze the base
 
 ### Loss function {#loss-function}
 A mathematical function that measures the difference between a model's prediction and the actual target. The goal of training is to minimize this value using [gradients](/shared/glossary/#gradients).
+
+### Loss value {#loss-value}
+The single scalar number produced by evaluating the [loss function](/shared/glossary/#loss-function) on a model's predictions. [autograd](/shared/glossary/#autograd)'s [backward pass](/shared/glossary/#backward-pass) computes [gradients](/shared/glossary/#gradients) of this one scalar with respect to every [parameter](/shared/glossary/#parameters), which is what makes [reverse-mode](/shared/glossary/#reverse-mode) differentiation efficient.
 
 ### Lorax / S-LoRA {#lorax--s-lora}
 Multi-LoRA serving engines; one base model + many adapters in HBM
@@ -403,6 +478,9 @@ The strongest open recipe for discrete video tokenization
 ### Manipulability {#manipulability}
 Scalar measure of how "easy" motion is from a given configuration (e.g. `sqrt(det(JJᵀ))`)
 
+### matmul {#matmul}
+Matrix multiplication — the dominant compute operation in neural networks; written `A @ B` in PyTorch.
+
 ### MDP {#mdp}
 Markov Decision Process — the tuple `(S, A, P, R, γ)`
 
@@ -414,6 +492,12 @@ An unintended increase in memory usage over time, often caused in PyTorch by hol
 
 ### Memory mapping {#memory-mapping}
 Accessing a file on disk as if it were an in-memory array, reading slices on demand without loading the whole file into RAM (e.g. `numpy.memmap`).
+
+### Memory snapshot {#memory-snapshot}
+A recording of how much GPU memory is allocated at one moment; comparing snapshots taken across training steps reveals a steadily growing [memory leak](/shared/glossary/#memory-leak).
+
+### Megatron {#megatron}
+NVIDIA's approach to [tensor parallelism](/shared/glossary/#tensor-parallelism-tp) that splits [attention](/shared/glossary/#attention) and [MLP](/shared/glossary/#mlp) layers [column-wise](/shared/glossary/#column-wise-partitioning) and row-wise across GPUs with carefully placed [AllReduce](/shared/glossary/#allreduce) collectives, allowing efficient intra-layer parallelism.
 
 ### Micrograd {#micrograd}
 A tiny, educational autograd engine implemented in basic Python by Andrej Karpathy to illustrate how reverse-mode differentiation works.
@@ -469,6 +553,9 @@ NVIDIA Collective Communications Library — does AllReduce etc. on NVIDIA GPUs
 ### nn.Module {#nnmodule}
 PyTorch's base class for all neural network components; acts as a registry that automatically tracks sub-modules, parameters, and buffers assigned in `__init__`
 
+### Node (distributed) {#node-distributed}
+One physical machine (server) in a distributed job, usually holding several GPUs; multi-node training spreads work across several of them over a network.
+
 ### non_blocking {#non_blocking}
 The `non_blocking=True` flag on `.to()` / `.cuda()` that lets a host→device copy run asynchronously from pinned memory
 
@@ -487,6 +574,15 @@ The starting index into the underlying storage where a tensor's data begins (`.s
 ### OMPL {#ompl}
 Open Motion Planning Library — sampling-based planners
 
+### Online softmax {#online-softmax}
+An incremental method for computing [softmax](/shared/glossary/#softmax) that maintains running maximum and sum statistics, enabling single-pass computation over tiled inputs without materializing the full exponent sum beforehand.
+
+### ONNX {#onnx}
+Open Neural Network Exchange — a framework-neutral file format that stores a model as a graph of operations, so it can run outside the framework that trained it.
+
+### ONNX Runtime {#onnx-runtime}
+A fast, cross-platform engine that runs models saved in the [ONNX](/shared/glossary/#onnx) format, without needing the original framework like PyTorch.
+
 ### On-policy {#on-policy}
 The data comes from the same policy being optimized (PPO, REINFORCE)
 
@@ -498,6 +594,9 @@ The extra per-parameter values an [optimizer](/shared/glossary/#optimizer) store
 
 ### Padding {#padding}
 Filling shorter sequences with a placeholder value so that every sample in a batch has the same length.
+
+### Parameters {#parameters}
+The learnable [tensors](/shared/glossary/#tensor) inside a model (such as [weights](/shared/glossary/#weights) and [biases](/shared/glossary/#biases)) that are updated by the [optimizer](/shared/glossary/#optimizer) during training. In PyTorch, they are instances of `nn.Parameter` and are automatically registered when assigned to an [`nn.Module`](/shared/glossary/#nnmodule).
 
 ### PagedAttention {#pagedattention}
 KV cache managed as fixed-size physical blocks with per-request block tables
@@ -568,6 +667,9 @@ sglang's KV cache organized as a radix tree keyed on prompt prefixes for automat
 ### RAG {#rag}
 Retrieval-Augmented Generation — fetch documents, prepend to prompt, then generate
 
+### rank {#rank}
+The unique integer ID of a process in a distributed job. `RANK` is the global ID across all machines; `LOCAL_RANK` is the ID within one machine; `WORLD_SIZE` is the total number of processes.
+
 ### Rectified flow {#rectified-flow}
 A flow-matching parameterization with straight-line trajectories; popular in 2024+ models
 
@@ -576,6 +678,9 @@ A flow-matching parameterization with straight-line trajectories; popular in 202
 
 ### reshape {#reshape}
 Returns a tensor with a new shape, copying only when a no-copy view isn't possible
+
+### reverse-mode {#reverse-mode}
+The order [autograd](/shared/glossary/#autograd) walks the computation graph when differentiating: the forward pass first, then a single [backward pass](/shared/glossary/#backward-pass) that propagates [gradients](/shared/glossary/#gradients) from the scalar output back to every input. It is the efficient choice when a model has many parameters but only one [loss value](/shared/glossary/#loss-value).
 
 ### Reward hacking {#reward-hacking}
 A policy that maximizes the reward signal without doing what was intended
@@ -622,6 +727,9 @@ Signed Distance Field — scalar field giving distance to nearest obstacle (nega
 ### SE(3) / SO(3) {#se3--so3}
 Special Euclidean / Orthogonal group — rigid-body motions / rotations in 3D
 
+### Seed {#seed}
+A fixed starting number for a random-number generator; setting the same seed makes random operations (shuffling, initialization, dropout) produce the identical sequence every run.
+
 ### SFT {#sft}
 Supervised Fine-Tuning — train on demonstration data with cross-entropy
 
@@ -649,11 +757,17 @@ Service Level Objective — a quantified commitment (e.g., P95 TTFT < 500 ms)
 ### SM {#sm}
 Streaming Multiprocessor; the GPU's "core"
 
+### softmax {#softmax}
+The function that turns a vector of scores into a probability distribution (each value in 0–1, summing to 1); the core of [attention](/shared/glossary/#attention) and classification heads.
+
 ### Speculative decoding {#speculative-decoding}
 Use a draft model to propose tokens; verify with the target in one parallel pass; accepted tokens are appended
 
 ### State dict {#state-dict}
 A Python `OrderedDict` that maps every parameter and buffer name to its tensor value; the standard format for saving, loading, and transplanting PyTorch model weights
+
+### Static quantization (PTQ) {#static-quantization-ptq}
+A [quantization](/shared/glossary/#quantization) method that converts both [weights](/shared/glossary/#weights) and [activations](/shared/glossary/#activations) to [int8](/shared/glossary/#int8) before serving, using a [calibration](/shared/glossary/#calibration) pass to fix the activation scales in advance.
 
 ### Storage {#storage}
 The 1-D buffer that a tensor is a view into
@@ -665,13 +779,16 @@ A technique used to bypass non-differentiable operations by passing gradients un
 The number of storage elements to step over for each dimension of a tensor
 
 ### SwiGLU {#swiglu}
-Gated [MLP](/shared/glossary/#mlp) activation `(xW) · σ(xV)` — the modern default FFN
+[Gated](/shared/glossary/#gated) [MLP](/shared/glossary/#mlp) activation `(xW) · σ(xV)` — the modern default [FFN](/shared/glossary/#ffn)
 
 ### Systolic array {#systolic-array}
 Data-flow matmul fabric used in TPUs
 
 ### T2V {#t2v}
 Text-to-Video
+
+### Tail latency {#tail-latency}
+The [latency](/shared/glossary/#latency) of the slowest requests (for example the p95 or p99 percentiles) rather than the median (p50); it is what users notice most.
 
 ### TCP {#tcp}
 Tool Center Point — the configurable point on a tool whose pose tracking controls
@@ -700,6 +817,9 @@ Tera (10¹²) floating-point operations per second
 ### Throughput {#throughput}
 How much work is completed per unit of time — for training, the number of examples processed per second.
 
+### Tiling {#tiling}
+Splitting a large computation into small blocks ("tiles") that fit in fast on-chip memory, so a [kernel](/shared/glossary/#kernel) reads slow memory fewer times.
+
 ### Token (visual/audio) {#token-visualaudio}
 Discrete code from a VQ-VAE or neural codec; lets transformers treat the modality like language
 
@@ -712,6 +832,12 @@ Time-Optimal Path Parameterization — time-parameterize a geometric path under 
 ### torch.compile {#torchcompile}
 The PyTorch 2.x API that traces a model into a graph and generates optimized, [fused kernels](/shared/glossary/#kernel-fusion), speeding up [eager mode](/shared/glossary/#eager-mode) code with a single call.
 
+### torch.export {#torchexport}
+The modern PyTorch API that captures a model into a standalone graph; the foundation for deployment paths like [ExecuTorch](/shared/glossary/#executorch) and [AOTInductor](/shared/glossary/#aotinductor).
+
+### torchrun {#torchrun}
+PyTorch's launcher command that starts one process per GPU and sets the `RANK`, `LOCAL_RANK`, and `WORLD_SIZE` environment variables those processes need to find each other.
+
 ### TorchScript {#torchscript}
 The legacy serialization/IR for PyTorch; superseded by `torch.export`
 
@@ -723,6 +849,9 @@ Swaps two dimensions by rewriting strides — never copies; the result is usuall
 
 ### Triton {#triton}
 A Python-flavored language for writing GPU kernels, developed by OpenAI
+
+### Triton Inference Server {#triton-inference-server}
+NVIDIA's production server for hosting models behind an HTTP/gRPC API, with [batching](/shared/glossary/#batching) and multi-model support; unrelated to the [Triton](/shared/glossary/#triton) kernel language despite the shared name.
 
 ### TTFT {#ttft}
 Time to first token — dominated by prefill plus queue wait
@@ -761,7 +890,7 @@ Visual-Inertial Odometry — fuse camera and IMU for high-rate ego-motion
 Vision-Language-Action model — transformer mapping image + instruction → action
 
 ### vLLM {#vllm}
-The reference open-source inference engine with PagedAttention and continuous batching
+The reference open-source inference engine with PagedAttention and continuous [batching](/shared/glossary/#batching)
 
 ### VLM {#vlm}
 Vision-Language Model — image (+ text) in, text out
@@ -786,6 +915,9 @@ A library that streams training data directly from sharded `.tar` archives, avoi
 
 ### Weight decay {#weight-decay}
 A regularization technique that shrinks model parameters toward zero at each update step, discouraging large weights and improving generalization
+
+### Weights {#weights}
+The learned [parameter](/shared/glossary/#parameters) matrices inside a neural network layer (e.g. the `W` in `y = xW + b`). During training, weights are updated by the [optimizer](/shared/glossary/#optimizer) to minimize the [loss function](/shared/glossary/#loss-function).
 
 ### Worker processes {#worker-processes}
 Background subprocesses that a [DataLoader](/shared/glossary/#dataloader) spawns to load and preprocess data in parallel with GPU computation.

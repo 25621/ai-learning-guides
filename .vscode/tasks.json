@@ -18,7 +18,7 @@
     {
       "label": "Docusaurus: Stop",
       "type": "shell",
-      "command": "pkill -f 'docusaurus start' || true",
+      "command": "pkill -f '[d]ocusaurus start' || true",
       "problemMatcher": [],
       "presentation": {
         "panel": "dedicated",
@@ -41,7 +41,31 @@
         "background": {
           "activeOnStart": true,
           "beginsPattern": ".*Starting.*",
-          "endsPattern": ".*(Server running|Local:).*"
+          "endsPattern": ".*(Server running|Local:|Docusaurus website is running at:).*"
+        }
+      },
+      "presentation": {
+        "panel": "dedicated",
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "Docusaurus: Restart",
+      "type": "shell",
+      "command": "pkill -f '[d]ocusaurus start' || true && npm run start",
+      "options": {
+        "cwd": "${workspaceFolder}/docusaurus-site"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "docusaurus",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*Starting.*",
+          "endsPattern": ".*(Server running|Local:|Docusaurus website is running at:).*"
         }
       },
       "presentation": {
@@ -53,9 +77,8 @@
       "label": "Docusaurus: Build and Restart",
       "dependsOrder": "sequence",
       "dependsOn": [
-        "Docusaurus: Stop",
         "Docusaurus: Build",
-        "Docusaurus: Start"
+        "Docusaurus: Restart"
       ],
       "group": {
         "kind": "build",
