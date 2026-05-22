@@ -139,6 +139,9 @@ A communication step that all processes ([ranks](/shared/glossary/#rank)) in a d
 ### Collision mesh {#collision-mesh}
 Simplified geometry used for collision tests, distinct from visual mesh
 
+### Column-wise partitioning {#column-wise-partitioning}
+Splitting a weight matrix along its column (output) dimension so that each GPU holds a vertical slice and computes part of the output independently — the standard first step in [Megatron](/shared/glossary/#megatron)-style [tensor parallelism](/shared/glossary/#tensor-parallelism-tp).
+
 ### Consistency model {#consistency-model}
 A diffusion-derived model that samples in 1–4 steps via consistency distillation
 
@@ -349,6 +352,9 @@ Factor-graph SLAM library; the standard back-end for many modern systems
 ### HBM {#hbm}
 High-Bandwidth Memory — stacked DRAM on a modern GPU; usually the bandwidth bottleneck
 
+### Heads (attention) {#heads}
+The independent, parallel [attention](/shared/glossary/#attention) sub-computations in multi-head attention. Each head operates on its own learned projections of queries, keys, and values, allowing the model to attend to different representation subspaces simultaneously.
+
 ### Holonomic {#holonomic}
 A vehicle whose instantaneous motion can be any direction (mecanum, omni)
 
@@ -448,6 +454,9 @@ An unintended increase in memory usage over time, often caused in PyTorch by hol
 ### Memory mapping {#memory-mapping}
 Accessing a file on disk as if it were an in-memory array, reading slices on demand without loading the whole file into RAM (e.g. `numpy.memmap`).
 
+### Megatron {#megatron}
+NVIDIA's approach to [tensor parallelism](/shared/glossary/#tensor-parallelism-tp) that splits [attention](/shared/glossary/#attention) and [MLP](/shared/glossary/#mlp) layers [column-wise](/shared/glossary/#column-wise-partitioning) and row-wise across GPUs with carefully placed [AllReduce](/shared/glossary/#allreduce) collectives, allowing efficient intra-layer parallelism.
+
 ### Micrograd {#micrograd}
 A tiny, educational autograd engine implemented in basic Python by Andrej Karpathy to illustrate how reverse-mode differentiation works.
 
@@ -537,6 +546,9 @@ The extra per-parameter values an [optimizer](/shared/glossary/#optimizer) store
 
 ### Padding {#padding}
 Filling shorter sequences with a placeholder value so that every sample in a batch has the same length.
+
+### Parameters {#parameters}
+The learnable [tensors](/shared/glossary/#tensor) inside a model (such as [weights](/shared/glossary/#weights) and biases) that are updated by the [optimizer](/shared/glossary/#optimizer) during training. In PyTorch, they are instances of `nn.Parameter` and are automatically registered when assigned to an [`nn.Module`](/shared/glossary/#nnmodule).
 
 ### PagedAttention {#pagedattention}
 KV cache managed as fixed-size physical blocks with per-request block tables
@@ -837,6 +849,9 @@ A library that streams training data directly from sharded `.tar` archives, avoi
 
 ### Weight decay {#weight-decay}
 A regularization technique that shrinks model parameters toward zero at each update step, discouraging large weights and improving generalization
+
+### Weights {#weights}
+The learned [parameter](/shared/glossary/#parameters) matrices inside a neural network layer (e.g. the `W` in `y = xW + b`). During training, weights are updated by the [optimizer](/shared/glossary/#optimizer) to minimize the [loss function](/shared/glossary/#loss-function).
 
 ### Worker processes {#worker-processes}
 Background subprocesses that a [DataLoader](/shared/glossary/#dataloader) spawns to load and preprocess data in parallel with GPU computation.

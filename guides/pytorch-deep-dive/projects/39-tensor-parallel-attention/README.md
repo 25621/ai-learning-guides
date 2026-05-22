@@ -8,7 +8,7 @@
 
 ## Key Insight
 
-[Tensor parallelism](/shared/glossary/#tensor-parallelism-tp) splits the weights of a single layer across GPUs, instead of replicating the whole model. Splitting a multi-head [attention](/shared/glossary/#attention) layer column-wise across two GPUs (the Megatron style) lets each GPU compute part of the heads and then combine the results.
+[Tensor parallelism](/shared/glossary/#tensor-parallelism-tp) splits the [weights](/shared/glossary/#weights) of a single layer across GPUs, instead of replicating the whole model. Splitting a multi-head [attention](/shared/glossary/#attention) layer [column-wise](/shared/glossary/#column-wise-partitioning) across two GPUs (the [Megatron](/shared/glossary/#megatron) style) lets each GPU compute part of the [heads](/shared/glossary/#heads) and then combine the results.
 
 ## Why This Matters
 

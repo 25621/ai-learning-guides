@@ -8,7 +8,7 @@
 
 ## Key Insight
 
-[FSDP](/shared/glossary/#fsdp) splits a model's parameters, [gradients](/shared/glossary/#gradients), and [optimizer state](/shared/glossary/#optimizer-state) into shards, one per GPU, and gathers each full layer only for the moment it is needed. This lets you train a [transformer](/shared/glossary/#transformer) that is far too large to fit on a single GPU under [DDP](/shared/glossary/#ddp).
+[FSDP](/shared/glossary/#fsdp) splits a model's [parameters](/shared/glossary/#parameters), [gradients](/shared/glossary/#gradients), and [optimizer state](/shared/glossary/#optimizer-state) into [shards](/shared/glossary/#sharding), one per GPU, and gathers each full layer only for the moment it is needed. This lets you train a [transformer](/shared/glossary/#transformer) that is far too large to fit on a single GPU under [DDP](/shared/glossary/#ddp).
 
 ## Why This Matters
 
