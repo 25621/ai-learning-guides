@@ -2,7 +2,7 @@
 
 ---
 
-> Teaching a model a new "alphabet" means adding tokens and growing its embedding table to match.
+> Teaching a model a new "alphabet" means adding tokens and growing its [embedding](/shared/glossary/#embedding) table to match.
 
 ---
 

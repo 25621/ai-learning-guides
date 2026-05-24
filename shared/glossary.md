@@ -283,6 +283,9 @@ An operation applied independently to each element of a tensor (e.g. add, multip
 ### EMA weights {#ema-weights}
 Exponential moving average of model weights; samples better than the live weights
 
+### Embedding {#embedding}
+A dense vector that represents a token (or other item) so the model can compute over it; each token ID maps to one row of the [embedding matrix](/shared/glossary/#embedding-matrix)
+
 ### Embedding matrix {#embedding-matrix}
 The lookup table `E ∈ ℝ^{V×d}` that turns each token ID into a dense vector by selecting its row; growing the [vocabulary](/shared/glossary/#vocabulary) means adding rows
 
