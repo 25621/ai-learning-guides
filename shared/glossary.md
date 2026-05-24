@@ -283,6 +283,9 @@ An operation applied independently to each element of a tensor (e.g. add, multip
 ### EMA weights {#ema-weights}
 Exponential moving average of model weights; samples better than the live weights
 
+### Embedding matrix {#embedding-matrix}
+The lookup table `E ∈ ℝ^{V×d}` that turns each token ID into a dense vector by selecting its row; growing the [vocabulary](/shared/glossary/#vocabulary) means adding rows
+
 ### ExecuTorch {#executorch}
 PyTorch's lightweight runtime for running models on mobile and edge devices, built on the graph captured by [`torch.export`](/shared/glossary/#torchexport).
 
@@ -763,6 +766,9 @@ Streaming Multiprocessor; the GPU's "core"
 ### softmax {#softmax}
 The function that turns a vector of scores into a probability distribution (each value in 0–1, summing to 1); the core of [attention](/shared/glossary/#attention) and classification heads.
 
+### Special tokens {#special-tokens}
+Reserved [vocabulary](/shared/glossary/#vocabulary) entries that mark structure rather than text — e.g. `<bos>`, `<eos>`, `<pad>`, and chat-boundary tokens like `<|im_start|>`
+
 ### Speculative decoding {#speculative-decoding}
 Use a draft model to propose tokens; verify with the target in one parallel pass; accepted tokens are appended
 
@@ -828,6 +834,9 @@ Discrete code from a VQ-VAE or neural codec; lets transformers treat the modalit
 
 ### Tokenizer {#tokenizer}
 The mapping from string to integer IDs; trained, frozen, part of the model contract
+
+### Tokens per byte {#tokens-per-byte}
+A measure of tokenizer efficiency: how many tokens it emits per byte of input text; higher means the same text costs more tokens
 
 ### TOPP {#topp}
 Time-Optimal Path Parameterization — time-parameterize a geometric path under bounds
@@ -897,6 +906,9 @@ The reference open-source inference engine with PagedAttention and continuous [b
 
 ### VLM {#vlm}
 Vision-Language Model — image (+ text) in, text out
+
+### Vocabulary {#vocabulary}
+The fixed set of tokens a [tokenizer](/shared/glossary/#tokenizer) can produce, each with an integer ID; its size trades tokens-per-document against [embedding matrix](/shared/glossary/#embedding-matrix) size
 
 ### VP / VE SDE {#vp--ve-sde}
 Variance-Preserving / Variance-Exploding — the two SDE families for diffusion

@@ -135,7 +135,24 @@ const sidebars = {
             },
           ],
         },
-        {type: 'doc', id: 'guides/llm/README', label: 'LLM'},
+        {
+          type: 'category',
+          label: 'LLM',
+          link: {type: 'doc', id: 'guides/llm/README'},
+          items: [
+            {
+              type: 'category',
+              label: 'Phase 1: Tokenization and Embeddings',
+              items: [
+                {type: 'doc', id: 'guides/llm/projects/train-a-bpe-from-scratch/README', label: 'Train a BPE from scratch'},
+                {type: 'doc', id: 'guides/llm/projects/tokenizer-compression-study/README', label: 'Tokenizer compression study'},
+                {type: 'doc', id: 'guides/llm/projects/numeral-tokenization-audit/README', label: 'Numeral tokenization audit'},
+                {type: 'doc', id: 'guides/llm/projects/chat-template-debugger/README', label: 'Chat-template debugger'},
+                {type: 'doc', id: 'guides/llm/projects/custom-vocab-extension/README', label: 'Custom vocab extension'},
+              ],
+            },
+          ],
+        },
         {type: 'doc', id: 'guides/image-generation/README', label: 'Image Generation'},
         {type: 'doc', id: 'guides/reinforcement-learning/README', label: 'Reinforcement Learning'},
         {type: 'doc', id: 'guides/video-generation/README', label: 'Video Generation'},

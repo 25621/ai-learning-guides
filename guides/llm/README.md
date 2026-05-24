@@ -125,11 +125,11 @@ the model silently underperforms.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Train a BPE from scratch | 1 MB of text, 5 000-token vocab; implement merge selection by hand; serialize and reload | ⭐⭐ |
-| Tokenizer compression study | Tokenize the same Wikipedia paragraph in English, French, Mandarin, Hindi, Bengali with `tiktoken`, Llama 3, and a Gemma tokenizer; plot tokens-per-byte | ⭐⭐ |
-| Numeral tokenization audit | For 1 000 integers from 0–10 000, count tokens per number across tokenizers; explain the digit-grouping decisions | ⭐⭐⭐ |
-| Chat-template debugger | Take a fine-tuned chat model, render the chat template by hand, byte-compare against `tokenizer.apply_chat_template`. Find one off-by-one whitespace bug | ⭐⭐⭐ |
-| Custom vocab extension | Add 256 new tokens (e.g. for chemical SMILES) to an existing tokenizer; resize embeddings; verify the model still generates valid English | ⭐⭐⭐⭐ |
+| [Train a BPE from scratch](projects/01-train-a-bpe-from-scratch/README.md) | 1 MB of text, 5 000-token vocab; implement merge selection by hand; serialize and reload | ⭐⭐ |
+| [Tokenizer compression study](projects/02-tokenizer-compression-study/README.md) | Tokenize the same Wikipedia paragraph in English, French, Mandarin, Hindi, Bengali with `tiktoken`, Llama 3, and a Gemma tokenizer; plot tokens-per-byte | ⭐⭐ |
+| [Numeral tokenization audit](projects/03-numeral-tokenization-audit/README.md) | For 1 000 integers from 0–10 000, count tokens per number across tokenizers; explain the digit-grouping decisions | ⭐⭐⭐ |
+| [Chat-template debugger](projects/04-chat-template-debugger/README.md) | Take a fine-tuned chat model, render the chat template by hand, byte-compare against `tokenizer.apply_chat_template`. Find one off-by-one whitespace bug | ⭐⭐⭐ |
+| [Custom vocab extension](projects/05-custom-vocab-extension/README.md) | Add 256 new tokens (e.g. for chemical SMILES) to an existing tokenizer; resize embeddings; verify the model still generates valid English | ⭐⭐⭐⭐ |
 
 ### Sample Code: A Minimal BPE
 
