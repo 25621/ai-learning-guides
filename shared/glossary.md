@@ -124,6 +124,9 @@ PyTorch's core C++ library (the "core ten[sor]" library)
 ### Calibration {#calibration}
 Running a few representative batches of data through a model to measure the typical range of its [activations](/shared/glossary/#activations), so that static [quantization](/shared/glossary/#quantization) can pick fixed [int8](/shared/glossary/#int8) scales.
 
+### Causal mask {#causal-mask}
+A mask applied to attention scores that hides future positions, so each token can attend only to itself and the tokens before it
+
 ### CBF {#cbf}
 Control Barrier Function — runtime safety filter via a constraint on `ḣ`
 
@@ -538,6 +541,9 @@ Model Predictive Control — re-solved finite-horizon optimization at each step
 ### MPS {#mps}
 Metal Performance Shaders — the GPU backend for Apple Silicon
 
+### MQA {#mqa}
+Multi-Query Attention — all query heads share a single key/value head; the most aggressive [KV-cache](/shared/glossary/#kv-cache) saver, at some quality cost
+
 ### MuJoCo {#mujoco}
 Open-source physics engine; the de facto manipulation/locomotion simulator
 
@@ -558,6 +564,9 @@ ROS 2 navigation stack
 
 ### NCCL {#nccl}
 NVIDIA Collective Communications Library — does AllReduce etc. on NVIDIA GPUs
+
+### Needle-in-a-haystack {#needle-in-a-haystack}
+A long-context test that hides one fact (the "needle") inside a long stretch of irrelevant text (the "haystack") and checks whether the model can find it
 
 ### nn.Module {#nnmodule}
 PyTorch's base class for all neural network components; acts as a registry that automatically tracks sub-modules, parameters, and buffers assigned in `__init__`
@@ -634,6 +643,9 @@ Fast rigid-body dynamics library (CRBA, RNEA, ABA)
 ### Plücker coordinates {#plücker-coordinates}
 6D representation of a camera ray; standard for camera-conditioning
 
+### Position interpolation {#position-interpolation}
+Extending a model's context length by linearly rescaling [RoPE](/shared/glossary/#rope) position indices so longer sequences fall within the trained range
+
 ### Posterior collapse {#posterior-collapse}
 VAE failure mode: encoder collapses to the prior; latent carries no information
 
@@ -687,6 +699,9 @@ A flow-matching parameterization with straight-line trajectories; popular in 202
 
 ### reshape {#reshape}
 Returns a tensor with a new shape, copying only when a no-copy view isn't possible
+
+### Residual connection {#residual-connection}
+A shortcut that adds a block's input to its output (`x + f(x)`), letting [gradients](/shared/glossary/#gradients) flow directly and making deep networks trainable
 
 ### reverse-mode {#reverse-mode}
 The order [autograd](/shared/glossary/#autograd) walks the computation graph when differentiating: the forward pass first, then a single [backward pass](/shared/glossary/#backward-pass) that propagates [gradients](/shared/glossary/#gradients) from the scalar output back to every input. It is the efficient choice when a model has many parameters but only one [loss value](/shared/glossary/#loss-value).
@@ -922,6 +937,9 @@ VQ-VAE trained with perceptual + adversarial losses; SD's VAE recipe descends fr
 ### VQ-VAE {#vq-vae}
 Vector-quantized VAE — discrete latent codes from a learned codebook
 
+### Warmup {#warmup}
+The opening phase of training where the learning rate ramps up from near zero to its peak, stabilizing the first noisy updates
+
 ### Warp {#warp}
 32 threads scheduled in lockstep on NVIDIA GPUs
 
@@ -945,6 +963,9 @@ Action-conditioned generative model of the world; a video model with actions
 
 ### XLA {#xla}
 Accelerated Linear Algebra — a compiler backend (e.g. for TPUs) used via `torch_xla`
+
+### YaRN {#yarn}
+A [RoPE](/shared/glossary/#rope) context-extension method that rescales rotation frequencies unevenly across dimensions to reach long contexts with minimal fine-tuning
 
 ### ZeRO {#zero}
 DeepSpeed's parameter/gradient/state sharding scheme — comparable to FSDP

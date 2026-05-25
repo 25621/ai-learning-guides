@@ -253,14 +253,14 @@ regardless of head dimension.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Single attention head | Implement scaled dot-product attention with a causal mask; verify against `F.scaled_dot_product_attention` | ⭐⭐ |
-| Multi-head attention | Add multi-head splitting, output projection, GQA option; verify equivalence to PyTorch's `nn.MultiheadAttention` | ⭐⭐⭐ |
-| nanoGPT reproduction | Type out Karpathy's nanoGPT from scratch; train on tiny Shakespeare; sample text | ⭐⭐⭐ |
-| Pre-norm vs post-norm | Train two 6-layer models, identical except for norm placement; observe training stability with and without warmup | ⭐⭐⭐ |
-| RoPE from scratch | Implement RoPE, including the half-rotation trick; test by checking that `<q, k>` depends only on relative position | ⭐⭐⭐⭐ |
-| GQA ablation | Train identical 100M models with MHA, GQA-4, MQA; measure KV-cache size and validation loss | ⭐⭐⭐⭐ |
-| Mini-MoE | Add an 8-expert top-2 MoE MLP to nanoGPT; verify routing balances; observe the loss curve | ⭐⭐⭐⭐⭐ |
-| Long-context extension | Take a 4k-context model and apply position interpolation or YaRN to extend to 16k; measure needle-in-a-haystack | ⭐⭐⭐⭐⭐ |
+| [Single attention head](projects/06-single-attention-head/README.md) | Implement scaled dot-product attention with a causal mask; verify against `F.scaled_dot_product_attention` | ⭐⭐ |
+| [Multi-head attention](projects/07-multi-head-attention/README.md) | Add multi-head splitting, output projection, GQA option; verify equivalence to PyTorch's `nn.MultiheadAttention` | ⭐⭐⭐ |
+| [nanoGPT reproduction](projects/08-nanogpt-reproduction/README.md) | Type out Karpathy's nanoGPT from scratch; train on tiny Shakespeare; sample text | ⭐⭐⭐ |
+| [Pre-norm vs post-norm](projects/09-pre-norm-vs-post-norm/README.md) | Train two 6-layer models, identical except for norm placement; observe training stability with and without warmup | ⭐⭐⭐ |
+| [RoPE from scratch](projects/10-rope-from-scratch/README.md) | Implement RoPE, including the half-rotation trick; test by checking that `<q, k>` depends only on relative position | ⭐⭐⭐⭐ |
+| [GQA ablation](projects/11-gqa-ablation/README.md) | Train identical 100M models with MHA, GQA-4, MQA; measure KV-cache size and validation loss | ⭐⭐⭐⭐ |
+| [Mini-MoE](projects/12-mini-moe/README.md) | Add an 8-expert top-2 MoE MLP to nanoGPT; verify routing balances; observe the loss curve | ⭐⭐⭐⭐⭐ |
+| [Long-context extension](projects/13-long-context-extension/README.md) | Take a 4k-context model and apply position interpolation or YaRN to extend to 16k; measure needle-in-a-haystack | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: Causal Multi-Head Self-Attention
 
