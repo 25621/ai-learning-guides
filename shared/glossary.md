@@ -334,6 +334,9 @@ A callback registered on an `nn.Module` that PyTorch calls automatically after t
 ### FP8 {#fp8}
 8-bit floating point (E4M3 / E5M2 on Hopper+); the modern default serving precision
 
+### F.scaled_dot_product_attention {#fscaled_dot_product_attention}
+PyTorch's built-in fused [attention](/shared/glossary/#attention) function (in `torch.nn.functional`) that computes `softmax(QKᵀ/√d)·V` in a single call, dispatching to an optimized [backend](/shared/glossary/#backend) such as [FlashAttention](/shared/glossary/#flashattention).
+
 ### FSDP {#fsdp}
 Fully Sharded Data Parallel — shard params, grads, and optimizer state across ranks
 
@@ -357,6 +360,9 @@ An operation where one path of a neural network modulates the information flow i
 
 ### GELU {#gelu}
 Gaussian Error Linear Unit — a smooth activation function widely used in transformer [MLPs](/shared/glossary/#mlp).
+
+### GLU {#glu}
+Gated Linear Unit — a layer whose output is the element-wise product of two linear projections, one of them passed through a [gating](/shared/glossary/#gated) non-linearity; [SwiGLU](/shared/glossary/#swiglu) is the variant that uses [Swish](/shared/glossary/#swish) as that non-linearity.
 
 ### GPTQ {#gptq}
 Hessian-based per-row PTQ minimizing layer-wise reconstruction error
@@ -515,7 +521,7 @@ NVIDIA's approach to [tensor parallelism](/shared/glossary/#tensor-parallelism-t
 A tiny, educational autograd engine implemented in basic Python by Andrej Karpathy to illustrate how reverse-mode differentiation works.
 
 ### MLP {#mlp}
-Multi-Layer Perceptron — a feedforward neural network of one or more fully-connected (linear) layers separated by non-linear activations. In transformer architectures, each block contains an attention sublayer followed by an MLP sublayer (often using [SwiGLU](/shared/glossary/#swiglu) activation).
+Multi-Layer Perceptron — a [feedforward neural network](/shared/glossary/#ffn) of one or more fully-connected (linear) layers separated by non-linear [activations](/shared/glossary/#activations). In [transformer](/shared/glossary/#transformer) architectures, each block contains an [attention](/shared/glossary/#attention) sublayer followed by an MLP sublayer (often using [SwiGLU](/shared/glossary/#swiglu) activation).
 
 ### MMDiT {#mmdit}
 Multi-Modal Diffusion Transformer — joint text+image attention layers, used in SD3 and Flux
@@ -742,6 +748,9 @@ Sparse Autoencoder — interpretability tool decomposing activations into monose
 ### Sampler {#sampler}
 The component that decides the order in which a [DataLoader](/shared/glossary/#dataloader) visits dataset examples (e.g. random, sequential, or class-weighted).
 
+### Sampling {#sampling}
+Drawing the next token from the model's predicted probability distribution instead of always taking the most likely one; temperature, top-k, and top-p control how random the choice is.
+
 ### Score {#score}
 `∇_x log p(x)` — diffusion training implicitly learns this
 
@@ -806,7 +815,10 @@ A technique used to bypass non-differentiable operations by passing gradients un
 The number of storage elements to step over for each dimension of a tensor
 
 ### SwiGLU {#swiglu}
-[Gated](/shared/glossary/#gated) [MLP](/shared/glossary/#mlp) activation `(xW) · σ(xV)` — the modern default [FFN](/shared/glossary/#ffn)
+[Gated](/shared/glossary/#gated) [MLP](/shared/glossary/#mlp) activation `(xW) · σ(xV)` — the modern default [FFN](/shared/glossary/#ffn); a [GLU](/shared/glossary/#glu) variant that uses [Swish](/shared/glossary/#swish) as its gating non-linearity
+
+### Swish {#swish}
+Activation function `x · σ(x)` (also called SiLU) — a smooth, non-monotonic alternative to ReLU; the gating non-linearity used inside [SwiGLU](/shared/glossary/#swiglu).
 
 ### Systolic array {#systolic-array}
 Data-flow matmul fabric used in TPUs
