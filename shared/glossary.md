@@ -13,6 +13,9 @@ Variational autoencoder that compresses video in time as well as space
 ### ABA {#aba}
 Articulated-Body Algorithm — `O(n)` forward dynamics for rigid-body chains
 
+### Ablation {#ablation}
+A controlled experiment that changes exactly one factor (a data step, a layer, a hyperparameter) while holding everything else fixed, to measure that factor's true effect.
+
 ### Activations {#activations}
 The intermediate tensor outputs produced by the layers of a neural network during the forward pass.
 
@@ -124,6 +127,9 @@ PyTorch's core C++ library (the "core ten[sor]" library)
 ### Calibration {#calibration}
 Running a few representative batches of data through a model to measure the typical range of its [activations](/shared/glossary/#activations), so that static [quantization](/shared/glossary/#quantization) can pick fixed [int8](/shared/glossary/#int8) scales.
 
+### Catastrophic forgetting {#catastrophic-forgetting}
+When training a model on new data erases skills it had already learned, because the new [gradients](/shared/glossary/#gradients) overwrite the old [weights](/shared/glossary/#weights).
+
 ### Causal mask {#causal-mask}
 A mask applied to attention scores that hides future positions, so each token can attend only to itself and the tokens before it
 
@@ -141,6 +147,9 @@ A calculus principle used to compute the derivative of a composite function by m
 
 ### Chat template {#chat-template}
 The structured format (system/user/assistant) the model is fine-tuned on
+
+### Checkpoint {#checkpoint}
+A saved snapshot of a model's [weights](/shared/glossary/#weights) (and [optimizer state](/shared/glossary/#optimizer-state)) at a point in training, so a run can be resumed or rolled back to it after a failure.
 
 ### Chinchilla {#chinchilla}
 The scaling law showing compute-optimal training uses ~20 tokens per parameter
@@ -174,6 +183,9 @@ The routing and retrieval of information between tokens based on their query-key
 
 ### Context window {#context-window}
 The maximum number of tokens the model can attend over in one forward pass
+
+### Continued pretraining {#continued-pretraining}
+Taking an already-pretrained model and training it further on a new corpus to add domain knowledge, rather than starting from random weights.
 
 ### ControlNet {#controlnet}
 Architecture that adds an auxiliary conditioning branch (depth, pose, edges, …) to a frozen diffusion model
@@ -222,6 +234,9 @@ Function approximation + bootstrapping + off-policy data → instability
 
 ### Decoupled {#decoupled}
 A training technique where two effects that are mathematically equivalent in standard SGD are separated into independent operations. In AdamW, weight decay is decoupled from the gradient update so that the regularization strength is not scaled by the adaptive learning rate.
+
+### Deduplication {#deduplication}
+Removing repeated or near-repeated documents from a training corpus; one of the highest-return cleaning steps in [pretraining](/shared/glossary/#pretraining).
 
 ### Detached tensor {#detached-tensor}
 A tensor that has been removed from the [dynamic computation graph](/shared/glossary/#dynamic-computation-graph) via the `.detach()` method, meaning operations performed on it will not be tracked for [autograd](/shared/glossary/#autograd).
@@ -481,6 +496,9 @@ Low-Rank Adaptation — fine-tune by adding small low-rank matrices, freeze the 
 ### Loss function {#loss-function}
 A mathematical function that measures the difference between a model's prediction and the actual target. The goal of training is to minimize this value using [gradients](/shared/glossary/#gradients).
 
+### Loss spike {#loss-spike}
+A sudden jump in the training [loss](/shared/glossary/#loss-function), usually from an outlier batch or optimizer instability; small spikes are normal, but a diverging one can ruin a run.
+
 ### Loss value {#loss-value}
 The single scalar number produced by evaluating the [loss function](/shared/glossary/#loss-function) on a model's predictions. [autograd](/shared/glossary/#autograd)'s [backward pass](/shared/glossary/#backward-pass) computes [gradients](/shared/glossary/#gradients) of this one scalar with respect to every [parameter](/shared/glossary/#parameters), which is what makes [reverse-mode](/shared/glossary/#reverse-mode) differentiation efficient.
 
@@ -519,6 +537,9 @@ NVIDIA's approach to [tensor parallelism](/shared/glossary/#tensor-parallelism-t
 
 ### Micrograd {#micrograd}
 A tiny, educational autograd engine implemented in basic Python by Andrej Karpathy to illustrate how reverse-mode differentiation works.
+
+### MinHash {#minhash}
+A hashing technique for estimating how similar two documents are, used to find and remove near-duplicate text at corpus scale (see [deduplication](/shared/glossary/#deduplication)).
 
 ### MLP {#mlp}
 Multi-Layer Perceptron — a [feedforward neural network](/shared/glossary/#ffn) of one or more fully-connected (linear) layers separated by non-linear [activations](/shared/glossary/#activations). In [transformer](/shared/glossary/#transformer) architectures, each block contains an [attention](/shared/glossary/#attention) sublayer followed by an MLP sublayer (often using [SwiGLU](/shared/glossary/#swiglu) activation).
@@ -573,6 +594,9 @@ NVIDIA Collective Communications Library — does AllReduce etc. on NVIDIA GPUs
 
 ### Needle-in-a-haystack {#needle-in-a-haystack}
 A long-context test that hides one fact (the "needle") inside a long stretch of irrelevant text (the "haystack") and checks whether the model can find it
+
+### Next-token prediction {#next-token-prediction}
+The training objective of an [LLM](/shared/glossary/#llm): given the tokens so far, predict the next one, scored with cross-entropy [loss](/shared/glossary/#loss-function).
 
 ### nn.Module {#nnmodule}
 PyTorch's base class for all neural network components; acts as a registry that automatically tracks sub-modules, parameters, and buffers assigned in `__init__`
@@ -684,6 +708,9 @@ Post-Training Quantization / Quantization-Aware Training
 
 ### Q-Former {#q-former}
 BLIP-2's learnable-query cross-attention module for distilling images into LLM tokens
+
+### Quality filter {#quality-filter}
+A classifier that scores each training document and keeps only the high-quality ones (e.g. educational web text), discarding low-value text before [pretraining](/shared/glossary/#pretraining).
 
 ### Quantization {#quantization}
 Reducing weight / activation precision (FP16, BF16, FP8, INT8, INT4) to save memory and bandwidth
@@ -916,6 +943,9 @@ A problem during training where [gradients](/shared/glossary/#gradients) become 
 ### VAE {#vae}
 Variational Autoencoder — encoder/decoder pair trained on the ELBO
 
+### Validation loss {#validation-loss}
+The [loss](/shared/glossary/#loss-function) measured on held-out data the model was not trained on; the honest signal of how well training is generalizing.
+
 ### Value function {#value-function}
 Expected return; `V(s)` for state-value, `Q(s, a)` for action-value
 
@@ -972,6 +1002,9 @@ Background subprocesses that a [DataLoader](/shared/glossary/#dataloader) spawns
 
 ### World Model {#world-model}
 Action-conditioned generative model of the world; a video model with actions
+
+### WSD {#wsd}
+Warmup-Stable-Decay — a learning-rate schedule that warms up, holds the rate constant for most of training, then decays sharply at the end.
 
 ### XLA {#xla}
 Accelerated Linear Algebra — a compiler backend (e.g. for TPUs) used via `torch_xla`

@@ -381,13 +381,13 @@ That's it. The entire pretraining objective is six lines. The other 50 000 lines
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Train a 10M-parameter LM | nanoGPT on tiny Shakespeare; understand every line of the loop | ⭐⭐ |
-| Train a 100M-parameter LM | OpenWebText subset, 8h on one A100; reach <3.5 val loss | ⭐⭐⭐ |
-| Dedup ablation | Train two identical 100M models, one on raw CommonCrawl, one after MinHash dedup; compare downstream eval | ⭐⭐⭐⭐ |
-| Quality-filter ablation | Repeat with vs. without an educational-quality classifier filter | ⭐⭐⭐⭐ |
-| LR schedule sweep | Same model, sweep cosine vs. WSD vs. constant; report val loss + downstream evals | ⭐⭐⭐ |
-| Loss-spike forensics | Deliberately cause a loss spike (huge LR, bad data sample); analyze, fix, recover from checkpoint | ⭐⭐⭐⭐ |
-| Continued pretraining | Take an open base model; continue-pretrain on 1B tokens of a specialized corpus; measure capability gain and base-task forgetting | ⭐⭐⭐⭐⭐ |
+| [Train a 10M-parameter LM](projects/14-train-a-10m-parameter-lm/README.md) | nanoGPT on tiny Shakespeare; understand every line of the loop | ⭐⭐ |
+| [Train a 100M-parameter LM](projects/15-train-a-100m-parameter-lm/README.md) | OpenWebText subset, 8h on one A100; reach <3.5 val loss | ⭐⭐⭐ |
+| [Dedup ablation](projects/16-dedup-ablation/README.md) | Train two identical 100M models, one on raw CommonCrawl, one after MinHash dedup; compare downstream eval | ⭐⭐⭐⭐ |
+| [Quality-filter ablation](projects/17-quality-filter-ablation/README.md) | Repeat with vs. without an educational-quality classifier filter | ⭐⭐⭐⭐ |
+| [LR schedule sweep](projects/18-lr-schedule-sweep/README.md) | Same model, sweep cosine vs. WSD vs. constant; report val loss + downstream evals | ⭐⭐⭐ |
+| [Loss-spike forensics](projects/19-loss-spike-forensics/README.md) | Deliberately cause a loss spike (huge LR, bad data sample); analyze, fix, recover from checkpoint | ⭐⭐⭐⭐ |
+| [Continued pretraining](projects/20-continued-pretraining/README.md) | Take an open base model; continue-pretrain on 1B tokens of a specialized corpus; measure capability gain and base-task forgetting | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: The Heart of a Pretraining Step
 
