@@ -12,4 +12,4 @@
 
 ## Why This Matters
 
-RoPE is the default positional scheme in Llama, Mistral, Qwen, and DeepSeek. Implementing it — including the half-rotation trick — and confirming that `⟨q, k⟩` depends only on relative position makes the most widely used position embedding concrete rather than magical.
+RoPE is the default positional scheme in Llama, Mistral, Qwen, and DeepSeek. Implementing it — including the [half-rotation](/shared/glossary/#half-rotation) trick — and confirming that `⟨q, k⟩` depends only on relative position makes the most widely used position embedding concrete rather than magical.

@@ -2,7 +2,7 @@
 
 ---
 
-> Keep many expert networks on hand, but pay to run only the few each token actually needs.
+> Keep many [expert](/shared/glossary/#expert) networks on hand, but pay to run only the few each token actually needs.
 
 ---
 

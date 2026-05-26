@@ -310,6 +310,9 @@ The lookup table `E ∈ ℝ^{V×d}` that turns each token ID into a dense vector
 ### ExecuTorch {#executorch}
 PyTorch's lightweight runtime for running models on mobile and edge devices, built on the graph captured by [`torch.export`](/shared/glossary/#torchexport).
 
+### Expert {#expert}
+In a [Mixture-of-Experts (MoE)](/shared/glossary/#moe), one of several parallel [MLP](/shared/glossary/#mlp) sub-networks; a router sends each token to only the top few experts instead of all of them. Like a hospital triage desk that routes each patient to the right specialist rather than making everyone see every doctor — lots of expertise on hand, but only a little used per case.
+
 ### Expert parallelism (EP) {#expert-parallelism-ep}
 For MoE models, distributing experts across GPUs with all-to-all token routing
 
@@ -409,6 +412,9 @@ Group Relative Policy Optimization — value-function-free PPO variant; DeepSeek
 ### GTSAM {#gtsam}
 Factor-graph SLAM library; the standard back-end for many modern systems
 
+### Half-rotation {#half-rotation}
+An efficient way to apply [RoPE](/shared/glossary/#rope): rather than rotating each adjacent pair of vector components on its own, you split the vector into two halves and combine them in one shot (the `rotate_half` trick, `[x₁, x₂] → [−x₂, x₁]`). It turns many tiny 2-D rotations into a couple of whole-vector operations, so it runs fast on a GPU while giving the same result.
+
 ### HBM {#hbm}
 High-Bandwidth Memory — stacked DRAM on a modern GPU; usually the bandwidth bottleneck
 
@@ -483,6 +489,9 @@ Latent Consistency Model — consistency-distilled few-step latent diffusion
 
 ### LDM {#ldm}
 Latent Diffusion Model — diffusion in the latent space of a VAE (i.e., Stable Diffusion)
+
+### Learning rate {#learning-rate}
+The step size an [optimizer](/shared/glossary/#optimizer) takes when nudging the [weights](/shared/glossary/#weights) along the [gradient](/shared/glossary/#gradients). Too large and training overshoots and diverges; too small and it crawls — like choosing how big a step to take walking downhill in fog. It is usually ramped up during [warmup](/shared/glossary/#warmup) and then decayed over the run.
 
 ### LiDAR {#lidar}
 Light Detection And Ranging — laser range scanner
@@ -574,6 +583,9 @@ Multi-Query Attention — all query heads share a single key/value head; the mos
 ### MuJoCo {#mujoco}
 Open-source physics engine; the de facto manipulation/locomotion simulator
 
+### Multi-head attention {#multi-head-attention}
+Running several [attention](/shared/glossary/#attention) operations ([heads](/shared/glossary/#heads)) in parallel, each with its own learned projections of queries, keys, and values, then concatenating their results. Like having several readers skim the same sentence for different things — one tracks the grammar, another tracks who-did-what — and then pooling what each one noticed.
+
 ### Multi-LoRA {#multi-lora}
 Serving many fine-tuned adapters on a single shared base model
 
@@ -606,6 +618,9 @@ One physical machine (server) in a distributed job, usually holding several GPUs
 
 ### non_blocking {#non_blocking}
 The `non_blocking=True` flag on `.to()` / `.cuda()` that lets a host→device copy run asynchronously from pinned memory
+
+### Normalization {#normalization}
+Rescaling a layer's outputs so they keep a consistent size — typically zero mean and unit variance (LayerNorm) or unit root-mean-square ([RMSNorm](/shared/glossary/#rmsnorm)). Like adjusting every photo to the same brightness before comparing them, it stops numbers from ballooning or vanishing as they flow through a deep network, which is what keeps training stable.
 
 ### NVLink {#nvlink}
 NVIDIA's GPU-GPU interconnect; much faster than PCIe
@@ -758,7 +773,7 @@ Recursive Newton-Euler — `O(n)` inverse-dynamics algorithm
 Performance model bounding throughput as min(peak FLOPs, memory bandwidth × arithmetic intensity)
 
 ### RoPE {#rope}
-Rotary Position Embedding — encodes position by rotating Q, K vectors
+Rotary Position [Embedding](/shared/glossary/#embedding) — encodes position by rotating Q, K vectors
 
 ### ROS / ROS 2 {#ros--ros-2}
 Robot Operating System — robotics middleware (ROS 2 is the modern version)
@@ -776,7 +791,7 @@ Sparse Autoencoder — interpretability tool decomposing activations into monose
 The component that decides the order in which a [DataLoader](/shared/glossary/#dataloader) visits dataset examples (e.g. random, sequential, or class-weighted).
 
 ### Sampling {#sampling}
-Drawing the next token from the model's predicted probability distribution instead of always taking the most likely one; temperature, top-k, and top-p control how random the choice is.
+Drawing the next token from the model's predicted probability distribution instead of always taking the most likely one; [temperature](/shared/glossary/#temperature), [top-k](/shared/glossary/#top-k), and [top-p](/shared/glossary/#top-p) control how random the choice is.
 
 ### Score {#score}
 `∇_x log p(x)` — diffusion training implicitly learns this
@@ -865,6 +880,9 @@ Tool Center Point — the configurable point on a tool whose pose tracking contr
 ### TD3 {#td3}
 Twin Delayed DDPG — DDPG plus three stability fixes
 
+### Temperature {#temperature}
+A [sampling](/shared/glossary/#sampling) knob that scales the model's scores before [softmax](/shared/glossary/#softmax): low temperature (e.g. 0.2) sharpens the distribution so the model plays it safe and repeats the likeliest words, while high temperature (e.g. 1.5) flattens it so rarer, more surprising words can win. Think of it as a creativity dial — turn it down for factual answers, up for brainstorming.
+
 ### Temporal inflation {#temporal-inflation}
 Adding time-axis layers to a pretrained 2D model
 
@@ -894,6 +912,12 @@ The mapping from string to integer IDs; trained, frozen, part of the model contr
 
 ### Tokens per byte {#tokens-per-byte}
 A measure of tokenizer efficiency: how many tokens it emits per byte of input text; higher means the same text costs more tokens
+
+### Top-k {#top-k}
+A [sampling](/shared/glossary/#sampling) rule that keeps only the `k` most likely next tokens and draws from those, throwing away the long tail. With `k=1` it always takes the single best word (greedy decoding); with `k=50` it chooses among the top 50 — like ordering only from a menu's 50 most popular dishes instead of the whole cookbook.
+
+### Top-p {#top-p}
+Also called nucleus sampling: instead of a fixed count like [top-k](/shared/glossary/#top-k), it keeps the smallest set of top tokens whose probabilities add up to `p` (e.g. 0.9), then samples from them. The shortlist automatically grows when the model is unsure and shrinks when it is confident — always keeping just enough candidates to cover 90% of the model's belief.
 
 ### TOPP {#topp}
 Time-Optimal Path Parameterization — time-parameterize a geometric path under bounds
@@ -1010,7 +1034,7 @@ Warmup-Stable-Decay — a learning-rate schedule that warms up, holds the rate c
 Accelerated Linear Algebra — a compiler backend (e.g. for TPUs) used via `torch_xla`
 
 ### YaRN {#yarn}
-A [RoPE](/shared/glossary/#rope) context-extension method that rescales rotation frequencies unevenly across dimensions to reach long contexts with minimal fine-tuning
+Yet another [RoPE](/shared/glossary/#rope) extensioN method — a context-extension scheme that rescales rotation frequencies unevenly across dimensions to reach long contexts with minimal fine-tuning
 
 ### ZeRO {#zero}
 DeepSpeed's parameter/gradient/state sharding scheme — comparable to FSDP

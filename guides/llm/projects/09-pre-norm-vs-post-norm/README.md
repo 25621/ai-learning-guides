@@ -2,13 +2,13 @@
 
 ---
 
-> Where you place the normalization decides whether training is smooth or blows up.
+> Where you place the [normalization](/shared/glossary/#normalization) decides whether training is smooth or blows up.
 
 ---
 
 ## Key Insight
 
-Pre-norm puts the normalization step *inside* each [residual](/shared/glossary/#residual-connection) branch (`x = x + Attn(Norm(x))`), while post-norm normalizes *after* the residual is added. Pre-norm trains stably even without learning-rate [warmup](/shared/glossary/#warmup); post-norm often needs warmup and can diverge without it.
+Pre-norm puts the normalization step *inside* each [residual](/shared/glossary/#residual-connection) branch (`x = x + Attn(Norm(x))`), while post-norm normalizes *after* the residual is added. Pre-norm trains stably even without [learning-rate](/shared/glossary/#learning-rate) [warmup](/shared/glossary/#warmup); post-norm often needs warmup and can diverge without it.
 
 ## Why This Matters
 
