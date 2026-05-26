@@ -8,7 +8,7 @@
 
 ## Key Insight
 
-A sweep trains the same model under different learning-rate schedules — cosine decay, [WSD](/shared/glossary/#wsd), and constant — and compares final [validation loss](/shared/glossary/#validation-loss) and downstream scores. The schedule controls how the learning rate rises during [warmup](/shared/glossary/#warmup) and falls afterward.
+A [sweep](/shared/glossary/#sweep) trains the same model under different learning-rate schedules — [cosine decay](/shared/glossary/#cosine-decay), [WSD](/shared/glossary/#wsd), and constant — and compares final [validation loss](/shared/glossary/#validation-loss) and downstream scores. The schedule controls how the [learning rate](/shared/glossary/#learning-rate) rises during [warmup](/shared/glossary/#warmup) and falls afterward.
 
 ## Why This Matters
 

@@ -12,4 +12,4 @@ This [ablation](/shared/glossary/#ablation) repeats the dedup experiment with a 
 
 ## Why This Matters
 
-Aggressive quality filtering (as in FineWeb-Edu) is one of the biggest drivers of modern model quality, but "quality" is a judgment call baked into a classifier. Running the ablation teaches you to trust measured downstream gains over intuition about what "good data" means.
+Aggressive quality filtering (as in [FineWeb-Edu](/shared/glossary/#fineweb-edu)) is one of the biggest drivers of modern model quality, but "quality" is a judgment call baked into a classifier. Running the ablation teaches you to trust measured downstream gains over intuition about what "good data" means.

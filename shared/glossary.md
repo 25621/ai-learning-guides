@@ -193,6 +193,9 @@ Architecture that adds an auxiliary conditioning branch (depth, pose, edges, …
 ### copy {#copy}
 A tensor that owns its own storage, independent of any source tensor; created by `.clone()`, or automatically by operations like `.contiguous()` and `reshape` when a view is not possible
 
+### Cosine decay {#cosine-decay}
+A [learning-rate](/shared/glossary/#learning-rate) schedule that, after [warmup](/shared/glossary/#warmup), lowers the rate along the smooth downward half of a cosine curve until it reaches near zero by the end of training. The step size starts large and eases off gently — like braking smoothly as you coast up to a stop sign instead of slamming the pedal at the last moment — which helps the model settle into a good solution. It is the long-standing default schedule, before newer recipes like [WSD](/shared/glossary/#wsd).
+
 ### CoT {#cot}
 Chain of Thought — prompting / training the model to produce intermediate reasoning
 
@@ -201,6 +204,9 @@ Conservative Q-Learning — offline RL with a pessimistic Q penalty
 
 ### Cross-attention {#cross-attention}
 Attention where queries come from one modality and keys/values from another
+
+### Cross-entropy {#cross-entropy}
+A [loss function](/shared/glossary/#loss-function) that scores how surprised a model is by the correct answer: it stays small when the model gave the true next word a high probability and grows large when it was confidently wrong. Like grading a weather forecaster on confidence and not just on being right — announcing "90% chance of sun" and then getting rain costs far more points than a hedged "50%." Training an [LLM](/shared/glossary/#llm) means adjusting the [weights](/shared/glossary/#weights) to push this surprise as low as it will go.
 
 ### cuBLAS {#cublas}
 NVIDIA's optimized library of dense linear-algebra [kernels](/shared/glossary/#kernel); PyTorch calls it for matrix multiplication on [CUDA](/shared/glossary/#cuda).
@@ -261,6 +267,9 @@ Diffusion Transformer — Peebles & Xie's transformer-based diffusion backbone
 
 ### Double backward {#double-backward}
 Computing the gradient of a gradient by tracking the backward pass operations in a new computation graph.
+
+### Downstream {#downstream}
+The later, real-world tasks a model is eventually judged on — such as question answering or coding — as opposed to the [pretraining](/shared/glossary/#pretraining) objective it was trained on. "Downstream scores" measure how much a change (cleaner data, a better [learning rate](/shared/glossary/#learning-rate)) actually pays off on those end tasks, the way a river's health downstream reflects what happened upstream at the source.
 
 ### DPO {#dpo}
 Direct Preference Optimization — closed-form RLHF without a reward model or PPO
@@ -325,6 +334,9 @@ Force/Torque sensor — six-axis force and moment at a wrist or fingertip
 ### FID {#fid}
 Fréchet Inception Distance — the standard sample-quality metric for image generation
 
+### FineWeb-Edu {#fineweb-edu}
+A large, openly released [pretraining](/shared/glossary/#pretraining) dataset built by running a [quality filter](/shared/glossary/#quality-filter) over crawled web pages and keeping only the educational-looking ones — like skimming a huge pile of internet text and saving just the pages that read like a textbook. Models trained on it often beat models trained on far more unfiltered text, making it a go-to example that data quality can matter more than raw quantity.
+
 ### FK / IK {#fk--ik}
 Forward / Inverse Kinematics — compute end-effector pose from joints or vice versa
 
@@ -351,6 +363,9 @@ A callback registered on an `nn.Module` that PyTorch calls automatically after t
 
 ### FP8 {#fp8}
 8-bit floating point (E4M3 / E5M2 on Hopper+); the modern default serving precision
+
+### Frontier run {#frontier-run}
+A training run for one of the largest, most capable models at the leading edge of what is currently possible — the kind that ties up thousands of GPUs for weeks and costs millions of dollars. Because the stakes are so high, a [loss spike](/shared/glossary/#loss-spike) that cannot be recovered cleanly can throw away days of that compute, which is why teams rehearse [checkpoint](/shared/glossary/#checkpoint) recovery on small models first.
 
 ### F.scaled_dot_product_attention {#fscaled_dot_product_attention}
 PyTorch's built-in fused [attention](/shared/glossary/#attention) function (in `torch.nn.functional`) that computes `softmax(QKᵀ/√d)·V` in a single call, dispatching to an optimized [backend](/shared/glossary/#backend) such as [FlashAttention](/shared/glossary/#flashattention).
@@ -392,7 +407,7 @@ Grouped-Query Attention — sharing K/V heads across query heads; primary KV-cac
 Summing the [gradients](/shared/glossary/#gradients) from several small batches before calling the [optimizer](/shared/glossary/#optimizer), so the update matches a larger effective batch size without its memory cost.
 
 ### Gradients {#gradients}
-The vector of partial derivatives of a function with respect to its inputs. In neural networks, gradients represent the direction and magnitude of the change required to minimize the [loss function](/shared/glossary/#loss-function).
+The vector of [partial derivatives](/shared/glossary/#partial-derivative) of a function with respect to its inputs. In neural networks, gradients represent the direction and magnitude of the change required to minimize the [loss function](/shared/glossary/#loss-function).
 
 ### Gradient checkpointing {#gradient-checkpointing}
 A memory-saving technique that discards intermediate activations during the forward pass and recomputes them during the backward pass.
@@ -608,7 +623,7 @@ NVIDIA Collective Communications Library — does AllReduce etc. on NVIDIA GPUs
 A long-context test that hides one fact (the "needle") inside a long stretch of irrelevant text (the "haystack") and checks whether the model can find it
 
 ### Next-token prediction {#next-token-prediction}
-The training objective of an [LLM](/shared/glossary/#llm): given the tokens so far, predict the next one, scored with cross-entropy [loss](/shared/glossary/#loss-function).
+The training objective of an [LLM](/shared/glossary/#llm): given the tokens so far, predict the next one, scored with [cross-entropy](/shared/glossary/#cross-entropy) [loss](/shared/glossary/#loss-function).
 
 ### nn.Module {#nnmodule}
 PyTorch's base class for all neural network components; acts as a registry that automatically tracks sub-modules, parameters, and buffers assigned in `__init__`
@@ -660,6 +675,9 @@ Filling shorter sequences with a placeholder value so that every sample in a bat
 
 ### Parameters {#parameters}
 The learnable [tensors](/shared/glossary/#tensor) inside a model (such as [weights](/shared/glossary/#weights) and [biases](/shared/glossary/#biases)) that are updated by the [optimizer](/shared/glossary/#optimizer) during training. In PyTorch, they are instances of `nn.Parameter` and are automatically registered when assigned to an [`nn.Module`](/shared/glossary/#nnmodule).
+
+### Partial derivative {#partial-derivative}
+How much a function changes when you nudge just one of its inputs and hold all the others still — the [derivative](/shared/glossary/#derivative) taken one input at a time. If a recipe's tastiness depends on both salt and sugar, the partial derivative with respect to salt tells you the effect of adding a pinch more salt while keeping the sugar fixed. A [gradient](/shared/glossary/#gradients) is simply the full list of these one-at-a-time slopes, one per [parameter](/shared/glossary/#parameters).
 
 ### PagedAttention {#pagedattention}
 KV cache managed as fixed-size physical blocks with per-request block tables
@@ -855,6 +873,9 @@ A technique used to bypass non-differentiable operations by passing gradients un
 
 ### Stride {#stride}
 The number of storage elements to step over for each dimension of a tensor
+
+### Sweep {#sweep}
+Training the same model many times while changing one setting across a range of values, then comparing results to pick the best — for example trying ten different [learning rates](/shared/glossary/#learning-rate) and keeping the winner. Like tasting a sauce as you add salt in small steps to find the amount you like, rather than guessing the whole spoonful at once. A sweep is how you turn a hyperparameter hunch into a measured choice.
 
 ### SwiGLU {#swiglu}
 [Gated](/shared/glossary/#gated) [MLP](/shared/glossary/#mlp) activation `(xW) · σ(xV)` — the modern default [FFN](/shared/glossary/#ffn); a [GLU](/shared/glossary/#glu) variant that uses [Swish](/shared/glossary/#swish) as its gating non-linearity

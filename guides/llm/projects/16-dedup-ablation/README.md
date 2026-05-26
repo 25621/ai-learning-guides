@@ -8,7 +8,7 @@
 
 ## Key Insight
 
-An [ablation](/shared/glossary/#ablation) trains two identical 100M models that differ in one thing only: one sees raw web data, the other sees the same data after [deduplication](/shared/glossary/#deduplication) (here [MinHash](/shared/glossary/#minhash) near-duplicate removal). Comparing their downstream scores isolates exactly what dedup buys you.
+An [ablation](/shared/glossary/#ablation) trains two identical 100M models that differ in one thing only: one sees raw web data, the other sees the same data after [deduplication](/shared/glossary/#deduplication) (here [MinHash](/shared/glossary/#minhash) near-duplicate removal). Comparing their [downstream](/shared/glossary/#downstream) scores isolates exactly what dedup buys you.
 
 ## Why This Matters
 
