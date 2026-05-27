@@ -12,4 +12,4 @@
 
 ## Why This Matters
 
-AdamW's [optimizer state](/shared/glossary/#optimizer-state) alone is several times the size of the model, so large models do not fit on one GPU. Sharding with FSDP (and its cousin [ZeRO](/shared/glossary/#zero)) is what makes training beyond a few billion parameters possible at all.
+[AdamW](/shared/glossary/#adamw)'s [optimizer state](/shared/glossary/#optimizer-state) alone is several times the size of the model, so large models do not fit on one GPU. Sharding with FSDP (and its cousin [ZeRO](/shared/glossary/#zero)) is what makes training beyond a few billion parameters possible at all.

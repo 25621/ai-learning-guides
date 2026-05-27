@@ -250,6 +250,9 @@ A training technique where two effects that are mathematically equivalent in sta
 ### Deduplication {#deduplication}
 Removing repeated or near-repeated documents from a training corpus; one of the highest-return cleaning steps in [pretraining](/shared/glossary/#pretraining).
 
+### DeepSpeed {#deepspeed}
+Microsoft's open-source library for training very large models efficiently. It is best known for [ZeRO](/shared/glossary/#zero), which shards a model's [parameters](/shared/glossary/#parameters), [gradients](/shared/glossary/#gradients), and [optimizer state](/shared/glossary/#optimizer-state) across GPUs so no single GPU has to hold the whole model — the same idea as PyTorch's [FSDP](/shared/glossary/#fsdp). Think of it as a moving company that splits one giant load across several trucks instead of trying to cram everything into one.
+
 ### Detached tensor {#detached-tensor}
 A tensor that has been removed from the [dynamic computation graph](/shared/glossary/#dynamic-computation-graph) via the `.detach()` method, meaning operations performed on it will not be tracked for [autograd](/shared/glossary/#autograd).
 
@@ -377,7 +380,7 @@ A training run for one of the largest, most capable models at the leading edge o
 PyTorch's built-in fused [attention](/shared/glossary/#attention) function (in `torch.nn.functional`) that computes `softmax(QKᵀ/√d)·V` in a single call, dispatching to an optimized [backend](/shared/glossary/#backend) such as [FlashAttention](/shared/glossary/#flashattention).
 
 ### FSDP {#fsdp}
-Fully Sharded Data Parallel — shard params, grads, and optimizer state across ranks
+Fully Sharded Data Parallel — shard params, grads, and optimizer state across [ranks](/shared/glossary/#rank)
 
 ### FSQ {#fsq}
 Finite Scalar Quantization — codebook-free discrete tokenization
@@ -439,6 +442,9 @@ An efficient way to apply [RoPE](/shared/glossary/#rope): rather than rotating e
 ### HBM {#hbm}
 High-Bandwidth Memory — stacked DRAM on a modern GPU; usually the bandwidth bottleneck
 
+### Headroom {#headroom}
+The safety margin you have left before something breaks. In low-precision training it is the spare range of values a number format can still represent before it overflows or rounds down to zero and triggers [numerical issues](/shared/glossary/#numerical-issues) — like the gap between your head and the ceiling: the less you have, the easier it is to bump into trouble. [FP8](/shared/glossary/#fp8) packs numbers into far fewer bits than [bfloat16](/shared/glossary/#bfloat16), so it has much less headroom and is more likely to destabilize a run.
+
 ### Heads (attention) {#heads}
 The independent, parallel [attention](/shared/glossary/#attention) sub-computations in multi-head attention. Each head operates on its own learned projections of queries, keys, and values, allowing the model to attend to different representation subspaces simultaneously.
 
@@ -474,6 +480,9 @@ Implicit Q-Learning — offline RL that never queries `Q` at OOD actions
 
 ### Isaac Lab {#isaac-lab}
 NVIDIA GPU-parallel robotics simulation platform
+
+### iso {#iso}
+A prefix meaning "equal" or "the same" (from the Greek *isos*). In a phrase like *iso-[FLOP](/shared/glossary/#flops)* it marks a group of training runs that all spent the same compute budget, so they can be compared fairly — like rating cars by how far each travels on the *same* tank of fuel rather than on top speed. Plotting the [loss](/shared/glossary/#loss-function) of several iso-FLOP runs is how a [Chinchilla](/shared/glossary/#chinchilla)-style [scaling-law](/shared/glossary/#scaling-laws) curve is drawn.
 
 ### ITL / TPOT {#itl--tpot}
 Inter-token latency / time per output token — steady-state per-token decode time
@@ -1070,7 +1079,7 @@ Accelerated Linear Algebra — a compiler backend (e.g. for TPUs) used via `torc
 Yet another [RoPE](/shared/glossary/#rope) extensioN method — a context-extension scheme that rescales rotation frequencies unevenly across dimensions to reach long contexts with minimal fine-tuning
 
 ### ZeRO {#zero}
-DeepSpeed's parameter/gradient/state sharding scheme — comparable to FSDP
+[DeepSpeed](/shared/glossary/#deepspeed)'s parameter/gradient/state sharding scheme — comparable to FSDP
 
 ### Zero-conv {#zero-conv}
 A 1×1 convolution with zero-initialized weights and bias; used by ControlNet to add a branch without disturbing init
