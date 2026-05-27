@@ -856,14 +856,14 @@ Robust agents need verification, retry, and budget control at every step.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Minimal RAG | Index 1 000 Wikipedia paragraphs with a sentence-embedding model; build a retrieve-then-answer pipeline | ⭐⭐⭐ |
-| Chunking ablation | Same corpus, 200 vs. 800 vs. 1 600 token chunks, with and without overlap; measure answer quality | ⭐⭐⭐ |
-| Reranker effect | Add a cross-encoder reranker to the pipeline; measure nDCG and end-to-end answer quality | ⭐⭐⭐⭐ |
-| Hybrid retrieval | Combine dense + BM25 via reciprocal rank fusion; verify the consistent win | ⭐⭐⭐⭐ |
-| Tool-using chatbot | Build a model that can call a calculator and a search tool; evaluate on a synthetic benchmark | ⭐⭐⭐ |
-| Agent on a sandbox task | Build a tiny ReAct-style agent on a deterministic task (e.g., spreadsheet edits); evaluate over many seeds | ⭐⭐⭐⭐ |
-| SWE-style coding agent | A model + a shell + a file editor; solve a few easy issues from a sample bug benchmark | ⭐⭐⭐⭐⭐ |
-| RL fine-tune for tools | GRPO on tool-call success; verifier checks tool output matches expected | ⭐⭐⭐⭐⭐ |
+| [Minimal RAG](projects/43-minimal-rag/README.md) | Index 1 000 Wikipedia paragraphs with a sentence-embedding model; build a retrieve-then-answer pipeline | ⭐⭐⭐ |
+| [Chunking ablation](projects/44-chunking-ablation/README.md) | Same corpus, 200 vs. 800 vs. 1 600 token chunks, with and without overlap; measure answer quality | ⭐⭐⭐ |
+| [Reranker effect](projects/45-reranker-effect/README.md) | Add a cross-encoder reranker to the pipeline; measure nDCG and end-to-end answer quality | ⭐⭐⭐⭐ |
+| [Hybrid retrieval](projects/46-hybrid-retrieval/README.md) | Combine dense + BM25 via reciprocal rank fusion; verify the consistent win | ⭐⭐⭐⭐ |
+| [Tool-using chatbot](projects/47-tool-using-chatbot/README.md) | Build a model that can call a calculator and a search tool; evaluate on a synthetic benchmark | ⭐⭐⭐ |
+| [Agent on a sandbox task](projects/48-agent-on-a-sandbox-task/README.md) | Build a tiny ReAct-style agent on a deterministic task (e.g., spreadsheet edits); evaluate over many seeds | ⭐⭐⭐⭐ |
+| [SWE-style coding agent](projects/49-swe-style-coding-agent/README.md) | A model + a shell + a file editor; solve a few easy issues from a sample bug benchmark | ⭐⭐⭐⭐⭐ |
+| [RL fine-tune for tools](projects/50-rl-fine-tune-for-tools/README.md) | GRPO on tool-call success; verifier checks tool output matches expected | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: A Minimal RAG Function
 

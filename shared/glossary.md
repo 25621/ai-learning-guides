@@ -43,6 +43,9 @@ Refusing requests early when capacity is saturated, to protect SLOs for accepted
 ### Advantage {#advantage}
 `A(s, a) = Q(s, a) − V(s)` — how much better than the baseline this action is
 
+### Agent {#agent}
+An [LLM](/shared/glossary/#llm) placed in a loop so it can plan, choose a tool, act, observe the result, and repeat until a task is finished — turning a one-shot answerer into something that carries out multi-step work, like a worker who keeps taking the next action until the whole job is done.
+
 ### AI (arithmetic intensity) {#ai-arithmetic-intensity}
 FLOPs per byte of memory accessed; determines roofline position
 
@@ -115,6 +118,9 @@ An adjustment applied in the Adam family of optimizers to counteract the zero-in
 ### Biases {#biases}
 The additive [parameter](/shared/glossary/#parameters) vectors in a linear layer (the `b` in `y = xW + b`). Each output neuron has one bias value, which shifts the result independently of the input.
 
+### BM25 {#bm25}
+A classic keyword-search ranking that scores a document by how often the query's words appear in it, weighting rare words more heavily — the *sparse* (exact-word) counterpart to dense [embedding](/shared/glossary/#embedding) search.
+
 ### Bootstrapping {#bootstrapping}
 Using a current estimate (e.g., `V(s')`) in the target instead of a full return
 
@@ -169,6 +175,9 @@ The scaling law showing compute-optimal training uses ~20 tokens per parameter
 ### Chunked prefill {#chunked-prefill}
 Splitting long prompts across multiple iterations to interleave with decode steps
 
+### Chunking {#chunking}
+Splitting documents into smaller passages (often a few hundred tokens each) before indexing them for retrieval, so a search returns a focused snippet instead of a whole book.
+
 ### CLIP {#clip}
 Contrastive Language-Image Pretraining — paired text-image dual encoder
 
@@ -219,6 +228,9 @@ Conservative Q-Learning — offline RL with a pessimistic Q penalty
 
 ### Cross-attention {#cross-attention}
 Attention where queries come from one modality and keys/values from another
+
+### Cross-encoder {#cross-encoder}
+A model that reads a query and one candidate document *together* in a single pass and outputs one relevance score — far more accurate than comparing their separate [embeddings](/shared/glossary/#embedding), but too slow to run over a whole corpus, so it is used to [rerank](/shared/glossary/#reranker) a short candidate list.
 
 ### Cross-entropy {#cross-entropy}
 A [loss function](/shared/glossary/#loss-function) that scores how surprised a model is by the correct answer: it stays small when the model gave the true next word a high probability and grows large when it was confidently wrong. Like grading a weather forecaster on confidence and not just on being right — announcing "90% chance of sun" and then getting rain costs far more points than a hedged "50%." Training an [LLM](/shared/glossary/#llm) means adjusting the [weights](/shared/glossary/#weights) to push this surprise as low as it will go.
@@ -397,6 +409,9 @@ Fully Sharded Data Parallel — shard params, grads, and optimizer state across 
 ### FSQ {#fsq}
 Finite Scalar Quantization — codebook-free discrete tokenization
 
+### Function calling {#function-calling}
+The mechanism by which a model uses a tool: it emits a structured request (such as JSON naming a function and its arguments), an external program runs that request, and the result is handed back to the model. Also called tool use.
+
 ### Fusion (early/middle/late) {#fusion-earlymiddlelate}
 When in the network different modalities are combined
 
@@ -465,6 +480,9 @@ The independent, parallel [attention](/shared/glossary/#attention) sub-computati
 
 ### Holonomic {#holonomic}
 A vehicle whose instantaneous motion can be any direction (mecanum, omni)
+
+### Hybrid retrieval {#hybrid-retrieval}
+Retrieving with both dense [embedding](/shared/glossary/#embedding) search (matches meaning) and sparse keyword search ([BM25](/shared/glossary/#bm25)) (matches exact words) and merging the two result lists, so each method covers the other's weaknesses.
 
 ### I2V {#i2v}
 Image-to-Video
@@ -664,6 +682,9 @@ ROS 2 navigation stack
 ### NCCL {#nccl}
 NVIDIA Collective Communications Library — does AllReduce etc. on NVIDIA GPUs
 
+### nDCG {#ndcg}
+Normalized Discounted Cumulative Gain — a ranking-quality score from 0 to 1 that rewards putting the most relevant results near the top of the list; the standard way to check whether a [reranker](/shared/glossary/#reranker) actually improved the ordering.
+
 ### Needle-in-a-haystack {#needle-in-a-haystack}
 A long-context test that hides one fact (the "needle") inside a long stretch of irrelevant text (the "haystack") and checks whether the model can find it
 
@@ -817,6 +838,12 @@ Retrieval-Augmented Generation — fetch documents, prepend to prompt, then gene
 ### rank {#rank}
 The unique integer ID of a process in a distributed job. `RANK` is the global ID across all machines; `LOCAL_RANK` is the ID within one machine; `WORLD_SIZE` is the total number of processes.
 
+### ReAct {#react}
+A simple [agent](/shared/glossary/#agent) pattern that interleaves **Rea**soning and **Act**ing: the model writes a thought, takes an action with a tool, reads the observation, then repeats — the loop most basic agents are built on.
+
+### Reciprocal rank fusion {#reciprocal-rank-fusion}
+A simple, robust way to merge several ranked lists into one: each item scores the sum of `1 / (rank + constant)` across the lists, so items ranked highly by more than one retriever rise to the top. Common for combining dense and sparse search in [hybrid retrieval](/shared/glossary/#hybrid-retrieval).
+
 ### Rectified flow {#rectified-flow}
 A flow-matching parameterization with straight-line trajectories; popular in 2024+ models
 
@@ -825,6 +852,9 @@ A frozen copy of the starting model that [RLHF](/shared/glossary/#rlhf) and [DPO
 
 ### Reparameterization trick {#reparameterization-trick}
 `z = μ + σ · ε` — lets gradients flow through a random sample
+
+### Reranker {#reranker}
+A second-stage model that re-scores the top candidates from a fast first-stage retriever and reorders them by true relevance — usually a [cross-encoder](/shared/glossary/#cross-encoder). The "retrieve then rerank" two-stage pattern is standard in search and [RAG](/shared/glossary/#rag).
 
 ### reshape {#reshape}
 Returns a tensor with a new shape, copying only when a no-copy view isn't possible
@@ -951,6 +981,9 @@ A technique used to bypass non-differentiable operations by passing gradients un
 
 ### Stride {#stride}
 The number of storage elements to step over for each dimension of a tensor
+
+### SWE-bench {#swe-bench}
+A benchmark of real GitHub issues paired with the code changes that fixed them; an [agent](/shared/glossary/#agent) is judged by whether its edits make the project's test suite pass, which makes it the standard test of coding agents.
 
 ### Sweep {#sweep}
 Training the same model many times while changing one setting across a range of values, then comparing results to pick the best — for example trying ten different [learning rates](/shared/glossary/#learning-rate) and keeping the winner. Like tasting a sauce as you add salt in small steps to find the amount you like, rather than guessing the whole spoonful at once. A sweep is how you turn a hyperparameter hunch into a measured choice.
