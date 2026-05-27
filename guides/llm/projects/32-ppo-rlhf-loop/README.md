@@ -12,4 +12,4 @@ This project wires together [SFT](/shared/glossary/#sft), a [reward model](/shar
 
 ## Why This Matters
 
-PPO-based RLHF is the classic recipe that first made chatbots both helpful and safe. Seeing the KL term hold the policy in check teaches the single most important knob in the entire alignment stack.
+PPO-based RLHF is the classic recipe that first made chatbots both helpful and safe. Seeing the [KL](/shared/glossary/#kl-divergence) term hold the policy in check teaches the single most important knob in the entire [alignment stack](/shared/glossary/#alignment-stack).

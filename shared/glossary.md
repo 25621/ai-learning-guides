@@ -49,6 +49,9 @@ FLOPs per byte of memory accessed; determines roofline position
 ### Alignment (multimodal) {#alignment-multimodal}
 Making embeddings from different modalities comparable in a shared space
 
+### Alignment stack {#alignment-stack}
+The layered sequence of post-training steps that turns a raw [base model](/shared/glossary/#base-model) into a helpful, safe assistant — typically [SFT](/shared/glossary/#sft), then a [reward model](/shared/glossary/#reward-model), then [RLHF](/shared/glossary/#rlhf) (or [DPO](/shared/glossary/#dpo)). Like the stations on an assembly line, each layer builds on the one below it: the model first learns to follow instructions, then learns what people prefer, then is tuned to actually prefer it. "Alignment" here means getting the model's behavior to match human intent.
+
 ### AllReduce {#allreduce}
 A collective op that sums tensors across all ranks and gives every rank the result
 
@@ -165,6 +168,9 @@ Splitting long prompts across multiple iterations to interleave with decode step
 
 ### CLIP {#clip}
 Contrastive Language-Image Pretraining — paired text-image dual encoder
+
+### Closed-form {#closed-form}
+A solution you can write down and compute directly with a fixed formula, instead of reaching it through many rounds of trial-and-error. Solving `2x = 10` by writing `x = 5` is closed-form; nudging `x` up and down until both sides match is not. In [DPO](/shared/glossary/#dpo) a closed-form objective lets the model learn straight from preference pairs with one training [loss](/shared/glossary/#loss-function), skipping the slow [reward model](/shared/glossary/#reward-model)-plus-[PPO](/shared/glossary/#ppo) loop of classic [RLHF](/shared/glossary/#rlhf).
 
 ### CNN {#cnn}
 Convolutional Neural Network — a neural network built mainly from convolution layers; the standard architecture for image tasks.
@@ -284,7 +290,7 @@ Computing the gradient of a gradient by tracking the backward pass operations in
 The later, real-world tasks a model is eventually judged on — such as question answering or coding — as opposed to the [pretraining](/shared/glossary/#pretraining) objective it was trained on. "Downstream scores" measure how much a change (cleaner data, a better [learning rate](/shared/glossary/#learning-rate)) actually pays off on those end tasks, the way a river's health downstream reflects what happened upstream at the source.
 
 ### DPO {#dpo}
-Direct Preference Optimization — closed-form RLHF without a reward model or PPO
+Direct Preference Optimization — [closed-form](/shared/glossary/#closed-form) RLHF without a reward model or [PPO](/shared/glossary/#ppo)
 
 ### DQN {#dqn}
 Deep Q-Network — Q-learning with neural-net function approximation + experience replay + target network
@@ -434,7 +440,7 @@ A point where [`torch.compile`](/shared/glossary/#torchcompile) cannot trace the
 Producing spatial outputs (boxes, points) referring to image regions
 
 ### GRPO {#grpo}
-Group Relative Policy Optimization — value-function-free PPO variant; DeepSeek lineage
+Group Relative Policy Optimization — [value-function](/shared/glossary/#value-function)-free PPO variant; DeepSeek lineage
 
 ### GSM8K {#gsm8k}
 A benchmark of about 8,000 grade-school math word problems, widely used to test step-by-step reasoning because each problem has a single checkable numeric answer.
@@ -506,7 +512,7 @@ Combining several small operations into one [kernel](/shared/glossary/#kernel) s
 Kalman Filter — optimal linear-Gaussian Bayes filter
 
 ### KL divergence {#kl-divergence}
-The regularizer that keeps RLHF policies near the reference model
+Short for **Kullback-Leibler divergence** — a number that measures how far one probability distribution has drifted from another, growing larger the more the two disagree. In [RLHF](/shared/glossary/#rlhf) it acts as a leash on the [policy](/shared/glossary/#policy) being trained: the further its word probabilities wander from the frozen [reference model](/shared/glossary/#reference-model), the bigger the penalty it pays. Like a tether that lets a climber explore but stops them straying somewhere dangerous, it lets the model chase reward without forgetting how to talk sensibly.
 
 ### KV cache {#kv-cache}
 Cached keys and values per past token per layer; the working set of the decoder
@@ -536,7 +542,7 @@ Light Detection And Ranging — laser range scanner
 Large Language Model — a [transformer](/shared/glossary/#transformer) trained on large amounts of text to predict and generate language.
 
 ### LoRA {#lora}
-Low-Rank Adaptation — fine-tune by adding small low-rank matrices, freeze the base
+[Low-Rank](/shared/glossary/#low-rank) Adaptation — fine-tune by adding small low-rank matrices, freeze the base
 
 ### Loss function {#loss-function}
 A mathematical function that measures the difference between a model's prediction and the actual target. The goal of training is to minimize this value using [gradients](/shared/glossary/#gradients).
@@ -552,6 +558,9 @@ The single scalar number produced by evaluating the [loss function](/shared/glos
 
 ### Lorax / S-LoRA {#lorax--s-lora}
 Multi-LoRA serving engines; one base model + many adapters in HBM
+
+### Low-rank {#low-rank}
+A way of approximating a big matrix as the product of two much skinnier ones, capturing most of its information with far fewer numbers. A full 1000×1000 weight matrix holds a million entries, but if its real content is "low rank" you can rebuild it well from, say, two 1000×8 matrices — a few thousand numbers instead of a million. Like summarizing a thick report with a handful of bullet points that still carry the gist. This is the trick behind [LoRA](/shared/glossary/#lora): freeze the giant base [weights](/shared/glossary/#weights) and learn only a small low-rank update on top.
 
 ### LQR {#lqr}
 Linear-Quadratic Regulator — optimal linear feedback for quadratic cost
@@ -746,7 +755,7 @@ Extending a model's context length by linearly rescaling [RoPE](/shared/glossary
 VAE failure mode: encoder collapses to the prior; latent carries no information
 
 ### PPO {#ppo}
-Proximal Policy Optimization — the workhorse on-policy RL algorithm, used in classic RLHF
+Proximal Policy Optimization — the [workhorse](/shared/glossary/#workhorse) [on-policy](/shared/glossary/#on-policy) RL algorithm, used in classic RLHF
 
 ### Prefill {#prefill}
 Processing the prompt in one parallel forward pass before decoding begins
@@ -818,7 +827,7 @@ A policy that maximizes the reward signal without doing what was intended
 A model trained on human preference comparisons to score how good a response is; it stands in for a human rater so [RLHF](/shared/glossary/#rlhf) can score millions of answers automatically.
 
 ### RLHF {#rlhf}
-Reinforcement Learning from Human Feedback — preference learning, classically via PPO + KL
+Reinforcement Learning from Human Feedback — preference learning, classically via [PPO](/shared/glossary/#ppo) + [KL](/shared/glossary/#kl-divergence)
 
 ### RLVR {#rlvr}
 RL with Verifiable Rewards — RL when the reward is a deterministic checker
@@ -831,6 +840,9 @@ Recursive Newton-Euler — `O(n)` inverse-dynamics algorithm
 
 ### Rollout {#rollout}
 One sample of the model actually generating a full response to a prompt, used in RL to see what behavior to reward; producing many rollouts is the expensive part of [PPO](/shared/glossary/#ppo) and [GRPO](/shared/glossary/#grpo).
+
+### Rollout distribution {#rollout-distribution}
+The spread of responses a model is currently generating when it produces [rollouts](/shared/glossary/#rollout) during RL training — what it tends to say and how varied those answers are. This distribution shifts as training proceeds, which is the whole point; but if it drifts toward weird, repetitive, or gamed outputs, that is a warning sign of [reward hacking](/shared/glossary/#reward-hacking). Watching how it moves is like checking what a student actually writes on practice tests, not just their final score.
 
 ### Roofline {#roofline}
 Performance model bounding throughput as min(peak FLOPs, memory bandwidth × arithmetic intensity)
@@ -872,7 +884,7 @@ Special Euclidean / Orthogonal group — rigid-body motions / rotations in 3D
 A fixed starting number for a random-number generator; setting the same seed makes random operations (shuffling, initialization, dropout) produce the identical sequence every run.
 
 ### SFT {#sft}
-Supervised Fine-Tuning — train on demonstration data with cross-entropy
+Supervised Fine-Tuning — train on demonstration data with [cross-entropy](/shared/glossary/#cross-entropy)
 
 ### SGD {#sgd}
 Stochastic Gradient Descent — updates parameters by subtracting a scaled gradient computed on a mini-batch; the simplest optimizer and the basis for more advanced methods
@@ -1042,6 +1054,9 @@ The [loss](/shared/glossary/#loss-function) measured on held-out data the model 
 ### Value function {#value-function}
 Expected return; `V(s)` for state-value, `Q(s, a)` for action-value
 
+### Value network {#value-network}
+The helper network (the "critic") in some RL algorithms that estimates the [value function](/shared/glossary/#value-function) — its best guess of how much future reward a situation is worth — so the [policy](/shared/glossary/#policy) can tell whether an action turned out better or worse than expected. [PPO](/shared/glossary/#ppo) trains one alongside the policy, which roughly doubles the networks held in memory; [GRPO](/shared/glossary/#grpo) skips it entirely by comparing each sampled answer to the group's average instead, which is what makes it cheaper.
+
 ### VBench {#vbench}
 Comprehensive open evaluation suite for video generation
 
@@ -1095,6 +1110,9 @@ The learned [parameter](/shared/glossary/#parameters) matrices inside a neural n
 
 ### Worker processes {#worker-processes}
 Background subprocesses that a [DataLoader](/shared/glossary/#dataloader) spawns to load and preprocess data in parallel with GPU computation.
+
+### Workhorse {#workhorse}
+The dependable, go-to method that does the bulk of the everyday work in a field — not the flashiest, but the one practitioners reach for by default because it reliably gets the job done. Just as a workhorse on a farm pulls the heavy loads day in and day out, [PPO](/shared/glossary/#ppo) earned the title in [RLHF](/shared/glossary/#rlhf) and the [PID](/shared/glossary/#pid) controller earned it in robotics.
 
 ### World Model {#world-model}
 Action-conditioned generative model of the world; a video model with actions

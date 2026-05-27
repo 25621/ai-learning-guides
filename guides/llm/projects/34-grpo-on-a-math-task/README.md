@@ -12,4 +12,4 @@ This project trains a model with [GRPO](/shared/glossary/#grpo) on [GSM8K](/shar
 
 ## Why This Matters
 
-GRPO drops both the [reward model](/shared/glossary/#reward-model) and the value network, making reasoning-focused RL cheap enough to run widely. It is the backbone of recent reasoning models like DeepSeek-R1.
+GRPO drops both the [reward model](/shared/glossary/#reward-model) and the [value network](/shared/glossary/#value-network), making reasoning-focused RL cheap enough to run widely. It is the backbone of recent reasoning models like DeepSeek-R1.
