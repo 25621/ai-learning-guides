@@ -616,14 +616,14 @@ reward-hacking. β ≈ 0.01–0.1 is the typical range; schedule it.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| SFT a 1B base model | Take an open base model, fine-tune on Alpaca / UltraChat / Tulu mix using TRL; measure on MT-Bench | ⭐⭐⭐ |
-| Loss-masking bug hunt | Run SFT with loss on the full sequence vs. only assistant tokens; observe and explain the difference | ⭐⭐⭐ |
-| LoRA / QLoRA | Repeat SFT with LoRA adapters; measure quality and VRAM savings vs. full fine-tune | ⭐⭐⭐ |
-| Train a reward model | Use HH-RLHF or UltraFeedback; report pairwise accuracy; analyze where the RM disagrees with humans | ⭐⭐⭐⭐ |
-| PPO RLHF loop | Wire SFT + RM + PPO with `trl`; observe KL, reward, and downstream quality; intentionally lower β until reward-hacking | ⭐⭐⭐⭐⭐ |
-| DPO from scratch | Implement DPO without `trl`; verify against `trl`'s reference loss | ⭐⭐⭐⭐ |
-| GRPO on a math task | Sample G=8 per prompt on GSM8K; verifier = exact answer match; train with GRPO; report accuracy gain over SFT | ⭐⭐⭐⭐⭐ |
-| Reward-hacking forensics | Deliberately produce a reward-hacked model; trace the failure to RM, β, or rollout distribution | ⭐⭐⭐⭐ |
+| [SFT a 1B base model](projects/28-sft-a-1b-base-model/README.md) | Take an open base model, fine-tune on Alpaca / UltraChat / Tulu mix using TRL; measure on MT-Bench | ⭐⭐⭐ |
+| [Loss-masking bug hunt](projects/29-loss-masking-bug-hunt/README.md) | Run SFT with loss on the full sequence vs. only assistant tokens; observe and explain the difference | ⭐⭐⭐ |
+| [LoRA / QLoRA](projects/30-lora-qlora/README.md) | Repeat SFT with LoRA adapters; measure quality and VRAM savings vs. full fine-tune | ⭐⭐⭐ |
+| [Train a reward model](projects/31-train-a-reward-model/README.md) | Use HH-RLHF or UltraFeedback; report pairwise accuracy; analyze where the RM disagrees with humans | ⭐⭐⭐⭐ |
+| [PPO RLHF loop](projects/32-ppo-rlhf-loop/README.md) | Wire SFT + RM + PPO with `trl`; observe KL, reward, and downstream quality; intentionally lower β until reward-hacking | ⭐⭐⭐⭐⭐ |
+| [DPO from scratch](projects/33-dpo-from-scratch/README.md) | Implement DPO without `trl`; verify against `trl`'s reference loss | ⭐⭐⭐⭐ |
+| [GRPO on a math task](projects/34-grpo-on-a-math-task/README.md) | Sample G=8 per prompt on GSM8K; verifier = exact answer match; train with GRPO; report accuracy gain over SFT | ⭐⭐⭐⭐⭐ |
+| [Reward-hacking forensics](projects/35-reward-hacking-forensics/README.md) | Deliberately produce a reward-hacked model; trace the failure to RM, β, or rollout distribution | ⭐⭐⭐⭐ |
 
 ### Sample Code: The DPO Loss
 

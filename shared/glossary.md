@@ -85,6 +85,9 @@ A device- or library-specific implementation that actually executes an operation
 ### Backward pass {#backward-pass}
 The process of traversing the computation graph in reverse to compute gradients using the chain rule.
 
+### Base model {#base-model}
+A model fresh out of [pretraining](/shared/glossary/#pretraining) that only continues text and has not yet been taught to follow instructions — a brilliant autocomplete, not yet an assistant.
+
 ### Batching {#batching}
 Grouping multiple inference requests together into a single forward pass so the GPU processes them in parallel, increasing [throughput](/shared/glossary/#throughput) at a small cost to [latency](/shared/glossary/#latency). Production servers like [Triton Inference Server](/shared/glossary/#triton-inference-server) perform batching automatically.
 
@@ -433,6 +436,9 @@ Producing spatial outputs (boxes, points) referring to image regions
 ### GRPO {#grpo}
 Group Relative Policy Optimization — value-function-free PPO variant; DeepSeek lineage
 
+### GSM8K {#gsm8k}
+A benchmark of about 8,000 grade-school math word problems, widely used to test step-by-step reasoning because each problem has a single checkable numeric answer.
+
 ### GTSAM {#gtsam}
 Factor-graph SLAM library; the standard back-end for many modern systems
 
@@ -535,6 +541,9 @@ Low-Rank Adaptation — fine-tune by adding small low-rank matrices, freeze the 
 ### Loss function {#loss-function}
 A mathematical function that measures the difference between a model's prediction and the actual target. The goal of training is to minimize this value using [gradients](/shared/glossary/#gradients).
 
+### Loss masking {#loss-masking}
+Telling the trainer to compute the [loss](/shared/glossary/#loss-function) only on the tokens you want the model to learn to produce — in [SFT](/shared/glossary/#sft), the assistant's reply — and to ignore the rest, like grading only a student's answers and not the printed questions.
+
 ### Loss spike {#loss-spike}
 A sudden jump in the training [loss](/shared/glossary/#loss-function), usually from an outlier batch or optimizer instability; small spikes are normal, but a diverging one can ruin a run.
 
@@ -612,6 +621,9 @@ Metal Performance Shaders — the GPU backend for Apple Silicon
 
 ### MQA {#mqa}
 Multi-Query Attention — all query heads share a single key/value head; the most aggressive [KV-cache](/shared/glossary/#kv-cache) saver, at some quality cost
+
+### MT-Bench {#mt-bench}
+A benchmark that scores a chat model's answers to a set of multi-turn questions, often using a strong [LLM](/shared/glossary/#llm) as the judge; a quick proxy for how helpful an assistant feels.
 
 ### MuJoCo {#mujoco}
 Open-source physics engine; the de facto manipulation/locomotion simulator
@@ -724,6 +736,9 @@ Fast rigid-body dynamics library (CRBA, RNEA, ABA)
 ### Plücker coordinates {#plücker-coordinates}
 6D representation of a camera ray; standard for camera-conditioning
 
+### Policy {#policy}
+In reinforcement learning, the model being trained to choose what to do next — for an [LLM](/shared/glossary/#llm), the network that picks the next token. "Improving the policy" just means making those choices earn more reward.
+
 ### Position interpolation {#position-interpolation}
 Extending a model's context length by linearly rescaling [RoPE](/shared/glossary/#rope) position indices so longer sequences fall within the trained range
 
@@ -760,6 +775,9 @@ Post-Training Quantization / Quantization-Aware Training
 ### Q-Former {#q-former}
 BLIP-2's learnable-query cross-attention module for distilling images into LLM tokens
 
+### QLoRA {#qlora}
+[LoRA](/shared/glossary/#lora) with the frozen base model stored in 4-bit [quantized](/shared/glossary/#quantization) form, cutting memory so much you can fine-tune a large model on a single consumer GPU.
+
 ### Quality filter {#quality-filter}
 A classifier that scores each training document and keeps only the high-quality ones (e.g. educational web text), discarding low-value text before [pretraining](/shared/glossary/#pretraining).
 
@@ -778,6 +796,9 @@ The unique integer ID of a process in a distributed job. `RANK` is the global ID
 ### Rectified flow {#rectified-flow}
 A flow-matching parameterization with straight-line trajectories; popular in 2024+ models
 
+### Reference model {#reference-model}
+A frozen copy of the starting model that [RLHF](/shared/glossary/#rlhf) and [DPO](/shared/glossary/#dpo) measure against (through a [KL](/shared/glossary/#kl-divergence) term) so the model being trained does not drift too far from sensible behavior — a "before" photo to compare every change against.
+
 ### Reparameterization trick {#reparameterization-trick}
 `z = μ + σ · ε` — lets gradients flow through a random sample
 
@@ -793,6 +814,9 @@ The order [autograd](/shared/glossary/#autograd) walks the computation graph whe
 ### Reward hacking {#reward-hacking}
 A policy that maximizes the reward signal without doing what was intended
 
+### Reward model {#reward-model}
+A model trained on human preference comparisons to score how good a response is; it stands in for a human rater so [RLHF](/shared/glossary/#rlhf) can score millions of answers automatically.
+
 ### RLHF {#rlhf}
 Reinforcement Learning from Human Feedback — preference learning, classically via PPO + KL
 
@@ -804,6 +828,9 @@ Root-Mean-Square LayerNorm without mean-centering; the modern default
 
 ### RNEA {#rnea}
 Recursive Newton-Euler — `O(n)` inverse-dynamics algorithm
+
+### Rollout {#rollout}
+One sample of the model actually generating a full response to a prompt, used in RL to see what behavior to reward; producing many rollouts is the expensive part of [PPO](/shared/glossary/#ppo) and [GRPO](/shared/glossary/#grpo).
 
 ### Roofline {#roofline}
 Performance model bounding throughput as min(peak FLOPs, memory bandwidth × arithmetic intensity)
@@ -1017,6 +1044,9 @@ Expected return; `V(s)` for state-value, `Q(s, a)` for action-value
 
 ### VBench {#vbench}
 Comprehensive open evaluation suite for video generation
+
+### Verifier {#verifier}
+A program that automatically checks whether an answer is correct — running unit tests, or comparing to a known math result — giving the exact, unhackable reward that [RLVR](/shared/glossary/#rlvr) trains on.
 
 ### view {#view}
 A no-copy alias that shares storage with its source; requires a contiguous-compatible layout
