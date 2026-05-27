@@ -16,6 +16,9 @@ Articulated-Body Algorithm — `O(n)` forward dynamics for rigid-body chains
 ### Ablation {#ablation}
 A controlled experiment that changes exactly one factor (a data step, a layer, a hyperparameter) while holding everything else fixed, to measure that factor's true effect.
 
+### Activation checkpointing {#activation-checkpointing}
+A memory-saving trick that throws away the intermediate [activations](/shared/glossary/#activations) from the forward pass and recomputes them during the [backward pass](/shared/glossary/#backward-pass) — trading a little extra compute for a lot less memory. Also called [gradient checkpointing](/shared/glossary/#gradient-checkpointing).
+
 ### Activations {#activations}
 The intermediate tensor outputs produced by the layers of a neural network during the forward pass.
 
@@ -219,6 +222,9 @@ A user-defined operation registered with PyTorch (e.g. via `torch.library.custom
 
 ### CUTLASS {#cutlass}
 NVIDIA's open template library for matmul kernels
+
+### Data parallelism {#data-parallelism}
+The default way to train across many GPUs: put a full copy of the model on each GPU, feed each one a different slice of the batch, then average their [gradients](/shared/glossary/#gradients) so all copies stay identical — like several graders each marking part of an exam pile and then pooling the scores. (See [DDP](/shared/glossary/#ddp).)
 
 ### DataLoader {#dataloader}
 PyTorch's iterator that pulls samples from a Dataset, groups them into batches, and can load them in parallel using [worker processes](/shared/glossary/#worker-processes).
@@ -559,6 +565,9 @@ A recording of how much GPU memory is allocated at one moment; comparing snapsho
 ### Megatron {#megatron}
 NVIDIA's approach to [tensor parallelism](/shared/glossary/#tensor-parallelism-tp) that splits [attention](/shared/glossary/#attention) and [MLP](/shared/glossary/#mlp) layers [column-wise](/shared/glossary/#column-wise-partitioning) and row-wise across GPUs with carefully placed [AllReduce](/shared/glossary/#allreduce) collectives, allowing efficient intra-layer parallelism.
 
+### MFU {#mfu}
+Model FLOPs Utilization — the fraction of a GPU's peak arithmetic speed a training run actually uses (e.g. 70% MFU). Like a delivery truck's fill rate, it shows how much of the hardware you are paying for is doing useful work instead of waiting on memory or the network.
+
 ### Micrograd {#micrograd}
 A tiny, educational autograd engine implemented in basic Python by Andrej Karpathy to illustrate how reverse-mode differentiation works.
 
@@ -810,6 +819,9 @@ The component that decides the order in which a [DataLoader](/shared/glossary/#d
 
 ### Sampling {#sampling}
 Drawing the next token from the model's predicted probability distribution instead of always taking the most likely one; [temperature](/shared/glossary/#temperature), [top-k](/shared/glossary/#top-k), and [top-p](/shared/glossary/#top-p) control how random the choice is.
+
+### Scaling laws {#scaling-laws}
+The empirical finding that a model's [loss](/shared/glossary/#loss-function) drops in a smooth, predictable curve as you add [parameters](/shared/glossary/#parameters), training data, and compute — like a growth chart that lets you forecast a bigger model's quality from smaller ones before you ever build it.
 
 ### Score {#score}
 `∇_x log p(x)` — diffusion training implicitly learns this

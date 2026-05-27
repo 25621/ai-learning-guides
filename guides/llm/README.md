@@ -494,13 +494,13 @@ A frontier-scale run might be DP × TP × PP × EP × SP, with FSDP underneath.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Reproduce a mini-Chinchilla plot | Train 7 models from 10M to 500M params with appropriate token counts; plot iso-FLOP loss curves | ⭐⭐⭐⭐ |
-| Compute calculator | Implement `6 N D` and check your last run's wall-time and FLOPs against the theoretical | ⭐⭐ |
-| FSDP from scratch (toy) | 2 GPUs, shard model weights manually, train a tiny model, verify equivalence to DP | ⭐⭐⭐⭐⭐ |
-| Activation checkpointing study | Same model, with and without checkpointing; measure memory and step time | ⭐⭐⭐ |
-| BF16 vs FP8 ablation | Train a 100M model in BF16 and FP8 (Transformer Engine if available); compare loss and stability | ⭐⭐⭐⭐⭐ |
-| Loss-spike recovery drill | Catch a spike via grad-norm threshold, roll back to last checkpoint, skip the offending batch, resume | ⭐⭐⭐⭐ |
-| Multi-node training | 2 nodes × 8 GPUs with `torchrun` + FSDP; reach >70% MFU | ⭐⭐⭐⭐⭐ |
+| [Reproduce a mini-Chinchilla plot](projects/21-reproduce-a-mini-chinchilla-plot/README.md) | Train 7 models from 10M to 500M params with appropriate token counts; plot iso-FLOP loss curves | ⭐⭐⭐⭐ |
+| [Compute calculator](projects/22-compute-calculator/README.md) | Implement `6 N D` and check your last run's wall-time and FLOPs against the theoretical | ⭐⭐ |
+| [FSDP from scratch (toy)](projects/23-fsdp-from-scratch-toy/README.md) | 2 GPUs, shard model weights manually, train a tiny model, verify equivalence to DP | ⭐⭐⭐⭐⭐ |
+| [Activation checkpointing study](projects/24-activation-checkpointing-study/README.md) | Same model, with and without checkpointing; measure memory and step time | ⭐⭐⭐ |
+| [BF16 vs FP8 ablation](projects/25-bf16-vs-fp8-ablation/README.md) | Train a 100M model in BF16 and FP8 (Transformer Engine if available); compare loss and stability | ⭐⭐⭐⭐⭐ |
+| [Loss-spike recovery drill](projects/26-loss-spike-recovery-drill/README.md) | Catch a spike via grad-norm threshold, roll back to last checkpoint, skip the offending batch, resume | ⭐⭐⭐⭐ |
+| [Multi-node training](projects/27-multi-node-training/README.md) | 2 nodes × 8 GPUs with `torchrun` + FSDP; reach >70% MFU | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: A Compute Budget in Three Lines
 
