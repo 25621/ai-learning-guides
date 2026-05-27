@@ -103,6 +103,9 @@ The policy that generated the data, in off-policy or offline RL
 ### Bellman equation {#bellman-equation}
 The recursive consistency condition `V(s) = E[r + γV(s')]`
 
+### Best-of-N {#best-of-n}
+An inference trick that samples `N` candidate answers to the same prompt and keeps the single one a scorer — usually a [reward model](/shared/glossary/#reward-model) or [verifier](/shared/glossary/#verifier) — rates highest, like writing several drafts of an email and sending only the best.
+
 ### bfloat16 {#bfloat16}
 16-bit float with fp32's exponent range — the modern default for training (also written bf16, BF16)
 
@@ -209,7 +212,7 @@ A tensor that owns its own storage, independent of any source tensor; created by
 A [learning-rate](/shared/glossary/#learning-rate) schedule that, after [warmup](/shared/glossary/#warmup), lowers the rate along the smooth downward half of a cosine curve until it reaches near zero by the end of training. The step size starts large and eases off gently — like braking smoothly as you coast up to a stop sign instead of slamming the pedal at the last moment — which helps the model settle into a good solution. It is the long-standing default schedule, before newer recipes like [WSD](/shared/glossary/#wsd).
 
 ### CoT {#cot}
-Chain of Thought — prompting / training the model to produce intermediate reasoning
+Chain of Thought — prompting or training a model to write out its reasoning step by step before giving a final answer, the way a student shows their work on a math problem instead of blurting out just the result.
 
 ### CQL {#cql}
 Conservative Q-Learning — offline RL with a pessimistic Q penalty
@@ -478,6 +481,9 @@ Inertial Measurement Unit — gyroscope + accelerometer (often + magnetometer)
 ### Indexing {#indexing}
 Mapping a multidimensional index `[i, j, …]` to a flat storage position via `offset + Σ iₖ·strideₖ`
 
+### Inference-time compute {#inference-time-compute}
+The work a model does while answering a question (not while training) — for reasoning models, mostly the tokens it spends "thinking" before it replies. Giving a fixed model more inference-time compute, like giving a student more time on an exam, can raise its accuracy without changing the model at all.
+
 ### InfiniBand (IB) {#infiniband-ib}
 High-speed network with RDMA; standard for AI clusters
 
@@ -709,6 +715,9 @@ An algorithm that updates model parameters using computed gradients; in PyTorch,
 ### Optimizer state {#optimizer-state}
 The extra per-parameter values an [optimizer](/shared/glossary/#optimizer) stores between steps — for example, [Adam](/shared/glossary/#adam) keeps two (the first- and second-moment estimates) — which adds to training memory.
 
+### Outcome reward model {#outcome-reward-model}
+A scorer that judges only a solution's final answer as right or wrong, ignoring the steps in between — simpler than a [process reward model](/shared/glossary/#process-reward-model), which grades each step, but blind to *where* a wrong answer first went off track.
+
 ### Padding {#padding}
 Filling shorter sequences with a placeholder value so that every sample in a batch has the same length.
 
@@ -771,6 +780,9 @@ Probabilistic Roadmap — multi-query sampling-based planner
 
 ### Probability flow ODE {#probability-flow-ode}
 The deterministic ODE equivalent of the reverse-time diffusion SDE
+
+### Process reward model {#process-reward-model}
+A scorer that grades each individual step of a model's reasoning rather than just the final answer — like a teacher marking every line of a proof, not only the last one — so a mistake can be caught at the exact step it happens. Contrast with an [outcome reward model](/shared/glossary/#outcome-reward-model).
 
 ### Profiler {#profiler}
 A tool (`torch.profiler`) that records how long each operation in a training step takes, used to locate performance [bottlenecks](/shared/glossary/#bottleneck).
@@ -882,6 +894,9 @@ Special Euclidean / Orthogonal group — rigid-body motions / rotations in 3D
 
 ### Seed {#seed}
 A fixed starting number for a random-number generator; setting the same seed makes random operations (shuffling, initialization, dropout) produce the identical sequence every run.
+
+### Self-consistency {#self-consistency}
+Sampling many independent [chain-of-thought](/shared/glossary/#cot) solutions to the same problem and taking a majority vote on the final answer — like asking several people to solve a puzzle on their own and trusting the answer most of them land on.
 
 ### SFT {#sft}
 Supervised Fine-Tuning — train on demonstration data with [cross-entropy](/shared/glossary/#cross-entropy)
@@ -1020,6 +1035,9 @@ The decoder-only / encoder-only / encoder-decoder architecture built from [atten
 
 ### transpose {#transpose}
 Swaps two dimensions by rewriting strides — never copies; the result is usually non-contiguous
+
+### Tree-of-Thoughts {#tree-of-thoughts}
+A reasoning method that explores several partial solutions at once as branches of a tree, scores them, and expands only the promising ones — like working through a maze by trying multiple paths and backing out of dead ends instead of committing to the first turn.
 
 ### Triton {#triton}
 A Python-flavored language for writing GPU kernels, developed by OpenAI

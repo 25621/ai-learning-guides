@@ -741,13 +741,13 @@ verifiable rewards (the top curve) shifts the whole frontier up.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| CoT vs. direct on GSM8K | Compare a base 7B model with and without "let's think step by step"; report accuracy gain | ⭐⭐ |
-| Self-consistency sweep | Same model, vary `n_samples ∈ {1, 4, 16, 64}`; plot accuracy vs. cost | ⭐⭐⭐ |
-| Best-of-N with a reward model | Reward-model-scored selection on a math benchmark; compare to self-consistency majority | ⭐⭐⭐ |
-| Process reward model | Train a small PRM on PRM800K; use it to rescore generations; measure win-rate | ⭐⭐⭐⭐ |
-| Tree-of-Thoughts on a logic puzzle | Implement a small tree-search over partial solutions with a PRM heuristic | ⭐⭐⭐⭐ |
-| Mini R1 recipe | Take Qwen 7B base; SFT on a small reasoning trace set; GRPO with `is_correct` reward on math problems; observe long-CoT behavior emerging | ⭐⭐⭐⭐⭐ |
-| Length-budget controller | Train a model to obey an explicit "think for at most N tokens" instruction; measure quality-vs-budget curve | ⭐⭐⭐⭐⭐ |
+| [CoT vs. direct on GSM8K](projects/36-cot-vs-direct-on-gsm8k/README.md) | Compare a base 7B model with and without "let's think step by step"; report accuracy gain | ⭐⭐ |
+| [Self-consistency sweep](projects/37-self-consistency-sweep/README.md) | Same model, vary `n_samples ∈ {1, 4, 16, 64}`; plot accuracy vs. cost | ⭐⭐⭐ |
+| [Best-of-N with a reward model](projects/38-best-of-n-with-a-reward-model/README.md) | Reward-model-scored selection on a math benchmark; compare to self-consistency majority | ⭐⭐⭐ |
+| [Process reward model](projects/39-process-reward-model/README.md) | Train a small PRM on PRM800K; use it to rescore generations; measure win-rate | ⭐⭐⭐⭐ |
+| [Tree-of-Thoughts on a logic puzzle](projects/40-tree-of-thoughts-on-a-logic-puzzle/README.md) | Implement a small tree-search over partial solutions with a PRM heuristic | ⭐⭐⭐⭐ |
+| [Mini R1 recipe](projects/41-mini-r1-recipe/README.md) | Take Qwen 7B base; SFT on a small reasoning trace set; GRPO with `is_correct` reward on math problems; observe long-CoT behavior emerging | ⭐⭐⭐⭐⭐ |
+| [Length-budget controller](projects/42-length-budget-controller/README.md) | Train a model to obey an explicit "think for at most N tokens" instruction; measure quality-vs-budget curve | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: Self-Consistency
 
