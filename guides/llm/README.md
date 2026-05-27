@@ -125,11 +125,11 @@ the model silently underperforms.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Train a BPE from scratch | 1 MB of text, 5 000-token vocab; implement merge selection by hand; serialize and reload | ⭐⭐ |
-| Tokenizer compression study | Tokenize the same Wikipedia paragraph in English, French, Mandarin, Hindi, Bengali with `tiktoken`, Llama 3, and a Gemma tokenizer; plot tokens-per-byte | ⭐⭐ |
-| Numeral tokenization audit | For 1 000 integers from 0–10 000, count tokens per number across tokenizers; explain the digit-grouping decisions | ⭐⭐⭐ |
-| Chat-template debugger | Take a fine-tuned chat model, render the chat template by hand, byte-compare against `tokenizer.apply_chat_template`. Find one off-by-one whitespace bug | ⭐⭐⭐ |
-| Custom vocab extension | Add 256 new tokens (e.g. for chemical SMILES) to an existing tokenizer; resize embeddings; verify the model still generates valid English | ⭐⭐⭐⭐ |
+| [Train a BPE from scratch](projects/01-train-a-bpe-from-scratch/README.md) | 1 MB of text, 5 000-token vocab; implement merge selection by hand; serialize and reload | ⭐⭐ |
+| [Tokenizer compression study](projects/02-tokenizer-compression-study/README.md) | Tokenize the same Wikipedia paragraph in English, French, Mandarin, Hindi, Bengali with `tiktoken`, Llama 3, and a Gemma tokenizer; plot tokens-per-byte | ⭐⭐ |
+| [Numeral tokenization audit](projects/03-numeral-tokenization-audit/README.md) | For 1 000 integers from 0–10 000, count tokens per number across tokenizers; explain the digit-grouping decisions | ⭐⭐⭐ |
+| [Chat-template debugger](projects/04-chat-template-debugger/README.md) | Take a fine-tuned chat model, render the chat template by hand, byte-compare against `tokenizer.apply_chat_template`. Find one off-by-one whitespace bug | ⭐⭐⭐ |
+| [Custom vocab extension](projects/05-custom-vocab-extension/README.md) | Add 256 new tokens (e.g. for chemical SMILES) to an existing tokenizer; resize embeddings; verify the model still generates valid English | ⭐⭐⭐⭐ |
 
 ### Sample Code: A Minimal BPE
 
@@ -253,14 +253,14 @@ regardless of head dimension.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Single attention head | Implement scaled dot-product attention with a causal mask; verify against `F.scaled_dot_product_attention` | ⭐⭐ |
-| Multi-head attention | Add multi-head splitting, output projection, GQA option; verify equivalence to PyTorch's `nn.MultiheadAttention` | ⭐⭐⭐ |
-| nanoGPT reproduction | Type out Karpathy's nanoGPT from scratch; train on tiny Shakespeare; sample text | ⭐⭐⭐ |
-| Pre-norm vs post-norm | Train two 6-layer models, identical except for norm placement; observe training stability with and without warmup | ⭐⭐⭐ |
-| RoPE from scratch | Implement RoPE, including the half-rotation trick; test by checking that `<q, k>` depends only on relative position | ⭐⭐⭐⭐ |
-| GQA ablation | Train identical 100M models with MHA, GQA-4, MQA; measure KV-cache size and validation loss | ⭐⭐⭐⭐ |
-| Mini-MoE | Add an 8-expert top-2 MoE MLP to nanoGPT; verify routing balances; observe the loss curve | ⭐⭐⭐⭐⭐ |
-| Long-context extension | Take a 4k-context model and apply position interpolation or YaRN to extend to 16k; measure needle-in-a-haystack | ⭐⭐⭐⭐⭐ |
+| [Single attention head](projects/06-single-attention-head/README.md) | Implement scaled dot-product attention with a causal mask; verify against `F.scaled_dot_product_attention` | ⭐⭐ |
+| [Multi-head attention](projects/07-multi-head-attention/README.md) | Add multi-head splitting, output projection, GQA option; verify equivalence to PyTorch's `nn.MultiheadAttention` | ⭐⭐⭐ |
+| [nanoGPT reproduction](projects/08-nanogpt-reproduction/README.md) | Type out Karpathy's nanoGPT from scratch; train on tiny Shakespeare; sample text | ⭐⭐⭐ |
+| [Pre-norm vs post-norm](projects/09-pre-norm-vs-post-norm/README.md) | Train two 6-layer models, identical except for norm placement; observe training stability with and without warmup | ⭐⭐⭐ |
+| [RoPE from scratch](projects/10-rope-from-scratch/README.md) | Implement RoPE, including the half-rotation trick; test by checking that `<q, k>` depends only on relative position | ⭐⭐⭐⭐ |
+| [GQA ablation](projects/11-gqa-ablation/README.md) | Train identical 100M models with MHA, GQA-4, MQA; measure KV-cache size and validation loss | ⭐⭐⭐⭐ |
+| [Mini-MoE](projects/12-mini-moe/README.md) | Add an 8-expert top-2 MoE MLP to nanoGPT; verify routing balances; observe the loss curve | ⭐⭐⭐⭐⭐ |
+| [Long-context extension](projects/13-long-context-extension/README.md) | Take a 4k-context model and apply position interpolation or YaRN to extend to 16k; measure needle-in-a-haystack | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: Causal Multi-Head Self-Attention
 
@@ -381,13 +381,13 @@ That's it. The entire pretraining objective is six lines. The other 50 000 lines
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Train a 10M-parameter LM | nanoGPT on tiny Shakespeare; understand every line of the loop | ⭐⭐ |
-| Train a 100M-parameter LM | OpenWebText subset, 8h on one A100; reach <3.5 val loss | ⭐⭐⭐ |
-| Dedup ablation | Train two identical 100M models, one on raw CommonCrawl, one after MinHash dedup; compare downstream eval | ⭐⭐⭐⭐ |
-| Quality-filter ablation | Repeat with vs. without an educational-quality classifier filter | ⭐⭐⭐⭐ |
-| LR schedule sweep | Same model, sweep cosine vs. WSD vs. constant; report val loss + downstream evals | ⭐⭐⭐ |
-| Loss-spike forensics | Deliberately cause a loss spike (huge LR, bad data sample); analyze, fix, recover from checkpoint | ⭐⭐⭐⭐ |
-| Continued pretraining | Take an open base model; continue-pretrain on 1B tokens of a specialized corpus; measure capability gain and base-task forgetting | ⭐⭐⭐⭐⭐ |
+| [Train a 10M-parameter LM](projects/14-train-a-10m-parameter-lm/README.md) | nanoGPT on tiny Shakespeare; understand every line of the loop | ⭐⭐ |
+| [Train a 100M-parameter LM](projects/15-train-a-100m-parameter-lm/README.md) | OpenWebText subset, 8h on one A100; reach <3.5 val loss | ⭐⭐⭐ |
+| [Dedup ablation](projects/16-dedup-ablation/README.md) | Train two identical 100M models, one on raw CommonCrawl, one after MinHash dedup; compare downstream eval | ⭐⭐⭐⭐ |
+| [Quality-filter ablation](projects/17-quality-filter-ablation/README.md) | Repeat with vs. without an educational-quality classifier filter | ⭐⭐⭐⭐ |
+| [LR schedule sweep](projects/18-lr-schedule-sweep/README.md) | Same model, sweep cosine vs. WSD vs. constant; report val loss + downstream evals | ⭐⭐⭐ |
+| [Loss-spike forensics](projects/19-loss-spike-forensics/README.md) | Deliberately cause a loss spike (huge LR, bad data sample); analyze, fix, recover from checkpoint | ⭐⭐⭐⭐ |
+| [Continued pretraining](projects/20-continued-pretraining/README.md) | Take an open base model; continue-pretrain on 1B tokens of a specialized corpus; measure capability gain and base-task forgetting | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: The Heart of a Pretraining Step
 
@@ -494,13 +494,13 @@ A frontier-scale run might be DP × TP × PP × EP × SP, with FSDP underneath.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Reproduce a mini-Chinchilla plot | Train 7 models from 10M to 500M params with appropriate token counts; plot iso-FLOP loss curves | ⭐⭐⭐⭐ |
-| Compute calculator | Implement `6 N D` and check your last run's wall-time and FLOPs against the theoretical | ⭐⭐ |
-| FSDP from scratch (toy) | 2 GPUs, shard model weights manually, train a tiny model, verify equivalence to DP | ⭐⭐⭐⭐⭐ |
-| Activation checkpointing study | Same model, with and without checkpointing; measure memory and step time | ⭐⭐⭐ |
-| BF16 vs FP8 ablation | Train a 100M model in BF16 and FP8 (Transformer Engine if available); compare loss and stability | ⭐⭐⭐⭐⭐ |
-| Loss-spike recovery drill | Catch a spike via grad-norm threshold, roll back to last checkpoint, skip the offending batch, resume | ⭐⭐⭐⭐ |
-| Multi-node training | 2 nodes × 8 GPUs with `torchrun` + FSDP; reach >70% MFU | ⭐⭐⭐⭐⭐ |
+| [Reproduce a mini-Chinchilla plot](projects/21-reproduce-a-mini-chinchilla-plot/README.md) | Train 7 models from 10M to 500M params with appropriate token counts; plot iso-FLOP loss curves | ⭐⭐⭐⭐ |
+| [Compute calculator](projects/22-compute-calculator/README.md) | Implement `6 N D` and check your last run's wall-time and FLOPs against the theoretical | ⭐⭐ |
+| [FSDP from scratch (toy)](projects/23-fsdp-from-scratch-toy/README.md) | 2 GPUs, shard model weights manually, train a tiny model, verify equivalence to DP | ⭐⭐⭐⭐⭐ |
+| [Activation checkpointing study](projects/24-activation-checkpointing-study/README.md) | Same model, with and without checkpointing; measure memory and step time | ⭐⭐⭐ |
+| [BF16 vs FP8 ablation](projects/25-bf16-vs-fp8-ablation/README.md) | Train a 100M model in BF16 and FP8 (Transformer Engine if available); compare loss and stability | ⭐⭐⭐⭐⭐ |
+| [Loss-spike recovery drill](projects/26-loss-spike-recovery-drill/README.md) | Catch a spike via grad-norm threshold, roll back to last checkpoint, skip the offending batch, resume | ⭐⭐⭐⭐ |
+| [Multi-node training](projects/27-multi-node-training/README.md) | 2 nodes × 8 GPUs with `torchrun` + FSDP; reach >70% MFU | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: A Compute Budget in Three Lines
 
@@ -616,14 +616,14 @@ reward-hacking. β ≈ 0.01–0.1 is the typical range; schedule it.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| SFT a 1B base model | Take an open base model, fine-tune on Alpaca / UltraChat / Tulu mix using TRL; measure on MT-Bench | ⭐⭐⭐ |
-| Loss-masking bug hunt | Run SFT with loss on the full sequence vs. only assistant tokens; observe and explain the difference | ⭐⭐⭐ |
-| LoRA / QLoRA | Repeat SFT with LoRA adapters; measure quality and VRAM savings vs. full fine-tune | ⭐⭐⭐ |
-| Train a reward model | Use HH-RLHF or UltraFeedback; report pairwise accuracy; analyze where the RM disagrees with humans | ⭐⭐⭐⭐ |
-| PPO RLHF loop | Wire SFT + RM + PPO with `trl`; observe KL, reward, and downstream quality; intentionally lower β until reward-hacking | ⭐⭐⭐⭐⭐ |
-| DPO from scratch | Implement DPO without `trl`; verify against `trl`'s reference loss | ⭐⭐⭐⭐ |
-| GRPO on a math task | Sample G=8 per prompt on GSM8K; verifier = exact answer match; train with GRPO; report accuracy gain over SFT | ⭐⭐⭐⭐⭐ |
-| Reward-hacking forensics | Deliberately produce a reward-hacked model; trace the failure to RM, β, or rollout distribution | ⭐⭐⭐⭐ |
+| [SFT a 1B base model](projects/28-sft-a-1b-base-model/README.md) | Take an open base model, fine-tune on Alpaca / UltraChat / Tulu mix using TRL; measure on MT-Bench | ⭐⭐⭐ |
+| [Loss-masking bug hunt](projects/29-loss-masking-bug-hunt/README.md) | Run SFT with loss on the full sequence vs. only assistant tokens; observe and explain the difference | ⭐⭐⭐ |
+| [LoRA / QLoRA](projects/30-lora-qlora/README.md) | Repeat SFT with LoRA adapters; measure quality and VRAM savings vs. full fine-tune | ⭐⭐⭐ |
+| [Train a reward model](projects/31-train-a-reward-model/README.md) | Use HH-RLHF or UltraFeedback; report pairwise accuracy; analyze where the RM disagrees with humans | ⭐⭐⭐⭐ |
+| [PPO RLHF loop](projects/32-ppo-rlhf-loop/README.md) | Wire SFT + RM + PPO with `trl`; observe KL, reward, and downstream quality; intentionally lower β until reward-hacking | ⭐⭐⭐⭐⭐ |
+| [DPO from scratch](projects/33-dpo-from-scratch/README.md) | Implement DPO without `trl`; verify against `trl`'s reference loss | ⭐⭐⭐⭐ |
+| [GRPO on a math task](projects/34-grpo-on-a-math-task/README.md) | Sample G=8 per prompt on GSM8K; verifier = exact answer match; train with GRPO; report accuracy gain over SFT | ⭐⭐⭐⭐⭐ |
+| [Reward-hacking forensics](projects/35-reward-hacking-forensics/README.md) | Deliberately produce a reward-hacked model; trace the failure to RM, β, or rollout distribution | ⭐⭐⭐⭐ |
 
 ### Sample Code: The DPO Loss
 

@@ -43,6 +43,10 @@ const config = {
   },
   trailingSlash: true,
 
+  // Guarantees window.gtag is always a function before the gtag plugin's route
+  // hook runs, preventing "window.gtag is not a function" runtime errors.
+  clientModules: [require.resolve('./src/ensureGtag.js')],
+
   headTags: [
     {
       tagName: 'link',

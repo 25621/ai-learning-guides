@@ -13,6 +13,12 @@ Variational autoencoder that compresses video in time as well as space
 ### ABA {#aba}
 Articulated-Body Algorithm — `O(n)` forward dynamics for rigid-body chains
 
+### Ablation {#ablation}
+A controlled experiment that changes exactly one factor (a data step, a layer, a hyperparameter) while holding everything else fixed, to measure that factor's true effect.
+
+### Activation checkpointing {#activation-checkpointing}
+A memory-saving trick that throws away the intermediate [activations](/shared/glossary/#activations) from the forward pass and recomputes them during the [backward pass](/shared/glossary/#backward-pass) — trading a little extra compute for a lot less memory. Also called [gradient checkpointing](/shared/glossary/#gradient-checkpointing).
+
 ### Activations {#activations}
 The intermediate tensor outputs produced by the layers of a neural network during the forward pass.
 
@@ -42,6 +48,9 @@ FLOPs per byte of memory accessed; determines roofline position
 
 ### Alignment (multimodal) {#alignment-multimodal}
 Making embeddings from different modalities comparable in a shared space
+
+### Alignment stack {#alignment-stack}
+The layered sequence of post-training steps that turns a raw [base model](/shared/glossary/#base-model) into a helpful, safe assistant — typically [SFT](/shared/glossary/#sft), then a [reward model](/shared/glossary/#reward-model), then [RLHF](/shared/glossary/#rlhf) (or [DPO](/shared/glossary/#dpo)). Like the stations on an assembly line, each layer builds on the one below it: the model first learns to follow instructions, then learns what people prefer, then is tuned to actually prefer it. "Alignment" here means getting the model's behavior to match human intent.
 
 ### AllReduce {#allreduce}
 A collective op that sums tensors across all ranks and gives every rank the result
@@ -73,8 +82,14 @@ The [reverse-mode](/shared/glossary/#reverse-mode) automatic differentiation eng
 ### AWQ {#awq}
 Activation-aware Weight Quantization — preserve weights important to large activations
 
+### Backend {#backend}
+A device- or library-specific implementation that actually executes an operation's [kernel](/shared/glossary/#kernel) — for example the CPU, [CUDA](/shared/glossary/#cuda), or [MPS](/shared/glossary/#mps) backend. The [dispatcher](/shared/glossary/#dispatcher) routes each call to the correct backend based on the tensor's device and [dtype](/shared/glossary/#dtype).
+
 ### Backward pass {#backward-pass}
 The process of traversing the computation graph in reverse to compute gradients using the chain rule.
+
+### Base model {#base-model}
+A model fresh out of [pretraining](/shared/glossary/#pretraining) that only continues text and has not yet been taught to follow instructions — a brilliant autocomplete, not yet an assistant.
 
 ### Batching {#batching}
 Grouping multiple inference requests together into a single forward pass so the GPU processes them in parallel, increasing [throughput](/shared/glossary/#throughput) at a small cost to [latency](/shared/glossary/#latency). Production servers like [Triton Inference Server](/shared/glossary/#triton-inference-server) perform batching automatically.
@@ -121,6 +136,12 @@ PyTorch's core C++ library (the "core ten[sor]" library)
 ### Calibration {#calibration}
 Running a few representative batches of data through a model to measure the typical range of its [activations](/shared/glossary/#activations), so that static [quantization](/shared/glossary/#quantization) can pick fixed [int8](/shared/glossary/#int8) scales.
 
+### Catastrophic forgetting {#catastrophic-forgetting}
+When training a model on new data erases skills it had already learned, because the new [gradients](/shared/glossary/#gradients) overwrite the old [weights](/shared/glossary/#weights).
+
+### Causal mask {#causal-mask}
+A mask applied to attention scores that hides future positions, so each token can attend only to itself and the tokens before it
+
 ### CBF {#cbf}
 Control Barrier Function — runtime safety filter via a constraint on `ḣ`
 
@@ -136,6 +157,9 @@ A calculus principle used to compute the derivative of a composite function by m
 ### Chat template {#chat-template}
 The structured format (system/user/assistant) the model is fine-tuned on
 
+### Checkpoint {#checkpoint}
+A saved snapshot of a model's [weights](/shared/glossary/#weights) (and [optimizer state](/shared/glossary/#optimizer-state)) at a point in training, so a run can be resumed or rolled back to it after a failure.
+
 ### Chinchilla {#chinchilla}
 The scaling law showing compute-optimal training uses ~20 tokens per parameter
 
@@ -144,6 +168,9 @@ Splitting long prompts across multiple iterations to interleave with decode step
 
 ### CLIP {#clip}
 Contrastive Language-Image Pretraining — paired text-image dual encoder
+
+### Closed-form {#closed-form}
+A solution you can write down and compute directly with a fixed formula, instead of reaching it through many rounds of trial-and-error. Solving `2x = 10` by writing `x = 5` is closed-form; nudging `x` up and down until both sides match is not. In [DPO](/shared/glossary/#dpo) a closed-form objective lets the model learn straight from preference pairs with one training [loss](/shared/glossary/#loss-function), skipping the slow [reward model](/shared/glossary/#reward-model)-plus-[PPO](/shared/glossary/#ppo) loop of classic [RLHF](/shared/glossary/#rlhf).
 
 ### CNN {#cnn}
 Convolutional Neural Network — a neural network built mainly from convolution layers; the standard architecture for image tasks.
@@ -169,11 +196,17 @@ The routing and retrieval of information between tokens based on their query-key
 ### Context window {#context-window}
 The maximum number of tokens the model can attend over in one forward pass
 
+### Continued pretraining {#continued-pretraining}
+Taking an already-pretrained model and training it further on a new corpus to add domain knowledge, rather than starting from random weights.
+
 ### ControlNet {#controlnet}
 Architecture that adds an auxiliary conditioning branch (depth, pose, edges, …) to a frozen diffusion model
 
 ### copy {#copy}
 A tensor that owns its own storage, independent of any source tensor; created by `.clone()`, or automatically by operations like `.contiguous()` and `reshape` when a view is not possible
+
+### Cosine decay {#cosine-decay}
+A [learning-rate](/shared/glossary/#learning-rate) schedule that, after [warmup](/shared/glossary/#warmup), lowers the rate along the smooth downward half of a cosine curve until it reaches near zero by the end of training. The step size starts large and eases off gently — like braking smoothly as you coast up to a stop sign instead of slamming the pedal at the last moment — which helps the model settle into a good solution. It is the long-standing default schedule, before newer recipes like [WSD](/shared/glossary/#wsd).
 
 ### CoT {#cot}
 Chain of Thought — prompting / training the model to produce intermediate reasoning
@@ -183,6 +216,9 @@ Conservative Q-Learning — offline RL with a pessimistic Q penalty
 
 ### Cross-attention {#cross-attention}
 Attention where queries come from one modality and keys/values from another
+
+### Cross-entropy {#cross-entropy}
+A [loss function](/shared/glossary/#loss-function) that scores how surprised a model is by the correct answer: it stays small when the model gave the true next word a high probability and grows large when it was confidently wrong. Like grading a weather forecaster on confidence and not just on being right — announcing "90% chance of sun" and then getting rain costs far more points than a hedged "50%." Training an [LLM](/shared/glossary/#llm) means adjusting the [weights](/shared/glossary/#weights) to push this surprise as low as it will go.
 
 ### cuBLAS {#cublas}
 NVIDIA's optimized library of dense linear-algebra [kernels](/shared/glossary/#kernel); PyTorch calls it for matrix multiplication on [CUDA](/shared/glossary/#cuda).
@@ -195,6 +231,9 @@ A user-defined operation registered with PyTorch (e.g. via `torch.library.custom
 
 ### CUTLASS {#cutlass}
 NVIDIA's open template library for matmul kernels
+
+### Data parallelism {#data-parallelism}
+The default way to train across many GPUs: put a full copy of the model on each GPU, feed each one a different slice of the batch, then average their [gradients](/shared/glossary/#gradients) so all copies stay identical — like several graders each marking part of an exam pile and then pooling the scores. (See [DDP](/shared/glossary/#ddp).)
 
 ### DataLoader {#dataloader}
 PyTorch's iterator that pulls samples from a Dataset, groups them into batches, and can load them in parallel using [worker processes](/shared/glossary/#worker-processes).
@@ -216,6 +255,12 @@ Function approximation + bootstrapping + off-policy data → instability
 
 ### Decoupled {#decoupled}
 A training technique where two effects that are mathematically equivalent in standard SGD are separated into independent operations. In AdamW, weight decay is decoupled from the gradient update so that the regularization strength is not scaled by the adaptive learning rate.
+
+### Deduplication {#deduplication}
+Removing repeated or near-repeated documents from a training corpus; one of the highest-return cleaning steps in [pretraining](/shared/glossary/#pretraining).
+
+### DeepSpeed {#deepspeed}
+Microsoft's open-source library for training very large models efficiently. It is best known for [ZeRO](/shared/glossary/#zero), which shards a model's [parameters](/shared/glossary/#parameters), [gradients](/shared/glossary/#gradients), and [optimizer state](/shared/glossary/#optimizer-state) across GPUs so no single GPU has to hold the whole model — the same idea as PyTorch's [FSDP](/shared/glossary/#fsdp). Think of it as a moving company that splits one giant load across several trucks instead of trying to cram everything into one.
 
 ### Detached tensor {#detached-tensor}
 A tensor that has been removed from the [dynamic computation graph](/shared/glossary/#dynamic-computation-graph) via the `.detach()` method, meaning operations performed on it will not be tracked for [autograd](/shared/glossary/#autograd).
@@ -241,8 +286,11 @@ Diffusion Transformer — Peebles & Xie's transformer-based diffusion backbone
 ### Double backward {#double-backward}
 Computing the gradient of a gradient by tracking the backward pass operations in a new computation graph.
 
+### Downstream {#downstream}
+The later, real-world tasks a model is eventually judged on — such as question answering or coding — as opposed to the [pretraining](/shared/glossary/#pretraining) objective it was trained on. "Downstream scores" measure how much a change (cleaner data, a better [learning rate](/shared/glossary/#learning-rate)) actually pays off on those end tasks, the way a river's health downstream reflects what happened upstream at the source.
+
 ### DPO {#dpo}
-Direct Preference Optimization — closed-form RLHF without a reward model or PPO
+Direct Preference Optimization — [closed-form](/shared/glossary/#closed-form) RLHF without a reward model or [PPO](/shared/glossary/#ppo)
 
 ### DQN {#dqn}
 Deep Q-Network — Q-learning with neural-net function approximation + experience replay + target network
@@ -280,8 +328,17 @@ An operation applied independently to each element of a tensor (e.g. add, multip
 ### EMA weights {#ema-weights}
 Exponential moving average of model weights; samples better than the live weights
 
+### Embedding {#embedding}
+A dense vector that represents a token (or other item) so the model can compute over it; each token ID maps to one row of the [embedding matrix](/shared/glossary/#embedding-matrix)
+
+### Embedding matrix {#embedding-matrix}
+The lookup table `E ∈ ℝ^{V×d}` that turns each token ID into a dense vector by selecting its row; growing the [vocabulary](/shared/glossary/#vocabulary) means adding rows
+
 ### ExecuTorch {#executorch}
 PyTorch's lightweight runtime for running models on mobile and edge devices, built on the graph captured by [`torch.export`](/shared/glossary/#torchexport).
+
+### Expert {#expert}
+In a [Mixture-of-Experts (MoE)](/shared/glossary/#moe), one of several parallel [MLP](/shared/glossary/#mlp) sub-networks; a router sends each token to only the top few experts instead of all of them. Like a hospital triage desk that routes each patient to the right specialist rather than making everyone see every doctor — lots of expertise on hand, but only a little used per case.
 
 ### Expert parallelism (EP) {#expert-parallelism-ep}
 For MoE models, distributing experts across GPUs with all-to-all token routing
@@ -294,6 +351,9 @@ Force/Torque sensor — six-axis force and moment at a wrist or fingertip
 
 ### FID {#fid}
 Fréchet Inception Distance — the standard sample-quality metric for image generation
+
+### FineWeb-Edu {#fineweb-edu}
+A large, openly released [pretraining](/shared/glossary/#pretraining) dataset built by running a [quality filter](/shared/glossary/#quality-filter) over crawled web pages and keeping only the educational-looking ones — like skimming a huge pile of internet text and saving just the pages that read like a textbook. Models trained on it often beat models trained on far more unfiltered text, making it a go-to example that data quality can matter more than raw quantity.
 
 ### FK / IK {#fk--ik}
 Forward / Inverse Kinematics — compute end-effector pose from joints or vice versa
@@ -322,8 +382,14 @@ A callback registered on an `nn.Module` that PyTorch calls automatically after t
 ### FP8 {#fp8}
 8-bit floating point (E4M3 / E5M2 on Hopper+); the modern default serving precision
 
+### Frontier run {#frontier-run}
+A training run for one of the largest, most capable models at the leading edge of what is currently possible — the kind that ties up thousands of GPUs for weeks and costs millions of dollars. Because the stakes are so high, a [loss spike](/shared/glossary/#loss-spike) that cannot be recovered cleanly can throw away days of that compute, which is why teams rehearse [checkpoint](/shared/glossary/#checkpoint) recovery on small models first.
+
+### F.scaled_dot_product_attention {#fscaled_dot_product_attention}
+PyTorch's built-in fused [attention](/shared/glossary/#attention) function (in `torch.nn.functional`) that computes `softmax(QKᵀ/√d)·V` in a single call, dispatching to an optimized [backend](/shared/glossary/#backend) such as [FlashAttention](/shared/glossary/#flashattention).
+
 ### FSDP {#fsdp}
-Fully Sharded Data Parallel — shard params, grads, and optimizer state across ranks
+Fully Sharded Data Parallel — shard params, grads, and optimizer state across [ranks](/shared/glossary/#rank)
 
 ### FSQ {#fsq}
 Finite Scalar Quantization — codebook-free discrete tokenization
@@ -346,6 +412,9 @@ An operation where one path of a neural network modulates the information flow i
 ### GELU {#gelu}
 Gaussian Error Linear Unit — a smooth activation function widely used in transformer [MLPs](/shared/glossary/#mlp).
 
+### GLU {#glu}
+Gated Linear Unit — a layer whose output is the element-wise product of two linear projections, one of them passed through a [gating](/shared/glossary/#gated) non-linearity; [SwiGLU](/shared/glossary/#swiglu) is the variant that uses [Swish](/shared/glossary/#swish) as that non-linearity.
+
 ### GPTQ {#gptq}
 Hessian-based per-row PTQ minimizing layer-wise reconstruction error
 
@@ -356,7 +425,7 @@ Grouped-Query Attention — sharing K/V heads across query heads; primary KV-cac
 Summing the [gradients](/shared/glossary/#gradients) from several small batches before calling the [optimizer](/shared/glossary/#optimizer), so the update matches a larger effective batch size without its memory cost.
 
 ### Gradients {#gradients}
-The vector of partial derivatives of a function with respect to its inputs. In neural networks, gradients represent the direction and magnitude of the change required to minimize the [loss function](/shared/glossary/#loss-function).
+The vector of [partial derivatives](/shared/glossary/#partial-derivative) of a function with respect to its inputs. In neural networks, gradients represent the direction and magnitude of the change required to minimize the [loss function](/shared/glossary/#loss-function).
 
 ### Gradient checkpointing {#gradient-checkpointing}
 A memory-saving technique that discards intermediate activations during the forward pass and recomputes them during the backward pass.
@@ -371,13 +440,22 @@ A point where [`torch.compile`](/shared/glossary/#torchcompile) cannot trace the
 Producing spatial outputs (boxes, points) referring to image regions
 
 ### GRPO {#grpo}
-Group Relative Policy Optimization — value-function-free PPO variant; DeepSeek lineage
+Group Relative Policy Optimization — [value-function](/shared/glossary/#value-function)-free PPO variant; DeepSeek lineage
+
+### GSM8K {#gsm8k}
+A benchmark of about 8,000 grade-school math word problems, widely used to test step-by-step reasoning because each problem has a single checkable numeric answer.
 
 ### GTSAM {#gtsam}
 Factor-graph SLAM library; the standard back-end for many modern systems
 
+### Half-rotation {#half-rotation}
+An efficient way to apply [RoPE](/shared/glossary/#rope): rather than rotating each adjacent pair of vector components on its own, you split the vector into two halves and combine them in one shot (the `rotate_half` trick, `[x₁, x₂] → [−x₂, x₁]`). It turns many tiny 2-D rotations into a couple of whole-vector operations, so it runs fast on a GPU while giving the same result.
+
 ### HBM {#hbm}
 High-Bandwidth Memory — stacked DRAM on a modern GPU; usually the bandwidth bottleneck
+
+### Headroom {#headroom}
+The safety margin you have left before something breaks. In low-precision training it is the spare range of values a number format can still represent before it overflows or rounds down to zero and triggers [numerical issues](/shared/glossary/#numerical-issues) — like the gap between your head and the ceiling: the less you have, the easier it is to bump into trouble. [FP8](/shared/glossary/#fp8) packs numbers into far fewer bits than [bfloat16](/shared/glossary/#bfloat16), so it has much less headroom and is more likely to destabilize a run.
 
 ### Heads (attention) {#heads}
 The independent, parallel [attention](/shared/glossary/#attention) sub-computations in multi-head attention. Each head operates on its own learned projections of queries, keys, and values, allowing the model to attend to different representation subspaces simultaneously.
@@ -415,6 +493,9 @@ Implicit Q-Learning — offline RL that never queries `Q` at OOD actions
 ### Isaac Lab {#isaac-lab}
 NVIDIA GPU-parallel robotics simulation platform
 
+### iso {#iso}
+A prefix meaning "equal" or "the same" (from the Greek *isos*). In a phrase like *iso-[FLOP](/shared/glossary/#flops)* it marks a group of training runs that all spent the same compute budget, so they can be compared fairly — like rating cars by how far each travels on the *same* tank of fuel rather than on top speed. Plotting the [loss](/shared/glossary/#loss-function) of several iso-FLOP runs is how a [Chinchilla](/shared/glossary/#chinchilla)-style [scaling-law](/shared/glossary/#scaling-laws) curve is drawn.
+
 ### ITL / TPOT {#itl--tpot}
 Inter-token latency / time per output token — steady-state per-token decode time
 
@@ -431,7 +512,7 @@ Combining several small operations into one [kernel](/shared/glossary/#kernel) s
 Kalman Filter — optimal linear-Gaussian Bayes filter
 
 ### KL divergence {#kl-divergence}
-The regularizer that keeps RLHF policies near the reference model
+Short for **Kullback-Leibler divergence** — a number that measures how far one probability distribution has drifted from another, growing larger the more the two disagree. In [RLHF](/shared/glossary/#rlhf) it acts as a leash on the [policy](/shared/glossary/#policy) being trained: the further its word probabilities wander from the frozen [reference model](/shared/glossary/#reference-model), the bigger the penalty it pays. Like a tether that lets a climber explore but stops them straying somewhere dangerous, it lets the model chase reward without forgetting how to talk sensibly.
 
 ### KV cache {#kv-cache}
 Cached keys and values per past token per layer; the working set of the decoder
@@ -451,6 +532,9 @@ Latent Consistency Model — consistency-distilled few-step latent diffusion
 ### LDM {#ldm}
 Latent Diffusion Model — diffusion in the latent space of a VAE (i.e., Stable Diffusion)
 
+### Learning rate {#learning-rate}
+The step size an [optimizer](/shared/glossary/#optimizer) takes when nudging the [weights](/shared/glossary/#weights) along the [gradient](/shared/glossary/#gradients). Too large and training overshoots and diverges; too small and it crawls — like choosing how big a step to take walking downhill in fog. It is usually ramped up during [warmup](/shared/glossary/#warmup) and then decayed over the run.
+
 ### LiDAR {#lidar}
 Light Detection And Ranging — laser range scanner
 
@@ -458,16 +542,25 @@ Light Detection And Ranging — laser range scanner
 Large Language Model — a [transformer](/shared/glossary/#transformer) trained on large amounts of text to predict and generate language.
 
 ### LoRA {#lora}
-Low-Rank Adaptation — fine-tune by adding small low-rank matrices, freeze the base
+[Low-Rank](/shared/glossary/#low-rank) Adaptation — fine-tune by adding small low-rank matrices, freeze the base
 
 ### Loss function {#loss-function}
 A mathematical function that measures the difference between a model's prediction and the actual target. The goal of training is to minimize this value using [gradients](/shared/glossary/#gradients).
+
+### Loss masking {#loss-masking}
+Telling the trainer to compute the [loss](/shared/glossary/#loss-function) only on the tokens you want the model to learn to produce — in [SFT](/shared/glossary/#sft), the assistant's reply — and to ignore the rest, like grading only a student's answers and not the printed questions.
+
+### Loss spike {#loss-spike}
+A sudden jump in the training [loss](/shared/glossary/#loss-function), usually from an outlier batch or optimizer instability; small spikes are normal, but a diverging one can ruin a run.
 
 ### Loss value {#loss-value}
 The single scalar number produced by evaluating the [loss function](/shared/glossary/#loss-function) on a model's predictions. [autograd](/shared/glossary/#autograd)'s [backward pass](/shared/glossary/#backward-pass) computes [gradients](/shared/glossary/#gradients) of this one scalar with respect to every [parameter](/shared/glossary/#parameters), which is what makes [reverse-mode](/shared/glossary/#reverse-mode) differentiation efficient.
 
 ### Lorax / S-LoRA {#lorax--s-lora}
 Multi-LoRA serving engines; one base model + many adapters in HBM
+
+### Low-rank {#low-rank}
+A way of approximating a big matrix as the product of two much skinnier ones, capturing most of its information with far fewer numbers. A full 1000×1000 weight matrix holds a million entries, but if its real content is "low rank" you can rebuild it well from, say, two 1000×8 matrices — a few thousand numbers instead of a million. Like summarizing a thick report with a handful of bullet points that still carry the gist. This is the trick behind [LoRA](/shared/glossary/#lora): freeze the giant base [weights](/shared/glossary/#weights) and learn only a small low-rank update on top.
 
 ### LQR {#lqr}
 Linear-Quadratic Regulator — optimal linear feedback for quadratic cost
@@ -499,11 +592,17 @@ A recording of how much GPU memory is allocated at one moment; comparing snapsho
 ### Megatron {#megatron}
 NVIDIA's approach to [tensor parallelism](/shared/glossary/#tensor-parallelism-tp) that splits [attention](/shared/glossary/#attention) and [MLP](/shared/glossary/#mlp) layers [column-wise](/shared/glossary/#column-wise-partitioning) and row-wise across GPUs with carefully placed [AllReduce](/shared/glossary/#allreduce) collectives, allowing efficient intra-layer parallelism.
 
+### MFU {#mfu}
+Model FLOPs Utilization — the fraction of a GPU's peak arithmetic speed a training run actually uses (e.g. 70% MFU). Like a delivery truck's fill rate, it shows how much of the hardware you are paying for is doing useful work instead of waiting on memory or the network.
+
 ### Micrograd {#micrograd}
 A tiny, educational autograd engine implemented in basic Python by Andrej Karpathy to illustrate how reverse-mode differentiation works.
 
+### MinHash {#minhash}
+A hashing technique for estimating how similar two documents are, used to find and remove near-duplicate text at corpus scale (see [deduplication](/shared/glossary/#deduplication)).
+
 ### MLP {#mlp}
-Multi-Layer Perceptron — a feedforward neural network of one or more fully-connected (linear) layers separated by non-linear activations. In transformer architectures, each block contains an attention sublayer followed by an MLP sublayer (often using [SwiGLU](/shared/glossary/#swiglu) activation).
+Multi-Layer Perceptron — a [feedforward neural network](/shared/glossary/#ffn) of one or more fully-connected (linear) layers separated by non-linear [activations](/shared/glossary/#activations). In [transformer](/shared/glossary/#transformer) architectures, each block contains an [attention](/shared/glossary/#attention) sublayer followed by an MLP sublayer (often using [SwiGLU](/shared/glossary/#swiglu) activation).
 
 ### MMDiT {#mmdit}
 Multi-Modal Diffusion Transformer — joint text+image attention layers, used in SD3 and Flux
@@ -529,8 +628,17 @@ Model Predictive Control — re-solved finite-horizon optimization at each step
 ### MPS {#mps}
 Metal Performance Shaders — the GPU backend for Apple Silicon
 
+### MQA {#mqa}
+Multi-Query Attention — all query heads share a single key/value head; the most aggressive [KV-cache](/shared/glossary/#kv-cache) saver, at some quality cost
+
+### MT-Bench {#mt-bench}
+A benchmark that scores a chat model's answers to a set of multi-turn questions, often using a strong [LLM](/shared/glossary/#llm) as the judge; a quick proxy for how helpful an assistant feels.
+
 ### MuJoCo {#mujoco}
 Open-source physics engine; the de facto manipulation/locomotion simulator
+
+### Multi-head attention {#multi-head-attention}
+Running several [attention](/shared/glossary/#attention) operations ([heads](/shared/glossary/#heads)) in parallel, each with its own learned projections of queries, keys, and values, then concatenating their results. Like having several readers skim the same sentence for different things — one tracks the grammar, another tracks who-did-what — and then pooling what each one noticed.
 
 ### Multi-LoRA {#multi-lora}
 Serving many fine-tuned adapters on a single shared base model
@@ -550,6 +658,12 @@ ROS 2 navigation stack
 ### NCCL {#nccl}
 NVIDIA Collective Communications Library — does AllReduce etc. on NVIDIA GPUs
 
+### Needle-in-a-haystack {#needle-in-a-haystack}
+A long-context test that hides one fact (the "needle") inside a long stretch of irrelevant text (the "haystack") and checks whether the model can find it
+
+### Next-token prediction {#next-token-prediction}
+The training objective of an [LLM](/shared/glossary/#llm): given the tokens so far, predict the next one, scored with [cross-entropy](/shared/glossary/#cross-entropy) [loss](/shared/glossary/#loss-function).
+
 ### nn.Module {#nnmodule}
 PyTorch's base class for all neural network components; acts as a registry that automatically tracks sub-modules, parameters, and buffers assigned in `__init__`
 
@@ -558,6 +672,9 @@ One physical machine (server) in a distributed job, usually holding several GPUs
 
 ### non_blocking {#non_blocking}
 The `non_blocking=True` flag on `.to()` / `.cuda()` that lets a host→device copy run asynchronously from pinned memory
+
+### Normalization {#normalization}
+Rescaling a layer's outputs so they keep a consistent size — typically zero mean and unit variance (LayerNorm) or unit root-mean-square ([RMSNorm](/shared/glossary/#rmsnorm)). Like adjusting every photo to the same brightness before comparing them, it stops numbers from ballooning or vanishing as they flow through a deep network, which is what keeps training stable.
 
 ### NVLink {#nvlink}
 NVIDIA's GPU-GPU interconnect; much faster than PCIe
@@ -598,6 +715,9 @@ Filling shorter sequences with a placeholder value so that every sample in a bat
 ### Parameters {#parameters}
 The learnable [tensors](/shared/glossary/#tensor) inside a model (such as [weights](/shared/glossary/#weights) and [biases](/shared/glossary/#biases)) that are updated by the [optimizer](/shared/glossary/#optimizer) during training. In PyTorch, they are instances of `nn.Parameter` and are automatically registered when assigned to an [`nn.Module`](/shared/glossary/#nnmodule).
 
+### Partial derivative {#partial-derivative}
+How much a function changes when you nudge just one of its inputs and hold all the others still — the [derivative](/shared/glossary/#derivative) taken one input at a time. If a recipe's tastiness depends on both salt and sugar, the partial derivative with respect to salt tells you the effect of adding a pinch more salt while keeping the sugar fixed. A [gradient](/shared/glossary/#gradients) is simply the full list of these one-at-a-time slopes, one per [parameter](/shared/glossary/#parameters).
+
 ### PagedAttention {#pagedattention}
 KV cache managed as fixed-size physical blocks with per-request block tables
 
@@ -625,11 +745,17 @@ Fast rigid-body dynamics library (CRBA, RNEA, ABA)
 ### Plücker coordinates {#plücker-coordinates}
 6D representation of a camera ray; standard for camera-conditioning
 
+### Policy {#policy}
+In reinforcement learning, the model being trained to choose what to do next — for an [LLM](/shared/glossary/#llm), the network that picks the next token. "Improving the policy" just means making those choices earn more reward.
+
+### Position interpolation {#position-interpolation}
+Extending a model's context length by linearly rescaling [RoPE](/shared/glossary/#rope) position indices so longer sequences fall within the trained range
+
 ### Posterior collapse {#posterior-collapse}
 VAE failure mode: encoder collapses to the prior; latent carries no information
 
 ### PPO {#ppo}
-Proximal Policy Optimization — the workhorse on-policy RL algorithm, used in classic RLHF
+Proximal Policy Optimization — the [workhorse](/shared/glossary/#workhorse) [on-policy](/shared/glossary/#on-policy) RL algorithm, used in classic RLHF
 
 ### Prefill {#prefill}
 Processing the prompt in one parallel forward pass before decoding begins
@@ -658,6 +784,12 @@ Post-Training Quantization / Quantization-Aware Training
 ### Q-Former {#q-former}
 BLIP-2's learnable-query cross-attention module for distilling images into LLM tokens
 
+### QLoRA {#qlora}
+[LoRA](/shared/glossary/#lora) with the frozen base model stored in 4-bit [quantized](/shared/glossary/#quantization) form, cutting memory so much you can fine-tune a large model on a single consumer GPU.
+
+### Quality filter {#quality-filter}
+A classifier that scores each training document and keeps only the high-quality ones (e.g. educational web text), discarding low-value text before [pretraining](/shared/glossary/#pretraining).
+
 ### Quantization {#quantization}
 Reducing weight / activation precision (FP16, BF16, FP8, INT8, INT4) to save memory and bandwidth
 
@@ -673,11 +805,17 @@ The unique integer ID of a process in a distributed job. `RANK` is the global ID
 ### Rectified flow {#rectified-flow}
 A flow-matching parameterization with straight-line trajectories; popular in 2024+ models
 
+### Reference model {#reference-model}
+A frozen copy of the starting model that [RLHF](/shared/glossary/#rlhf) and [DPO](/shared/glossary/#dpo) measure against (through a [KL](/shared/glossary/#kl-divergence) term) so the model being trained does not drift too far from sensible behavior — a "before" photo to compare every change against.
+
 ### Reparameterization trick {#reparameterization-trick}
 `z = μ + σ · ε` — lets gradients flow through a random sample
 
 ### reshape {#reshape}
 Returns a tensor with a new shape, copying only when a no-copy view isn't possible
+
+### Residual connection {#residual-connection}
+A shortcut that adds a block's input to its output (`x + f(x)`), letting [gradients](/shared/glossary/#gradients) flow directly and making deep networks trainable
 
 ### reverse-mode {#reverse-mode}
 The order [autograd](/shared/glossary/#autograd) walks the computation graph when differentiating: the forward pass first, then a single [backward pass](/shared/glossary/#backward-pass) that propagates [gradients](/shared/glossary/#gradients) from the scalar output back to every input. It is the efficient choice when a model has many parameters but only one [loss value](/shared/glossary/#loss-value).
@@ -685,8 +823,11 @@ The order [autograd](/shared/glossary/#autograd) walks the computation graph whe
 ### Reward hacking {#reward-hacking}
 A policy that maximizes the reward signal without doing what was intended
 
+### Reward model {#reward-model}
+A model trained on human preference comparisons to score how good a response is; it stands in for a human rater so [RLHF](/shared/glossary/#rlhf) can score millions of answers automatically.
+
 ### RLHF {#rlhf}
-Reinforcement Learning from Human Feedback — preference learning, classically via PPO + KL
+Reinforcement Learning from Human Feedback — preference learning, classically via [PPO](/shared/glossary/#ppo) + [KL](/shared/glossary/#kl-divergence)
 
 ### RLVR {#rlvr}
 RL with Verifiable Rewards — RL when the reward is a deterministic checker
@@ -697,11 +838,17 @@ Root-Mean-Square LayerNorm without mean-centering; the modern default
 ### RNEA {#rnea}
 Recursive Newton-Euler — `O(n)` inverse-dynamics algorithm
 
+### Rollout {#rollout}
+One sample of the model actually generating a full response to a prompt, used in RL to see what behavior to reward; producing many rollouts is the expensive part of [PPO](/shared/glossary/#ppo) and [GRPO](/shared/glossary/#grpo).
+
+### Rollout distribution {#rollout-distribution}
+The spread of responses a model is currently generating when it produces [rollouts](/shared/glossary/#rollout) during RL training — what it tends to say and how varied those answers are. This distribution shifts as training proceeds, which is the whole point; but if it drifts toward weird, repetitive, or gamed outputs, that is a warning sign of [reward hacking](/shared/glossary/#reward-hacking). Watching how it moves is like checking what a student actually writes on practice tests, not just their final score.
+
 ### Roofline {#roofline}
 Performance model bounding throughput as min(peak FLOPs, memory bandwidth × arithmetic intensity)
 
 ### RoPE {#rope}
-Rotary Position Embedding — encodes position by rotating Q, K vectors
+Rotary Position [Embedding](/shared/glossary/#embedding) — encodes position by rotating Q, K vectors
 
 ### ROS / ROS 2 {#ros--ros-2}
 Robot Operating System — robotics middleware (ROS 2 is the modern version)
@@ -718,6 +865,12 @@ Sparse Autoencoder — interpretability tool decomposing activations into monose
 ### Sampler {#sampler}
 The component that decides the order in which a [DataLoader](/shared/glossary/#dataloader) visits dataset examples (e.g. random, sequential, or class-weighted).
 
+### Sampling {#sampling}
+Drawing the next token from the model's predicted probability distribution instead of always taking the most likely one; [temperature](/shared/glossary/#temperature), [top-k](/shared/glossary/#top-k), and [top-p](/shared/glossary/#top-p) control how random the choice is.
+
+### Scaling laws {#scaling-laws}
+The empirical finding that a model's [loss](/shared/glossary/#loss-function) drops in a smooth, predictable curve as you add [parameters](/shared/glossary/#parameters), training data, and compute — like a growth chart that lets you forecast a bigger model's quality from smaller ones before you ever build it.
+
 ### Score {#score}
 `∇_x log p(x)` — diffusion training implicitly learns this
 
@@ -731,7 +884,7 @@ Special Euclidean / Orthogonal group — rigid-body motions / rotations in 3D
 A fixed starting number for a random-number generator; setting the same seed makes random operations (shuffling, initialization, dropout) produce the identical sequence every run.
 
 ### SFT {#sft}
-Supervised Fine-Tuning — train on demonstration data with cross-entropy
+Supervised Fine-Tuning — train on demonstration data with [cross-entropy](/shared/glossary/#cross-entropy)
 
 ### SGD {#sgd}
 Stochastic Gradient Descent — updates parameters by subtracting a scaled gradient computed on a mini-batch; the simplest optimizer and the basis for more advanced methods
@@ -760,6 +913,9 @@ Streaming Multiprocessor; the GPU's "core"
 ### softmax {#softmax}
 The function that turns a vector of scores into a probability distribution (each value in 0–1, summing to 1); the core of [attention](/shared/glossary/#attention) and classification heads.
 
+### Special tokens {#special-tokens}
+Reserved [vocabulary](/shared/glossary/#vocabulary) entries that mark structure rather than text — e.g. `<bos>`, `<eos>`, `<pad>`, and chat-boundary tokens like `<|im_start|>`
+
 ### Speculative decoding {#speculative-decoding}
 Use a draft model to propose tokens; verify with the target in one parallel pass; accepted tokens are appended
 
@@ -778,8 +934,14 @@ A technique used to bypass non-differentiable operations by passing gradients un
 ### Stride {#stride}
 The number of storage elements to step over for each dimension of a tensor
 
+### Sweep {#sweep}
+Training the same model many times while changing one setting across a range of values, then comparing results to pick the best — for example trying ten different [learning rates](/shared/glossary/#learning-rate) and keeping the winner. Like tasting a sauce as you add salt in small steps to find the amount you like, rather than guessing the whole spoonful at once. A sweep is how you turn a hyperparameter hunch into a measured choice.
+
 ### SwiGLU {#swiglu}
-[Gated](/shared/glossary/#gated) [MLP](/shared/glossary/#mlp) activation `(xW) · σ(xV)` — the modern default [FFN](/shared/glossary/#ffn)
+[Gated](/shared/glossary/#gated) [MLP](/shared/glossary/#mlp) activation `(xW) · σ(xV)` — the modern default [FFN](/shared/glossary/#ffn); a [GLU](/shared/glossary/#glu) variant that uses [Swish](/shared/glossary/#swish) as its gating non-linearity
+
+### Swish {#swish}
+Activation function `x · σ(x)` (also called SiLU) — a smooth, non-monotonic alternative to ReLU; the gating non-linearity used inside [SwiGLU](/shared/glossary/#swiglu).
 
 ### Systolic array {#systolic-array}
 Data-flow matmul fabric used in TPUs
@@ -798,6 +960,9 @@ Tool Center Point — the configurable point on a tool whose pose tracking contr
 
 ### TD3 {#td3}
 Twin Delayed DDPG — DDPG plus three stability fixes
+
+### Temperature {#temperature}
+A [sampling](/shared/glossary/#sampling) knob that scales the model's scores before [softmax](/shared/glossary/#softmax): low temperature (e.g. 0.2) sharpens the distribution so the model plays it safe and repeats the likeliest words, while high temperature (e.g. 1.5) flattens it so rarer, more surprising words can win. Think of it as a creativity dial — turn it down for factual answers, up for brainstorming.
 
 ### Temporal inflation {#temporal-inflation}
 Adding time-axis layers to a pretrained 2D model
@@ -825,6 +990,15 @@ Discrete code from a VQ-VAE or neural codec; lets transformers treat the modalit
 
 ### Tokenizer {#tokenizer}
 The mapping from string to integer IDs; trained, frozen, part of the model contract
+
+### Tokens per byte {#tokens-per-byte}
+A measure of tokenizer efficiency: how many tokens it emits per byte of input text; higher means the same text costs more tokens
+
+### Top-k {#top-k}
+A [sampling](/shared/glossary/#sampling) rule that keeps only the `k` most likely next tokens and draws from those, throwing away the long tail. With `k=1` it always takes the single best word (greedy decoding); with `k=50` it chooses among the top 50 — like ordering only from a menu's 50 most popular dishes instead of the whole cookbook.
+
+### Top-p {#top-p}
+Also called nucleus sampling: instead of a fixed count like [top-k](/shared/glossary/#top-k), it keeps the smallest set of top tokens whose probabilities add up to `p` (e.g. 0.9), then samples from them. The shortlist automatically grows when the model is unsure and shrinks when it is confident — always keeping just enough candidates to cover 90% of the model's belief.
 
 ### TOPP {#topp}
 Time-Optimal Path Parameterization — time-parameterize a geometric path under bounds
@@ -874,11 +1048,20 @@ A problem during training where [gradients](/shared/glossary/#gradients) become 
 ### VAE {#vae}
 Variational Autoencoder — encoder/decoder pair trained on the ELBO
 
+### Validation loss {#validation-loss}
+The [loss](/shared/glossary/#loss-function) measured on held-out data the model was not trained on; the honest signal of how well training is generalizing.
+
 ### Value function {#value-function}
 Expected return; `V(s)` for state-value, `Q(s, a)` for action-value
 
+### Value network {#value-network}
+The helper network (the "critic") in some RL algorithms that estimates the [value function](/shared/glossary/#value-function) — its best guess of how much future reward a situation is worth — so the [policy](/shared/glossary/#policy) can tell whether an action turned out better or worse than expected. [PPO](/shared/glossary/#ppo) trains one alongside the policy, which roughly doubles the networks held in memory; [GRPO](/shared/glossary/#grpo) skips it entirely by comparing each sampled answer to the group's average instead, which is what makes it cheaper.
+
 ### VBench {#vbench}
 Comprehensive open evaluation suite for video generation
+
+### Verifier {#verifier}
+A program that automatically checks whether an answer is correct — running unit tests, or comparing to a known math result — giving the exact, unhackable reward that [RLVR](/shared/glossary/#rlvr) trains on.
 
 ### view {#view}
 A no-copy alias that shares storage with its source; requires a contiguous-compatible layout
@@ -895,6 +1078,9 @@ The reference open-source inference engine with PagedAttention and continuous [b
 ### VLM {#vlm}
 Vision-Language Model — image (+ text) in, text out
 
+### Vocabulary {#vocabulary}
+The fixed set of tokens a [tokenizer](/shared/glossary/#tokenizer) can produce, each with an integer ID; its size trades tokens-per-document against [embedding matrix](/shared/glossary/#embedding-matrix) size
+
 ### VP / VE SDE {#vp--ve-sde}
 Variance-Preserving / Variance-Exploding — the two SDE families for diffusion
 
@@ -903,6 +1089,9 @@ VQ-VAE trained with perceptual + adversarial losses; SD's VAE recipe descends fr
 
 ### VQ-VAE {#vq-vae}
 Vector-quantized VAE — discrete latent codes from a learned codebook
+
+### Warmup {#warmup}
+The opening phase of training where the learning rate ramps up from near zero to its peak, stabilizing the first noisy updates
 
 ### Warp {#warp}
 32 threads scheduled in lockstep on NVIDIA GPUs
@@ -922,14 +1111,23 @@ The learned [parameter](/shared/glossary/#parameters) matrices inside a neural n
 ### Worker processes {#worker-processes}
 Background subprocesses that a [DataLoader](/shared/glossary/#dataloader) spawns to load and preprocess data in parallel with GPU computation.
 
+### Workhorse {#workhorse}
+The dependable, go-to method that does the bulk of the everyday work in a field — not the flashiest, but the one practitioners reach for by default because it reliably gets the job done. Just as a workhorse on a farm pulls the heavy loads day in and day out, [PPO](/shared/glossary/#ppo) earned the title in [RLHF](/shared/glossary/#rlhf) and the [PID](/shared/glossary/#pid) controller earned it in robotics.
+
 ### World Model {#world-model}
 Action-conditioned generative model of the world; a video model with actions
+
+### WSD {#wsd}
+Warmup-Stable-Decay — a learning-rate schedule that warms up, holds the rate constant for most of training, then decays sharply at the end.
 
 ### XLA {#xla}
 Accelerated Linear Algebra — a compiler backend (e.g. for TPUs) used via `torch_xla`
 
+### YaRN {#yarn}
+Yet another [RoPE](/shared/glossary/#rope) extensioN method — a context-extension scheme that rescales rotation frequencies unevenly across dimensions to reach long contexts with minimal fine-tuning
+
 ### ZeRO {#zero}
-DeepSpeed's parameter/gradient/state sharding scheme — comparable to FSDP
+[DeepSpeed](/shared/glossary/#deepspeed)'s parameter/gradient/state sharding scheme — comparable to FSDP
 
 ### Zero-conv {#zero-conv}
 A 1×1 convolution with zero-initialized weights and bias; used by ControlNet to add a branch without disturbing init
