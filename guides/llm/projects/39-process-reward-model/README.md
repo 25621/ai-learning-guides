@@ -8,7 +8,7 @@
 
 ## Key Insight
 
-A [process reward model (PRM)](/shared/glossary/#process-reward-model) scores each individual step in a model's reasoning, unlike an [outcome reward model](/shared/glossary/#outcome-reward-model) that judges only the final answer. This project trains a small PRM on the PRM800K dataset and uses it to re-rank generated solutions.
+A [process reward model (PRM)](/shared/glossary/#process-reward-model) scores each individual step in a model's reasoning, unlike an [outcome reward model](/shared/glossary/#outcome-reward-model) that judges only the final answer. This project trains a small PRM on the [PRM800K](/shared/glossary/#prm800k) dataset and uses it to re-rank generated solutions.
 
 ## Why This Matters
 

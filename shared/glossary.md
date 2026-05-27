@@ -778,6 +778,9 @@ Self-supervised training on a large unlabeled corpus to predict the next token
 ### PRM {#prm}
 Probabilistic Roadmap — multi-query sampling-based planner
 
+### PRM800K {#prm800k}
+A public dataset of about 800,000 human labels that mark each step of a math solution as right or wrong, released by OpenAI to train [process reward models](/shared/glossary/#process-reward-model). Rather than only checking whether the final answer was correct, human graders read each worked solution line by line — like a math teacher putting a check or an X next to every step of a student's proof, not just the boxed answer at the bottom. Because the feedback is step-level, a model trained on it learns to spot exactly where the reasoning went off the rails instead of whether the ending happened to be lucky. It is the standard training set for the step-by-step scorers used in [Best-of-N](/shared/glossary/#best-of-n) re-ranking.
+
 ### Probability flow ODE {#probability-flow-ode}
 The deterministic ODE equivalent of the reverse-time diffusion SDE
 
