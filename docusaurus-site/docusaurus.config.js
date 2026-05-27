@@ -153,12 +153,10 @@ const config = {
           ignorePatterns: ['/tags/**', '/search/**'],
           filename: 'sitemap.xml',
         },
-        ...(process.env.NODE_ENV === 'production' ? {
-          gtag: {
-            trackingID: 'G-LEDRXS502H',
-            anonymizeIP: true,
-          },
-        } : {}),
+        gtag: {
+          trackingID: 'G-LEDRXS502H',
+          anonymizeIP: true,
+        },
       },
     ],
   ],
