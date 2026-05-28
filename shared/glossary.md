@@ -214,6 +214,9 @@ Splitting a weight matrix along its column (output) dimension so that each GPU h
 ### Consistency model {#consistency-model}
 A diffusion-derived model that samples in 1–4 steps via consistency distillation
 
+### Constitutional AI {#constitutional-ai}
+An alignment recipe (introduced by Anthropic) where some or all human preference labels are replaced by an AI judge that grades responses against a written "constitution" — a short list of principles like "be helpful," "refuse to assist with harm," "don't pretend to be human." Like running a debate club with a published rulebook instead of asking the audience to vote: cheaper, more consistent, and easier to update than collecting fresh human labels for every new behavior. The technique is the foundation of [RLAIF](/shared/glossary/#rlaif).
+
 ### Constrained generation {#constrained-generation}
 A decoding-time technique that masks out any next-token choices that would break a target structure — a regex, a JSON schema, a grammar — so the model is only *allowed* to pick valid continuations. Like a Mad Libs game whose blanks accept only nouns or only numbers: the writer can be creative inside each blank but cannot break the form. Libraries such as Outlines and sglang are common implementations, and the technique is what makes reliable [function calling](/shared/glossary/#function-calling) and tool-using agents possible.
 
@@ -454,6 +457,9 @@ A class of generative models in which a generator network and a discriminator ne
 ### Gated {#gated}
 An operation where one path of a neural network modulates the information flow in another path via element-wise multiplication (e.g. in a [SwiGLU](/shared/glossary/#swiglu) block).
 
+### GCG {#gcg}
+Short for **Greedy Coordinate Gradient** — a gradient-based attack that finds an adversarial suffix (a short string of seemingly random tokens) which, when appended to a harmful question, causes an aligned [LLM](/shared/glossary/#llm) to comply anyway. It works by swapping one suffix token at a time for whatever the gradient says raises the probability of an unsafe answer most. Like picking a combination lock by feeling each dial until the click; once one model is unlocked the same suffix often opens other models, which is why GCG is the standard benchmark attack in [jailbreak](/shared/glossary/#jailbreak) research.
+
 ### GELU {#gelu}
 Gaussian Error Linear Unit — a smooth activation function widely used in transformer [MLPs](/shared/glossary/#mlp).
 
@@ -495,6 +501,9 @@ Factor-graph SLAM library; the standard back-end for many modern systems
 
 ### Half-rotation {#half-rotation}
 An efficient way to apply [RoPE](/shared/glossary/#rope): rather than rotating each adjacent pair of vector components on its own, you split the vector into two halves and combine them in one shot (the `rotate_half` trick, `[x₁, x₂] → [−x₂, x₁]`). It turns many tiny 2-D rotations into a couple of whole-vector operations, so it runs fast on a GPU while giving the same result.
+
+### Hallucination {#hallucination}
+When an [LLM](/shared/glossary/#llm) states something false with the same confident tone it uses for true things — invented citations, made-up people, fabricated facts. Like a student who didn't read the book but answers the essay question anyway in confident prose; the grammar is fine, the facts are not. Hallucination is built in to the [next-token prediction](/shared/glossary/#next-token-prediction) objective, which rewards fluent continuation rather than truth, and is mitigated (not solved) by [RAG](/shared/glossary/#rag), [verifiers](/shared/glossary/#verifier), and abstention training.
 
 ### HBM {#hbm}
 High-Bandwidth Memory — stacked DRAM on a modern GPU; usually the bandwidth bottleneck
@@ -556,6 +565,9 @@ Inter-token latency / time per output token — steady-state per-token decode ti
 ### Jacobian {#jacobian}
 Linear map from joint velocities to end-effector spatial velocity
 
+### Jailbreak {#jailbreak}
+A prompt — sometimes plain English, sometimes a gradient-found suffix like in [GCG](/shared/glossary/#gcg), sometimes a long role-play setup or a translation into a low-resource language — that gets a safety-trained model to do what its alignment training was supposed to refuse. Like picking a hotel-room door lock instead of asking for the key. Modern defenses assume any single safety layer can be jailbroken and use *defense in depth* — input filtering, output filtering, monitoring, refusal classifiers — instead of trusting the model alone.
+
 ### Kernel {#kernel}
 A single function that runs on the GPU (or CPU) to carry out one operation, such as a matrix multiply or an element-wise add.
 
@@ -591,6 +603,9 @@ The step size an [optimizer](/shared/glossary/#optimizer) takes when nudging the
 
 ### LiDAR {#lidar}
 Light Detection And Ranging — laser range scanner
+
+### Linear probe {#linear-probe}
+A small linear classifier trained on the frozen hidden [activations](/shared/glossary/#activations) of a layer of a neural network to test whether that layer has *already* encoded some property — for example, "is this sentence true?", "what is the capital of this country?", or "which language is this?" Like sticking a voltmeter into one wire of a circuit to see what signal is flowing past that point; you don't change the circuit, you just read what's already there. The standard first tool in [mechanistic interpretability](/shared/glossary/#mechanistic-interpretability).
 
 ### LLM {#llm}
 Large Language Model — a [transformer](/shared/glossary/#transformer) trained on large amounts of text to predict and generate language.
@@ -634,8 +649,14 @@ Matrix multiplication — the dominant compute operation in neural networks; wri
 ### MDP {#mdp}
 Markov Decision Process — the tuple `(S, A, P, R, γ)`
 
+### Mechanistic interpretability {#mechanistic-interpretability}
+The line of research that tries to reverse-engineer *what individual pieces of a neural network actually do* — which neurons or [attention heads](/shared/glossary/#heads) detect what, where a fact is stored, why a particular output came out. Like opening up a watch to see which gears turn the hands, instead of only timing how fast the watch runs. Main tools: [linear probes](/shared/glossary/#linear-probe), [sparse autoencoders](/shared/glossary/#sae), activation patching, and circuit analysis.
+
 ### Meta-learning {#meta-learning}
 "Learning to learn" — training a model to adapt quickly to new tasks with few examples. Many meta-learning algorithms, such as MAML, rely on higher-order gradients to optimize across tasks.
+
+### Memorization {#memorization}
+When an [LLM](/shared/glossary/#llm) reproduces a chunk of its training data verbatim instead of generalizing from it — give it the right opening prompt and out comes the original passage word for word. Like a student who recites a textbook sentence rather than explaining the idea; useful for trivia, dangerous for copyright, PII, and security. [Deduplication](/shared/glossary/#deduplication) at training time and prompt filtering at serving time are the main mitigations.
 
 ### Memory leak {#memory-leak}
 An unintended increase in memory usage over time, often caused in PyTorch by holding onto references to the [loss function](/shared/glossary/#loss-function) or other parts of the [dynamic computation graph](/shared/glossary/#dynamic-computation-graph) across training iterations.
@@ -678,6 +699,9 @@ Mixture-of-Experts — sparse routing across N expert [MLPs](/shared/glossary/#m
 
 ### Momentum {#momentum}
 A technique that accumulates a moving average of past gradients to dampen oscillations and accelerate gradient descent in consistent directions
+
+### Monosemantic {#monosemantic}
+A feature inside a neural network that fires for exactly *one* concept — for example, a direction in [activation](/shared/glossary/#activations) space that lights up only for "Golden Gate Bridge," or only for "negation in a clause." The opposite is *polysemantic*: one neuron that activates for several unrelated concepts at once. Like a single word that means just one thing versus a homonym that means several. Recovering monosemantic features is the main goal of [SAE](/shared/glossary/#sae)-based interpretability.
 
 ### MoveIt {#moveit}
 ROS 2 manipulation-planning framework
@@ -859,6 +883,9 @@ A tool (`torch.profiler`) that records how long each operation in a training ste
 ### Projector {#projector}
 The (usually small) network that maps one modality's features into another's space
 
+### Prompt injection {#prompt-injection}
+An attack in which adversarial text smuggled into something the model reads — a retrieved document, a tool's output, an email, even text inside an image — overrides the original system instructions. Like a customer slipping a fake "manager-approved" note into a server's order pile: the server can't easily tell the planted note from a real one. The hardest unsolved security problem in deployed [LLMs](/shared/glossary/#llm), because the model has no built-in way to separate "instructions" from "data" in its input.
+
 ### PTQ / QAT {#ptq--qat}
 Post-Training Quantization / Quantization-Aware Training
 
@@ -915,6 +942,9 @@ A policy that maximizes the reward signal without doing what was intended
 
 ### Reward model {#reward-model}
 A model trained on human preference comparisons to score how good a response is; it stands in for a human rater so [RLHF](/shared/glossary/#rlhf) can score millions of answers automatically.
+
+### RLAIF {#rlaif}
+Reinforcement Learning from **AI** Feedback — the same recipe as [RLHF](/shared/glossary/#rlhf) but the preference labels (or grades) are produced by another, stronger LLM following a written rubric instead of by paid human raters. Like swapping a panel of human judges for a single expert judge who works for free, never sleeps, and applies the same rules every time. Cheaper and faster than human labeling, often nearly as good on well-defined tasks, and the basis of [Constitutional AI](/shared/glossary/#constitutional-ai).
 
 ### RLHF {#rlhf}
 Reinforcement Learning from Human Feedback — preference learning, classically via [PPO](/shared/glossary/#ppo) + [KL](/shared/glossary/#kl-divergence)

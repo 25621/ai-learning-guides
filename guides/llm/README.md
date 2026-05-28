@@ -1157,13 +1157,13 @@ Once you've built and shipped a model, you discover the problems that aren't on 
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Hallucination triage | Build a 100-prompt eval where the model should say "I don't know"; measure refusal rate vs. confident wrong answers | ⭐⭐⭐ |
-| Memorization probe | For an open model with known training data, find verbatim regurgitation with prefix prompts | ⭐⭐⭐⭐ |
-| Prompt-injection red team | Build a tool-using agent; try 20 injection attacks via retrieved documents; document which defenses help | ⭐⭐⭐⭐ |
-| GCG jailbreak | Reproduce a small GCG attack on an aligned open model; understand what the optimization is doing | ⭐⭐⭐⭐⭐ |
-| Linear probes for facts | Train probes on hidden states to recover "is this statement true"; measure across layers | ⭐⭐⭐⭐ |
-| Tiny SAE | Train a sparse autoencoder on a small model's residual stream; visualize a few features | ⭐⭐⭐⭐⭐ |
-| RLAIF on a small task | Replace human preferences with AI judgments; train DPO; compare quality and cost | ⭐⭐⭐⭐ |
+| [Hallucination triage](projects/66-hallucination-triage/README.md) | Build a 100-prompt eval where the model should say "I don't know"; measure refusal rate vs. confident wrong answers | ⭐⭐⭐ |
+| [Memorization probe](projects/67-memorization-probe/README.md) | For an open model with known training data, find verbatim regurgitation with prefix prompts | ⭐⭐⭐⭐ |
+| [Prompt-injection red team](projects/68-prompt-injection-red-team/README.md) | Build a tool-using agent; try 20 injection attacks via retrieved documents; document which defenses help | ⭐⭐⭐⭐ |
+| [GCG jailbreak](projects/69-gcg-jailbreak/README.md) | Reproduce a small GCG attack on an aligned open model; understand what the optimization is doing | ⭐⭐⭐⭐⭐ |
+| [Linear probes for facts](projects/70-linear-probes-for-facts/README.md) | Train probes on hidden states to recover "is this statement true"; measure across layers | ⭐⭐⭐⭐ |
+| [Tiny SAE](projects/71-tiny-sae/README.md) | Train a sparse autoencoder on a small model's residual stream; visualize a few features | ⭐⭐⭐⭐⭐ |
+| [RLAIF on a small task](projects/72-rlaif-on-a-small-task/README.md) | Replace human preferences with AI judgments; train DPO; compare quality and cost | ⭐⭐⭐⭐ |
 
 ### Key Insight
 
