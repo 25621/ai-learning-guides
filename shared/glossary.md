@@ -70,6 +70,9 @@ Ahead-of-Time Inductor — a deployment path built on [`torch.export`](/shared/g
 ### AnyRes {#anyres}
 Dynamic-resolution input handling (tile images at native aspect ratio)
 
+### Application {#application}
+The specific real-world job a model is being built to do — for example, "answer customer-support questions about our refund policy," "summarize internal engineering tickets," or "write product descriptions in our brand voice." A model that scores high on a generic public [benchmark](/shared/glossary/#benchmark) can still flop on *your* application if the two don't match, the way a chef who aces a fine-dining contest may still be the wrong hire for your taco truck. That mismatch is why teams build a small targeted eval shaped like their application instead of trusting a famous leaderboard number.
+
 ### AprilTag {#apriltag}
 Square fiducial marker with a known code; widely used for pose ground truth
 
@@ -578,7 +581,7 @@ Light Detection And Ranging — laser range scanner
 Large Language Model — a [transformer](/shared/glossary/#transformer) trained on large amounts of text to predict and generate language.
 
 ### LLM-as-judge {#llm-as-judge}
-Using a strong [LLM](/shared/glossary/#llm) to grade or compare other models' answers in place of a human rater — fast, cheap, and surprisingly well-calibrated, though it tends to favor longer answers and ones written in its own style. To catch position bias you usually ask twice with the two answers swapped and trust only an agreeing verdict.
+Using a strong [LLM](/shared/glossary/#llm) to grade or compare other models' answers in place of a human rater — fast, cheap, and surprisingly well-calibrated, though it tends to favor longer answers and ones written in its own style. To catch [position bias](/shared/glossary/#position-bias) you usually ask twice with the two answers swapped and trust only an agreeing verdict — like a blind wine tasting where the same two bottles are poured first as "Glass A, Glass B" and then again as "Glass B, Glass A"; you only believe the judge picked the better wine if they pick the same bottle both times, because that rules out them simply liking whichever glass sat on the left.
 
 ### LoRA {#lora}
 [Low-Rank](/shared/glossary/#low-rank) Adaptation — fine-tune by adding small low-rank matrices, freeze the base
@@ -748,6 +751,9 @@ A fast, cross-platform engine that runs models saved in the [ONNX](/shared/gloss
 ### On-policy {#on-policy}
 The data comes from the same policy being optimized (PPO, REINFORCE)
 
+### Open-ended {#open-ended}
+A task where many different answers can all be reasonable and there is no single right one to check against — writing a poem, summarizing an article, replying helpfully in a chat. The opposite of a closed-ended task like a multiple-choice question (one correct letter) or arithmetic (one correct number). Like grading a creative-writing assignment versus grading a true/false quiz: with the quiz you just count matches, but with the essay you need a human reader — or an [LLM-as-judge](/shared/glossary/#llm-as-judge) — to weigh quality, which is why evaluating open-ended work is the hard part of LLM evals.
+
 ### Optimizer {#optimizer}
 An algorithm that updates model parameters using computed gradients; in PyTorch, a subclass of `torch.optim.Optimizer` that holds parameter groups and per-parameter state
 
@@ -795,6 +801,9 @@ Fast rigid-body dynamics library (CRBA, RNEA, ABA)
 
 ### Policy {#policy}
 In reinforcement learning, the model being trained to choose what to do next — for an [LLM](/shared/glossary/#llm), the network that picks the next token. "Improving the policy" just means making those choices earn more reward.
+
+### Position bias {#position-bias}
+A judge's tendency to pick an answer based on *where* it sits rather than *what* it says — for example, an [LLM-as-judge](/shared/glossary/#llm-as-judge) that quietly prefers whichever response appears first (or last) when shown two side-by-side. Like a job interviewer who can't help favoring the candidate they meet right after lunch, regardless of qualifications. The standard fix is to ask the judge twice with the two answers swapped and accept the verdict only if both runs name the same winner.
 
 ### Position interpolation {#position-interpolation}
 Extending a model's context length by linearly rescaling [RoPE](/shared/glossary/#rope) position indices so longer sequences fall within the trained range
