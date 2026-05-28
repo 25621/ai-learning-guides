@@ -127,6 +127,9 @@ An adjustment applied in the Adam family of optimizers to counteract the zero-in
 ### Biases {#biases}
 The additive [parameter](/shared/glossary/#parameters) vectors in a linear layer (the `b` in `y = xW + b`). Each output neuron has one bias value, which shifts the result independently of the input.
 
+### Blackwell {#blackwell}
+NVIDIA's 2024 GPU architecture (B100, B200, B200 Ultra) and the successor to [Hopper](/shared/glossary/#hopper). Like swapping a sports car engine for a more powerful one of the same shape, it keeps the same overall design as Hopper but doubles down on low-precision math — better [FP8](/shared/glossary/#fp8) throughput and brand-new FP4 [Tensor Cores](/shared/glossary/#tensor-core) — which is what makes it the preferred chip for the largest 2025-era training and serving runs.
+
 ### BM25 (Best Matching 25) {#bm25}
 A classic keyword-search ranking — short for **Best Matching 25** — that scores a document by how often the query's words appear in it, weighting rare words more heavily. Think of it like a librarian scanning pages for your exact search words and ranking pages where those words appear most often (especially unusual words) higher on the list. It is the *sparse* (exact-word) counterpart to dense [embedding](/shared/glossary/#embedding) search.
 
@@ -227,7 +230,7 @@ The maximum number of tokens the model can attend over in one forward pass
 Taking an already-pretrained model and training it further on a new corpus to add domain knowledge, rather than starting from random weights.
 
 ### Continuous batching {#continuous-batching}
-A serving trick where the GPU adds new requests into the running [batch](/shared/glossary/#batching) — and drops finished ones — at every decode step, instead of waiting for the whole batch to finish together. Like a hotel shuttle that can pick up and drop off passengers anywhere along its loop rather than only at the start and end: far fewer empty seats overall, so [throughput](/shared/glossary/#throughput) goes up dramatically. It is the single largest speedup in modern LLM serving and is the default in [vLLM](/shared/glossary/#vllm) and TGI.
+A serving trick where the GPU adds new requests into the running [batch](/shared/glossary/#batching) — and drops finished ones — at every decode step, instead of waiting for the whole batch to finish together. Like a hotel shuttle that can pick up and drop off passengers anywhere along its loop rather than only at the start and end: far fewer empty seats overall, so [throughput](/shared/glossary/#throughput) goes up dramatically. It is the single largest speedup in modern LLM serving and is the default in [vLLM](/shared/glossary/#vllm) and [TGI](/shared/glossary/#tgi).
 
 ### ControlNet {#controlnet}
 Architecture that adds an auxiliary conditioning branch (depth, pose, edges, …) to a frozen diffusion model
@@ -419,7 +422,7 @@ Working backward from a training failure to the operation that first caused it, 
 A callback registered on an `nn.Module` that PyTorch calls automatically after the module's forward pass, receiving the input and output tensors; used for capturing activations and debugging
 
 ### FP8 {#fp8}
-8-bit floating point (E4M3 / E5M2 on Hopper+); the modern default serving precision
+8-bit floating point — half the bits of [bfloat16](/shared/glossary/#bfloat16). Comes in two flavors: **E4M3** (4 exponent bits + 3 mantissa bits) keeps a bit more precision and is used for [weights](/shared/glossary/#weights) and the forward [activations](/shared/glossary/#activations); **E5M2** (5 exponent + 2 mantissa) trades precision for a wider range and is used for gradients, which can be very large or very small. Supported by [Hopper](/shared/glossary/#hopper) and later NVIDIA GPUs, it is rapidly becoming the modern default serving precision.
 
 ### Frontier run {#frontier-run}
 A training run for one of the largest, most capable models at the leading edge of what is currently possible — the kind that ties up thousands of GPUs for weeks and costs millions of dollars. Because the stakes are so high, a [loss spike](/shared/glossary/#loss-spike) that cannot be recovered cleanly can throw away days of that compute, which is why teams rehearse [checkpoint](/shared/glossary/#checkpoint) recovery on small models first.
@@ -458,7 +461,7 @@ Gaussian Error Linear Unit — a smooth activation function widely used in trans
 Gated Linear Unit — a layer whose output is the element-wise product of two linear projections, one of them passed through a [gating](/shared/glossary/#gated) non-linearity; [SwiGLU](/shared/glossary/#swiglu) is the variant that uses [Swish](/shared/glossary/#swish) as that non-linearity.
 
 ### GPTQ {#gptq}
-Hessian-based per-row PTQ minimizing layer-wise reconstruction error
+Short for **Generative Pre-trained Transformer Quantization** — a [post-training quantization (PTQ)](/shared/glossary/#ptq--qat) method that compresses each layer's [weights](/shared/glossary/#weights) row by row, using second-order (Hessian) information to choose the int8 / int4 values that minimize the reconstruction error one layer at a time. Despite the name, GPTQ is not GPT-specific; it works on any [transformer](/shared/glossary/#transformer).
 
 ### GQA {#gqa}
 Grouped-Query Attention — sharing K/V heads across query heads; primary KV-cache saver at serving time
@@ -504,6 +507,9 @@ The independent, parallel [attention](/shared/glossary/#attention) sub-computati
 
 ### Holonomic {#holonomic}
 A vehicle whose instantaneous motion can be any direction (mecanum, omni)
+
+### Hopper {#hopper}
+NVIDIA's 2022 GPU architecture (H100, H200) and the workhorse of LLM training and serving in 2023–2024. It was the first generation to ship dedicated [FP8](/shared/glossary/#fp8) [Tensor Cores](/shared/glossary/#tensor-core), which is what made FP8 inference a practical option. Named after Grace Hopper, the computer scientist who invented the compiler.
 
 ### Hybrid retrieval {#hybrid-retrieval}
 Retrieving with both dense [embedding](/shared/glossary/#embedding) search (matches meaning) and sparse keyword search ([BM25](/shared/glossary/#bm25)) (matches exact words) and merging the two result lists, so each method covers the other's weaknesses.
@@ -563,7 +569,7 @@ Kalman Filter — optimal linear-Gaussian Bayes filter
 Short for **Kullback-Leibler divergence** — a number that measures how far one probability distribution has drifted from another, growing larger the more the two disagree. In [RLHF](/shared/glossary/#rlhf) it acts as a leash on the [policy](/shared/glossary/#policy) being trained: the further its word probabilities wander from the frozen [reference model](/shared/glossary/#reference-model), the bigger the penalty it pays. Like a tether that lets a climber explore but stops them straying somewhere dangerous, it lets the model chase reward without forgetting how to talk sensibly.
 
 ### KV cache {#kv-cache}
-A scratchpad that stores the [attention](/shared/glossary/#attention) keys and values already computed for every earlier token in the sequence, so generating the next token only has to compute keys and values for that *one* new token instead of redoing all the previous ones. Like writing out a long multiplication table once and then looking up products instead of recalculating them — it turns each decode step from "redo the whole prompt" into "do one more token," which is what makes long-context serving fast enough to be usable.
+A [scratchpad](/shared/glossary/#scratchpad) that stores the [attention](/shared/glossary/#attention) keys and values already computed for every earlier token in the sequence, so generating the next token only has to compute keys and values for that *one* new token instead of redoing all the previous ones. Like writing out a long multiplication table once and then looking up products instead of recalculating them — it turns each decode step from "redo the whole prompt" into "do one more token," which is what makes long-context serving fast enough to be usable.
 
 ### L2 regularization {#l2-regularization}
 A regularization technique that adds a penalty proportional to the squared magnitude of model weights to the loss function, encouraging smaller weights and reducing overfitting. In standard adaptive optimizers such as [Adam](/shared/glossary/#adam), this penalty is folded into the gradient and scaled by the adaptive learning rate, which is why [AdamW](/shared/glossary/#adamw) uses [decoupled](/shared/glossary/#decoupled) weight decay instead.
@@ -772,6 +778,9 @@ The extra per-parameter values an [optimizer](/shared/glossary/#optimizer) store
 ### Outcome reward model {#outcome-reward-model}
 A scorer that judges only a solution's final answer as right or wrong, ignoring the steps in between — simpler than a [process reward model](/shared/glossary/#process-reward-model), which grades each step, but blind to *where* a wrong answer first went off track.
 
+### Outlines {#outlines}
+An open-source Python library for [constrained generation](/shared/glossary/#constrained-generation): you hand it a regular expression, a JSON schema, or a Pydantic model and it patches the [LLM](/shared/glossary/#llm)'s decoder to mask out any next-token choices that would break the structure. Like putting guardrails on a road so the car physically cannot drive off the edge no matter how the driver steers, it makes the model's output structurally valid by construction rather than by hope.
+
 ### Padding {#padding}
 Filling shorter sequences with a placeholder value so that every sample in a batch has the same length.
 
@@ -958,6 +967,9 @@ The empirical finding that a model's [loss](/shared/glossary/#loss-function) dro
 ### Score {#score}
 `∇_x log p(x)` — diffusion training implicitly learns this
 
+### Scratchpad {#scratchpad}
+A temporary, fast-access workspace where intermediate results are stashed so they don't have to be recomputed later. Like a math student's scratch paper next to an exam: jot the partial sums, look them up later, move on much faster than redoing each calculation. In serving, the [KV cache](/shared/glossary/#kv-cache) is the model's scratchpad — every key and value it has already computed sits there ready to be reused on the next decode step.
+
 ### SDF {#sdf}
 Signed Distance Field — scalar field giving distance to nearest obstacle (negative inside)
 
@@ -978,6 +990,9 @@ Supervised Fine-Tuning — train on demonstration data with [cross-entropy](/sha
 
 ### SGD {#sgd}
 Stochastic Gradient Descent — updates parameters by subtracting a scaled gradient computed on a mini-batch; the simplest optimizer and the basis for more advanced methods
+
+### sglang {#sglang}
+An open-source LLM serving runtime that pairs fast inference (via [RadixAttention](/shared/glossary/#radixattention) prefix sharing) with first-class [constrained generation](/shared/glossary/#constrained-generation) — built-in regex / JSON / grammar constraints applied at decode time. Plays a similar role to [vLLM](/shared/glossary/#vllm) but is the popular pick when reliable structured output (function calls, tool use, schema-conformant JSON) matters most.
 
 ### Shape {#shape}
 The size of a tensor along each dimension; the tuple returned by `.shape`
@@ -1039,6 +1054,9 @@ Training the same model many times while changing one setting across a range of 
 ### Swish {#swish}
 Activation function `x · σ(x)` (also called SiLU) — a smooth, non-monotonic alternative to ReLU; the gating non-linearity used inside [SwiGLU](/shared/glossary/#swiglu).
 
+### System prompt {#system-prompt}
+A message placed at the very start of a chat conversation that tells the model how to behave — its role, tone, rules, and the tools it can call — before the user's first turn ever arrives. Like a stage director's note to an actor before the curtain rises: *"You're a polite customer-support agent who answers only refund questions."* System prompts are usually long and shared across many requests, which is why caching their KV state (see [prefix cache](/shared/glossary/#prefix-cache)) saves so much repeated work.
+
 ### Systolic array {#systolic-array}
 Data-flow matmul fabric used in TPUs
 
@@ -1067,13 +1085,16 @@ Adding time-axis layers to a pretrained 2D model
 A multidimensional array — a (storage, shape, stride, offset, dtype, device, requires_grad) tuple that views a 1-D storage buffer
 
 ### Tensor Core {#tensor-core}
-Specialized matmul unit in NVIDIA GPUs since Volta
+Specialized matmul unit in NVIDIA GPUs since [Volta](/shared/glossary/#volta)
 
 ### Tensor parallelism (TP) {#tensor-parallelism-tp}
 Sharding each layer's weights across GPUs with all-reduce at attention/[MLP](/shared/glossary/#mlp) boundaries
 
 ### TFLOPs {#tflops}
 Tera (10¹²) floating-point operations per second
+
+### TGI {#tgi}
+Short for **Text Generation Inference** — Hugging Face's open-source LLM serving engine, similar in role to [vLLM](/shared/glossary/#vllm). It implements [continuous batching](/shared/glossary/#continuous-batching), [PagedAttention](/shared/glossary/#pagedattention), and quantized inference behind a simple HTTP API, and is one of the two engines most commonly used to put an LLM in front of real users.
 
 ### Throughput {#throughput}
 How much work is completed per unit of time — for training, the number of examples processed per second.
@@ -1114,6 +1135,9 @@ The legacy serialization/IR for PyTorch; superseded by `torch.export`
 ### Transformer {#transformer}
 The decoder-only / encoder-only / encoder-decoder architecture built from [attention](/shared/glossary/#attention) + [MLP](/shared/glossary/#mlp) blocks
 
+### TransformerEngine {#transformerengine}
+NVIDIA's open-source library that automates safe [FP8](/shared/glossary/#fp8) training and inference on [Hopper](/shared/glossary/#hopper) and [Blackwell](/shared/glossary/#blackwell) GPUs — it picks per-tensor scales each step so the low-bit math stays numerically stable. Like a thermostat for low-precision arithmetic: as values drift toward overflow or underflow, it nudges the scale to keep them inside the safe range. Drop-in [transformer](/shared/glossary/#transformer) layers wrap your model and turn FP8 on without the user having to manage the scaling manually.
+
 ### transpose {#transpose}
 Swaps two dimensions by rewriting strides — never copies; the result is usually non-contiguous
 
@@ -1127,7 +1151,7 @@ A Python-flavored language for writing GPU kernels, developed by OpenAI
 NVIDIA's production server for hosting models behind an HTTP/gRPC API, with [batching](/shared/glossary/#batching) and multi-model support; unrelated to the [Triton](/shared/glossary/#triton) kernel language despite the shared name.
 
 ### TTFT {#ttft}
-Time to first token — dominated by prefill plus queue wait
+Time to *produce* the first token — the elapsed time from when a request arrives at the server until the model returns its first output token, dominated by [prefill](/shared/glossary/#prefill) plus any queue wait. Like a restaurant's "time until your drink arrives" — felt separately from the rest of the meal, and the first thing the user actually notices.
 
 ### U-Net {#u-net}
 Encoder-decoder architecture with skip connections; the standard diffusion backbone before DiT
@@ -1137,6 +1161,9 @@ Condition where a floating-point value is too small to be represented and rounds
 
 ### URDF / MJCF / USD {#urdf--mjcf--usd}
 Robot description formats (ROS, MuJoCo, NVIDIA respectively)
+
+### User turn {#user-turn}
+One message a user sends in a chat conversation, paired with the model's reply (the *assistant turn*). A back-and-forth between user and assistant is a sequence of alternating turns, all under the same opening [system prompt](/shared/glossary/#system-prompt). In typical traffic, the system prompt is long and fixed while each user turn is short and varies — which is exactly the pattern a [prefix cache](/shared/glossary/#prefix-cache) exploits.
 
 ### V2V {#v2v}
 Video-to-Video
@@ -1179,6 +1206,9 @@ Vision-Language Model — image (+ text) in, text out
 
 ### Vocabulary {#vocabulary}
 The fixed set of tokens a [tokenizer](/shared/glossary/#tokenizer) can produce, each with an integer ID; its size trades tokens-per-document against [embedding matrix](/shared/glossary/#embedding-matrix) size
+
+### Volta {#volta}
+NVIDIA's 2017 GPU architecture (V100) and the first generation to ship [Tensor Cores](/shared/glossary/#tensor-core), the dedicated matmul units that made deep-learning training dramatically faster. Subsequent generations — Turing, Ampere, [Hopper](/shared/glossary/#hopper), [Blackwell](/shared/glossary/#blackwell) — kept Tensor Cores and added support for ever-lower-precision formats. Named after the Italian physicist Alessandro Volta.
 
 ### VP / VE SDE {#vp--ve-sde}
 Variance-Preserving / Variance-Exploding — the two SDE families for diffusion

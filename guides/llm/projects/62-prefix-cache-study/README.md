@@ -2,7 +2,7 @@
 
 ---
 
-> Stop redoing the same long system prompt for every request.
+> Stop redoing the same long [system prompt](/shared/glossary/#system-prompt) for every request.
 
 ---
 
@@ -12,4 +12,4 @@ This project runs the same workload twice on a [vLLM](/shared/glossary/#vllm) se
 
 ## Why This Matters
 
-Real traffic is mostly a long shared system prompt followed by a short user turn, so caching the keys and values for that prefix means the boilerplate is processed only once across many users — a quiet but huge throughput win whenever the prompts your users send have a fixed beginning.
+Real traffic is mostly a long shared [system prompt](/shared/glossary/#system-prompt) followed by a short [user turn](/shared/glossary/#user-turn), so caching the keys and values for that prefix means the boilerplate is processed only once across many users — a quiet but huge throughput win whenever the prompts your users send have a fixed beginning.
