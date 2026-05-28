@@ -1,4 +1,4 @@
-# Agent on a Sandbox Task
+# Agent on a [Sandbox](/shared/glossary/#sandbox) Task
 
 ---
 

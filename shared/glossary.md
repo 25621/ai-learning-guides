@@ -118,8 +118,8 @@ An adjustment applied in the Adam family of optimizers to counteract the zero-in
 ### Biases {#biases}
 The additive [parameter](/shared/glossary/#parameters) vectors in a linear layer (the `b` in `y = xW + b`). Each output neuron has one bias value, which shifts the result independently of the input.
 
-### BM25 {#bm25}
-A classic keyword-search ranking that scores a document by how often the query's words appear in it, weighting rare words more heavily — the *sparse* (exact-word) counterpart to dense [embedding](/shared/glossary/#embedding) search.
+### BM25 (Best Matching 25) {#bm25}
+A classic keyword-search ranking — short for **Best Matching 25** — that scores a document by how often the query's words appear in it, weighting rare words more heavily. Think of it like a librarian scanning pages for your exact search words and ranking pages where those words appear most often (especially unusual words) higher on the list. It is the *sparse* (exact-word) counterpart to dense [embedding](/shared/glossary/#embedding) search.
 
 ### Bootstrapping {#bootstrapping}
 Using a current estimate (e.g., `V(s')`) in the target instead of a full return
@@ -910,6 +910,9 @@ Sparse Autoencoder — interpretability tool decomposing activations into monose
 ### Sampler {#sampler}
 The component that decides the order in which a [DataLoader](/shared/glossary/#dataloader) visits dataset examples (e.g. random, sequential, or class-weighted).
 
+### Sandbox {#sandbox}
+An isolated, throwaway environment — like a fenced-off playground — where an [agent](/shared/glossary/#agent) or program can run commands, create files, and make mistakes without affecting your real computer. If the agent breaks something inside the sandbox, you just throw the sandbox away; nothing outside it is touched. Containers (like Docker) and virtual machines are common ways to build one.
+
 ### Sampling {#sampling}
 Drawing the next token from the model's predicted probability distribution instead of always taking the most likely one; [temperature](/shared/glossary/#temperature), [top-k](/shared/glossary/#top-k), and [top-p](/shared/glossary/#top-p) control how random the choice is.
 
@@ -927,6 +930,9 @@ Special Euclidean / Orthogonal group — rigid-body motions / rotations in 3D
 
 ### Seed {#seed}
 A fixed starting number for a random-number generator; setting the same seed makes random operations (shuffling, initialization, dropout) produce the identical sequence every run.
+
+### Sentence embedding {#sentence-embedding}
+A single dense vector that captures the meaning of an entire sentence (or short passage), so two sentences about the same topic end up close together in vector space even if they use completely different words. Think of it as a GPS coordinate for meaning — two sentences that "mean the same thing" land near the same point on the map. Sentence [embeddings](/shared/glossary/#embedding) are the backbone of semantic search in [RAG](/shared/glossary/#rag): you embed the user's question and every stored passage, then find the passages whose coordinates are closest.
 
 ### Self-consistency {#self-consistency}
 Sampling many independent [chain-of-thought](/shared/glossary/#cot) solutions to the same problem and taking a majority vote on the final answer — like asking several people to solve a puzzle on their own and trusting the answer most of them land on.
@@ -982,8 +988,11 @@ A technique used to bypass non-differentiable operations by passing gradients un
 ### Stride {#stride}
 The number of storage elements to step over for each dimension of a tensor
 
+### SWE (Software Engineering) {#swe}
+Short for **Software Engineering** — the discipline of building, testing, and maintaining software systems. In the AI/LLM context, "SWE" usually appears in compound terms like [SWE-bench](/shared/glossary/#swe-bench) or "SWE-style agent," meaning an [agent](/shared/glossary/#agent) that does the kind of work a human software engineer does: reading code, diagnosing bugs, writing fixes, and running tests.
+
 ### SWE-bench {#swe-bench}
-A benchmark of real GitHub issues paired with the code changes that fixed them; an [agent](/shared/glossary/#agent) is judged by whether its edits make the project's test suite pass, which makes it the standard test of coding agents.
+Short for **Software Engineering Benchmark** — a benchmark of real GitHub issues paired with the code changes that fixed them; an [agent](/shared/glossary/#agent) is judged by whether its edits make the project's test suite pass, which makes it the standard test of coding agents.
 
 ### Sweep {#sweep}
 Training the same model many times while changing one setting across a range of values, then comparing results to pick the best — for example trying ten different [learning rates](/shared/glossary/#learning-rate) and keeping the winner. Like tasting a sauce as you add salt in small steps to find the amount you like, rather than guessing the whole spoonful at once. A sweep is how you turn a hyperparameter hunch into a measured choice.

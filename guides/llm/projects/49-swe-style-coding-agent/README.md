@@ -1,4 +1,4 @@
-# SWE-Style Coding Agent
+# [SWE](/shared/glossary/#swe)-Style Coding Agent
 
 ---
 
