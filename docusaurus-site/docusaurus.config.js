@@ -2,7 +2,6 @@ const {themes} = require('prism-react-renderer');
 
 const siteUrl = 'https://25621.github.io';
 const siteBaseUrl = '/ai-learning-guides/';
-const googleAnalyticsTrackingID = 'G-LEDRXS502H';
 const siteDescription =
   'Learn reinforcement learning from scratch with a structured roadmap covering MDPs, dynamic programming, Q-learning, policy gradients, actor-critic methods, PPO, SAC, and modern deep RL.';
 const siteKeywords = [
@@ -22,40 +21,6 @@ const siteKeywords = [
   'OpenAI Spinning Up',
   'AI learning roadmap',
 ];
-
-function safeGoogleGtagPlugin() {
-  return {
-    name: 'safe-google-gtag',
-    getClientModules() {
-      return [require.resolve('./src/clientModules/safeGoogleGtag.js')];
-    },
-    injectHtmlTags() {
-      return {
-        headTags: [
-          {
-            tagName: 'script',
-            attributes: {
-              async: true,
-              src: `https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsTrackingID}`,
-            },
-          },
-          {
-            tagName: 'script',
-            innerHTML: `
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-if (typeof window.gtag !== 'function') {
-  window.gtag = gtag;
-}
-gtag('js', new Date());
-gtag('config', '${googleAnalyticsTrackingID}', {'anonymize_ip': true});
-`,
-          },
-        ],
-      };
-    },
-  };
-}
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -153,10 +118,6 @@ const config = {
     ],
   ],
 
-  plugins: [
-    ...(process.env.NODE_ENV === 'production' ? [safeGoogleGtagPlugin] : []),
-  ],
-
   presets: [
     [
       'classic',
@@ -192,6 +153,12 @@ const config = {
           ignorePatterns: ['/tags/**', '/search/**'],
           filename: 'sitemap.xml',
         },
+        ...(process.env.NODE_ENV === 'production' ? {
+          gtag: {
+            trackingID: 'G-LEDRXS502H',
+            anonymizeIP: true,
+          },
+        } : {}),
       },
     ],
   ],
