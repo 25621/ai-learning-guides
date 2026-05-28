@@ -1051,14 +1051,14 @@ across many concurrent users.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| KV cache from scratch | Add a KV cache to a transformer; measure speedup vs. naive recomputation | ⭐⭐⭐ |
-| Quantize a 7B model | INT8 with GPTQ; INT4 with AWQ; measure quality (a few benchmarks) and VRAM | ⭐⭐⭐⭐ |
-| Speculative decoding | Pair a 1B draft with a 7B target; measure acceptance rate and wall-clock speedup | ⭐⭐⭐⭐ |
-| Serve with vLLM | Stand up a vLLM server; load-test with realistic concurrent requests | ⭐⭐⭐ |
-| Prefix-cache study | Same model in vLLM, same workload, with prefix cache on/off; report tail latency | ⭐⭐⭐ |
-| Constrained JSON generation | Force JSON-schema-valid output with Outlines or sglang; measure overhead | ⭐⭐⭐ |
-| Distill 7B → 1B | Distill a strong 7B model into a 1B student on a task domain; report quality retention | ⭐⭐⭐⭐⭐ |
-| FP8 serving | Convert a model to FP8 with TransformerEngine; verify quality and speedup | ⭐⭐⭐⭐⭐ |
+| [KV cache from scratch](projects/58-kv-cache-from-scratch/README.md) | Add a KV cache to a transformer; measure speedup vs. naive recomputation | ⭐⭐⭐ |
+| [Quantize a 7B model](projects/59-quantize-a-7b-model/README.md) | INT8 with GPTQ; INT4 with AWQ; measure quality (a few benchmarks) and VRAM | ⭐⭐⭐⭐ |
+| [Speculative decoding](projects/60-speculative-decoding/README.md) | Pair a 1B draft with a 7B target; measure acceptance rate and wall-clock speedup | ⭐⭐⭐⭐ |
+| [Serve with vLLM](projects/61-serve-with-vllm/README.md) | Stand up a vLLM server; load-test with realistic concurrent requests | ⭐⭐⭐ |
+| [Prefix-cache study](projects/62-prefix-cache-study/README.md) | Same model in vLLM, same workload, with prefix cache on/off; report tail latency | ⭐⭐⭐ |
+| [Constrained JSON generation](projects/63-constrained-json-generation/README.md) | Force JSON-schema-valid output with Outlines or sglang; measure overhead | ⭐⭐⭐ |
+| [Distill 7B → 1B](projects/64-distill-7b-1b/README.md) | Distill a strong 7B model into a 1B student on a task domain; report quality retention | ⭐⭐⭐⭐⭐ |
+| [FP8 serving](projects/65-fp8-serving/README.md) | Convert a model to FP8 with TransformerEngine; verify quality and speedup | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: A Minimal Speculative-Decoding Loop
 

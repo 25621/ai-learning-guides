@@ -211,6 +211,9 @@ Splitting a weight matrix along its column (output) dimension so that each GPU h
 ### Consistency model {#consistency-model}
 A diffusion-derived model that samples in 1–4 steps via consistency distillation
 
+### Constrained generation {#constrained-generation}
+A decoding-time technique that masks out any next-token choices that would break a target structure — a regex, a JSON schema, a grammar — so the model is only *allowed* to pick valid continuations. Like a Mad Libs game whose blanks accept only nouns or only numbers: the writer can be creative inside each blank but cannot break the form. Libraries such as Outlines and sglang are common implementations, and the technique is what makes reliable [function calling](/shared/glossary/#function-calling) and tool-using agents possible.
+
 ### Contamination {#contamination}
 When items from an evaluation [benchmark](/shared/glossary/#benchmark) accidentally end up in a model's training data, so its score reflects memorization rather than skill — like a student who studied from a leaked copy of the exam. Also called train-test contamination, it is a leading reason a high benchmark number can mislead.
 
@@ -222,6 +225,9 @@ The maximum number of tokens the model can attend over in one forward pass
 
 ### Continued pretraining {#continued-pretraining}
 Taking an already-pretrained model and training it further on a new corpus to add domain knowledge, rather than starting from random weights.
+
+### Continuous batching {#continuous-batching}
+A serving trick where the GPU adds new requests into the running [batch](/shared/glossary/#batching) — and drops finished ones — at every decode step, instead of waiting for the whole batch to finish together. Like a hotel shuttle that can pick up and drop off passengers anywhere along its loop rather than only at the start and end: far fewer empty seats overall, so [throughput](/shared/glossary/#throughput) goes up dramatically. It is the single largest speedup in modern LLM serving and is the default in [vLLM](/shared/glossary/#vllm) and TGI.
 
 ### ControlNet {#controlnet}
 Architecture that adds an auxiliary conditioning branch (depth, pose, edges, …) to a frozen diffusion model
@@ -306,6 +312,9 @@ Running prefill and decode on separate GPU pools with KV cache transfer between 
 
 ### Dispatcher {#dispatcher}
 The PyTorch component that routes `torch.foo(...)` calls to the right backend/dtype kernel
+
+### Distillation {#distillation}
+Training a smaller "student" model to copy the output of a larger, more capable "teacher" so the student inherits most of the teacher's behavior at a fraction of the cost. Like a junior cook shadowing a head chef and learning each recipe by mimicking the dish — they may never match the master, but they can plate most of the menu for far less money. Distillation works for skills the teacher already has but cannot conjure new abilities the teacher lacks.
 
 ### DiT {#dit}
 Diffusion Transformer — Peebles & Xie's transformer-based diffusion backbone
@@ -554,7 +563,7 @@ Kalman Filter — optimal linear-Gaussian Bayes filter
 Short for **Kullback-Leibler divergence** — a number that measures how far one probability distribution has drifted from another, growing larger the more the two disagree. In [RLHF](/shared/glossary/#rlhf) it acts as a leash on the [policy](/shared/glossary/#policy) being trained: the further its word probabilities wander from the frozen [reference model](/shared/glossary/#reference-model), the bigger the penalty it pays. Like a tether that lets a climber explore but stops them straying somewhere dangerous, it lets the model chase reward without forgetting how to talk sensibly.
 
 ### KV cache {#kv-cache}
-Cached keys and values per past token per layer; the working set of the decoder
+A scratchpad that stores the [attention](/shared/glossary/#attention) keys and values already computed for every earlier token in the sequence, so generating the next token only has to compute keys and values for that *one* new token instead of redoing all the previous ones. Like writing out a long multiplication table once and then looking up products instead of recalculating them — it turns each decode step from "redo the whole prompt" into "do one more token," which is what makes long-context serving fast enough to be usable.
 
 ### L2 regularization {#l2-regularization}
 A regularization technique that adds a penalty proportional to the squared magnitude of model weights to the loss function, encouraging smaller weights and reducing overfitting. In standard adaptive optimizers such as [Adam](/shared/glossary/#adam), this penalty is folded into the gradient and scaled by the adaptive learning rate, which is why [AdamW](/shared/glossary/#adamw) uses [decoupled](/shared/glossary/#decoupled) weight decay instead.
@@ -773,7 +782,7 @@ The learnable [tensors](/shared/glossary/#tensor) inside a model (such as [weigh
 How much a function changes when you nudge just one of its inputs and hold all the others still — the [derivative](/shared/glossary/#derivative) taken one input at a time. If a recipe's tastiness depends on both salt and sugar, the partial derivative with respect to salt tells you the effect of adding a pinch more salt while keeping the sugar fixed. A [gradient](/shared/glossary/#gradients) is simply the full list of these one-at-a-time slopes, one per [parameter](/shared/glossary/#parameters).
 
 ### PagedAttention {#pagedattention}
-KV cache managed as fixed-size physical blocks with per-request block tables
+A way of storing the [KV cache](/shared/glossary/#kv-cache) for many concurrent requests by splitting each request's cache into small fixed-size "pages" that the engine can scatter freely around GPU memory and look up through a per-request page table — the same idea operating systems use for virtual memory. It removes the wasted space and fragmentation you get when each request needs its own contiguous chunk, which is why [vLLM](/shared/glossary/#vllm) made it the default scheme.
 
 ### Patchification {#patchification}
 Splitting a (latent) tensor into a sequence of patch tokens for a transformer
