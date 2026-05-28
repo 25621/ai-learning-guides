@@ -73,6 +73,9 @@ Dynamic-resolution input handling (tile images at native aspect ratio)
 ### AprilTag {#apriltag}
 Square fiducial marker with a known code; widely used for pose ground truth
 
+### Arena {#arena}
+A way to rank chat models by having them go head-to-head: two models answer the same prompt, a human or [LLM judge](/shared/glossary/#llm-as-judge) picks the winner, and many such duels are turned into [Elo](/shared/glossary/#elo) ratings — the scoring system used for chess players. The public [LMSys Chatbot Arena](https://lmarena.ai/) is the best-known example.
+
 ### ATen {#aten}
 The C++ tensor library underneath PyTorch's Python frontend
 
@@ -105,6 +108,9 @@ The policy that generated the data, in off-policy or offline RL
 
 ### Bellman equation {#bellman-equation}
 The recursive consistency condition `V(s) = E[r + γV(s')]`
+
+### Benchmark {#benchmark}
+A fixed, shared test set used to measure and compare models on a task — like a standardized exam everyone sits so scores line up side by side. [MMLU](/shared/glossary/#mmlu) tests knowledge and [GSM8K](/shared/glossary/#gsm8k) tests math; a benchmark is only meaningful while models have not already seen its answers (see [contamination](/shared/glossary/#contamination)).
 
 ### Best-of-N {#best-of-n}
 An inference trick that samples `N` candidate answers to the same prompt and keeps the single one a scorer — usually a [reward model](/shared/glossary/#reward-model) or [verifier](/shared/glossary/#verifier) — rates highest, like writing several drafts of an email and sending only the best.
@@ -201,6 +207,9 @@ Splitting a weight matrix along its column (output) dimension so that each GPU h
 
 ### Consistency model {#consistency-model}
 A diffusion-derived model that samples in 1–4 steps via consistency distillation
+
+### Contamination {#contamination}
+When items from an evaluation [benchmark](/shared/glossary/#benchmark) accidentally end up in a model's training data, so its score reflects memorization rather than skill — like a student who studied from a leaked copy of the exam. Also called train-test contamination, it is a leading reason a high benchmark number can mislead.
 
 ### Content-addressable token mixing {#content-addressable-token-mixing}
 The routing and retrieval of information between tokens based on their query-key similarity (as in [attention](/shared/glossary/#attention)) rather than their positions
@@ -339,6 +348,9 @@ Evidence Lower Bound — the variational objective trained by VAEs
 
 ### Elementwise operation {#elementwise-operation}
 An operation applied independently to each element of a tensor (e.g. add, multiply, ReLU), where output position `i` depends only on input position `i`.
+
+### Elo {#elo}
+A rating system borrowed from chess that turns a series of head-to-head wins and losses into a single number per player: beat a strong opponent and your rating jumps, lose to a weak one and it drops. LLM [arenas](/shared/glossary/#arena) use it to rank chat models from pairwise comparisons instead of from a fixed-answer [benchmark](/shared/glossary/#benchmark).
 
 ### EMA weights {#ema-weights}
 Exponential moving average of model weights; samples better than the live weights
@@ -565,6 +577,9 @@ Light Detection And Ranging — laser range scanner
 ### LLM {#llm}
 Large Language Model — a [transformer](/shared/glossary/#transformer) trained on large amounts of text to predict and generate language.
 
+### LLM-as-judge {#llm-as-judge}
+Using a strong [LLM](/shared/glossary/#llm) to grade or compare other models' answers in place of a human rater — fast, cheap, and surprisingly well-calibrated, though it tends to favor longer answers and ones written in its own style. To catch position bias you usually ask twice with the two answers swapped and trust only an agreeing verdict.
+
 ### LoRA {#lora}
 [Low-Rank](/shared/glossary/#low-rank) Adaptation — fine-tune by adding small low-rank matrices, freeze the base
 
@@ -630,6 +645,9 @@ Multi-Layer Perceptron — a [feedforward neural network](/shared/glossary/#ffn)
 
 ### MMDiT {#mmdit}
 Multi-Modal Diffusion Transformer — joint text+image attention layers, used in SD3 and Flux
+
+### MMLU {#mmlu}
+Massive Multitask Language Understanding — a 57-subject multiple-choice [benchmark](/shared/glossary/#benchmark) (history, law, medicine, math, and more) that became the standard quick test of how much general knowledge a model has, like a giant trivia exam spanning many school subjects at once.
 
 ### Modality gap {#modality-gap}
 Empirical finding that different-modality embeddings stay in separable regions

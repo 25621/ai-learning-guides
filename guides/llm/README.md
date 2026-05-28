@@ -952,13 +952,13 @@ Long-context retrieval           Greedy; deterministic by design
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| MMLU re-run | Evaluate an open model on MMLU; report by category; verify your number against published | ⭐⭐ |
-| Prompt sensitivity sweep | Same model, same eval, five different prompt formats; plot the spread | ⭐⭐⭐ |
-| Contamination probe | For a model you trained, search its pretraining data for exact and near-duplicate eval items | ⭐⭐⭐⭐ |
-| LLM-as-judge pipeline | Build a judge that compares model A and model B on your own prompts; check inter-judge agreement | ⭐⭐⭐ |
-| Capability profile | Run a model through 8 evals across capabilities; produce a one-page radar chart | ⭐⭐⭐ |
-| Custom eval | Define a 100-prompt eval that matches your application; collect 3 grades per prompt and analyze noise | ⭐⭐⭐⭐ |
-| Arena reproduction | Run a small Elo tournament on 5 open models with an LLM judge; check stability vs. seed and judge model | ⭐⭐⭐⭐ |
+| [MMLU re-run](projects/51-mmlu-re-run/README.md) | Evaluate an open model on MMLU; report by category; verify your number against published | ⭐⭐ |
+| [Prompt sensitivity sweep](projects/52-prompt-sensitivity-sweep/README.md) | Same model, same eval, five different prompt formats; plot the spread | ⭐⭐⭐ |
+| [Contamination probe](projects/53-contamination-probe/README.md) | For a model you trained, search its pretraining data for exact and near-duplicate eval items | ⭐⭐⭐⭐ |
+| [LLM-as-judge pipeline](projects/54-llm-as-judge-pipeline/README.md) | Build a judge that compares model A and model B on your own prompts; check inter-judge agreement | ⭐⭐⭐ |
+| [Capability profile](projects/55-capability-profile/README.md) | Run a model through 8 evals across capabilities; produce a one-page radar chart | ⭐⭐⭐ |
+| [Custom eval](projects/56-custom-eval/README.md) | Define a 100-prompt eval that matches your application; collect 3 grades per prompt and analyze noise | ⭐⭐⭐⭐ |
+| [Arena reproduction](projects/57-arena-reproduction/README.md) | Run a small Elo tournament on 5 open models with an LLM judge; check stability vs. seed and judge model | ⭐⭐⭐⭐ |
 
 ### Sample Code: An LLM-as-Judge Loop
 
