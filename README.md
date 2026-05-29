@@ -17,7 +17,7 @@ A collection of long-form, project-driven guides for learning modern AI from fir
 | [Video Generation](./guides/video-generation/) | Video diffusion, latent video, DiTs, world models | 11 | Temporal generative models |
 | [Robotics](./guides/robotics/) | Control, perception, imitation learning, diffusion policies, VLAs, sim-to-real | 11 | Building robot learning systems |
 | [Multimodal Learning](./guides/multimodal-learning/) | CLIP, fusion, VLMs, any-to-any models | 11 | Combining modalities into shared representations |
-| [Inference Systems](./guides/inference-systems/) | KV cache, batching, speculative decoding, quantization, distributed serving | 11 | Putting trained LLMs into production |
+| [Inference Systems](./guides/inference-systems/) | Request lifecycle, KV cache, batching/scheduling, speculative decoding, serving-time quantization, distributed/disaggregated serving, observability & cost | 11 | Putting trained models into production at scale (LLM-focused) |
 | [AI Hardware](./guides/ai-hardware/) | GPU architecture, CUDA/Triton, quantization, serving | 11 | Making models fast on real silicon |
 
 The order above is a suggested learning progression: foundations first, then single-modality work, then cross-modality and applied tracks, with the systems-heavy guides (Inference Systems and AI Hardware) as the production-and-performance endpoint. Each guide is self-contained but cross-references the others where it makes sense. Project folders live under each guide's `projects/` directory — see [the structure section](#repository-structure) below.
@@ -123,7 +123,7 @@ How the guides relate to each other:
 **Soft dependencies:**
 - LLM Phase 6 (RLHF) reads better after RL Phase 9.
 - Robotics Phase 6 (VLAs) reads better after Multimodal Phase 5 (VLMs).
-- Inference Systems Phases 5–6 (quantization, kernels) overlap with AI Hardware Phases 4 and 7; read together if both interest you.
+- Inference Systems defers numeric-format theory to AI Hardware Phase 7 and kernel-writing fundamentals to AI Hardware Phase 4 / PyTorch Deep Dive Phase 6; read the upstream guide first if you want depth there.
 
 ---
 
