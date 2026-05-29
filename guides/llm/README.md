@@ -741,13 +741,13 @@ verifiable rewards (the top curve) shifts the whole frontier up.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| CoT vs. direct on GSM8K | Compare a base 7B model with and without "let's think step by step"; report accuracy gain | ⭐⭐ |
-| Self-consistency sweep | Same model, vary `n_samples ∈ {1, 4, 16, 64}`; plot accuracy vs. cost | ⭐⭐⭐ |
-| Best-of-N with a reward model | Reward-model-scored selection on a math benchmark; compare to self-consistency majority | ⭐⭐⭐ |
-| Process reward model | Train a small PRM on PRM800K; use it to rescore generations; measure win-rate | ⭐⭐⭐⭐ |
-| Tree-of-Thoughts on a logic puzzle | Implement a small tree-search over partial solutions with a PRM heuristic | ⭐⭐⭐⭐ |
-| Mini R1 recipe | Take Qwen 7B base; SFT on a small reasoning trace set; GRPO with `is_correct` reward on math problems; observe long-CoT behavior emerging | ⭐⭐⭐⭐⭐ |
-| Length-budget controller | Train a model to obey an explicit "think for at most N tokens" instruction; measure quality-vs-budget curve | ⭐⭐⭐⭐⭐ |
+| [CoT vs. direct on GSM8K](projects/36-cot-vs-direct-on-gsm8k/README.md) | Compare a base 7B model with and without "let's think step by step"; report accuracy gain | ⭐⭐ |
+| [Self-consistency sweep](projects/37-self-consistency-sweep/README.md) | Same model, vary `n_samples ∈ {1, 4, 16, 64}`; plot accuracy vs. cost | ⭐⭐⭐ |
+| [Best-of-N with a reward model](projects/38-best-of-n-with-a-reward-model/README.md) | Reward-model-scored selection on a math benchmark; compare to self-consistency majority | ⭐⭐⭐ |
+| [Process reward model](projects/39-process-reward-model/README.md) | Train a small PRM on PRM800K; use it to rescore generations; measure win-rate | ⭐⭐⭐⭐ |
+| [Tree-of-Thoughts on a logic puzzle](projects/40-tree-of-thoughts-on-a-logic-puzzle/README.md) | Implement a small tree-search over partial solutions with a PRM heuristic | ⭐⭐⭐⭐ |
+| [Mini R1 recipe](projects/41-mini-r1-recipe/README.md) | Take Qwen 7B base; SFT on a small reasoning trace set; GRPO with `is_correct` reward on math problems; observe long-CoT behavior emerging | ⭐⭐⭐⭐⭐ |
+| [Length-budget controller](projects/42-length-budget-controller/README.md) | Train a model to obey an explicit "think for at most N tokens" instruction; measure quality-vs-budget curve | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: Self-Consistency
 
@@ -856,14 +856,14 @@ Robust agents need verification, retry, and budget control at every step.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Minimal RAG | Index 1 000 Wikipedia paragraphs with a sentence-embedding model; build a retrieve-then-answer pipeline | ⭐⭐⭐ |
-| Chunking ablation | Same corpus, 200 vs. 800 vs. 1 600 token chunks, with and without overlap; measure answer quality | ⭐⭐⭐ |
-| Reranker effect | Add a cross-encoder reranker to the pipeline; measure nDCG and end-to-end answer quality | ⭐⭐⭐⭐ |
-| Hybrid retrieval | Combine dense + BM25 via reciprocal rank fusion; verify the consistent win | ⭐⭐⭐⭐ |
-| Tool-using chatbot | Build a model that can call a calculator and a search tool; evaluate on a synthetic benchmark | ⭐⭐⭐ |
-| Agent on a sandbox task | Build a tiny ReAct-style agent on a deterministic task (e.g., spreadsheet edits); evaluate over many seeds | ⭐⭐⭐⭐ |
-| SWE-style coding agent | A model + a shell + a file editor; solve a few easy issues from a sample bug benchmark | ⭐⭐⭐⭐⭐ |
-| RL fine-tune for tools | GRPO on tool-call success; verifier checks tool output matches expected | ⭐⭐⭐⭐⭐ |
+| [Minimal RAG](projects/43-minimal-rag/README.md) | Index 1 000 Wikipedia paragraphs with a sentence-embedding model; build a retrieve-then-answer pipeline | ⭐⭐⭐ |
+| [Chunking ablation](projects/44-chunking-ablation/README.md) | Same corpus, 200 vs. 800 vs. 1 600 token chunks, with and without overlap; measure answer quality | ⭐⭐⭐ |
+| [Reranker effect](projects/45-reranker-effect/README.md) | Add a cross-encoder reranker to the pipeline; measure nDCG and end-to-end answer quality | ⭐⭐⭐⭐ |
+| [Hybrid retrieval](projects/46-hybrid-retrieval/README.md) | Combine dense + BM25 via reciprocal rank fusion; verify the consistent win | ⭐⭐⭐⭐ |
+| [Tool-using chatbot](projects/47-tool-using-chatbot/README.md) | Build a model that can call a calculator and a search tool; evaluate on a synthetic benchmark | ⭐⭐⭐ |
+| [Agent on a sandbox task](projects/48-agent-on-a-sandbox-task/README.md) | Build a tiny ReAct-style agent on a deterministic task (e.g., spreadsheet edits); evaluate over many seeds | ⭐⭐⭐⭐ |
+| [SWE-style coding agent](projects/49-swe-style-coding-agent/README.md) | A model + a shell + a file editor; solve a few easy issues from a sample bug benchmark | ⭐⭐⭐⭐⭐ |
+| [RL fine-tune for tools](projects/50-rl-fine-tune-for-tools/README.md) | GRPO on tool-call success; verifier checks tool output matches expected | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: A Minimal RAG Function
 
@@ -952,13 +952,13 @@ Long-context retrieval           Greedy; deterministic by design
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| MMLU re-run | Evaluate an open model on MMLU; report by category; verify your number against published | ⭐⭐ |
-| Prompt sensitivity sweep | Same model, same eval, five different prompt formats; plot the spread | ⭐⭐⭐ |
-| Contamination probe | For a model you trained, search its pretraining data for exact and near-duplicate eval items | ⭐⭐⭐⭐ |
-| LLM-as-judge pipeline | Build a judge that compares model A and model B on your own prompts; check inter-judge agreement | ⭐⭐⭐ |
-| Capability profile | Run a model through 8 evals across capabilities; produce a one-page radar chart | ⭐⭐⭐ |
-| Custom eval | Define a 100-prompt eval that matches your application; collect 3 grades per prompt and analyze noise | ⭐⭐⭐⭐ |
-| Arena reproduction | Run a small Elo tournament on 5 open models with an LLM judge; check stability vs. seed and judge model | ⭐⭐⭐⭐ |
+| [MMLU re-run](projects/51-mmlu-re-run/README.md) | Evaluate an open model on MMLU; report by category; verify your number against published | ⭐⭐ |
+| [Prompt sensitivity sweep](projects/52-prompt-sensitivity-sweep/README.md) | Same model, same eval, five different prompt formats; plot the spread | ⭐⭐⭐ |
+| [Contamination probe](projects/53-contamination-probe/README.md) | For a model you trained, search its pretraining data for exact and near-duplicate eval items | ⭐⭐⭐⭐ |
+| [LLM-as-judge pipeline](projects/54-llm-as-judge-pipeline/README.md) | Build a judge that compares model A and model B on your own prompts; check inter-judge agreement | ⭐⭐⭐ |
+| [Capability profile](projects/55-capability-profile/README.md) | Run a model through 8 evals across capabilities; produce a one-page radar chart | ⭐⭐⭐ |
+| [Custom eval](projects/56-custom-eval/README.md) | Define a 100-prompt eval that matches your application; collect 3 grades per prompt and analyze noise | ⭐⭐⭐⭐ |
+| [Arena reproduction](projects/57-arena-reproduction/README.md) | Run a small Elo tournament on 5 open models with an LLM judge; check stability vs. seed and judge model | ⭐⭐⭐⭐ |
 
 ### Sample Code: An LLM-as-Judge Loop
 
@@ -1051,14 +1051,14 @@ across many concurrent users.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| KV cache from scratch | Add a KV cache to a transformer; measure speedup vs. naive recomputation | ⭐⭐⭐ |
-| Quantize a 7B model | INT8 with GPTQ; INT4 with AWQ; measure quality (a few benchmarks) and VRAM | ⭐⭐⭐⭐ |
-| Speculative decoding | Pair a 1B draft with a 7B target; measure acceptance rate and wall-clock speedup | ⭐⭐⭐⭐ |
-| Serve with vLLM | Stand up a vLLM server; load-test with realistic concurrent requests | ⭐⭐⭐ |
-| Prefix-cache study | Same model in vLLM, same workload, with prefix cache on/off; report tail latency | ⭐⭐⭐ |
-| Constrained JSON generation | Force JSON-schema-valid output with Outlines or sglang; measure overhead | ⭐⭐⭐ |
-| Distill 7B → 1B | Distill a strong 7B model into a 1B student on a task domain; report quality retention | ⭐⭐⭐⭐⭐ |
-| FP8 serving | Convert a model to FP8 with TransformerEngine; verify quality and speedup | ⭐⭐⭐⭐⭐ |
+| [KV cache from scratch](projects/58-kv-cache-from-scratch/README.md) | Add a KV cache to a transformer; measure speedup vs. naive recomputation | ⭐⭐⭐ |
+| [Quantize a 7B model](projects/59-quantize-a-7b-model/README.md) | INT8 with GPTQ; INT4 with AWQ; measure quality (a few benchmarks) and VRAM | ⭐⭐⭐⭐ |
+| [Speculative decoding](projects/60-speculative-decoding/README.md) | Pair a 1B draft with a 7B target; measure acceptance rate and wall-clock speedup | ⭐⭐⭐⭐ |
+| [Serve with vLLM](projects/61-serve-with-vllm/README.md) | Stand up a vLLM server; load-test with realistic concurrent requests | ⭐⭐⭐ |
+| [Prefix-cache study](projects/62-prefix-cache-study/README.md) | Same model in vLLM, same workload, with prefix cache on/off; report tail latency | ⭐⭐⭐ |
+| [Constrained JSON generation](projects/63-constrained-json-generation/README.md) | Force JSON-schema-valid output with Outlines or sglang; measure overhead | ⭐⭐⭐ |
+| [Distill 7B → 1B](projects/64-distill-7b-1b/README.md) | Distill a strong 7B model into a 1B student on a task domain; report quality retention | ⭐⭐⭐⭐⭐ |
+| [FP8 serving](projects/65-fp8-serving/README.md) | Convert a model to FP8 with TransformerEngine; verify quality and speedup | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: A Minimal Speculative-Decoding Loop
 
@@ -1157,13 +1157,13 @@ Once you've built and shipped a model, you discover the problems that aren't on 
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Hallucination triage | Build a 100-prompt eval where the model should say "I don't know"; measure refusal rate vs. confident wrong answers | ⭐⭐⭐ |
-| Memorization probe | For an open model with known training data, find verbatim regurgitation with prefix prompts | ⭐⭐⭐⭐ |
-| Prompt-injection red team | Build a tool-using agent; try 20 injection attacks via retrieved documents; document which defenses help | ⭐⭐⭐⭐ |
-| GCG jailbreak | Reproduce a small GCG attack on an aligned open model; understand what the optimization is doing | ⭐⭐⭐⭐⭐ |
-| Linear probes for facts | Train probes on hidden states to recover "is this statement true"; measure across layers | ⭐⭐⭐⭐ |
-| Tiny SAE | Train a sparse autoencoder on a small model's residual stream; visualize a few features | ⭐⭐⭐⭐⭐ |
-| RLAIF on a small task | Replace human preferences with AI judgments; train DPO; compare quality and cost | ⭐⭐⭐⭐ |
+| [Hallucination triage](projects/66-hallucination-triage/README.md) | Build a 100-prompt eval where the model should say "I don't know"; measure refusal rate vs. confident wrong answers | ⭐⭐⭐ |
+| [Memorization probe](projects/67-memorization-probe/README.md) | For an open model with known training data, find verbatim regurgitation with prefix prompts | ⭐⭐⭐⭐ |
+| [Prompt-injection red team](projects/68-prompt-injection-red-team/README.md) | Build a tool-using agent; try 20 injection attacks via retrieved documents; document which defenses help | ⭐⭐⭐⭐ |
+| [GCG jailbreak](projects/69-gcg-jailbreak/README.md) | Reproduce a small GCG attack on an aligned open model; understand what the optimization is doing | ⭐⭐⭐⭐⭐ |
+| [Linear probes for facts](projects/70-linear-probes-for-facts/README.md) | Train probes on hidden states to recover "is this statement true"; measure across layers | ⭐⭐⭐⭐ |
+| [Tiny SAE](projects/71-tiny-sae/README.md) | Train a sparse autoencoder on a small model's residual stream; visualize a few features | ⭐⭐⭐⭐⭐ |
+| [RLAIF on a small task](projects/72-rlaif-on-a-small-task/README.md) | Replace human preferences with AI judgments; train DPO; compare quality and cost | ⭐⭐⭐⭐ |
 
 ### Key Insight
 
