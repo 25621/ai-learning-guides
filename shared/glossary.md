@@ -295,6 +295,9 @@ Denoising Diffusion Probabilistic Models — the foundational 2020 paper and tra
 ### Deadly triad {#deadly-triad}
 Function approximation + bootstrapping + off-policy data → instability
 
+### Decode {#decode}
+The token-by-token half of LLM inference: after [prefill](/shared/glossary/#prefill) digests the prompt, the model generates one new token per forward pass, each step reading the whole [KV cache](/shared/glossary/#kv-cache) before producing the next [logits](/shared/glossary/#logits). Like writing a sentence one word at a time while glancing back over every word already written — fast per step, but the constant re-reading of the page is what bounds speed. Decode is [memory-bandwidth-bound](/shared/glossary/#roofline) on a GPU, the opposite of [prefill](/shared/glossary/#prefill), and is what most serving optimizations target.
+
 ### Decoupled {#decoupled}
 A training technique where two effects that are mathematically equivalent in standard SGD are separated into independent operations. In AdamW, weight decay is decoupled from the gradient update so that the regularization strength is not scaled by the adaptive learning rate.
 
@@ -313,8 +316,14 @@ The instantaneous rate of change of a function with respect to its input. In dee
 ### Deterministic algorithms {#deterministic-algorithms}
 Operations that produce bit-identical outputs for identical inputs every time; enabled in PyTorch via `torch.use_deterministic_algorithms(True)` at the cost of some performance
 
+### Detokenization {#detokenization}
+Turning a sequence of token IDs back into a UTF-8 string — the reverse of what the [tokenizer](/shared/glossary/#tokenizer) did on the way in. The tricky part for streaming servers is that a single visible character (like an emoji or a Chinese character) is often spread across several [BPE](/shared/glossary/#bpe) pieces, so emitting each token's text the moment it arrives can produce broken bytes; a correct streaming detokenizer buffers the partial bytes until they form a complete character.
+
 ### DH parameters {#dh-parameters}
 Denavit-Hartenberg parameters — textbook arm-geometry description
+
+### Diffusion model {#diffusion-model}
+A generative model that learns to *un-noise* an image (or video, or audio) — training starts from clean data, gradually adds Gaussian noise until it looks like static, and teaches the network to reverse one small step of that corruption. At inference time you start from pure static and call the network many times (often 4–50), each call removing a bit of noise until a coherent picture emerges. Like sculpting in reverse: the marble starts as a featureless block of noise and the model chips away until the shape appears. Stable Diffusion is the best-known example.
 
 ### Disaggregated serving {#disaggregated-serving}
 Running prefill and decode on separate GPU pools with KV cache transfer between them
@@ -493,6 +502,9 @@ A helper used with [float16](/shared/glossary/#float16) mixed-precision training
 ### Graph break {#graph-break}
 A point where [`torch.compile`](/shared/glossary/#torchcompile) cannot trace the code (e.g. a `print` or a data-dependent branch), forcing it to split the model and fall back to [eager mode](/shared/glossary/#eager-mode) — a common cause of lost speedup.
 
+### Greedy decoding {#greedy-decoding}
+The simplest [sampling](/shared/glossary/#sampling) rule: at every step, pick the single most likely next token (the `argmax` of the [logits](/shared/glossary/#logits)) and never roll the dice. Like always ordering the most popular dish on the menu — boring but predictable. Useful when reproducibility matters, though on a GPU even greedy decoding is not bit-for-bit deterministic across batch sizes because floating-point sums reorder.
+
 ### Grounding {#grounding}
 Producing spatial outputs (boxes, points) referring to image regions
 
@@ -621,6 +633,9 @@ Large Language Model — a [transformer](/shared/glossary/#transformer) trained 
 
 ### LLM-as-judge {#llm-as-judge}
 Using a strong [LLM](/shared/glossary/#llm) to grade or compare other models' answers in place of a human rater — fast, cheap, and surprisingly well-calibrated, though it tends to favor longer answers and ones written in its own style. To catch [position bias](/shared/glossary/#position-bias) you usually ask twice with the two answers swapped and trust only an agreeing verdict — like a blind wine tasting where the same two bottles are poured first as "Glass A, Glass B" and then again as "Glass B, Glass A"; you only believe the judge picked the better wine if they pick the same bottle both times, because that rules out them simply liking whichever glass sat on the left.
+
+### Logits {#logits}
+The raw, unnormalized scores a model produces at its output, one per [vocabulary](/shared/glossary/#vocabulary) entry, before they are turned into probabilities by [softmax](/shared/glossary/#softmax). Like the points each contestant has scored at the end of a game — bigger means "more likely the next token" — but to read them as percentages you have to normalize. [Sampling](/shared/glossary/#sampling) rules ([temperature](/shared/glossary/#temperature), [top-k](/shared/glossary/#top-k), [top-p](/shared/glossary/#top-p)) all reshape the logits before the random draw, and `argmax` of the logits is what [greedy decoding](/shared/glossary/#greedy-decoding) picks.
 
 ### LoRA {#lora}
 [Low-Rank](/shared/glossary/#low-rank) Adaptation — fine-tune by adding small low-rank matrices, freeze the base
@@ -1081,11 +1096,17 @@ A Python `OrderedDict` that maps every parameter and buffer name to its tensor v
 ### Static quantization (PTQ) {#static-quantization-ptq}
 A [quantization](/shared/glossary/#quantization) method that converts both [weights](/shared/glossary/#weights) and [activations](/shared/glossary/#activations) to [int8](/shared/glossary/#int8) before serving, using a [calibration](/shared/glossary/#calibration) pass to fix the activation scales in advance.
 
+### Stop-string {#stop-string}
+A user-supplied substring that tells the server "as soon as the generated text contains this, stop." Matched on the *decoded* text, not the raw token IDs, because the same letters can land in different [BPE](/shared/glossary/#bpe) tokens depending on what came before — so the matcher has to keep a small rolling window of recent output and check for the string at every step.
+
 ### Storage {#storage}
 The 1-D buffer that a tensor is a view into
 
 ### Straight-through estimator {#straight-through-estimator}
 A technique used to bypass non-differentiable operations by passing gradients unchanged through the operation during the backward pass.
+
+### Streaming {#streaming}
+Sending the model's reply to the client one piece at a time as it is generated, instead of waiting for the whole answer and then returning it in a single response. Over HTTP this is usually done with Server-Sent Events (SSE) or chunked transfer encoding; the connection stays open and the server flushes each new token as soon as it is sampled. Like a waiter who brings each course out as it leaves the kitchen rather than holding the whole meal until dessert is ready — the user sees [TTFT](/shared/glossary/#ttft) drop dramatically even though total generation time is the same.
 
 ### Stride {#stride}
 The number of storage elements to step over for each dimension of a tensor

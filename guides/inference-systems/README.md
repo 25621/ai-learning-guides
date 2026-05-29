@@ -216,14 +216,14 @@ The rest of this guide focuses on the decoder-only LLM case unless otherwise not
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Manual inference loop | Load a 1B HF model, write a Python `while` loop that prefills the prompt, then decodes one token at a time using the KV cache | ⭐⭐ |
-| Streaming server | Wrap the loop in FastAPI with `StreamingResponse`; benchmark TTFT vs. ITL with `oha` | ⭐⭐⭐ |
-| Stop-string matcher | Implement a streaming stop-string matcher that handles BPE token boundaries correctly; verify against pathological cases (stop string split across two tokens) | ⭐⭐⭐ |
-| Sampling kernel | Implement top-k + top-p + temperature sampling on logits in pure PyTorch; profile against `torch.multinomial` + `topk` | ⭐⭐⭐ |
-| Detokenizer fuzzer | Generate random token sequences, decode incrementally vs. all-at-once; find a case where they disagree | ⭐⭐⭐⭐ |
-| Determinism audit | Run the same prompt 100× with greedy decoding at different batch sizes; report bitwise divergence rate; fix one source | ⭐⭐⭐⭐ |
-| Request-lifecycle tracer | Add per-stage timestamps to a request; produce a flamegraph for one slow request from a load test | ⭐⭐⭐ |
-| Diffusion vs LLM serving | Serve a Stable Diffusion model and a 7B LLM behind the same load generator; explain why batch sizes and TTFT shapes look so different | ⭐⭐⭐ |
+| [Manual inference loop](projects/01-manual-inference-loop/README.md) | Load a 1B HF model, write a Python `while` loop that prefills the prompt, then decodes one token at a time using the KV cache | ⭐⭐ |
+| [Streaming server](projects/02-streaming-server/README.md) | Wrap the loop in FastAPI with `StreamingResponse`; benchmark TTFT vs. ITL with `oha` | ⭐⭐⭐ |
+| [Stop-string matcher](projects/03-stop-string-matcher/README.md) | Implement a streaming stop-string matcher that handles BPE token boundaries correctly; verify against pathological cases (stop string split across two tokens) | ⭐⭐⭐ |
+| [Sampling kernel](projects/04-sampling-kernel/README.md) | Implement top-k + top-p + temperature sampling on logits in pure PyTorch; profile against `torch.multinomial` + `topk` | ⭐⭐⭐ |
+| [Detokenizer fuzzer](projects/05-detokenizer-fuzzer/README.md) | Generate random token sequences, decode incrementally vs. all-at-once; find a case where they disagree | ⭐⭐⭐⭐ |
+| [Determinism audit](projects/06-determinism-audit/README.md) | Run the same prompt 100× with greedy decoding at different batch sizes; report bitwise divergence rate; fix one source | ⭐⭐⭐⭐ |
+| [Request-lifecycle tracer](projects/07-request-lifecycle-tracer/README.md) | Add per-stage timestamps to a request; produce a flamegraph for one slow request from a load test | ⭐⭐⭐ |
+| [Diffusion vs LLM serving](projects/08-diffusion-vs-llm-serving/README.md) | Serve a Stable Diffusion model and a 7B LLM behind the same load generator; explain why batch sizes and TTFT shapes look so different | ⭐⭐⭐ |
 
 ### Sample Code: A Minimal Decode Loop With a KV Cache
 

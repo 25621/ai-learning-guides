@@ -279,7 +279,27 @@ const sidebars = {
         {type: 'doc', id: 'guides/video-generation/README', label: 'Video Generation'},
         {type: 'doc', id: 'guides/robotics/README', label: 'Robotics'},
         {type: 'doc', id: 'guides/multimodal-learning/README', label: 'Multimodal Learning'},
-        {type: 'doc', id: 'guides/inference-systems/README', label: 'Inference Systems'},
+        {
+          type: 'category',
+          label: 'Inference Systems',
+          link: {type: 'doc', id: 'guides/inference-systems/README'},
+          items: [
+            {
+              type: 'category',
+              label: 'Phase 1: The Anatomy of an Inference Request',
+              items: [
+                {type: 'doc', id: 'guides/inference-systems/projects/manual-inference-loop/README', label: 'Manual inference loop'},
+                {type: 'doc', id: 'guides/inference-systems/projects/streaming-server/README', label: 'Streaming server'},
+                {type: 'doc', id: 'guides/inference-systems/projects/stop-string-matcher/README', label: 'Stop-string matcher'},
+                {type: 'doc', id: 'guides/inference-systems/projects/sampling-kernel/README', label: 'Sampling kernel'},
+                {type: 'doc', id: 'guides/inference-systems/projects/detokenizer-fuzzer/README', label: 'Detokenizer fuzzer'},
+                {type: 'doc', id: 'guides/inference-systems/projects/determinism-audit/README', label: 'Determinism audit'},
+                {type: 'doc', id: 'guides/inference-systems/projects/request-lifecycle-tracer/README', label: 'Request-lifecycle tracer'},
+                {type: 'doc', id: 'guides/inference-systems/projects/diffusion-vs-llm-serving/README', label: 'Diffusion vs LLM serving'},
+              ],
+            },
+          ],
+        },
         {type: 'doc', id: 'guides/ai-hardware/README', label: 'AI Hardware'},
       ],
     },
