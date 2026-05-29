@@ -388,6 +388,9 @@ In a [Mixture-of-Experts (MoE)](/shared/glossary/#moe), one of several parallel 
 ### Expert parallelism (EP) {#expert-parallelism-ep}
 For MoE models, distributing experts across GPUs with all-to-all token routing
 
+### Exponent {#exponent}
+The part of a [floating-point](https://en.wikipedia.org/wiki/Floating-point_arithmetic) number that records its *scale* — how many places to shift the decimal point. In scientific notation like `3.5 × 10¹²`, the `12` is the exponent (using base 10 instead of base 2). More exponent bits give a wider range of representable magnitudes, from astronomically large to vanishingly small; fewer exponent bits mean values overflow or [underflow](/shared/glossary/#underflow) more easily. This is why [FP8](/shared/glossary/#fp8) has two flavors: **E5M2** (5 exponent bits) for gradients that can swing wildly in size, and **E4M3** (4 exponent bits) for activations that stay in a tighter range. See also [mantissa](/shared/glossary/#mantissa).
+
 ### FFN {#ffn}
 Feed-Forward Network — a position-wise neural network block (often referred to as an [MLP](/shared/glossary/#mlp)) in a [transformer](/shared/glossary/#transformer) that processes each token independently.
 
@@ -425,7 +428,7 @@ Working backward from a training failure to the operation that first caused it, 
 A callback registered on an `nn.Module` that PyTorch calls automatically after the module's forward pass, receiving the input and output tensors; used for capturing activations and debugging
 
 ### FP8 {#fp8}
-8-bit floating point — half the bits of [bfloat16](/shared/glossary/#bfloat16). Comes in two flavors: **E4M3** (4 exponent bits + 3 mantissa bits) keeps a bit more precision and is used for [weights](/shared/glossary/#weights) and the forward [activations](/shared/glossary/#activations); **E5M2** (5 exponent + 2 mantissa) trades precision for a wider range and is used for gradients, which can be very large or very small. Supported by [Hopper](/shared/glossary/#hopper) and later NVIDIA GPUs, it is rapidly becoming the modern default serving precision.
+8-bit floating point — half the bits of [bfloat16](/shared/glossary/#bfloat16). Comes in two flavors: **E4M3** (4 [exponent](/shared/glossary/#exponent) bits + 3 [mantissa](/shared/glossary/#mantissa) bits) keeps a bit more precision and is used for [weights](/shared/glossary/#weights) and the forward [activations](/shared/glossary/#activations); **E5M2** (5 [exponent](/shared/glossary/#exponent) + 2 [mantissa](/shared/glossary/#mantissa)) trades precision for a wider range and is used for gradients, which can be very large or very small. Supported by [Hopper](/shared/glossary/#hopper) and later NVIDIA GPUs, it is rapidly becoming the modern default serving precision.
 
 ### Frontier run {#frontier-run}
 A training run for one of the largest, most capable models at the leading edge of what is currently possible — the kind that ties up thousands of GPUs for weeks and costs millions of dollars. Because the stakes are so high, a [loss spike](/shared/glossary/#loss-spike) that cannot be recovered cleanly can throw away days of that compute, which is why teams rehearse [checkpoint](/shared/glossary/#checkpoint) recovery on small models first.
@@ -467,7 +470,7 @@ Gaussian Error Linear Unit — a smooth activation function widely used in trans
 Gated Linear Unit — a layer whose output is the element-wise product of two linear projections, one of them passed through a [gating](/shared/glossary/#gated) non-linearity; [SwiGLU](/shared/glossary/#swiglu) is the variant that uses [Swish](/shared/glossary/#swish) as that non-linearity.
 
 ### GPTQ {#gptq}
-Short for **Generative Pre-trained Transformer Quantization** — a [post-training quantization (PTQ)](/shared/glossary/#ptq--qat) method that compresses each layer's [weights](/shared/glossary/#weights) row by row, using second-order (Hessian) information to choose the int8 / int4 values that minimize the reconstruction error one layer at a time. Despite the name, GPTQ is not GPT-specific; it works on any [transformer](/shared/glossary/#transformer).
+Short for **Generative Pre-trained Transformer Quantization** — a [post-training quantization (PTQ)](/shared/glossary/#ptq--qat) method that compresses each layer's [weights](/shared/glossary/#weights) row by row, using second-order ([Hessian](/shared/glossary/#hessian)) information to choose the int8 / int4 values that minimize the reconstruction error one layer at a time. Despite the name, GPTQ is not GPT-specific; it works on any [transformer](/shared/glossary/#transformer).
 
 ### GQA {#gqa}
 Grouped-Query Attention — sharing K/V heads across query heads; primary KV-cache saver at serving time
@@ -513,6 +516,9 @@ The safety margin you have left before something breaks. In low-precision traini
 
 ### Heads (attention) {#heads}
 The independent, parallel [attention](/shared/glossary/#attention) sub-computations in multi-head attention. Each head operates on its own learned projections of queries, keys, and values, allowing the model to attend to different representation subspaces simultaneously.
+
+### Hessian {#hessian}
+The matrix of all second partial derivatives of a function — it captures the *curvature* of a loss landscape, not just its slope. Where the [gradient](/shared/glossary/#gradients) tells you "which way is downhill," the Hessian tells you "and how sharply does it bend." Like the difference between knowing a road slopes down and knowing whether it banks into a tight curve or stretches out almost flat. For real LLMs the full Hessian is too big to store (rows × columns each equal to the parameter count), so methods like [GPTQ](/shared/glossary/#gptq) use cheap approximations of it — typically built from a small batch of [calibration](/shared/glossary/#calibration) activations — to decide which weights matter most when [quantizing](/shared/glossary/#quantization).
 
 ### Holonomic {#holonomic}
 A vehicle whose instantaneous motion can be any direction (mecanum, omni)
@@ -642,6 +648,9 @@ The strongest open recipe for discrete video tokenization
 
 ### Manipulability {#manipulability}
 Scalar measure of how "easy" motion is from a given configuration (e.g. `sqrt(det(JJᵀ))`)
+
+### Mantissa {#mantissa}
+The part of a [floating-point](https://en.wikipedia.org/wiki/Floating-point_arithmetic) number that holds the *precision digits* — the significant figures sitting in front of the scale factor. In `3.5 × 10¹²`, the `3.5` is the mantissa (also called the *significand*). More mantissa bits give finer resolution between nearby values; fewer mantissa bits leave larger gaps between representable numbers. [FP8](/shared/glossary/#fp8)'s `E4M3` format means 4 [exponent](/shared/glossary/#exponent) bits + 3 mantissa bits, so it can only distinguish about 8 distinct values between each consecutive power of two — coarse, but small enough to fit twice as many numbers in the same memory as [bfloat16](/shared/glossary/#bfloat16).
 
 ### matmul {#matmul}
 Matrix multiplication — the dominant compute operation in neural networks; written `A @ B` in PyTorch.
@@ -793,6 +802,9 @@ The data comes from the same policy being optimized (PPO, REINFORCE)
 ### Open-ended {#open-ended}
 A task where many different answers can all be reasonable and there is no single right one to check against — writing a poem, summarizing an article, replying helpfully in a chat. The opposite of a closed-ended task like a multiple-choice question (one correct letter) or arithmetic (one correct number). Like grading a creative-writing assignment versus grading a true/false quiz: with the quiz you just count matches, but with the essay you need a human reader — or an [LLM-as-judge](/shared/glossary/#llm-as-judge) — to weigh quality, which is why evaluating open-ended work is the hard part of LLM evals.
 
+### Open model {#open-model}
+A model whose [weights](/shared/glossary/#weights) you can download and run yourself — Meta's Llama, Mistral, Qwen, DeepSeek — as opposed to a *closed* model like GPT-4 or Claude where the weights stay on the provider's servers and you can only call them through an API. Like the difference between buying a recipe book (you have the actual instructions, can modify them, can bake offline) and ordering at a restaurant (you only see the finished dish). Open models are essential for any white-box research that needs the model's internals: methods like [GCG](/shared/glossary/#gcg) optimize against the model's own [gradients](/shared/glossary/#gradients), and interpretability tools like [SAEs](/shared/glossary/#sae) read its hidden [activations](/shared/glossary/#activations) — neither is possible through a closed API.
+
 ### Optimizer {#optimizer}
 An algorithm that updates model parameters using computed gradients; in PyTorch, a subclass of `torch.optim.Optimizer` that holds parameter groups and per-parameter state
 
@@ -803,7 +815,7 @@ The extra per-parameter values an [optimizer](/shared/glossary/#optimizer) store
 A scorer that judges only a solution's final answer as right or wrong, ignoring the steps in between — simpler than a [process reward model](/shared/glossary/#process-reward-model), which grades each step, but blind to *where* a wrong answer first went off track.
 
 ### Outlines {#outlines}
-An open-source Python library for [constrained generation](/shared/glossary/#constrained-generation): you hand it a regular expression, a JSON schema, or a Pydantic model and it patches the [LLM](/shared/glossary/#llm)'s decoder to mask out any next-token choices that would break the structure. Like putting guardrails on a road so the car physically cannot drive off the edge no matter how the driver steers, it makes the model's output structurally valid by construction rather than by hope.
+An open-source Python library for [constrained generation](/shared/glossary/#constrained-generation): you hand it a regular expression, a JSON schema, or a [Pydantic](/shared/glossary/#pydantic) model and it patches the [LLM](/shared/glossary/#llm)'s decoder to mask out any next-token choices that would break the structure. Like putting guardrails on a road so the car physically cannot drive off the edge no matter how the driver steers, it makes the model's output structurally valid by construction rather than by hope.
 
 ### Padding {#padding}
 Filling shorter sequences with a placeholder value so that every sample in a batch has the same length.
@@ -889,6 +901,9 @@ An attack in which adversarial text smuggled into something the model reads — 
 ### PTQ / QAT {#ptq--qat}
 Post-Training Quantization / Quantization-Aware Training
 
+### Pydantic {#pydantic}
+A popular Python library for declaring the *shape* of your data as a class — you write a class with typed fields (e.g. `name: str`, `age: int`) and Pydantic validates that any data you load actually matches, raising a clear error if a value is the wrong type or a required field is missing. Like a customs form for data: anything that does not match the listed fields gets stopped at the border. In LLM work it is the standard way to describe the JSON object you want the model to produce, which tools like [Outlines](/shared/glossary/#outlines) or OpenAI's structured-output mode can then enforce during decoding.
+
 ### Q-Former {#q-former}
 BLIP-2's learnable-query cross-attention module for distilling images into LLM tokens
 
@@ -933,6 +948,9 @@ Returns a tensor with a new shape, copying only when a no-copy view isn't possib
 
 ### Residual connection {#residual-connection}
 A shortcut that adds a block's input to its output (`x + f(x)`), letting [gradients](/shared/glossary/#gradients) flow directly and making deep networks trainable
+
+### Residual stream {#residual-stream}
+In a [transformer](/shared/glossary/#transformer), the running activation vector that flows through every layer via [residual connections](/shared/glossary/#residual-connection) — each [attention](/shared/glossary/#attention) block and [MLP](/shared/glossary/#mlp) block reads from this stream and adds its update back to it, without erasing what came before. Like a shared bulletin board that every department reads and pins notes to as it passes through the office: by the end of the building, the board carries the combined contribution of every team. Because every layer reads and writes the same vector space, the residual stream is the most natural place to look for interpretable features, which is why [sparse autoencoders (SAEs)](/shared/glossary/#sae) are usually trained on residual-stream [activations](/shared/glossary/#activations).
 
 ### reverse-mode {#reverse-mode}
 The order [autograd](/shared/glossary/#autograd) walks the computation graph when differentiating: the forward pass first, then a single [backward pass](/shared/glossary/#backward-pass) that propagates [gradients](/shared/glossary/#gradients) from the scalar output back to every input. It is the efficient choice when a model has many parameters but only one [loss value](/shared/glossary/#loss-value).
@@ -1173,6 +1191,9 @@ Swaps two dimensions by rewriting strides — never copies; the result is usuall
 
 ### Tree-of-Thoughts {#tree-of-thoughts}
 A reasoning method that explores several partial solutions at once as branches of a tree, scores them, and expands only the promising ones — like working through a maze by trying multiple paths and backing out of dead ends instead of committing to the first turn.
+
+### Triage {#triage}
+Sorting cases by what each one needs, borrowed from emergency-room medicine where a nurse classifies arriving patients by severity before any doctor sees them. In LLM evaluation, *hallucination triage* means sorting model answers into useful buckets — *correctly answered*, *correctly abstained ("I don't know")*, *confidently wrong* ([hallucination](/shared/glossary/#hallucination)) — so each rate can be measured separately, instead of collapsing everything into one "accuracy" number that hides which failures are dangerous.
 
 ### Triton {#triton}
 A Python-flavored language for writing GPU kernels, developed by OpenAI

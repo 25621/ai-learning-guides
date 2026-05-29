@@ -8,7 +8,7 @@
 
 ## Key Insight
 
-This project trains a small [sparse autoencoder (SAE)](/shared/glossary/#sae) on the residual stream of a small [LLM](/shared/glossary/#llm) and visualizes a handful of the recovered features — directions in activation space that fire for exactly one concept ("Golden Gate Bridge," "is a JSON key," "negation in a clause").
+This project trains a small [sparse autoencoder (SAE)](/shared/glossary/#sae) on the [residual stream](/shared/glossary/#residual-stream) of a small [LLM](/shared/glossary/#llm) and visualizes a handful of the recovered features — directions in activation space that fire for exactly one concept ("Golden Gate Bridge," "is a JSON key," "negation in a clause").
 
 ## Why This Matters
 

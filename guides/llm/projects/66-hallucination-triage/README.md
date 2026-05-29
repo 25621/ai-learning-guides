@@ -8,7 +8,7 @@
 
 ## Key Insight
 
-This project builds a 100-prompt evaluation made of questions the model genuinely cannot know — invented names, future events, made-up acronyms — and scores how often it responsibly says "I don't know" versus confidently inventing an answer ([hallucination](/shared/glossary/#hallucination)).
+This project builds a 100-prompt evaluation made of questions the model genuinely cannot know — invented names, future events, made-up acronyms — and [triages](/shared/glossary/#triage) the responses by how often the model responsibly says "I don't know" versus confidently inventing an answer ([hallucination](/shared/glossary/#hallucination)).
 
 ## Why This Matters
 
