@@ -468,13 +468,13 @@ A GPU is happiest when it has a lot of work to do in parallel. A single user's d
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Static vs. continuous | Build both schedulers around your toy decode loop; load-test under varying lengths and arrival rates | ⭐⭐⭐⭐ |
-| Padding waste audit | Instrument a static-batching server: what fraction of decode FLOPs go to padding tokens? | ⭐⭐⭐ |
-| Chunked prefill simulator | Discrete-event sim: requests arrive Poisson, prefill consumes `P` time, decode `D` per step; sweep chunk size; plot TTFT P99 vs. throughput | ⭐⭐⭐⭐ |
-| Disaggregated PoC | Two processes (prefill / decode), exchange KV cache over IPC or RDMA; measure overhead vs. unified | ⭐⭐⭐⭐⭐ |
-| Priority queue | Add a priority class to vLLM (or a fork); verify high-prio TTFT under load | ⭐⭐⭐⭐ |
-| Cache-aware admission | Refuse admission when projected KV cache exceeds GPU; verify the system never OOMs | ⭐⭐⭐⭐ |
-| SLO-aware scheduler | Given per-request deadlines, schedule to maximize on-time completions; compare to FCFS | ⭐⭐⭐⭐⭐ |
+| [Static vs. continuous](projects/16-static-vs-continuous/README.md) | Build both schedulers around your toy decode loop; load-test under varying lengths and arrival rates | ⭐⭐⭐⭐ |
+| [Padding waste audit](projects/17-padding-waste-audit/README.md) | Instrument a static-batching server: what fraction of decode FLOPs go to padding tokens? | ⭐⭐⭐ |
+| [Chunked prefill simulator](projects/18-chunked-prefill-simulator/README.md) | Discrete-event sim: requests arrive Poisson, prefill consumes `P` time, decode `D` per step; sweep chunk size; plot TTFT P99 vs. throughput | ⭐⭐⭐⭐ |
+| [Disaggregated PoC](projects/19-disaggregated-poc/README.md) | Two processes (prefill / decode), exchange KV cache over IPC or RDMA; measure overhead vs. unified | ⭐⭐⭐⭐⭐ |
+| [Priority queue](projects/20-priority-queue/README.md) | Add a priority class to vLLM (or a fork); verify high-prio TTFT under load | ⭐⭐⭐⭐ |
+| [Cache-aware admission](projects/21-cache-aware-admission/README.md) | Refuse admission when projected KV cache exceeds GPU; verify the system never OOMs | ⭐⭐⭐⭐ |
+| [SLO-aware scheduler](projects/22-slo-aware-scheduler/README.md) | Given per-request deadlines, schedule to maximize on-time completions; compare to FCFS | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: A Toy Continuous-Batching Scheduler
 

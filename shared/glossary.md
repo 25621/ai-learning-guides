@@ -412,6 +412,9 @@ For MoE models, distributing experts across GPUs with all-to-all token routing
 ### Exponent {#exponent}
 The part of a [floating-point](https://en.wikipedia.org/wiki/Floating-point_arithmetic) number that records its *scale* — how many places to shift the decimal point. In scientific notation like `3.5 × 10¹²`, the `12` is the exponent (using base 10 instead of base 2). More exponent bits give a wider range of representable magnitudes, from astronomically large to vanishingly small; fewer exponent bits mean values overflow or [underflow](/shared/glossary/#underflow) more easily. This is why [FP8](/shared/glossary/#fp8) has two flavors: **E5M2** (5 exponent bits) for gradients that can swing wildly in size, and **E4M3** (4 exponent bits) for activations that stay in a tighter range. See also [mantissa](/shared/glossary/#mantissa).
 
+### FCFS {#fcfs}
+First-Come, First-Served — the simplest scheduling rule: handle requests in the exact order they arrive, like a single queue at a bakery where nobody can skip ahead. It is fair and easy to build, but it has no sense of deadlines, so one slow request at the front can make everyone behind it late.
+
 ### FFN {#ffn}
 Feed-Forward Network — a position-wise neural network block (often referred to as an [MLP](/shared/glossary/#mlp)) in a [transformer](/shared/glossary/#transformer) that processes each token independently.
 
@@ -1044,6 +1047,9 @@ Drawing the next token from the model's predicted probability distribution inste
 
 ### Scaling laws {#scaling-laws}
 The empirical finding that a model's [loss](/shared/glossary/#loss-function) drops in a smooth, predictable curve as you add [parameters](/shared/glossary/#parameters), training data, and compute — like a growth chart that lets you forecast a bigger model's quality from smaller ones before you ever build it.
+
+### Scheduler {#scheduler}
+The part of an inference server that decides, at every step, which requests to start, which to keep generating, and which to pause when memory runs low — like an air-traffic controller choosing which planes take off, keep flying, or circle, so the runway (the GPU) is always busy but never overloaded. A good scheduler is often worth more real-world [throughput](/shared/glossary/#throughput) than any single clever kernel.
 
 ### Score {#score}
 `∇_x log p(x)` — diffusion training implicitly learns this
