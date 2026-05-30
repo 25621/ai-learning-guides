@@ -2,7 +2,7 @@
 
 ---
 
-> Guessing ahead must not quietly change how random the model's answers are.
+> Going faster must not make the model's answers any more or less random.
 
 ---
 
