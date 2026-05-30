@@ -726,13 +726,13 @@ A 70B model in BF16 is 140 GB of weights. In INT4, it's 35 GB. That difference i
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Quantize a 7B model end-to-end | Pick AWQ; calibrate on 128 production-style prompts; serve with vLLM; pass a quality gate | ⭐⭐⭐ |
-| FP8 KV cache | Switch a serving deployment from BF16 KV to FP8 KV; measure decode speedup and verify a quality gate | ⭐⭐⭐⭐ |
-| W4A8 ablation | Compare W4-only vs. W4A8 (4-bit weights, 8-bit activations); measure quality and tokens/sec | ⭐⭐⭐⭐ |
-| Mixed-precision deployment | Keep attention output projections + lm_head in BF16 while quantizing the rest; measure the quality bump and the cost | ⭐⭐⭐⭐ |
-| Calibration drift study | Calibrate on traffic from week 0; re-evaluate quality after 12 weeks of distribution drift; quantify the gap | ⭐⭐⭐⭐ |
-| Eval-suite for quantized models | Build an automated gate that blocks a quantized model from deploying if any of N evals regresses by more than X | ⭐⭐⭐ |
-| FP4 (Blackwell) deployment | If hardware available, benchmark FP4 weights against FP8; report quality, throughput, and operational gotchas | ⭐⭐⭐⭐⭐ |
+| [Quantize a 7B model end-to-end](projects/30-quantize-a-7b-model-end-to-end/README.md) | Pick AWQ; calibrate on 128 production-style prompts; serve with vLLM; pass a quality gate | ⭐⭐⭐ |
+| [FP8 KV cache](projects/31-fp8-kv-cache/README.md) | Switch a serving deployment from BF16 KV to FP8 KV; measure decode speedup and verify a quality gate | ⭐⭐⭐⭐ |
+| [W4A8 ablation](projects/32-w4a8-ablation/README.md) | Compare W4-only vs. W4A8 (4-bit weights, 8-bit activations); measure quality and tokens/sec | ⭐⭐⭐⭐ |
+| [Mixed-precision deployment](projects/33-mixed-precision-deployment/README.md) | Keep attention output projections + lm_head in BF16 while quantizing the rest; measure the quality bump and the cost | ⭐⭐⭐⭐ |
+| [Calibration drift study](projects/34-calibration-drift-study/README.md) | Calibrate on traffic from week 0; re-evaluate quality after 12 weeks of distribution drift; quantify the gap | ⭐⭐⭐⭐ |
+| [Eval-suite for quantized models](projects/35-eval-suite-for-quantized-models/README.md) | Build an automated gate that blocks a quantized model from deploying if any of N evals regresses by more than X | ⭐⭐⭐ |
+| [FP4 (Blackwell) deployment](projects/36-fp4-blackwell-deployment/README.md) | If hardware available, benchmark FP4 weights against FP8; report quality, throughput, and operational gotchas | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: A Production Quality-Gate Sketch
 

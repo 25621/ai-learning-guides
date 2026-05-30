@@ -346,6 +346,9 @@ The PyTorch component that routes `torch.foo(...)` calls to the right backend/dt
 ### Distillation {#distillation}
 Training a smaller "student" model to copy the output of a larger, more capable "teacher" so the student inherits most of the teacher's behavior at a fraction of the cost. Like a junior cook shadowing a head chef and learning each recipe by mimicking the dish — they may never match the master, but they can plate most of the menu for far less money. Distillation works for skills the teacher already has but cannot conjure new abilities the teacher lacks.
 
+### Distribution drift {#distribution-drift}
+When the kind of data a model sees in production slowly changes away from the data it was tuned on — like a store whose regular customers gradually change their tastes, so last year's best-selling stock starts to sit on the shelf. For a [quantized](/shared/glossary/#quantization) model it matters because [calibration](/shared/glossary/#calibration) was fitted to the old traffic, so quality can quietly slip as the new traffic drifts further away.
+
 ### DiT {#dit}
 Diffusion Transformer — Peebles & Xie's transformer-based diffusion backbone
 
@@ -453,6 +456,9 @@ Training a velocity field that transports noise to data via an ODE; modern alter
 
 ### Forensics {#forensics}
 Working backward from a training failure to the operation that first caused it, instead of chasing the visible symptom. In PyTorch this means turning on [autograd](/shared/glossary/#autograd) [anomaly detection](/shared/glossary/#anomaly-detection) to halt at the first [NaN](/shared/glossary/#nan) or bad [gradient](/shared/glossary/#gradients).
+
+### FP4 {#fp4}
+4-bit floating point — half the bits of [FP8](/shared/glossary/#fp8) again, so a weight takes a quarter of the space of [bfloat16](/shared/glossary/#bfloat16). With only 4 bits there are just 16 possible values, so it sits near the edge of usable precision and needs careful checking; newer [Blackwell](/shared/glossary/#blackwell) GPUs accelerate it in hardware, making it attractive for squeezing huge models onto fewer chips.
 
 ### Forward hook {#forward-hook}
 A callback registered on an `nn.Module` that PyTorch calls automatically after the module's forward pass, receiving the input and output tensors; used for capturing activations and debugging
@@ -886,6 +892,9 @@ Loss computed in the feature space of a pretrained classifier; sharper than pixe
 ### permute {#permute}
 Reorders all of a tensor's dimensions by rewriting strides — never copies
 
+### Perplexity {#perplexity}
+A score for how *surprised* a language model is by a piece of text — roughly, how many words it was effectively choosing between at each step. Lower is better: a perplexity of 1 means the model knew exactly what came next, while a high number means it was guessing wildly. Because it is cheap to compute and rises the moment a model gets worse, it is a common first tripwire in a [quality gate](/shared/glossary/#quality-gate) after [quantization](/shared/glossary/#quantization).
+
 ### PID {#pid}
 Proportional-Integral-Derivative — the workhorse linear controller
 
@@ -960,6 +969,9 @@ BLIP-2's learnable-query cross-attention module for distilling images into LLM t
 
 ### Quality filter {#quality-filter}
 A classifier that scores each training document and keeps only the high-quality ones (e.g. educational web text), discarding low-value text before [pretraining](/shared/glossary/#pretraining).
+
+### Quality gate {#quality-gate}
+An automatic check that a model must pass *before* it is allowed to serve real traffic — like a bouncer at the door who turns away anyone failing the dress code. It runs a fixed set of evaluations (such as [perplexity](/shared/glossary/#perplexity) and capability tests) and blocks the deploy if any score drops too far from the trusted baseline, which is how teams catch silent [quantization](/shared/glossary/#quantization) regressions before users do.
 
 ### Quantization {#quantization}
 Reducing weight / activation precision (FP16, BF16, FP8, INT8, INT4) to save memory and bandwidth
