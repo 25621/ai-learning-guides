@@ -86,10 +86,10 @@ The "which one is biggest?" operation: given a list of scores it returns the *po
 The C++ tensor library underneath PyTorch's Python frontend
 
 ### Attention {#attention}
-The operation `softmax(QKᵀ/√d) V` — [content-addressable token mixing](/shared/glossary/#content-addressable-token-mixing); the core of every [transformer](/shared/glossary/#transformer)
+The operation `softmax(QKᵀ/√d) V` — [content-addressable token mixing](/shared/glossary/#content-addressable-token-mixing); the core of every [transformer](/shared/glossary/#transformer). The [softmax](/shared/glossary/#softmax) step turns the raw query–key match scores into weights between 0 and 1 that decide how much each earlier token contributes to the next one.
 
 ### Attention sink {#attention-sink}
-The first few tokens of a sequence, which [attention](/shared/glossary/#attention) heads keep putting weight on no matter what those tokens actually say — like a paperweight that holds a stack of pages down whatever is written on the top sheet. Because the model leans on them, [KV cache](/shared/glossary/#kv-cache) eviction schemes deliberately keep these tokens even when they look unimportant, which keeps quality stable in long-context serving.
+The first few tokens of a sequence, which [attention](/shared/glossary/#attention) heads keep putting weight on no matter what those tokens actually say. They are called a *sink* in the plumbing sense — a drain where leftover water collects: on every step the [softmax](/shared/glossary/#softmax) has to spread a full 100% of attention across the tokens, so when a head has nothing important to look at, that spare attention drains into these first tokens. Because the model leans on them, [KV cache](/shared/glossary/#kv-cache) eviction schemes deliberately keep these tokens even when they look unimportant, which keeps quality stable in long-context serving.
 
 ### autograd {#autograd}
 The [reverse-mode](/shared/glossary/#reverse-mode) automatic differentiation engine
@@ -854,7 +854,7 @@ A scorer that judges only a solution's final answer as right or wrong, ignoring 
 An open-source Python library for [constrained generation](/shared/glossary/#constrained-generation): you hand it a regular expression, a JSON schema, or a [Pydantic](/shared/glossary/#pydantic) model and it patches the [LLM](/shared/glossary/#llm)'s decoder to mask out any next-token choices that would break the structure. Like putting guardrails on a road so the car physically cannot drive off the edge no matter how the driver steers, it makes the model's output structurally valid by construction rather than by hope.
 
 ### Padding {#padding}
-Filling shorter sequences with a placeholder value so that every sample in a batch has the same length.
+Filling shorter sequences with a placeholder value so that every [sample](/shared/glossary/#sample) in a batch has the same length.
 
 ### Parameters {#parameters}
 The learnable [tensors](/shared/glossary/#tensor) inside a model (such as [weights](/shared/glossary/#weights) and [biases](/shared/glossary/#biases)) that are updated by the [optimizer](/shared/glossary/#optimizer) during training. In PyTorch, they are instances of `nn.Parameter` and are automatically registered when assigned to an [`nn.Module`](/shared/glossary/#nnmodule).
@@ -888,6 +888,9 @@ Fast rigid-body dynamics library (CRBA, RNEA, ABA)
 
 ### Plücker coordinates {#plücker-coordinates}
 6D representation of a camera ray; standard for camera-conditioning
+
+### PoC {#poc}
+Proof of Concept — a small, rough build whose only job is to show that an idea *can* work, before anyone invests in a polished version. Like frying one test pancake to check the batter before making the whole stack: you are not trying to serve it, just to learn whether the approach is sound.
 
 ### Policy {#policy}
 In reinforcement learning, the model being trained to choose what to do next — for an [LLM](/shared/glossary/#llm), the network that picks the next token. "Improving the policy" just means making those choices earn more reward.
@@ -1036,6 +1039,9 @@ Soft Actor-Critic — maximum-entropy continuous-control algorithm; the modern d
 ### SAE {#sae}
 Sparse Autoencoder — interpretability tool decomposing activations into monosemantic features
 
+### Sample {#sample}
+A single example in a dataset or [batch](/shared/glossary/#batch) — one sentence, one image, one prompt. If a batch is a carton of eggs, a sample is one egg. The word can confuse beginners because [sampling](/shared/glossary/#sampling) in text generation means something else entirely (randomly drawing the next token); here it simply means "one item."
+
 ### Sampler {#sampler}
 The component that decides the order in which a [DataLoader](/shared/glossary/#dataloader) visits dataset examples (e.g. random, sequential, or class-weighted).
 
@@ -1103,7 +1109,7 @@ Service Level Objective — a quantified commitment (e.g., P95 TTFT < 500 ms)
 Streaming Multiprocessor; the GPU's "core"
 
 ### softmax {#softmax}
-The function that turns a vector of scores into a probability distribution (each value in 0–1, summing to 1); the core of [attention](/shared/glossary/#attention) and classification heads.
+The function that turns a vector of scores into a probability distribution — each value squeezed into 0–1, and all of them summing to 1; the core of [attention](/shared/glossary/#attention) and classification heads. The name means a *soft* version of `max`: instead of the hard "winner takes all" of [argmax](/shared/glossary/#argmax), which hands the single biggest score 100% and the rest nothing, softmax gives most of the weight to the biggest score while still leaving a little for the others. That smoothness — a dimmer switch rather than an on/off toggle — is what lets the model be trained by gradients.
 
 ### Special tokens {#special-tokens}
 Reserved [vocabulary](/shared/glossary/#vocabulary) entries that mark structure rather than text — e.g. `<bos>`, `<eos>`, `<pad>`, and chat-boundary tokens like `<|im_start|>`

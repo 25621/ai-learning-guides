@@ -8,7 +8,7 @@
 
 ## Key Insight
 
-This project builds a small proof-of-concept of [disaggregated serving](/shared/glossary/#disaggregated-serving): one process runs [prefill](/shared/glossary/#prefill), a second runs [decode](/shared/glossary/#decode), and they hand off the [KV cache](/shared/glossary/#kv-cache) between them. It then measures the transfer overhead against doing both phases in one process.
+This project builds a small [proof-of-concept](/shared/glossary/#poc) of [disaggregated serving](/shared/glossary/#disaggregated-serving): one process runs [prefill](/shared/glossary/#prefill), a second runs [decode](/shared/glossary/#decode), and they hand off the [KV cache](/shared/glossary/#kv-cache) between them. It then measures the transfer overhead against doing both phases in one process.
 
 ## Why This Matters
 
