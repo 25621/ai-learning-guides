@@ -8,7 +8,7 @@
 
 ## Key Insight
 
-This project turns the KV-cache size formula into code and sweeps its inputs — number of key/value heads, sequence length, and [dtype](/shared/glossary/#dtype) — to plot how much GPU memory the [KV cache](/shared/glossary/#kv-cache) eats as you serve more users at once. It makes clear why tricks like [GQA](/shared/glossary/#gqa) (sharing key/value heads) and lower-precision storage matter so much.
+This project turns the KV-cache size formula into code and sweeps its inputs — number of key/value [heads](/shared/glossary/#heads), sequence length, and [dtype](/shared/glossary/#dtype) — to plot how much GPU memory the [KV cache](/shared/glossary/#kv-cache) eats as you serve more users at once. It makes clear why tricks like [GQA](/shared/glossary/#gqa) (sharing key/value heads) and lower-precision storage matter so much.
 
 ## Why This Matters
 

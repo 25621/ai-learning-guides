@@ -80,7 +80,7 @@ Square fiducial marker with a known code; widely used for pose ground truth
 A way to rank chat models by having them go head-to-head: two models answer the same prompt, a human or [LLM judge](/shared/glossary/#llm-as-judge) picks the winner, and many such duels are turned into [Elo](/shared/glossary/#elo) ratings — the scoring system used for chess players. The public [LMSys Chatbot Arena](https://lmarena.ai/) is the best-known example.
 
 ### argmax {#argmax}
-The "which one is biggest?" operation: given a list of scores it returns the *position* of the largest one, not the value itself. If the [logits](/shared/glossary/#logits) are `[1.2, 4.8, 0.3]`, `argmax` is `1` — the index of `4.8` — which the model reads as "pick token #1." Like scanning a class's test scores and naming the top student rather than reading out their mark. [Greedy decoding](/shared/glossary/#greedy-decoding) is just `argmax` applied to the logits at every step, so it always makes the same choice and never gambles.
+The "which one is biggest?" operation: given a list of scores it returns the *position* of the largest one, not the value itself. The name is short for *argument of the maximum* — in math the "argument" is the input you hand a function, so `argmax` answers "which input gives the biggest output?" and returns that input's position. If the [logits](/shared/glossary/#logits) are `[1.2, 4.8, 0.3]`, `argmax` is `1` — the index of `4.8` — which the model reads as "pick token #1." Like scanning a class's test scores and naming the top student rather than reading out their mark. [Greedy decoding](/shared/glossary/#greedy-decoding) is just `argmax` applied to the logits at every step, so it always makes the same choice and never gambles.
 
 ### ATen {#aten}
 The C++ tensor library underneath PyTorch's Python frontend
@@ -110,7 +110,7 @@ A model fresh out of [pretraining](/shared/glossary/#pretraining) that only cont
 A small group of examples (sentences, images, prompts) that the model processes together in a single forward pass instead of one at a time. Like a chef who slices a whole basket of onions at once rather than picking up the knife for each onion separately — the GPU pays a fixed startup cost per pass, so doing 32 examples in one shot is far faster than 32 single passes. In training, the batch size sets how many examples contribute to each gradient update; in [quantization](/shared/glossary/#quantization) methods like [GPTQ](/shared/glossary/#gptq), a small *calibration batch* of representative inputs is run through the model to estimate which weights matter most. See also [Batching](/shared/glossary/#batching), which is the same idea applied to grouping inference *requests* on a serving stack.
 
 ### Batching {#batching}
-Grouping multiple inference requests together into a single forward pass so the GPU processes them in parallel, increasing [throughput](/shared/glossary/#throughput) at a small cost to [latency](/shared/glossary/#latency). Production servers like [Triton Inference Server](/shared/glossary/#triton-inference-server) perform batching automatically.
+Grouping several inference requests so the GPU runs them together in one forward pass instead of one at a time. Like an elevator that waits a moment to gather a few people and carry them up in a single trip rather than going up and down for each person separately — every rider's start is a touch slower, but far more people move per minute. That is the trade-off batching makes: higher [throughput](/shared/glossary/#throughput) (requests finished per second) at a small cost in [latency](/shared/glossary/#latency) (how long one request waits). Production servers like [Triton Inference Server](/shared/glossary/#triton-inference-server) do this grouping for you automatically; see [continuous batching](/shared/glossary/#continuous-batching) for the version that lets riders hop on and off mid-trip.
 
 ### BC {#bc}
 Behavior Cloning — supervised imitation of demonstrator actions
@@ -497,7 +497,7 @@ Gated Linear Unit — a layer whose output is the element-wise product of two li
 Short for **Generative Pre-trained Transformer Quantization** — a [post-training quantization (PTQ)](/shared/glossary/#ptq--qat) method that compresses each layer's [weights](/shared/glossary/#weights) row by row, using second-order ([Hessian](/shared/glossary/#hessian)) information to choose the int8 / int4 values that minimize the reconstruction error one layer at a time. Despite the name, GPTQ is not GPT-specific; it works on any [transformer](/shared/glossary/#transformer).
 
 ### GQA {#gqa}
-Grouped-Query Attention — sharing K/V heads across query heads; primary KV-cache saver at serving time
+Grouped-Query Attention — sharing K/V [heads](/shared/glossary/#heads) across query heads; primary KV-cache saver at serving time
 
 ### Gradient accumulation {#gradient-accumulation}
 Summing the [gradients](/shared/glossary/#gradients) from several small batches before calling the [optimizer](/shared/glossary/#optimizer), so the update matches a larger effective batch size without its memory cost.
@@ -529,6 +529,9 @@ A benchmark of about 8,000 grade-school math word problems, widely used to test 
 ### GTSAM {#gtsam}
 Factor-graph SLAM library; the standard back-end for many modern systems
 
+### H2O {#h2o}
+Short for *Heavy-Hitter Oracle*, a [KV cache](/shared/glossary/#kv-cache) eviction method that keeps only the handful of past tokens that have been getting most of the [attention](/shared/glossary/#attention) — the "heavy hitters" — and throws the rest away. Like skimming a long book and keeping only the few sentences you keep flipping back to: you save shelf space while barely losing the plot, which lets a model serve much longer sequences in the same memory. It always keeps the very first tokens too (the [attention sink](/shared/glossary/#attention-sink)), since those anchor the model no matter what they say.
+
 ### Half-rotation {#half-rotation}
 An efficient way to apply [RoPE](/shared/glossary/#rope): rather than rotating each adjacent pair of vector components on its own, you split the vector into two halves and combine them in one shot (the `rotate_half` trick, `[x₁, x₂] → [−x₂, x₁]`). It turns many tiny 2-D rotations into a couple of whole-vector operations, so it runs fast on a GPU while giving the same result.
 
@@ -542,7 +545,7 @@ High-Bandwidth Memory — stacked DRAM on a modern GPU; usually the bandwidth bo
 The safety margin you have left before something breaks. In low-precision training it is the spare range of values a number format can still represent before it overflows or rounds down to zero and triggers [numerical issues](/shared/glossary/#numerical-issues) — like the gap between your head and the ceiling: the less you have, the easier it is to bump into trouble. [FP8](/shared/glossary/#fp8) packs numbers into far fewer bits than [bfloat16](/shared/glossary/#bfloat16), so it has much less headroom and is more likely to destabilize a run.
 
 ### Heads (attention) {#heads}
-The independent, parallel [attention](/shared/glossary/#attention) sub-computations in multi-head attention. Each head operates on its own learned projections of queries, keys, and values, allowing the model to attend to different representation subspaces simultaneously.
+The independent, parallel [attention](/shared/glossary/#attention) sub-computations in multi-head attention. Each head operates on its own learned projections of queries, keys, and values, so different heads can latch onto different relationships — one might track which word is the grammatical subject while another tracks what rhymes — and the model attends to several representation subspaces at once. They are called *heads* by analogy to the read/write "heads" of a tape or disk drive: several separate readers scanning the same strip of data in parallel, each pulling out something different. "Multi-head" attention simply runs many such readers side by side and then joins their findings.
 
 ### Hessian {#hessian}
 The matrix of all second partial derivatives of a function — it captures the *curvature* of a loss landscape, not just its slope. Where the [gradient](/shared/glossary/#gradients) tells you "which way is downhill," the Hessian tells you "and how sharply does it bend." Like the difference between knowing a road slopes down and knowing whether it banks into a tight curve or stretches out almost flat. For real LLMs the full Hessian is too big to store (rows × columns each equal to the parameter count), so methods like [GPTQ](/shared/glossary/#gptq) use cheap approximations of it — typically built from a small [batch](/shared/glossary/#batch) of [calibration](/shared/glossary/#calibration) activations — to decide which weights matter most when [quantizing](/shared/glossary/#quantization).

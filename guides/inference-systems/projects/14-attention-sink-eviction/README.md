@@ -8,7 +8,7 @@
 
 ## Key Insight
 
-This project implements an H2O-style eviction policy: when the [KV cache](/shared/glossary/#kv-cache) grows too large, it drops the tokens that have been getting little [attention](/shared/glossary/#attention) while always keeping the first few tokens — the [attention sink](/shared/glossary/#attention-sink) — and then measures answer quality at long [context](/shared/glossary/#context-window).
+This project implements an [H2O](/shared/glossary/#h2o)-style eviction policy: when the [KV cache](/shared/glossary/#kv-cache) grows too large, it drops the tokens that have been getting little [attention](/shared/glossary/#attention) while always keeping the first few tokens — the [attention sink](/shared/glossary/#attention-sink) — and then measures answer quality at long [context](/shared/glossary/#context-window). The title names the two halves of the policy: *eviction* throws cache entries away to free memory, while the *attention sink* is the one region it must never evict.
 
 ## Why This Matters
 
