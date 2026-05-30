@@ -8,7 +8,7 @@
 
 ## Key Insight
 
-This project attaches a timestamp to each stage a request passes through — admission, queue wait, [prefill](/shared/glossary/#prefill), each [decode](/shared/glossary/#decode) step, detokenization, send — and produces a flamegraph for the slowest request from a load test. The picture immediately reveals which stage owns the [tail latency](/shared/glossary/#tail-latency): a long queue wait points at the scheduler, a long prefill points at prompt length or chunked-prefill tuning, a long decode tail points at memory bandwidth.
+This project attaches a timestamp to each stage a request passes through — admission, queue wait, [prefill](/shared/glossary/#prefill), each [decode](/shared/glossary/#decode) step, detokenization, send — and produces a flamegraph for the slowest request from a load test. The picture immediately reveals which stage owns the [tail latency](/shared/glossary/#tail-latency): a long queue wait points at the scheduler, a long prefill points at prompt length or [chunked-prefill](/shared/glossary/#chunked-prefill) tuning, a long decode tail points at memory bandwidth.
 
 ## Why This Matters
 

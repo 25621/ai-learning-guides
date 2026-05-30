@@ -79,6 +79,9 @@ Square fiducial marker with a known code; widely used for pose ground truth
 ### Arena {#arena}
 A way to rank chat models by having them go head-to-head: two models answer the same prompt, a human or [LLM judge](/shared/glossary/#llm-as-judge) picks the winner, and many such duels are turned into [Elo](/shared/glossary/#elo) ratings — the scoring system used for chess players. The public [LMSys Chatbot Arena](https://lmarena.ai/) is the best-known example.
 
+### argmax {#argmax}
+The "which one is biggest?" operation: given a list of scores it returns the *position* of the largest one, not the value itself. If the [logits](/shared/glossary/#logits) are `[1.2, 4.8, 0.3]`, `argmax` is `1` — the index of `4.8` — which the model reads as "pick token #1." Like scanning a class's test scores and naming the top student rather than reading out their mark. [Greedy decoding](/shared/glossary/#greedy-decoding) is just `argmax` applied to the logits at every step, so it always makes the same choice and never gambles.
+
 ### ATen {#aten}
 The C++ tensor library underneath PyTorch's Python frontend
 
@@ -146,7 +149,7 @@ The single slowest stage in a pipeline, which caps the overall speed; in trainin
 Standard likelihood metric for image models; `-log₂ p(x) / D`
 
 ### BPE {#bpe}
-Byte-Pair Encoding — subword tokenization by greedy frequent-pair merges
+Byte-Pair Encoding — subword [tokenization](/shared/glossary/#tokenizer) by greedy frequent-pair merges. It starts from raw bytes and repeatedly glues together the neighboring pair that appears most often, building up reusable chunks. For example, on lots of English text BPE notices `t` and `h` sit side by side constantly and merges them into `th`; a later round merges `th` + `e` into `the`. So a common word like `the` ends up as a single token, while a rarer word like `tokenizer` is left as familiar pieces such as `token` + `izer`. "Greedy" means each round simply takes the single most-frequent merge available, never looking ahead to see whether a different choice would pay off later.
 
 ### C++ extension {#c-extension}
 A custom operation written in C++ (optionally with CUDA), compiled and loaded so it can be called from Python like a built-in PyTorch op.
@@ -174,6 +177,9 @@ AMD's datacenter / consumer GPU architectures
 
 ### CFG (classifier-free guidance) {#cfg-classifier-free-guidance}
 Inference trick: combine conditional and unconditional model outputs to amplify conditioning
+
+### CFG fusion {#cfg-fusion}
+A diffusion-serving optimization for [classifier-free guidance](/shared/glossary/#cfg-classifier-free-guidance), which normally needs *two* model passes per denoising step — one conditioned on the prompt, one unconditioned. CFG fusion runs both in a single batched forward pass (stacking them as a batch of two) instead of two separate calls, so the GPU is launched once per step rather than twice. Like cooking two portions in one pan instead of washing up between them — same result, far less overhead.
 
 ### Chain rule {#chain-rule}
 A calculus principle used to compute the derivative of a composite function by multiplying the derivatives of its parts.
@@ -503,7 +509,7 @@ A helper used with [float16](/shared/glossary/#float16) mixed-precision training
 A point where [`torch.compile`](/shared/glossary/#torchcompile) cannot trace the code (e.g. a `print` or a data-dependent branch), forcing it to split the model and fall back to [eager mode](/shared/glossary/#eager-mode) — a common cause of lost speedup.
 
 ### Greedy decoding {#greedy-decoding}
-The simplest [sampling](/shared/glossary/#sampling) rule: at every step, pick the single most likely next token (the `argmax` of the [logits](/shared/glossary/#logits)) and never roll the dice. Like always ordering the most popular dish on the menu — boring but predictable. Useful when reproducibility matters, though on a GPU even greedy decoding is not bit-for-bit deterministic across batch sizes because floating-point sums reorder.
+The simplest [sampling](/shared/glossary/#sampling) rule: at every step, pick the single most likely next token (the [`argmax`](/shared/glossary/#argmax) of the [logits](/shared/glossary/#logits)) and never roll the dice. Like always ordering the most popular dish on the menu — boring but predictable. Useful when reproducibility matters, though on a GPU even greedy decoding is not bit-for-bit deterministic across batch sizes because floating-point sums reorder.
 
 ### Grounding {#grounding}
 Producing spatial outputs (boxes, points) referring to image regions
@@ -635,7 +641,7 @@ Large Language Model — a [transformer](/shared/glossary/#transformer) trained 
 Using a strong [LLM](/shared/glossary/#llm) to grade or compare other models' answers in place of a human rater — fast, cheap, and surprisingly well-calibrated, though it tends to favor longer answers and ones written in its own style. To catch [position bias](/shared/glossary/#position-bias) you usually ask twice with the two answers swapped and trust only an agreeing verdict — like a blind wine tasting where the same two bottles are poured first as "Glass A, Glass B" and then again as "Glass B, Glass A"; you only believe the judge picked the better wine if they pick the same bottle both times, because that rules out them simply liking whichever glass sat on the left.
 
 ### Logits {#logits}
-The raw, unnormalized scores a model produces at its output, one per [vocabulary](/shared/glossary/#vocabulary) entry, before they are turned into probabilities by [softmax](/shared/glossary/#softmax). Like the points each contestant has scored at the end of a game — bigger means "more likely the next token" — but to read them as percentages you have to normalize. [Sampling](/shared/glossary/#sampling) rules ([temperature](/shared/glossary/#temperature), [top-k](/shared/glossary/#top-k), [top-p](/shared/glossary/#top-p)) all reshape the logits before the random draw, and `argmax` of the logits is what [greedy decoding](/shared/glossary/#greedy-decoding) picks.
+The raw, unnormalized scores a model produces at its output, one per [vocabulary](/shared/glossary/#vocabulary) entry, before they are turned into probabilities by [softmax](/shared/glossary/#softmax). Like the points each contestant has scored at the end of a game — bigger means "more likely the next token" — but to read them as percentages you have to normalize. [Sampling](/shared/glossary/#sampling) rules ([temperature](/shared/glossary/#temperature), [top-k](/shared/glossary/#top-k), [top-p](/shared/glossary/#top-p)) all reshape the logits before the random draw, and [`argmax`](/shared/glossary/#argmax) of the logits is what [greedy decoding](/shared/glossary/#greedy-decoding) picks.
 
 ### LoRA {#lora}
 [Low-Rank](/shared/glossary/#low-rank) Adaptation — fine-tune by adding small low-rank matrices, freeze the base
@@ -1197,6 +1203,9 @@ The PyTorch 2.x API that traces a model into a graph and generates optimized, [f
 
 ### torch.export {#torchexport}
 The modern PyTorch API that captures a model into a standalone graph; the foundation for deployment paths like [ExecuTorch](/shared/glossary/#executorch) and [AOTInductor](/shared/glossary/#aotinductor).
+
+### torch.multinomial {#torchmultinomial}
+The PyTorch function that draws a random sample from a probability distribution: hand it a list of probabilities and it rolls a weighted die, returning the index it lands on. A token with probability `0.6` comes up about 60% of the time. It is the "roll the dice" step at the end of [sampling](/shared/glossary/#sampling) — the opposite of [`argmax`](/shared/glossary/#argmax), which never gambles. On the GPU each call is its own [kernel](/shared/glossary/#kernel) launch, which is why folding it into the rest of the sampling math can speed up [decode](/shared/glossary/#decode).
 
 ### torchrun {#torchrun}
 PyTorch's launcher command that starts one process per GPU and sets the `RANK`, `LOCAL_RANK`, and `WORLD_SIZE` environment variables those processes need to find each other.

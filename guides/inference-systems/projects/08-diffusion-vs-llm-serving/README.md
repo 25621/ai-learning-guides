@@ -12,4 +12,4 @@ This project puts a [Stable-Diffusion-style](/shared/glossary/#diffusion-model) 
 
 ## Why This Matters
 
-The same control knobs do not work on both workloads: continuous batching, prefix caching, and speculative decoding are LLM-specific levers that have no diffusion analog, while step distillation and CFG fusion are diffusion-specific levers that have no LLM analog. Trying to serve both with one engine, or copy-pasting tuning advice from one to the other, is a common and expensive mistake that this comparison makes obvious.
+The same control knobs do not work on both workloads: continuous batching, prefix caching, and speculative decoding are LLM-specific levers that have no diffusion analog, while step distillation and [CFG fusion](/shared/glossary/#cfg-fusion) are diffusion-specific levers that have no LLM analog. Trying to serve both with one engine, or copy-pasting tuning advice from one to the other, is a common and expensive mistake that this comparison makes obvious.
