@@ -600,13 +600,13 @@ If decode is memory-bandwidth-bound, then the GPU is mostly *waiting* during dec
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Greedy speculative decoding | Pair a 1B draft with a 7B target; implement the verify loop; measure acceptance and wall-clock speedup | ⭐⭐⭐⭐ |
-| Sampling-mode rejection | Add the probabilistic accept/reject step for non-greedy sampling; verify output distribution matches target | ⭐⭐⭐⭐⭐ |
-| N-gram lookup | Implement prompt-lookup decoding: scan the prompt for matching n-grams to use as drafts. Measure on a summarization workload | ⭐⭐⭐ |
-| Tune `k` | Sweep `k ∈ {1, 2, 3, 4, 5, 7, 10}`; plot acceptance, speedup, and tail latency. Find the knee | ⭐⭐⭐ |
-| Medusa heads | Train 3 Medusa heads on a small base model; report acceptance vs. external draft | ⭐⭐⭐⭐⭐ |
-| Speculation + batching | Add speculative decoding to a continuous-batching engine; handle ragged acceptance across the batch correctly | ⭐⭐⭐⭐⭐ |
-| Workload sensitivity | Measure speedup on chat, code completion, summarization, JSON-mode. Explain the variance | ⭐⭐⭐ |
+| [Greedy speculative decoding](projects/23-greedy-speculative-decoding/README.md) | Pair a 1B draft with a 7B target; implement the verify loop; measure acceptance and wall-clock speedup | ⭐⭐⭐⭐ |
+| [Sampling-mode rejection](projects/24-sampling-mode-rejection/README.md) | Add the probabilistic accept/reject step for non-greedy sampling; verify output distribution matches target | ⭐⭐⭐⭐⭐ |
+| [N-gram lookup](projects/25-n-gram-lookup/README.md) | Implement prompt-lookup decoding: scan the prompt for matching n-grams to use as drafts. Measure on a summarization workload | ⭐⭐⭐ |
+| [Tune `k`](projects/26-tune-k/README.md) | Sweep `k ∈ {1, 2, 3, 4, 5, 7, 10}`; plot acceptance, speedup, and tail latency. Find the knee | ⭐⭐⭐ |
+| [Medusa heads](projects/27-medusa-heads/README.md) | Train 3 Medusa heads on a small base model; report acceptance vs. external draft | ⭐⭐⭐⭐⭐ |
+| [Speculation + batching](projects/28-speculation-batching/README.md) | Add speculative decoding to a continuous-batching engine; handle ragged acceptance across the batch correctly | ⭐⭐⭐⭐⭐ |
+| [Workload sensitivity](projects/29-workload-sensitivity/README.md) | Measure speedup on chat, code completion, summarization, JSON-mode. Explain the variance | ⭐⭐⭐ |
 
 ### Sample Code: Greedy Speculative Decoding
 

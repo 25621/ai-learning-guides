@@ -16,6 +16,9 @@ Articulated-Body Algorithm — `O(n)` forward dynamics for rigid-body chains
 ### Ablation {#ablation}
 A controlled experiment that changes exactly one factor (a data step, a layer, a hyperparameter) while holding everything else fixed, to measure that factor's true effect.
 
+### Acceptance rate {#acceptance-rate}
+In [speculative decoding](/shared/glossary/#speculative-decoding), the share of the [draft model](/shared/glossary/#draft-model)'s guessed tokens that the big [target model](/shared/glossary/#target-model) agrees with and keeps — `accepted ÷ proposed`. Like a junior writer drafting sentences that the editor either approves or crosses out: the higher the approval rate, the less the editor has to redo and the faster the work goes. Higher acceptance means bigger speedups.
+
 ### Activation checkpointing {#activation-checkpointing}
 A memory-saving trick that throws away the intermediate [activations](/shared/glossary/#activations) from the forward pass and recomputes them during the [backward pass](/shared/glossary/#backward-pass) — trading a little extra compute for a lot less memory. Also called [gradient checkpointing](/shared/glossary/#gradient-checkpointing).
 
@@ -357,6 +360,9 @@ Direct Preference Optimization — [closed-form](/shared/glossary/#closed-form) 
 
 ### DQN {#dqn}
 Deep Q-Network — Q-learning with neural-net function approximation + experience replay + target network
+
+### Draft model {#draft-model}
+In [speculative decoding](/shared/glossary/#speculative-decoding), a small, fast model that *guesses* the next few tokens so the big [target model](/shared/glossary/#target-model) can check them all at once. Like a quick assistant who scribbles a rough draft for the expert to approve or correct — cheap to run, and most of its guesses turn out right, so the slow expert is consulted far less often.
 
 ### DreamBooth {#dreambooth}
 Fine-tuning recipe for subject personalization; updates the whole model on a few subject images
@@ -796,6 +802,9 @@ A long-context test that hides one fact (the "needle") inside a long stretch of 
 ### Next-token prediction {#next-token-prediction}
 The training objective of an [LLM](/shared/glossary/#llm): given the tokens so far, predict the next one, scored with [cross-entropy](/shared/glossary/#cross-entropy) [loss](/shared/glossary/#loss-function).
 
+### N-gram {#n-gram}
+A run of `n` tokens (or words) sitting next to each other — "the cat sat" is a 3-gram. By matching the most recent few tokens against earlier text, you can often guess what comes next from what followed the same phrase before, which is exactly how prompt-lookup speculative decoding builds its drafts for free.
+
 ### nn.Module {#nnmodule}
 PyTorch's base class for all neural network components; acts as a registry that automatically tracks sub-modules, parameters, and buffers assigned in `__init__`
 
@@ -975,6 +984,9 @@ A flow-matching parameterization with straight-line trajectories; popular in 202
 
 ### Reference model {#reference-model}
 A frozen copy of the starting model that [RLHF](/shared/glossary/#rlhf) and [DPO](/shared/glossary/#dpo) measure against (through a [KL](/shared/glossary/#kl-divergence) term) so the model being trained does not drift too far from sensible behavior — a "before" photo to compare every change against.
+
+### Rejection sampling {#rejection-sampling}
+A way to draw samples from a target distribution by proposing easy guesses and accepting or throwing each one away with just the right probability, so the survivors are distributed exactly as if they came from the hard distribution directly. In [speculative decoding](/shared/glossary/#speculative-decoding) it is the step that lets a [draft model](/shared/glossary/#draft-model)'s guesses be reused for random [sampling](/shared/glossary/#sampling) without changing the [target model](/shared/glossary/#target-model)'s true output distribution.
 
 ### Reparameterization trick {#reparameterization-trick}
 `z = μ + σ · ε` — lets gradients flow through a random sample
@@ -1164,6 +1176,9 @@ Text-to-Video
 
 ### Tail latency {#tail-latency}
 The [latency](/shared/glossary/#latency) of the slowest requests (for example the p95 or p99 percentiles) rather than the median (p50); it is what users notice most.
+
+### Target model {#target-model}
+In [speculative decoding](/shared/glossary/#speculative-decoding), the big, accurate model whose output you actually want — it checks the small [draft model](/shared/glossary/#draft-model)'s guesses and has the final say on every token. Like the senior editor who must approve the assistant's draft: slow and expensive to consult, so the trick is to bother it as rarely as possible while still letting it decide the real answer.
 
 ### TCP {#tcp}
 Tool Center Point — the configurable point on a tool whose pose tracking controls
