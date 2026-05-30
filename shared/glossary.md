@@ -23,7 +23,7 @@ In [speculative decoding](/shared/glossary/#speculative-decoding), the share of 
 A memory-saving trick that throws away the intermediate [activations](/shared/glossary/#activations) from the forward pass and recomputes them during the [backward pass](/shared/glossary/#backward-pass) — trading a little extra compute for a lot less memory. Also called [gradient checkpointing](/shared/glossary/#gradient-checkpointing).
 
 ### Activations {#activations}
-The intermediate tensor outputs produced by the layers of a neural network during the forward pass.
+The intermediate outputs that flow *between* the layers of a network — the numbers each layer hands to the next during the forward pass. If [weights](/shared/glossary/#weights) are the fixed recipe a model learned, activations are the half-finished dish moving down the kitchen line, changing with every new input. Unlike weights, they are not saved after training; they are recomputed fresh each time the model runs on a new input.
 
 ### AdaLN {#adaln}
 Adaptive layer normalization; the conditioning mechanism in DiT
@@ -137,7 +137,7 @@ An inference trick that samples `N` candidate answers to the same prompt and kee
 An adjustment applied in the Adam family of optimizers to counteract the zero-initialization of moment estimates; without it, early steps would be artificially small
 
 ### Biases {#biases}
-The additive [parameter](/shared/glossary/#parameters) vectors in a linear layer (the `b` in `y = xW + b`). Each output neuron has one bias value, which shifts the result independently of the input.
+The smaller, additive group of learned [parameters](/shared/glossary/#parameters) in a layer — the `b` in `y = xW + b`. After the [weights](/shared/glossary/#weights) combine the inputs, each output neuron adds its own bias: a fixed offset that shifts the result up or down no matter what the input was. Like the `+ b` that lets a line `y = mx + b` sit above or below the origin, or a starting balance in a bank account before any transactions — it gives each neuron a baseline to lean toward.
 
 ### Blackwell {#blackwell}
 NVIDIA's 2024 GPU architecture (B100, B200, B200 Ultra) and the successor to [Hopper](/shared/glossary/#hopper). Like swapping a sports car engine for a more powerful one of the same shape, it keeps the same overall design as Hopper but doubles down on low-precision math — better [FP8](/shared/glossary/#fp8) throughput and brand-new FP4 [Tensor Cores](/shared/glossary/#tensor-core) — which is what makes it the preferred chip for the largest 2025-era training and serving runs.
@@ -167,7 +167,7 @@ Configuration space — the abstract space of joint configurations
 PyTorch's core C++ library (the "core ten[sor]" library)
 
 ### Calibration {#calibration}
-Running a few representative batches of data through a model to measure the typical range of its [activations](/shared/glossary/#activations), so that static [quantization](/shared/glossary/#quantization) can pick fixed [int8](/shared/glossary/#int8) scales.
+Running a few representative batches of data through a model to learn how big its [activations](/shared/glossary/#activations) typically get — their usual smallest and largest values — before [quantizing](/shared/glossary/#quantization) it. Knowing that range lets static quantization choose one fixed [int8](/shared/glossary/#int8) "scale": the conversion factor that maps the real numbers onto the 256 slots an int8 can hold. It is like measuring the tallest guest you expect before setting a doorframe height — check the real range once, then size the fixed scale so almost nothing gets clipped.
 
 ### Catastrophic forgetting {#catastrophic-forgetting}
 When training a model on new data erases skills it had already learned, because the new [gradients](/shared/glossary/#gradients) overwrite the old [weights](/shared/glossary/#weights).
@@ -872,7 +872,7 @@ An open-source Python library for [constrained generation](/shared/glossary/#con
 Filling shorter sequences with a placeholder value so that every [sample](/shared/glossary/#sample) in a batch has the same length.
 
 ### Parameters {#parameters}
-The learnable [tensors](/shared/glossary/#tensor) inside a model (such as [weights](/shared/glossary/#weights) and [biases](/shared/glossary/#biases)) that are updated by the [optimizer](/shared/glossary/#optimizer) during training. In PyTorch, they are instances of `nn.Parameter` and are automatically registered when assigned to an [`nn.Module`](/shared/glossary/#nnmodule).
+The numbers a model *learns* during training — its adjustable internal settings. Picture thousands of tiny knobs on a giant mixing board: training nudges each knob a little at a time until the whole board produces good output, and the final knob positions *are* what the model "knows." They come in two kinds — [weights](/shared/glossary/#weights) and [biases](/shared/glossary/#biases) — are stored as [tensors](/shared/glossary/#tensor), and are adjusted by the [optimizer](/shared/glossary/#optimizer) during training. (When people say a "7B model," they mean 7 billion of these knobs.) In PyTorch they are `nn.Parameter` objects, registered automatically when assigned to an [`nn.Module`](/shared/glossary/#nnmodule).
 
 ### Partial derivative {#partial-derivative}
 How much a function changes when you nudge just one of its inputs and hold all the others still — the [derivative](/shared/glossary/#derivative) taken one input at a time. If a recipe's tastiness depends on both salt and sugar, the partial derivative with respect to salt tells you the effect of adding a pinch more salt while keeping the sugar fixed. A [gradient](/shared/glossary/#gradients) is simply the full list of these one-at-a-time slopes, one per [parameter](/shared/glossary/#parameters).
@@ -893,7 +893,7 @@ Loss computed in the feature space of a pretrained classifier; sharper than pixe
 Reorders all of a tensor's dimensions by rewriting strides — never copies
 
 ### Perplexity {#perplexity}
-A score for how *surprised* a language model is by a piece of text — roughly, how many words it was effectively choosing between at each step. Lower is better: a perplexity of 1 means the model knew exactly what came next, while a high number means it was guessing wildly. Because it is cheap to compute and rises the moment a model gets worse, it is a common first tripwire in a [quality gate](/shared/glossary/#quality-gate) after [quantization](/shared/glossary/#quantization).
+A score for how *surprised* a language model is by a piece of text — roughly, how many words it was effectively choosing between at each step. Lower is better: a perplexity of 1 means the model knew exactly what came next, while a high number means it was guessing wildly. Because it is cheap to compute and rises the moment a model gets worse, it is a common first [tripwire](/shared/glossary/#tripwire) in a [quality gate](/shared/glossary/#quality-gate) after [quantization](/shared/glossary/#quantization).
 
 ### PID {#pid}
 Proportional-Integral-Derivative — the workhorse linear controller
@@ -1208,7 +1208,7 @@ A [sampling](/shared/glossary/#sampling) knob that scales the model's scores bef
 Adding time-axis layers to a pretrained 2D model
 
 ### Tensor {#tensor}
-A multidimensional array — a (storage, shape, stride, offset, dtype, device, requires_grad) tuple that views a 1-D storage buffer
+A grid of numbers — the basic container deep learning uses for almost everything. A single number is a 0-D tensor, a list of numbers is 1-D (a *vector*), a table is 2-D (a *matrix*), and you can keep stacking into 3-D and beyond — for example a color image is a 3-D tensor of height × width × 3 color channels. Under the hood it is a (storage, shape, stride, offset, dtype, device, requires_grad) tuple viewing a 1-D [storage](/shared/glossary/#storage) buffer, but the everyday idea is simply "an N-dimensional array of numbers the GPU can crunch in parallel."
 
 ### Tensor Core {#tensor-core}
 Specialized matmul unit in NVIDIA GPUs since [Volta](/shared/glossary/#volta)
@@ -1275,6 +1275,9 @@ A reasoning method that explores several partial solutions at once as branches o
 
 ### Triage {#triage}
 Sorting cases by what each one needs, borrowed from emergency-room medicine where a nurse classifies arriving patients by severity before any doctor sees them. In LLM evaluation, *hallucination triage* means sorting model answers into useful buckets — *correctly answered*, *correctly abstained ("I don't know")*, *confidently wrong* ([hallucination](/shared/glossary/#hallucination)) — so each rate can be measured separately, instead of collapsing everything into one "accuracy" number that hides which failures are dangerous.
+
+### Tripwire {#tripwire}
+A cheap, fast check whose only job is to sound the alarm the instant something goes wrong — named after the thin wire that, when stepped on, sets off a trap or flare. In model deployment a quick metric like [perplexity](/shared/glossary/#perplexity) is used as a tripwire: it won't tell you *what* broke, but it spikes the moment quality drops, so it catches a bad build before the slower, fuller tests even run.
 
 ### Triton {#triton}
 A Python-flavored language for writing GPU kernels, developed by OpenAI
@@ -1367,7 +1370,7 @@ A library that streams training data directly from sharded `.tar` archives, avoi
 A regularization technique that shrinks model parameters toward zero at each update step, discouraging large weights and improving generalization
 
 ### Weights {#weights}
-The learned [parameter](/shared/glossary/#parameters) matrices inside a neural network layer (e.g. the `W` in `y = xW + b`). During training, weights are updated by the [optimizer](/shared/glossary/#optimizer) to minimize the [loss function](/shared/glossary/#loss-function).
+The main, larger group of learned [parameters](/shared/glossary/#parameters) in a layer — the `W` in `y = xW + b` — that decide how strongly each input affects each output. Think of the volume sliders on a soundboard: a big weight turns an input way up, a near-zero weight mutes it, and a negative weight flips it. During training the [optimizer](/shared/glossary/#optimizer) keeps nudging these sliders to lower the [loss](/shared/glossary/#loss-function), and they make up the bulk of a model's size.
 
 ### Worker processes {#worker-processes}
 Background subprocesses that a [DataLoader](/shared/glossary/#dataloader) spawns to load and preprocess data in parallel with GPU computation.
