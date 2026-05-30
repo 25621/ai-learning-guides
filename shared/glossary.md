@@ -88,6 +88,9 @@ The C++ tensor library underneath PyTorch's Python frontend
 ### Attention {#attention}
 The operation `softmax(QKᵀ/√d) V` — [content-addressable token mixing](/shared/glossary/#content-addressable-token-mixing); the core of every [transformer](/shared/glossary/#transformer)
 
+### Attention sink {#attention-sink}
+The first few tokens of a sequence, which [attention](/shared/glossary/#attention) heads keep putting weight on no matter what those tokens actually say — like a paperweight that holds a stack of pages down whatever is written on the top sheet. Because the model leans on them, [KV cache](/shared/glossary/#kv-cache) eviction schemes deliberately keep these tokens even when they look unimportant, which keeps quality stable in long-context serving.
+
 ### autograd {#autograd}
 The [reverse-mode](/shared/glossary/#reverse-mode) automatic differentiation engine
 
@@ -447,6 +450,9 @@ A callback registered on an `nn.Module` that PyTorch calls automatically after t
 
 ### FP8 {#fp8}
 8-bit floating point — half the bits of [bfloat16](/shared/glossary/#bfloat16). Comes in two flavors: **E4M3** (4 [exponent](/shared/glossary/#exponent) bits + 3 [mantissa](/shared/glossary/#mantissa) bits) keeps a bit more precision and is used for [weights](/shared/glossary/#weights) and the forward [activations](/shared/glossary/#activations); **E5M2** (5 [exponent](/shared/glossary/#exponent) + 2 [mantissa](/shared/glossary/#mantissa)) trades precision for a wider range and is used for gradients, which can be very large or very small. Supported by [Hopper](/shared/glossary/#hopper) and later NVIDIA GPUs, it is rapidly becoming the modern default serving precision.
+
+### Fragmentation {#fragmentation}
+Memory wasted in gaps too small to reuse, left behind when each request is given its own contiguous chunk — like a parking lot full of single empty spaces where no bus can fit even though there is plenty of total room. Paged schemes such as [PagedAttention](/shared/glossary/#pagedattention) avoid it by handing out small fixed-size pages instead of one big block per request.
 
 ### Frontier run {#frontier-run}
 A training run for one of the largest, most capable models at the leading edge of what is currently possible — the kind that ties up thousands of GPUs for weeks and costs millions of dollars. Because the stakes are so high, a [loss spike](/shared/glossary/#loss-spike) that cannot be recovered cleanly can throw away days of that compute, which is why teams rehearse [checkpoint](/shared/glossary/#checkpoint) recovery on small models first.

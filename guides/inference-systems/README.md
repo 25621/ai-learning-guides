@@ -358,13 +358,13 @@ halves single-user decode latency.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| KV cache from scratch | Add a contiguous KV cache to a toy transformer; verify outputs match no-cache decoding bit-for-bit | ⭐⭐⭐ |
-| KV size calculator | Implement the formula above; sweep `n_kv_heads`, `seq_len`, `dtype`; plot memory vs. concurrency | ⭐⭐ |
-| Tiny paged cache | Implement a block-paginated KV cache (block size 16); allocate / free blocks per request; reproduce the vLLM block-table data structure | ⭐⭐⭐⭐⭐ |
-| Prefix-share benchmark | In vLLM, send 100 requests sharing a 2000-token system prompt; measure TTFT with prefix cache on vs. off | ⭐⭐⭐ |
-| KV-quantization study | Drop the KV cache to FP8 (or INT8 with a custom kernel); measure quality on a held-out eval and throughput delta | ⭐⭐⭐⭐ |
-| Attention-sink eviction | Implement an H2O-style "keep top-attention tokens + first 4 tokens" eviction policy; measure quality at long context | ⭐⭐⭐⭐⭐ |
-| CPU/NVMe offload | Add a tier-2 cache (CPU RAM); evict cold blocks on GPU pressure; measure reload-cost vs. throughput on long-running sessions | ⭐⭐⭐⭐⭐ |
+| [KV cache from scratch](projects/09-kv-cache-from-scratch/README.md) | Add a contiguous KV cache to a toy transformer; verify outputs match no-cache decoding bit-for-bit | ⭐⭐⭐ |
+| [KV size calculator](projects/10-kv-size-calculator/README.md) | Implement the formula above; sweep `n_kv_heads`, `seq_len`, `dtype`; plot memory vs. concurrency | ⭐⭐ |
+| [Tiny paged cache](projects/11-tiny-paged-cache/README.md) | Implement a block-paginated KV cache (block size 16); allocate / free blocks per request; reproduce the vLLM block-table data structure | ⭐⭐⭐⭐⭐ |
+| [Prefix-share benchmark](projects/12-prefix-share-benchmark/README.md) | In vLLM, send 100 requests sharing a 2000-token system prompt; measure TTFT with prefix cache on vs. off | ⭐⭐⭐ |
+| [KV-quantization study](projects/13-kv-quantization-study/README.md) | Drop the KV cache to FP8 (or INT8 with a custom kernel); measure quality on a held-out eval and throughput delta | ⭐⭐⭐⭐ |
+| [Attention-sink eviction](projects/14-attention-sink-eviction/README.md) | Implement an H2O-style "keep top-attention tokens + first 4 tokens" eviction policy; measure quality at long context | ⭐⭐⭐⭐⭐ |
+| [CPU/NVMe offload](projects/15-cpu-nvme-offload/README.md) | Add a tier-2 cache (CPU RAM); evict cold blocks on GPU pressure; measure reload-cost vs. throughput on long-running sessions | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: The Memory Math, Made Concrete
 
