@@ -856,13 +856,13 @@ Underneath the inference engine, every forward pass eventually becomes a sequenc
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Roofline plot for *your* engine | Sweep batch 1–128 and prompt length 128–32k; plot throughput vs. arithmetic intensity; identify the regime each operating point lives in | ⭐⭐⭐ |
-| Profile a single decode step | Use Nsight Systems; identify the longest kernel, the HBM-read pattern, the launch overhead | ⭐⭐⭐⭐ |
-| FlashDecoding ablation | Run the same model with and without the FlashDecoding code path (vLLM exposes a flag); measure decode-throughput delta | ⭐⭐⭐ |
-| Skinny-M kernel study | Pick a decode-shape GEMM (`M=8, K=8192, N=8192`); compare cuBLAS, a Triton implementation, and Marlin; report TFLOPs and bandwidth | ⭐⭐⭐⭐ |
-| CUDA Graphs for decode | Capture the per-token decode kernel sequence as a graph; measure launch-overhead savings on a small model | ⭐⭐⭐⭐ |
-| Stream-overlap audit | Identify a serial gap (e.g., detokenization on CPU stalling the GPU); pipeline it; measure | ⭐⭐⭐⭐ |
-| Hardware comparison | Run the same model and benchmark on two different GPUs (or a CPU+iGPU); explain the gap from the spec sheets | ⭐⭐⭐ |
+| [Roofline plot for *your* engine](projects/37-roofline-plot-for-your-engine/README.md) | Sweep batch 1–128 and prompt length 128–32k; plot throughput vs. arithmetic intensity; identify the regime each operating point lives in | ⭐⭐⭐ |
+| [Profile a single decode step](projects/38-profile-a-single-decode-step/README.md) | Use Nsight Systems; identify the longest kernel, the HBM-read pattern, the launch overhead | ⭐⭐⭐⭐ |
+| [FlashDecoding ablation](projects/39-flashdecoding-ablation/README.md) | Run the same model with and without the FlashDecoding code path (vLLM exposes a flag); measure decode-throughput delta | ⭐⭐⭐ |
+| [Skinny-M kernel study](projects/40-skinny-m-kernel-study/README.md) | Pick a decode-shape GEMM (`M=8, K=8192, N=8192`); compare cuBLAS, a Triton implementation, and Marlin; report TFLOPs and bandwidth | ⭐⭐⭐⭐ |
+| [CUDA Graphs for decode](projects/41-cuda-graphs-for-decode/README.md) | Capture the per-token decode kernel sequence as a graph; measure launch-overhead savings on a small model | ⭐⭐⭐⭐ |
+| [Stream-overlap audit](projects/42-stream-overlap-audit/README.md) | Identify a serial gap (e.g., detokenization on CPU stalling the GPU); pipeline it; measure | ⭐⭐⭐⭐ |
+| [Hardware comparison](projects/43-hardware-comparison/README.md) | Run the same model and benchmark on two different GPUs (or a CPU+iGPU); explain the gap from the spec sheets | ⭐⭐⭐ |
 
 ### Sample Code: Reading a Fused Decode Kernel
 

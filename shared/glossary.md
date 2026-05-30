@@ -280,6 +280,12 @@ NVIDIA's optimized library of dense linear-algebra [kernels](/shared/glossary/#k
 ### CUDA {#cuda}
 NVIDIA's GPU compute backend; tensors on the `cuda` device run their kernels here
 
+### CUDA Graphs {#cuda-graphs}
+A way to record a whole sequence of GPU [kernel](/shared/glossary/#kernel) launches once and then replay the entire batch with a single command, instead of telling the GPU what to do step by step every time. Like pressing "play" on a saved macro rather than retyping the same keystrokes — it removes the per-launch bookkeeping, which matters in [decode](/shared/glossary/#decode) where each token fires dozens of tiny kernels and the launch cost itself becomes significant.
+
+### CUDA stream {#cuda-stream}
+A queue of GPU work that runs in order, but *independently* of other streams — so the GPU can be doing one stream's job while the CPU prepares the next, or two streams can overlap. Like separate checkout lanes at a store: putting independent tasks in different lanes lets them progress at the same time instead of waiting in one long line, which is how a serving stack overlaps [detokenization](/shared/glossary/#detokenization) or KV transfer with the next forward pass.
+
 ### Custom op {#custom-op}
 A user-defined operation registered with PyTorch (e.g. via `torch.library.custom_op`) so it behaves like a built-in — including working with [`torch.compile`](/shared/glossary/#torchcompile).
 
@@ -442,6 +448,9 @@ Forward / Inverse Kinematics — compute end-effector pose from joints or vice v
 ### FlashAttention {#flashattention}
 IO-aware attention kernel that avoids materializing the T×T score matrix in HBM
 
+### FlashDecoding {#flashdecoding}
+A version of [FlashAttention](/shared/glossary/#flashattention) tuned for the [decode](/shared/glossary/#decode) step, where there is just one new query token but a long [KV cache](/shared/glossary/#kv-cache) to read. It splits that long read across many GPU workers so the [HBM](/shared/glossary/#hbm) bandwidth stays fully used instead of one worker plodding through the cache alone — the trick that lets engines like [vLLM](/shared/glossary/#vllm) hit near-peak bandwidth on decode-heavy traffic.
+
 ### float16 {#float16}
 16-bit floating-point format (`fp16`); saves memory and can be fast on GPUs, but has a limited range (max ~65,504) that can cause [underflow](/shared/glossary/#underflow) when accumulating very small values
 
@@ -504,6 +513,9 @@ Short for **Greedy Coordinate Gradient** — a gradient-based attack that finds 
 
 ### GELU {#gelu}
 Gaussian Error Linear Unit — a smooth activation function widely used in transformer [MLPs](/shared/glossary/#mlp).
+
+### GEMM {#gemm}
+GEneral Matrix Multiply — the workhorse operation `C = A × B` on two matrices, and the single most common heavy computation inside a neural network. GPUs are built to do GEMMs fast; nearly every layer's forward pass is one. When one input is very "skinny" (a tiny batch, as in single-token [decode](/shared/glossary/#decode)) the GPU's [Tensor Cores](/shared/glossary/#tensor-core) sit half-idle, so that case needs a different kernel from a big, square prefill GEMM.
 
 ### GLU {#glu}
 Gated Linear Unit — a layer whose output is the element-wise product of two linear projections, one of them passed through a [gating](/shared/glossary/#gated) non-linearity; [SwiGLU](/shared/glossary/#swiglu) is the variant that uses [Swish](/shared/glossary/#swish) as that non-linearity.
