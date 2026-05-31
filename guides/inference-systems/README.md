@@ -1,8 +1,37 @@
-# LLM Inference Systems: From Beginner to Advanced
+# Inference Systems: From Beginner to Advanced
 
-A comprehensive guide to **serving** large language models — the layer between a trained checkpoint sitting on disk and a user typing into a chat box and seeing tokens stream back. The goal is to take you from "I have called an API" to "I can stand up a production inference cluster, explain every hop a token takes from prompt to client, debug a P99 latency regression, and make a defensible cost-per-million-tokens commitment to a CFO."
+A comprehensive guide to **serving** trained models in production — the layer between a checkpoint sitting on disk and a user typing into a chat box and seeing tokens stream back. The goal is to take you from "I have called an API" to "I can stand up a production inference cluster, explain every hop a token takes from prompt to client, debug a P99 latency regression, and make a defensible cost-per-million-tokens commitment to a CFO."
 
-> **An honest framing.** Training is a fixed cost; serving is a forever cost. A modest production system serves more tokens in its first month than the model ever saw during fine-tuning. The math that makes a serving system economically viable is *almost entirely* about how cleverly you handle memory bandwidth, batch heterogeneity, and the KV cache. The model architecture you can copy from the [LLM guide](../llm/). The serving system you cannot copy from anywhere — every workload is different, and the right stack for a chatbot is the wrong stack for a code-completion sidecar.
+> **An honest framing.** Training is a fixed cost; serving is a forever cost. A modest production system serves more tokens in its first month than the model ever saw during fine-tuning. The math that makes a serving system economically viable is *almost entirely* about how cleverly you handle memory bandwidth, batch heterogeneity, and the KV cache. The model architecture you can copy from the [LLM guide](../llm/). The silicon underneath you can read about in the [AI Hardware guide](../ai-hardware/). The serving system you cannot copy from anywhere — every workload is different, and the right stack for a chatbot is the wrong stack for a code-completion sidecar.
+
+---
+
+## What This Guide Covers (and What It Doesn't)
+
+This guide is the production-serving track of the [AI Learning Guides](../../) collection. It is deliberately scoped so its content does not overlap with the other guides. Knowing what belongs here vs. elsewhere is part of using it well.
+
+**In scope — this guide owns these topics:**
+- The lifecycle of an inference request, end to end (prefill, decode, streaming, termination)
+- KV-cache engineering: sizing, paging, sharing, quantizing, evicting, offloading
+- Batching and scheduling algorithms for heterogeneous serving traffic
+- Speculative decoding, prompt-lookup, Medusa, EAGLE, tree speculation
+- *Serving-time* quantization decisions (which formats, where, with what calibration gates)
+- *Inference-relevant* kernels (FlashAttention, FlashDecoding, fused decode, CUDA Graphs)
+- Distributed and disaggregated serving (TP/EP for inference, prefill/decode split, KV transfer)
+- Long-context serving, structured generation, multi-LoRA, prefix caching, agentic sessions
+- Production concerns: observability, SLOs, capacity planning, $/M-token economics
+- Non-LLM inference patterns at a high level (diffusion, embeddings, VLMs) — with pointers
+
+**Out of scope — deferred to other guides:**
+- *Model architecture and training* → [LLM](../llm/), [Image Generation](../image-generation/), [Video Generation](../video-generation/), [Multimodal Learning](../multimodal-learning/), [Robotics](../robotics/)
+- *Post-training* (SFT, RLHF, DPO, GRPO, RLVR) → [LLM Phase 5](../llm/#phase-5-post-training--sft-rlhf-dpo-grpo-rlvr) and [RL Phase 9](../reinforcement-learning/#phase-9-rl-for-language-models--rlhf-dpo-grpo-rlvr)
+- *Evaluation methodology* → [LLM Phase 8](../llm/#phase-8-evaluation)
+- *GPU architecture, memory-hierarchy theory, numeric-format design* → [AI Hardware Phases 2–7](../ai-hardware/)
+- *Kernel writing as a discipline* (CUDA/Triton/CUTLASS fundamentals) → [AI Hardware Phase 4](../ai-hardware/#phase-4-cuda-triton-and-writing-real-kernels) and [PyTorch Deep Dive Phase 6](../pytorch-deep-dive/#phase-6-custom-kernels--c-cuda-and-triton-extensions)
+- *Distributed **training**, FSDP/DDP/ZeRO internals* → [PyTorch Deep Dive Phase 7](../pytorch-deep-dive/#phase-7-distributed-training--ddp-fsdp-and-beyond) and [LLM Phase 4](../llm/#phase-4-scaling-laws-and-training-infrastructure)
+- *Robot/agent control loops and embodied inference* → [Robotics Phase 8](../robotics/#phase-8-learning-for-robotics)
+
+When this guide touches an out-of-scope topic, it does so only to the depth needed for serving decisions, and it links forward to the owning guide.
 
 ---
 
@@ -13,12 +42,12 @@ A comprehensive guide to **serving** large language models — the layer between
 3. [Phase 2: The KV Cache](#phase-2-the-kv-cache)
 4. [Phase 3: Batching and Scheduling](#phase-3-batching-and-scheduling)
 5. [Phase 4: Speculative Decoding](#phase-4-speculative-decoding)
-6. [Phase 5: Quantization and Low-Precision Inference](#phase-5-quantization-and-low-precision-inference)
-7. [Phase 6: Kernels and Hardware](#phase-6-kernels-and-hardware)
+6. [Phase 5: Serving-Time Quantization Decisions](#phase-5-serving-time-quantization-decisions)
+7. [Phase 6: Inference-Relevant Kernels and Hardware Choices](#phase-6-inference-relevant-kernels-and-hardware-choices)
 8. [Phase 7: Distributed and Disaggregated Serving](#phase-7-distributed-and-disaggregated-serving)
 9. [Phase 8: Long Context, Structured Output, and Multi-Tenant Tricks](#phase-8-long-context-structured-output-and-multi-tenant-tricks)
 10. [Phase 9: Observability, SLOs, and Cost Economics](#phase-9-observability-slos-and-cost-economics)
-11. [Phase 10: Frontier Topics](#phase-10-frontier-topics)
+11. [Phase 10: Frontier Topics in Serving](#phase-10-frontier-topics-in-serving)
 12. [Suggested Timeline](#suggested-timeline)
 13. [Key Advice](#key-advice)
 14. [Common Pitfalls](#common-pitfalls)
@@ -33,10 +62,10 @@ Inference systems sit at the intersection of deep learning, GPU programming, dis
 
 ### Concepts to Know
 
-- **Transformer basics**: decoder-only stack, multi-head attention, MLP block, the fact that decoding produces one token at a time conditioning on the prefix. If shaky, do Phases 1–2 of the [LLM guide](../llm/) first
-- **Memory hierarchies on a GPU**: registers, shared memory / SRAM, L2, HBM. Roughly: SRAM is ~100× faster than HBM and ~1000× smaller; everything in inference is a fight over which numbers live where
-- **Roofline thinking**: a kernel is either *compute-bound* (limited by FLOPs/s) or *memory-bound* (limited by bytes/s). The single most important diagnostic question in inference is "which side of the roofline am I on?"
-- **Async, batching, and queues**: requests arrive at random times with random lengths; you serve a fixed-throughput accelerator. Everything in the middle is queueing-theory dressed up as Python
+- **Transformer basics**: decoder-only stack, multi-head attention, MLP block, the fact that decoding produces one token at a time conditioning on the prefix. If shaky, do [LLM Phases 1–2](../llm/) first
+- **GPU memory hierarchy** at a sketch level: registers → SRAM → L2 → HBM → NVLink → network, each step ~10× slower than the last. The deep treatment lives in [AI Hardware Phase 3](../ai-hardware/#phase-3-the-memory-hierarchy--where-your-time-actually-goes); this guide assumes you can already think "which level of memory am I hitting?"
+- **Roofline thinking**: a kernel is either *compute-bound* (limited by FLOPs/s) or *memory-bound* (limited by bytes/s). The single most important diagnostic question in inference is "which side of the roofline am I on?" See [AI Hardware Phase 1](../ai-hardware/#phase-1-how-a-modern-computer-computes) for the underlying model
+- **Async, batching, and queues**: requests arrive at random times with random lengths; you serve a fixed-throughput accelerator. Everything in the middle is queueing theory dressed up as Python
 - **HTTP / gRPC / streaming**: tokens arrive at a client over an open connection (SSE or chunked transfer or WebSockets). Closing the connection wrong wastes a generation
 - **Programming maturity**: you will read other people's C++/CUDA at 3 a.m. when a request gets stuck in `cudaEventSynchronize`
 
@@ -64,15 +93,15 @@ If your team can't quote those two numbers for your system off the top of its he
 - **CUDA + Nsight Systems / Nsight Compute** if you have NVIDIA hardware. You will not understand a memory-bound regression without a profiler
 - **`huggingface_hub`, `transformers`, `accelerate`** — to fetch weights and run reference forward passes
 - **A load generator** — `oha`, `wrk`, `vegeta`, or `vllm`'s own benchmark harness. Single-stream timing is a lie; you have to send concurrent load
-- **A GPU** — 16 GB is enough for 7B inference with quantization. For production-grade work you need at least one H100/H200 or equivalent
+- **A GPU** — 16 GB is enough for 7B inference with quantization. For production-grade work you need at least one H100/H200/B200 or equivalent
 
 ### Resources
 
 - [Karpathy — *Let's reproduce GPT-2 (124M)*](https://www.youtube.com/watch?v=l8pRSuU81PU) — the cleanest "build it yourself" tour of the forward pass
 - [Horace He — *Making Deep Learning Go Brrrr From First Principles*](https://horace.io/brrr_intro.html) — the roofline mental model, applied
-- [NVIDIA — *CUDA C++ Best Practices Guide*](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/) — the canonical reference
 - [vLLM docs](https://docs.vllm.ai/) — the inference engine you should know best by the end of this guide
 - [PyTorch profiler tutorial](https://pytorch.org/tutorials/recipes/recipes/profiler_recipe.html)
+- [AI Hardware Phases 1–4](../ai-hardware/) — for the hardware substrate this guide sits on top of
 
 ---
 
@@ -145,17 +174,56 @@ optimization in this guide tries to exploit, work around, or hide.
    one where long answers feel like they're crawling. You need both.
 ```
 
+### Other Inference Workloads — Where the LLM Pattern Doesn't Apply
+
+Most of this guide is written for autoregressive LLMs, because that's where serving complexity is densest. But "inference" is a broader umbrella, and the techniques shift in important ways for each non-LLM workload. The table below is the map; deeper treatment lives in the topic-specific guides.
+
+```
+   Workload                Dominant cost       Batching shape         Owning guide
+   ─────────────────────   ─────────────────   ────────────────────   ─────────────────
+   Decoder-only LLM        Decode: HBM B/W     Heterogeneous,         this guide
+                           Prefill: FLOPs       continuous
+   ─────────────────────   ─────────────────   ────────────────────   ─────────────────
+   Diffusion (image/video) Many denoising      Big static batches,    Image Gen Phase 7
+                           steps, all prefill-  same step-count       Video Gen Phase 4
+                           shaped (FLOPs)       per request
+   ─────────────────────   ─────────────────   ────────────────────   ─────────────────
+   Embeddings / rerankers  One forward pass,   Huge homogeneous       Multimodal Phase 3
+                           pure encoder        batches, no decode
+   ─────────────────────   ─────────────────   ────────────────────   ─────────────────
+   VLMs (image+text in,    Vision encoder      LLM-shaped after the   Multimodal Phase 5
+   text out)               (prefill-like) +     vision tower; KV
+                           LLM decode           cache lives in text
+   ─────────────────────   ─────────────────   ────────────────────   ─────────────────
+   ASR / TTS               Mostly encoder      Big batches, low       Multimodal Phase 6
+                           passes; some        per-request memory
+                           autoregressive
+   ─────────────────────   ─────────────────   ────────────────────   ─────────────────
+   Robot policies / VLAs   Real-time control   Tiny batches (often    Robotics Phase 8
+                           loop (10–100 Hz)    1), latency-critical
+```
+
+The big takeaways for non-LLM workloads:
+
+- **Diffusion serving** is essentially "do prefill N times" — there's no KV cache, no autoregression. The optimizations that matter are step-distillation (turning 50-step sampling into 1–4 steps), batched cross-attention, and CFG fusion. See [Image Generation Phase 10](../image-generation/#phase-10-training-at-scale-distillation-evaluation-and-frontier-topics) and [Video Generation Phase 10](../video-generation/#phase-10-training-at-scale-evaluation-and-frontier-topics).
+- **Embedding/rerank serving** is the easy case: pure encoder, no decode loop, batch as wide as memory allows. Don't try to serve them in the same engine as decoder LLMs — the optimal batch sizes differ by an order of magnitude.
+- **VLM serving** is "an LLM with an extra prefill stage." Everything in this guide applies after the vision encoder runs; the new wrinkle is caching the vision encoder output across multi-turn conversations.
+- **Robot policy inference** lives at the opposite end of the latency/throughput trade-off — batch size 1, hard deadlines, often on edge silicon. The KV-cache, continuous-batching, speculation playbook is not the right toolbox.
+
+The rest of this guide focuses on the decoder-only LLM case unless otherwise noted, because that's where the system-engineering depth is.
+
 ### Projects
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Manual inference loop | Load a 1B HF model, write a Python `while` loop that prefills the prompt, then decodes one token at a time using the KV cache | ⭐⭐ |
-| Streaming server | Wrap the loop in FastAPI with `StreamingResponse`; benchmark TTFT vs. ITL with `oha` | ⭐⭐⭐ |
-| Stop-string matcher | Implement a streaming stop-string matcher that handles BPE token boundaries correctly; verify against pathological cases (stop string split across two tokens) | ⭐⭐⭐ |
-| Sampling kernel | Implement top-k + top-p + temperature sampling on logits in pure PyTorch; profile against `torch.multinomial` + `topk` | ⭐⭐⭐ |
-| Detokenizer fuzzer | Generate random token sequences, decode incrementally vs. all-at-once; find a case where they disagree | ⭐⭐⭐⭐ |
-| Determinism audit | Run the same prompt 100× with greedy decoding at different batch sizes; report bitwise divergence rate; fix one source | ⭐⭐⭐⭐ |
-| Request-lifecycle tracer | Add per-stage timestamps to a request; produce a flamegraph for one slow request from a load test | ⭐⭐⭐ |
+| [Manual inference loop](projects/01-manual-inference-loop/README.md) | Load a 1B HF model, write a Python `while` loop that prefills the prompt, then decodes one token at a time using the KV cache | ⭐⭐ |
+| [Streaming server](projects/02-streaming-server/README.md) | Wrap the loop in FastAPI with `StreamingResponse`; benchmark TTFT vs. ITL with `oha` | ⭐⭐⭐ |
+| [Stop-string matcher](projects/03-stop-string-matcher/README.md) | Implement a streaming stop-string matcher that handles BPE token boundaries correctly; verify against pathological cases (stop string split across two tokens) | ⭐⭐⭐ |
+| [Sampling kernel](projects/04-sampling-kernel/README.md) | Implement top-k + top-p + temperature sampling on logits in pure PyTorch; profile against `torch.multinomial` + `topk` | ⭐⭐⭐ |
+| [Detokenizer fuzzer](projects/05-detokenizer-fuzzer/README.md) | Generate random token sequences, decode incrementally vs. all-at-once; find a case where they disagree | ⭐⭐⭐⭐ |
+| [Determinism audit](projects/06-determinism-audit/README.md) | Run the same prompt 100× with greedy decoding at different batch sizes; report bitwise divergence rate; fix one source | ⭐⭐⭐⭐ |
+| [Request-lifecycle tracer](projects/07-request-lifecycle-tracer/README.md) | Add per-stage timestamps to a request; produce a flamegraph for one slow request from a load test | ⭐⭐⭐ |
+| [Diffusion vs LLM serving](projects/08-diffusion-vs-llm-serving/README.md) | Serve a Stable Diffusion model and a 7B LLM behind the same load generator; explain why batch sizes and TTFT shapes look so different | ⭐⭐⭐ |
 
 ### Sample Code: A Minimal Decode Loop With a KV Cache
 
@@ -216,6 +284,8 @@ LLM inference has a *bimodal* performance profile: one big compute-heavy prefill
 
 The KV cache is the single most important data structure in LLM serving. It is the reason decode is fast (you don't recompute attention over the prefix every step) and it is the reason serving is hard (its memory footprint dominates GPU RAM and grows with every active request). Master this and you understand 80% of why modern inference engines look the way they do.
 
+> The [LLM guide introduces](../llm/#phase-9-efficient-inference-and-deployment) the KV cache as a one-paragraph idea. This phase is the engineering deep dive: sizing it, paging it, sharing it, quantizing it, evicting it, and tiering it. If any of these data-structure choices later show up in a production incident, the cause almost always traces here.
+
 ### Concepts to Learn
 
 - **What's actually cached**: at each layer, for each previously-seen token, the projected `K` and `V` vectors. Once computed, they don't change — they only get attended to by future queries
@@ -236,7 +306,7 @@ The KV cache is the single most important data structure in LLM serving. It is t
   - **Paged** (PagedAttention, vLLM, 2023) — chop the cache into fixed-size blocks (e.g., 16 tokens each), maintain a per-request block table, allocate blocks on demand
   - **TokenAttention / radix-tree** (sglang) — model the cache as a radix tree keyed on prompt prefixes; share blocks across requests with a common prefix automatically
 - **Prefix sharing / prefix caching**: if many requests share a long system prompt or a retrieved document, the prefill compute and the KV cache memory can be reused. Production systems with a static system prompt get a 5–20× TTFT win from this alone
-- **KV-cache quantization**: drop the cache to FP8, INT8, or even INT4. The cache is huge and bandwidth-dominant; halving it nearly halves decode latency. Quality loss is small for K/V (smaller than for weights) — they're activations, not parameters
+- **KV-cache quantization**: drop the cache to FP8, INT8, or even INT4. The cache is huge and bandwidth-dominant; halving it nearly halves decode latency. Quality loss is small for K/V (smaller than for weights) — they're activations, not parameters. (Format-design and outlier-handling theory live in [AI Hardware Phase 7](../ai-hardware/#phase-7-numeric-formats-and-quantization); this phase is about when and where to apply them in the cache.)
 - **KV cache offload**: when GPU memory is tight, evict cold blocks to CPU RAM or NVMe. Used for very long sessions or huge agentic histories. The trade-off is reload latency on the next decode step that touches the offloaded blocks
 - **Cache eviction policies**:
   - LRU at the *block* level for inactive sessions
@@ -288,13 +358,13 @@ halves single-user decode latency.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| KV cache from scratch | Add a contiguous KV cache to a toy transformer; verify outputs match no-cache decoding bit-for-bit | ⭐⭐⭐ |
-| KV size calculator | Implement the formula above; sweep `n_kv_heads`, `seq_len`, `dtype`; plot memory vs. concurrency | ⭐⭐ |
-| Tiny paged cache | Implement a block-paginated KV cache (block size 16); allocate / free blocks per request; reproduce the vLLM block-table data structure | ⭐⭐⭐⭐⭐ |
-| Prefix-share benchmark | In vLLM, send 100 requests sharing a 2000-token system prompt; measure TTFT with prefix cache on vs. off | ⭐⭐⭐ |
-| KV-quantization study | Drop the KV cache to FP8 (or INT8 with a custom kernel); measure quality on a held-out eval and throughput delta | ⭐⭐⭐⭐ |
-| Attention-sink eviction | Implement an H2O-style "keep top-attention tokens + first 4 tokens" eviction policy; measure quality at long context | ⭐⭐⭐⭐⭐ |
-| CPU/NVMe offload | Add a tier-2 cache (CPU RAM); evict cold blocks on GPU pressure; measure reload-cost vs. throughput on long-running sessions | ⭐⭐⭐⭐⭐ |
+| [KV cache from scratch](projects/09-kv-cache-from-scratch/README.md) | Add a contiguous KV cache to a toy transformer; verify outputs match no-cache decoding bit-for-bit | ⭐⭐⭐ |
+| [KV size calculator](projects/10-kv-size-calculator/README.md) | Implement the formula above; sweep `n_kv_heads`, `seq_len`, `dtype`; plot memory vs. concurrency | ⭐⭐ |
+| [Tiny paged cache](projects/11-tiny-paged-cache/README.md) | Implement a block-paginated KV cache (block size 16); allocate / free blocks per request; reproduce the vLLM block-table data structure | ⭐⭐⭐⭐⭐ |
+| [Prefix-share benchmark](projects/12-prefix-share-benchmark/README.md) | In vLLM, send 100 requests sharing a 2000-token system prompt; measure TTFT with prefix cache on vs. off | ⭐⭐⭐ |
+| [KV-quantization study](projects/13-kv-quantization-study/README.md) | Drop the KV cache to FP8 (or INT8 with a custom kernel); measure quality on a held-out eval and throughput delta | ⭐⭐⭐⭐ |
+| [Attention-sink eviction](projects/14-attention-sink-eviction/README.md) | Implement an H2O-style "keep top-attention tokens + first 4 tokens" eviction policy; measure quality at long context | ⭐⭐⭐⭐⭐ |
+| [CPU/NVMe offload](projects/15-cpu-nvme-offload/README.md) | Add a tier-2 cache (CPU RAM); evict cold blocks on GPU pressure; measure reload-cost vs. throughput on long-running sessions | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: The Memory Math, Made Concrete
 
@@ -343,7 +413,7 @@ A GPU is happiest when it has a lot of work to do in parallel. A single user's d
   - The batch is *heterogeneous*: different requests are at different positions in their generation
   - Implemented in vLLM, TGI, TensorRT-LLM, sglang. The single biggest serving throughput win of the post-2022 era — up to ~20× throughput at iso-latency
 - **Chunked prefill** — long prompts (say 32k tokens) would otherwise hog the GPU for hundreds of milliseconds, stalling all decode steps. Instead, split prefill into chunks (e.g., 2048 tokens at a time) and *interleave* prefill chunks with decode steps in the same forward pass. Trades a bit of prefill efficiency for far better tail latency
-- **Disaggregated prefill / decode** — push the idea further: run prefill on one set of GPUs and decode on another, connected by a fast interconnect. Each pool is sized for its own workload (compute-heavy vs. bandwidth-heavy). Mooncake, DistServe, and increasingly the production systems behind frontier APIs use this
+- **Disaggregated prefill / decode** — push the idea further: run prefill on one set of GPUs and decode on another, connected by a fast interconnect. Each pool is sized for its own workload (compute-heavy vs. bandwidth-heavy). Mooncake, DistServe, and increasingly the production systems behind frontier APIs use this. (Phase 7 covers the cross-node engineering.)
 - **The scheduler's job**, formalized — at every iteration, given a queue of pending requests and a running batch, decide:
   - Which pending requests to admit (prefill them in this iteration?)
   - Which running requests to decode this iteration (and which to pause if cache is full)
@@ -398,13 +468,13 @@ A GPU is happiest when it has a lot of work to do in parallel. A single user's d
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Static vs. continuous | Build both schedulers around your toy decode loop; load-test under varying lengths and arrival rates | ⭐⭐⭐⭐ |
-| Padding waste audit | Instrument a static-batching server: what fraction of decode FLOPs go to padding tokens? | ⭐⭐⭐ |
-| Chunked prefill simulator | Discrete-event sim: requests arrive Poisson, prefill consumes `P` time, decode `D` per step; sweep chunk size; plot TTFT P99 vs. throughput | ⭐⭐⭐⭐ |
-| Disaggregated PoC | Two processes (prefill / decode), exchange KV cache over IPC or RDMA; measure overhead vs. unified | ⭐⭐⭐⭐⭐ |
-| Priority queue | Add a priority class to vLLM (or a fork); verify high-prio TTFT under load | ⭐⭐⭐⭐ |
-| Cache-aware admission | Refuse admission when projected KV cache exceeds GPU; verify the system never OOMs | ⭐⭐⭐⭐ |
-| SLO-aware scheduler | Given per-request deadlines, schedule to maximize on-time completions; compare to FCFS | ⭐⭐⭐⭐⭐ |
+| [Static vs. continuous](projects/16-static-vs-continuous/README.md) | Build both schedulers around your toy decode loop; load-test under varying lengths and arrival rates | ⭐⭐⭐⭐ |
+| [Padding waste audit](projects/17-padding-waste-audit/README.md) | Instrument a static-batching server: what fraction of decode FLOPs go to padding tokens? | ⭐⭐⭐ |
+| [Chunked prefill simulator](projects/18-chunked-prefill-simulator/README.md) | Discrete-event sim: requests arrive Poisson, prefill consumes `P` time, decode `D` per step; sweep chunk size; plot TTFT P99 vs. throughput | ⭐⭐⭐⭐ |
+| [Disaggregated PoC](projects/19-disaggregated-poc/README.md) | Two processes (prefill / decode), exchange KV cache over IPC or RDMA; measure overhead vs. unified | ⭐⭐⭐⭐⭐ |
+| [Priority queue](projects/20-priority-queue/README.md) | Add a priority class to vLLM (or a fork); verify high-prio TTFT under load | ⭐⭐⭐⭐ |
+| [Cache-aware admission](projects/21-cache-aware-admission/README.md) | Refuse admission when projected KV cache exceeds GPU; verify the system never OOMs | ⭐⭐⭐⭐ |
+| [SLO-aware scheduler](projects/22-slo-aware-scheduler/README.md) | Given per-request deadlines, schedule to maximize on-time completions; compare to FCFS | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: A Toy Continuous-Batching Scheduler
 
@@ -474,7 +544,7 @@ If decode is memory-bandwidth-bound, then the GPU is mostly *waiting* during dec
   - Tokens that match the target's argmax (or that pass a probabilistic rejection step) are accepted; on the first mismatch, accept the target's choice and discard the rest
   - Output distribution is **identical** to the target model's — this is provable, not just empirical
 - **Self-speculation / Medusa** — instead of a separate draft model, train extra prediction heads on the target model that predict tokens at positions `t+1, t+2, t+3, …`. No separate model to manage, no separate KV cache, much higher acceptance rates
-- **EAGLE / EAGLE-2** — predict the next-token *feature vector* (not token ID), then decode from that. Higher acceptance than Medusa because predicting a vector is easier than predicting a discrete token
+- **EAGLE / EAGLE-2 / EAGLE-3** — predict the next-token *feature vector* (not token ID), then decode from that. Higher acceptance than Medusa because predicting a vector is easier than predicting a discrete token
 - **N-gram / prompt lookup decoding** — when the model is paraphrasing or copying from the prompt (common in summarization, RAG, code edits), the draft is just *the prompt itself*. Free, no training, surprisingly large speedups on copy-heavy workloads
 - **Tree-style speculation** — instead of a single chain of `k` drafts, propose a *tree* of alternatives at each position and verify the whole tree in one forward pass. Higher token-acceptance per iteration at the cost of more verification FLOPs
 - **Acceptance rate** is the headline metric. Define it as `accepted_tokens / proposed_tokens`. For 1B-draft + 70B-target on chat, acceptance is typically 0.65–0.80. Medusa pushes 0.7–0.85. EAGLE pushes 0.85+. Higher acceptance → higher speedup, with diminishing returns
@@ -530,13 +600,13 @@ If decode is memory-bandwidth-bound, then the GPU is mostly *waiting* during dec
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Greedy speculative decoding | Pair a 1B draft with a 7B target; implement the verify loop; measure acceptance and wall-clock speedup | ⭐⭐⭐⭐ |
-| Sampling-mode rejection | Add the probabilistic accept/reject step for non-greedy sampling; verify output distribution matches target | ⭐⭐⭐⭐⭐ |
-| N-gram lookup | Implement prompt-lookup decoding: scan the prompt for matching n-grams to use as drafts. Measure on a summarization workload | ⭐⭐⭐ |
-| Tune `k` | Sweep `k ∈ {1, 2, 3, 4, 5, 7, 10}`; plot acceptance, speedup, and tail latency. Find the knee | ⭐⭐⭐ |
-| Medusa heads | Train 3 Medusa heads on a small base model; report acceptance vs. external draft | ⭐⭐⭐⭐⭐ |
-| Speculation + batching | Add speculative decoding to a continuous-batching engine; handle ragged acceptance across the batch correctly | ⭐⭐⭐⭐⭐ |
-| Workload sensitivity | Measure speedup on chat, code completion, summarization, JSON-mode. Explain the variance | ⭐⭐⭐ |
+| [Greedy speculative decoding](projects/23-greedy-speculative-decoding/README.md) | Pair a 1B draft with a 7B target; implement the verify loop; measure acceptance and wall-clock speedup | ⭐⭐⭐⭐ |
+| [Sampling-mode rejection](projects/24-sampling-mode-rejection/README.md) | Add the probabilistic accept/reject step for non-greedy sampling; verify output distribution matches target | ⭐⭐⭐⭐⭐ |
+| [N-gram lookup](projects/25-n-gram-lookup/README.md) | Implement prompt-lookup decoding: scan the prompt for matching n-grams to use as drafts. Measure on a summarization workload | ⭐⭐⭐ |
+| [Tune `k`](projects/26-tune-k/README.md) | Sweep `k ∈ {1, 2, 3, 4, 5, 7, 10}`; plot acceptance, speedup, and tail latency. Find the knee | ⭐⭐⭐ |
+| [Medusa heads](projects/27-medusa-heads/README.md) | Train 3 Medusa heads on a small base model; report acceptance vs. external draft | ⭐⭐⭐⭐⭐ |
+| [Speculation + batching](projects/28-speculation-batching/README.md) | Add speculative decoding to a continuous-batching engine; handle ragged acceptance across the batch correctly | ⭐⭐⭐⭐⭐ |
+| [Workload sensitivity](projects/29-workload-sensitivity/README.md) | Measure speedup on chat, code completion, summarization, JSON-mode. Explain the variance | ⭐⭐⭐ |
 
 ### Sample Code: Greedy Speculative Decoding
 
@@ -579,167 +649,166 @@ Speculative decoding is one of the rare inference optimizations that is genuinel
 - [Leviathan, Kalman, Matias — *Fast Inference from Transformers via Speculative Decoding* (2022)](https://arxiv.org/abs/2211.17192)
 - [Chen et al. — *Accelerating Large Language Model Decoding with Speculative Sampling* (DeepMind, 2023)](https://arxiv.org/abs/2302.01318)
 - [Cai et al. — *Medusa: Simple LLM Inference Acceleration Framework* (2024)](https://arxiv.org/abs/2401.10774)
-- [Li et al. — *EAGLE / EAGLE-2* (2024)](https://arxiv.org/abs/2401.15077)
+- [Li et al. — *EAGLE / EAGLE-2 / EAGLE-3* (2024–2025)](https://arxiv.org/abs/2401.15077)
 - [Saxena — *Prompt Lookup Decoding*](https://github.com/apoorvumang/prompt-lookup-decoding)
 - vLLM speculative-decoding source: `vllm/spec_decode/`
 
 ---
 
-## Phase 5: Quantization and Low-Precision Inference
+## Phase 5: Serving-Time Quantization Decisions
 
-A 70B model in BF16 is 140 GB of weights. In INT4, it's 35 GB. That difference is the line between "needs eight H100s" and "runs on one." Quantization is the single most leveraged knob in inference cost, and the techniques have matured to the point where 8-bit is essentially free quality-wise and 4-bit is acceptable for most production workloads.
+A 70B model in BF16 is 140 GB of weights. In INT4, it's 35 GB. That difference is the line between "needs eight H100s" and "runs on one." Quantization is the single most leveraged knob in inference cost.
+
+> The theory of numeric formats (FP8 vs INT8 vs NF4, outlier-handling math, calibration algorithms) lives in [AI Hardware Phase 7](../ai-hardware/#phase-7-numeric-formats-and-quantization). This phase is the *serving-side* view: given that the formats exist, which knob do you turn for which workload, where do you put the calibration gate, and how do you keep quality from quietly regressing across deploys.
 
 ### Concepts to Learn
 
-- **What you can quantize**:
-  - **Weights only** — keep activations and KV cache in higher precision; the easiest target. INT8 weight-only is near-lossless; INT4 has a small quality cost
-  - **Weights + activations (W·A)** — both quantized at compute time. Higher savings, harder; outlier activations make this delicate. FP8 (E4M3 on H100/H200) is the production default in 2025–2026
-  - **KV cache** — separate decision from weights. FP8 KV cache is ~free quality-wise; INT8 KV cache works with careful scaling; INT4 KV cache costs noticeable quality
-  - **Embeddings / lm_head** — usually quantized like weights, but you sometimes leave them in higher precision because they're a small fraction of the model
-- **Calibration** — quantization requires picking a scale per weight tensor (and sometimes per channel, per group, per row). You need a calibration dataset to estimate activation ranges. A few hundred examples from the model's expected workload is usually enough
-- **Post-training quantization (PTQ)** — quantize a trained model without re-training:
-  - **AWQ (Activation-aware Weight Quantization)** — scale weights so that important channels (those multiplied by large activations) are preserved at higher effective precision. The de facto open-source standard for 4-bit
-  - **GPTQ** — Hessian-based per-row quantization that minimizes layer-wise reconstruction error. Slightly slower than AWQ to produce, similar quality
-  - **SmoothQuant** — migrate the activation outlier magnitude into the weights pre-quantization; enables W8A8
-  - **SpQR / OmniQuant / QuIP#** — more aggressive low-bit schemes (3-bit, 2-bit) using mixed strategies
-- **Quantization-aware training (QAT)** — fold the quantization noise into training. Better quality at low bits, but costs you a fine-tune
-- **FP8 training and inference** — Hopper / Blackwell native; two formats (E4M3 for forward, E5M2 for backward). FP8 inference is essentially "BF16 quality at half the bandwidth," and it's the production target for most frontier API serving today
-- **Quantizing the KV cache** is a separate, often *better* lever than quantizing weights. The cache is huge and almost purely bandwidth-bound at decode. Halving cache bandwidth nearly halves decode latency. FP8 KV is essentially lossless; INT8 KV with per-token scaling works well; INT4 KV is the frontier
-- **Outliers**: activations in LLMs have heavy-tailed distributions — a few channels carry magnitudes ~1000× the median. Naive quantization clips these and craters quality. Every PTQ method is, at heart, a way to deal with outliers
-- **Quality measurement** — always benchmark quantized vs. baseline on:
-  - Perplexity on a held-out set (sensitive but not human-aligned)
-  - A capability eval suite (MMLU, GSM8K, HumanEval) — the numbers should be within 1–2 points
-  - Your own production eval — the only one that matters for shipping
-- **Don't trust a vendor's "lossless 4-bit" claim**. Re-evaluate after every quantization. *Especially* re-evaluate after quantization + fine-tuning combinations, where regressions compound silently
+- **The serving-time decision tree** — for each of these, you make a separate call:
+  - **Weights** — FP8 is the new default for server-grade; INT4 weight-only (AWQ / GPTQ) for memory-constrained / consumer deployments; sub-4-bit (GGUF I-quants, AWQ-2) for edge
+  - **Activations** — FP8 with weights is "W8A8" and works well on Hopper+; INT8 activations need SmoothQuant-style outlier migration to be safe; INT4 activations are rare and risky
+  - **KV cache** — separate decision from weights, often *better leverage*. FP8 KV is essentially lossless; INT8 KV with per-token scaling works well; INT4 KV is the frontier. See Phase 2 for the cache-engineering side
+  - **Embeddings / lm_head** — usually quantized like weights, but sometimes left in higher precision because they're a small fraction of the model and a quality cliff if they go wrong
+- **The "right" recipe depends on the workload regime**:
+  - **Bandwidth-bound decode** (most serving) → quantize weights *and* KV. Reducing bytes/token directly speeds up decode
+  - **Compute-bound prefill** (long-prompt RAG, batch jobs) → quantization helps less per request; pick formats with hardware Tensor Core support (FP8 on Hopper, FP4 on Blackwell, INT4-tensor-core on Hopper+)
+  - **Memory-fit** (you just need it to load) → INT4 weight-only is the lever; quality gates as below
+- **Calibration as a deploy-time step** — not a research artifact. Production teams keep a small (~256-prompt) calibration set drawn from production traffic. Re-calibrate when the model changes, when traffic shifts materially, or when a regression shows up
+- **The AWQ vs. GPTQ vs. SmoothQuant choice, practically**:
+  - **AWQ** — fast to produce, near-best 4-bit weight quality, works without per-layer Hessians. The default for new deployments
+  - **GPTQ** — slower to produce but well-trodden; almost always close to AWQ on quality
+  - **SmoothQuant** — when you need W8A8 (activations quantized too); migrates the outlier magnitude into weights so neither side blows up
+  - Most teams ship AWQ for weight-only and SmoothQuant for activation quantization
+- **The quality gate** — every quantized deployment needs a gate that runs *before* it sees traffic:
+  - Perplexity on a small held-out set (sensitive but not human-aligned)
+  - Capability evals matched to the workload (MMLU-Pro, GSM8K, HumanEval, an internal eval); within 1–2 points of baseline is the usual bar
+  - A production-traffic shadow eval (mirror a small share of real traffic; compare quantized vs. baseline output side-by-side)
+  - If you skip the gate, you discover the regression three weeks later from a customer ticket
+- **Don't trust a vendor's "lossless 4-bit" claim**. Re-evaluate after every quantization, especially after quantization + fine-tuning combinations, where regressions compound silently
+- **Quantization-aware training (QAT)** is *training* work, not serving work; if quality at 4-bit isn't acceptable post-training, that decision goes back to the training team. See [AI Hardware Phase 7](../ai-hardware/#phase-7-numeric-formats-and-quantization) for the format/QAT theory
 
-### The Bit-Width Trade-Off
+### The Bit-Width Trade-Off, From The Serving Side
 
 ```
-   Bits/weight     Memory     Quality (vs BF16)     Production fitness
+   Bits/weight     Memory     Quality (vs BF16)     When you ship it
    ───────────────────────────────────────────────────────────────────
    BF16 (16-bit)    1.0×       baseline              fine but expensive
-   FP8  (8-bit)     0.5×       ~0% loss              the new default
+   FP8  (8-bit)     0.5×       ~0% loss              server default in 2026
    INT8 (8-bit)     0.5×       ~0% loss (weights)    fine for weights
-   INT4 (4-bit)     0.25×      ~0.5–2% loss          standard at the edge
+   INT4 (4-bit)     0.25×      ~0.5–2% loss          standard at the edge / mid
    INT3             0.19×      noticeable            niche
    INT2             0.125×     significant           research-only
 
-   Sweet spot today: FP8 weights + FP8 activations + FP8 KV cache for
-   server-grade serving; INT4 weights + INT8 KV for memory-constrained
-   deployment (consumer GPUs, edge).
+   Server-grade sweet spot today:  FP8 weights + FP8 activations + FP8 KV cache.
+   Memory-constrained sweet spot:  INT4 weights (AWQ) + INT8 KV.
+   Edge / consumer:                INT4 weights + sliding-window KV.
+
+   Blackwell adds FP4 to the menu; production deployment in 2026 is rolling out.
 ```
 
-### Why Outliers Are The Whole Story
+### Where Each Format Pays You Back
 
 ```
-   Activation magnitudes across channels (typical layer)
+   Lever            Decode TPOT      Memory headroom    Quality risk
+   ─────────────    ─────────────    ───────────────    ─────────────
+   FP8 weights      ~1.8× faster     2× more concurrency  ~0% (safe default)
+   INT4 weights     ~3× faster       4× more concurrency  small (gate it)
+   FP8 KV cache     ~1.4× faster     2× longer context    ~0% (safe default)
+   INT8 KV cache    ~1.6× faster     2× longer context    small (gate it)
+   INT4 KV cache    ~1.8× faster     4× longer context    real (gate hard)
+   FP8 activations  marginal         marginal             small (gate it)
 
-        magnitude
-            │
-            │         ●
-       1000 │         │            ← a handful of channels carry huge values
-            │         │
-            │         │       ●
-        100 │         │       │       ●
-            │   ●     │       │       │
-         10 │   │  ●  │   ●   │  ●    │   ●   ●  ●  ●  ●
-            └───┴──┴──┴───┴───┴──┴────┴───┴───┴──┴──┴──►   channel index
-
-   A naive int8 quantizer fits the whole range into [-128, 127]:
-       the outlier sets the scale, the median values get 0–2 bits of precision,
-       and quality dies. Every modern PTQ method (AWQ, SmoothQuant, GPTQ, …)
-       is, at its core, a clever way to keep the outliers from destroying the
-       quantization of everyone else.
+   The two highest-leverage moves for most serving deployments are
+   FP8 weights and FP8 KV cache. Get those right before reaching for
+   anything more aggressive.
 ```
 
 ### Projects
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| INT8 weight-only quantization | Implement per-channel symmetric INT8 quantization on a 1B model; measure perplexity and VRAM | ⭐⭐⭐ |
-| AWQ from scratch | Implement the activation-aware scale search; verify against the AWQ reference | ⭐⭐⭐⭐⭐ |
-| GPTQ on a 7B model | Use the autogptq library; calibrate on 128 samples; evaluate on MMLU | ⭐⭐⭐⭐ |
-| FP8 KV cache | Add FP8 KV storage to a custom decode loop; measure end-to-end speedup | ⭐⭐⭐⭐ |
-| W4A8 ablation | Compare W4-only vs. W4A8 (4-bit weights, 8-bit activations); measure quality and tokens/sec | ⭐⭐⭐⭐ |
-| Outlier analysis | Per-layer activation magnitude histogram for a real model; identify the outlier channels | ⭐⭐⭐ |
-| Mixed-precision experiment | Keep certain layers (e.g., attention output projections, lm_head) in BF16 while quantizing the rest; measure quality | ⭐⭐⭐⭐ |
-| Eval suite for quantized models | Build an automated eval that gates a quantized model before deployment | ⭐⭐⭐ |
+| [Quantize a 7B model end-to-end](projects/30-quantize-a-7b-model-end-to-end/README.md) | Pick AWQ; calibrate on 128 production-style prompts; serve with vLLM; pass a quality gate | ⭐⭐⭐ |
+| [FP8 KV cache](projects/31-fp8-kv-cache/README.md) | Switch a serving deployment from BF16 KV to FP8 KV; measure decode speedup and verify a quality gate | ⭐⭐⭐⭐ |
+| [W4A8 ablation](projects/32-w4a8-ablation/README.md) | Compare W4-only vs. W4A8 (4-bit weights, 8-bit activations); measure quality and tokens/sec | ⭐⭐⭐⭐ |
+| [Mixed-precision deployment](projects/33-mixed-precision-deployment/README.md) | Keep attention output projections + lm_head in BF16 while quantizing the rest; measure the quality bump and the cost | ⭐⭐⭐⭐ |
+| [Calibration drift study](projects/34-calibration-drift-study/README.md) | Calibrate on traffic from week 0; re-evaluate quality after 12 weeks of distribution drift; quantify the gap | ⭐⭐⭐⭐ |
+| [Eval-suite for quantized models](projects/35-eval-suite-for-quantized-models/README.md) | Build an automated gate that blocks a quantized model from deploying if any of N evals regresses by more than X | ⭐⭐⭐ |
+| [FP4 (Blackwell) deployment](projects/36-fp4-blackwell-deployment/README.md) | If hardware available, benchmark FP4 weights against FP8; report quality, throughput, and operational gotchas | ⭐⭐⭐⭐⭐ |
 
-### Sample Code: Per-Channel Symmetric INT8 Weight Quantization
+### Sample Code: A Production Quality-Gate Sketch
 
 ```python
-def quantize_int8_symmetric(W):
-    """W: (out, in) BF16 weights. Returns (q, scales) such that
-       W ≈ q.float() * scales.unsqueeze(1)."""
-    scales = W.abs().amax(dim=1, keepdim=True) / 127.0      # (out, 1)
-    q = (W / scales).round().clamp(-128, 127).to(torch.int8)
-    return q, scales.squeeze(1)
+def deploy_gate(quantized_model, baseline_model, evals, prod_shadow_set,
+                max_per_eval_drop=2.0, max_shadow_disagreement=0.05):
+    """Returns True if `quantized_model` may be promoted to traffic."""
+    for eval_name, run_eval in evals.items():
+        baseline_score   = run_eval(baseline_model)
+        quantized_score  = run_eval(quantized_model)
+        drop = baseline_score - quantized_score
+        if drop > max_per_eval_drop:
+            print(f"[BLOCK] {eval_name}: {baseline_score:.2f} → {quantized_score:.2f}")
+            return False
 
-def dequantize_int8(q, scales):
-    return q.to(torch.bfloat16) * scales.unsqueeze(1)
+    disagree = shadow_eval_disagreement(quantized_model, baseline_model, prod_shadow_set)
+    if disagree > max_shadow_disagreement:
+        print(f"[BLOCK] shadow disagreement {disagree:.1%} > {max_shadow_disagreement:.1%}")
+        return False
 
-# Usage: replace nn.Linear's forward with a custom int8 → bf16 path
-class Int8Linear(torch.nn.Module):
-    def __init__(self, q, scales, bias=None):
-        super().__init__()
-        self.register_buffer("q", q)
-        self.register_buffer("scales", scales)
-        self.bias = bias
-    def forward(self, x):
-        # Production kernels fuse dequant + GEMM; this is the readable version
-        W = dequantize_int8(self.q, self.scales)
-        return torch.nn.functional.linear(x, W, self.bias)
+    print("[OK] quantized model passed the deploy gate")
+    return True
 ```
 
-In production you would use a fused `int8 × bf16` GEMM kernel from CUTLASS, Marlin, or vendor libraries — the loose code above shows the *idea* but not the speedup.
+In production this gate runs in CI before every quantized-model promotion. The exact thresholds are tuned per workload, but the *shape* — a fixed eval suite plus a shadow comparison against the current production model — is non-negotiable.
 
 ### Key Insight
 
-Quantization is a memory-and-bandwidth optimization first and a FLOPs optimization second. The reason FP8 weights make decode faster is not "the math is half as expensive" — at batch size 1 the math is irrelevant. It's that *the weights stream from HBM in half the time*. Once you internalize this, the design space becomes obvious: anything bandwidth-bound (decode, attention, KV cache reads) wants to be in the smallest precision that doesn't tank quality; anything compute-bound (prefill, large-batch GEMM) gets less benefit from low precision. Allocate your bits accordingly.
+Quantization is a memory-and-bandwidth optimization first and a FLOPs optimization second. The reason FP8 weights make decode faster is not "the math is half as expensive" — at batch size 1 the math is irrelevant. It's that *the weights stream from HBM in half the time*. Once you internalize this, the serving design space becomes obvious: anything bandwidth-bound (decode, attention, KV cache reads) wants to be in the smallest precision that doesn't tank quality; anything compute-bound (prefill, large-batch GEMM) gets less benefit from low precision. Allocate your bits accordingly, and **gate every deploy with a real eval** — quantization regressions are silent and they compound.
 
 ### Resources
 
 - [Lin et al. — *AWQ: Activation-aware Weight Quantization* (2023)](https://arxiv.org/abs/2306.00978)
 - [Frantar et al. — *GPTQ* (2022)](https://arxiv.org/abs/2210.17323)
 - [Xiao et al. — *SmoothQuant* (2022)](https://arxiv.org/abs/2211.10438)
-- [Dettmers et al. — *LLM.int8()* (2022)](https://arxiv.org/abs/2208.07339) — the paper that surfaced outliers
 - [NVIDIA — *FP8 Formats for Deep Learning*](https://arxiv.org/abs/2209.05433)
 - [Marlin kernels](https://github.com/IST-DASLab/marlin) — fast INT4×FP16 GEMM for inference
-- [bitsandbytes](https://github.com/bitsandbytes-foundation/bitsandbytes) — quick PTQ + QLoRA toolkit
+- [TensorRT-LLM quantization docs](https://nvidia.github.io/TensorRT-LLM/) — the production reference on NVIDIA
+- [AI Hardware Phase 7](../ai-hardware/#phase-7-numeric-formats-and-quantization) — the underlying format theory
 
 ---
 
-## Phase 6: Kernels and Hardware
+## Phase 6: Inference-Relevant Kernels and Hardware Choices
 
-Underneath the inference engine, every forward pass eventually becomes a sequence of CUDA / ROCm / Triton kernels running on a real piece of silicon. You can ship a system without writing a kernel yourself, but if you want to *understand* a profiler trace — and you will, the day a latency regression lands on you — you need a working mental model of the hardware.
+Underneath the inference engine, every forward pass eventually becomes a sequence of CUDA / ROCm / Triton kernels running on a real piece of silicon. You can ship a system without writing a kernel yourself, but if you want to *understand* a profiler trace — and you will, the day a latency regression lands on you — you need a working mental model of which kernels matter for serving and why.
+
+> The general theory of GPU architecture, the memory hierarchy, and how to write kernels from scratch is the subject of [AI Hardware Phases 2–4](../ai-hardware/#phase-2-gpu-architecture-inside-out) and [PyTorch Deep Dive Phase 6](../pytorch-deep-dive/#phase-6-custom-kernels--c-cuda-and-triton-extensions). This phase assumes that foundation and focuses on the *inference-relevant subset*: the kernels and hardware choices that move the two numbers in Phase 0.
 
 ### Concepts to Learn
 
-- **GPU memory hierarchy** (NVIDIA Hopper, illustrative):
-  - **Registers** — per-thread, ~256 KB per SM total, single-cycle access
-  - **Shared memory / L1** — per-SM scratchpad, ~228 KB, near-register speed
-  - **L2 cache** — chip-wide, ~50 MB, ~5× slower than SRAM
-  - **HBM3** — off-chip, ~80 GB, ~3 TB/s, ~100–200 cycles latency
-  - **NVLink** — between GPUs in a node, ~900 GB/s on H100
-  - **InfiniBand / Ethernet** — across nodes, ~400 Gbps
-- **Arithmetic intensity** = FLOPs / bytes moved. Each kernel sits somewhere on a roofline plot; kernels with low intensity (decode, attention with small batch) are memory-bound, kernels with high intensity (prefill GEMM) are compute-bound
-- **FlashAttention** (and 2, 3) — the canonical inference kernel. Standard attention materializes a `T × T` score matrix in HBM (huge memory + bandwidth). FlashAttention tiles the computation, keeps the scores in SRAM, and never writes them out. Same math, dramatically less HBM traffic. Every modern inference engine uses it
-- **FlashDecoding / FlashAttention-decode** — the decode-step variant: many queries (one per batch member), many KV positions to read. Optimizes for the case where the bottleneck is *reading* the KV cache
-- **GEMM kernels** — the actual matmuls. CUTLASS, cuBLAS, and Triton are the main toolkits. For inference you care about:
-  - Skinny GEMMs (decode: `M = batch`, `K = d_model`, `N = d_model` — tiny M, big N/K)
-  - Mixed-precision GEMMs (INT4 weights × BF16 activations)
-  - Grouped / batched GEMMs (per-LoRA-adapter, per-MoE-expert)
-- **Kernel fusion** — combining `RMSNorm + linear + silu` into a single kernel saves HBM round-trips. Modern engines fuse aggressively; `torch.compile`, custom Triton, and TensorRT-LLM all do this
-- **CUDA Graphs** — capture a static sequence of kernel launches once, replay it. Saves launch overhead on the decode loop, where each kernel is so small that launch latency matters. 5–20% speedup on small models
-- **Streams, synchronization, overlap** — overlap GPU compute with H2D/D2H transfers, network traffic, CPU prep. The difference between a well-pipelined and a serial inference engine is often 20–40% throughput
-- **Hardware to know**:
-  - **NVIDIA H100/H200/B100/B200** — the dominant data-center GPU lineage; bigger HBM and FP8 are the headline differentiators per generation
-  - **AMD MI300X/MI350** — competitive on bandwidth and capacity per dollar; mature ROCm story
-  - **Google TPU v5e/v5p/v6e (Trillium)** — pod-scale fabric; great for big-batch training, increasingly viable for serving
-  - **Inference accelerators** — Groq, Cerebras, SambaNova, AWS Trainium/Inferentia — each picks a different point on the latency/throughput/cost surface
-  - The **decision** of which silicon to buy is workload-shaped: chat-bot serving wants HBM bandwidth; long-context wants HBM capacity; agentic / batch wants throughput per dollar
+- **The inference roofline picture** — apply the AI Hardware roofline model to the *serving* mix:
+  - Single-user decode lives deep in the memory-bound regime — `tok/s ≈ HBM_bandwidth / (2 · N_params)`; for a 70B model on H100 (~3 TB/s) that's ~21 tok/s single-stream
+  - Large-batch decode and prefill move you right, toward the compute ceiling
+  - Buying decisions follow: if your workload is decode-heavy single-user, buy HBM bandwidth; if it's prefill/batch-heavy, buy FLOPs
+- **FlashAttention (1/2/3)** — the canonical attention kernel for both training and inference. Standard attention materializes a `T × T` score matrix in HBM; FlashAttention tiles the computation, keeps the scores in SRAM, and never writes them out. **Every modern inference engine uses it** — you should be able to read it, even if you never write it
+- **FlashDecoding / FlashAttention-decode** — the decode-specific variant: one query token per request, many KV positions to read. Reorganizes the KV-read pattern to keep HBM bandwidth saturated. The reason vLLM and friends hit ~80% of peak HBM bandwidth on decode-heavy mixes
+- **GEMM shapes that show up in serving** — the matmul library doesn't know about "inference," but the shapes it sees do:
+  - **Skinny decode GEMM** — `M = batch (often 1–32)`, `K = d_model`, `N = d_model`. Tiny M means Tensor Cores under-utilized; the right kernel is a *GEMV-like* path, not a generic GEMM
+  - **Prefill GEMM** — `M = batch × seq_len (thousands)`, big enough that standard cuBLAS / CUTLASS GEMM kernels are happy
+  - **Mixed-precision GEMM** — INT4 weights × BF16 activations is the common quantized path; Marlin and CUTLASS have specialized kernels
+  - **Grouped GEMM** — per-LoRA-adapter and per-MoE-expert work; one kernel launch handles many small matmuls
+- **CUDA Graphs for the decode loop** — decode launches dozens of tiny kernels per token; launch overhead becomes a noticeable share of wall-clock. Capturing the per-token sequence as a CUDA Graph and replaying it saves 5–20% on small models. Production engines do this by default
+- **Kernel fusion for inference-specific patterns**:
+  - RMSNorm + linear + (optional) SwiGLU fused into one kernel
+  - QKV projection + RoPE + KV-cache write fused into one
+  - Sampling (top-k + top-p + temperature + multinomial) fused into one kernel called once per decode step
+  - These are the fusions that ship in vLLM / TRT-LLM / sglang and that you can't easily get from `torch.compile` because they cross the attention boundary
+- **Streams, sync, and overlap for serving** — overlap detokenization on CPU with the next GPU forward pass; overlap KV transfer in disaggregated setups with the decode that follows it; overlap a draft model's GPU work with the target's HBM read in speculative decoding. The difference between a well-pipelined serving stack and a serial one is often 20–40% throughput
+- **Picking the right silicon for the workload** (the serving-side cut of [AI Hardware Phase 5](../ai-hardware/#phase-5-tpus-npus-and-alternative-accelerators)):
+  - **Decode-heavy, latency-sensitive (chat)** — HBM bandwidth dominates. H200 (4.8 TB/s) and B200 (8 TB/s) beat H100 (3.35 TB/s) by their bandwidth ratio for single-stream decode
+  - **Prefill-heavy / long-context (RAG, batch)** — FLOPs and HBM *capacity* dominate. MI300X (192 GB) and B200 (192 GB) shine for memory-fit; B200 FP4 for compute
+  - **Throughput-per-dollar batch (offline workloads)** — anything you can keep saturated. Older A100/H100 nodes on spot pricing often win on $/M-token
+  - **Single-user latency king** — Groq LPU and Cerebras have a real architectural edge at batch-1; less competitive at high concurrency
+  - **Edge / on-device** — Apple Silicon (MLX), Jetson, mobile NPUs; very different optimization profile (unified memory, thermal throttling)
 
-### The Inference Roofline
+### The Inference Roofline, Re-Drawn for Serving
 
 ```
       Throughput (tokens/s/replica)
@@ -765,70 +834,79 @@ Underneath the inference engine, every forward pass eventually becomes a sequenc
         toward the compute ceiling, where bigger / better silicon helps.
 ```
 
-### FlashAttention vs. Standard Attention
+### Why Decode and Prefill Want Different Kernels
 
 ```
-   Standard attention, sequence length T, head dim d:
-      compute Q K V          O(T² d)  compute
-      write S = QKᵀ          O(T²)    HBM write
-      softmax + S @ V        O(T² + T² d)  more HBM
-      → memory-bound; S matrix is the killer
+   Prefill kernel (one big GEMM per layer):
+       M = batch × seq_len ≈ thousands
+       Tensor Cores happy; standard GEMM tile shapes (128×128, 256×128) are great
+       cuBLAS / CUTLASS pick these by default
 
-   FlashAttention:
-      tile Q and K into blocks (B_r, B_c) that fit in SRAM
-      for each Q-tile, iterate K/V-tiles, accumulate output online
-      never materialize the full T×T matrix
-      → up to 10× faster at long T; same math; numerically near-identical
+   Decode kernel (one tiny GEMM per layer):
+       M = batch ≈ 1–32; K, N still big
+       Tensor Cores ½ idle even at peak; this is a memory-bandwidth problem
+       The kernel you want is a GEMV-like skinny-M path with weights streamed
+       from HBM; CUTLASS has these and cuBLAS routes to them when M is small
+
+   Picking the wrong tile shape for the wrong phase costs 20–50% of throughput.
+   Production engines specialize; toy implementations almost never do.
 ```
 
 ### Projects
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Roofline plot | For your inference engine, plot throughput vs. arithmetic intensity across batches 1–128; identify the regime each operates in | ⭐⭐⭐ |
-| Profile a single decode step | Use Nsight Systems; identify the longest kernel, the HBM-read pattern, the launch overhead | ⭐⭐⭐⭐ |
-| Triton attention | Implement a basic flash-style attention kernel in Triton; benchmark against `F.scaled_dot_product_attention` | ⭐⭐⭐⭐⭐ |
-| RMSNorm fusion | Fuse `RMSNorm + linear` in Triton; measure HBM traffic delta | ⭐⭐⭐⭐ |
-| CUDA Graphs for decode | Capture the per-token decode kernel sequence as a graph; measure launch-overhead savings | ⭐⭐⭐⭐ |
-| Stream-overlap audit | Identify a serial gap (e.g., detokenization on CPU stalling the GPU); pipeline it; measure | ⭐⭐⭐⭐ |
-| Hardware comparison | Run the same model and benchmark on two different GPUs (or a CPU+iGPU); explain the gap from the spec sheets | ⭐⭐⭐ |
+| [Roofline plot for *your* engine](projects/37-roofline-plot-for-your-engine/README.md) | Sweep batch 1–128 and prompt length 128–32k; plot throughput vs. arithmetic intensity; identify the regime each operating point lives in | ⭐⭐⭐ |
+| [Profile a single decode step](projects/38-profile-a-single-decode-step/README.md) | Use Nsight Systems; identify the longest kernel, the HBM-read pattern, the launch overhead | ⭐⭐⭐⭐ |
+| [FlashDecoding ablation](projects/39-flashdecoding-ablation/README.md) | Run the same model with and without the FlashDecoding code path (vLLM exposes a flag); measure decode-throughput delta | ⭐⭐⭐ |
+| [Skinny-M kernel study](projects/40-skinny-m-kernel-study/README.md) | Pick a decode-shape GEMM (`M=8, K=8192, N=8192`); compare cuBLAS, a Triton implementation, and Marlin; report TFLOPs and bandwidth | ⭐⭐⭐⭐ |
+| [CUDA Graphs for decode](projects/41-cuda-graphs-for-decode/README.md) | Capture the per-token decode kernel sequence as a graph; measure launch-overhead savings on a small model | ⭐⭐⭐⭐ |
+| [Stream-overlap audit](projects/42-stream-overlap-audit/README.md) | Identify a serial gap (e.g., detokenization on CPU stalling the GPU); pipeline it; measure | ⭐⭐⭐⭐ |
+| [Hardware comparison](projects/43-hardware-comparison/README.md) | Run the same model and benchmark on two different GPUs (or a CPU+iGPU); explain the gap from the spec sheets | ⭐⭐⭐ |
 
-### Sample Code: Tiny Triton Decode-Step Sketch (Skeleton)
+### Sample Code: Reading a Fused Decode Kernel
 
 ```python
+# This is the kind of pattern you'll see in production engines.
+# The fusion crosses the norm boundary so torch.compile usually can't reach it.
 import triton
 import triton.language as tl
 
 @triton.jit
-def rmsnorm_kernel(x_ptr, w_ptr, y_ptr, n_cols, eps,
-                   BLOCK: tl.constexpr):
+def rmsnorm_qkv_proj_kernel(
+    x_ptr, w_norm_ptr, w_qkv_ptr,        # input, norm weights, fused QKV weight
+    q_out_ptr, k_out_ptr, v_out_ptr,
+    n_cols, d_head, eps,
+    BLOCK: tl.constexpr,
+):
     row = tl.program_id(0)
     cols = tl.arange(0, BLOCK)
     mask = cols < n_cols
 
     x = tl.load(x_ptr + row * n_cols + cols, mask=mask, other=0.).to(tl.float32)
     rms = tl.sqrt(tl.sum(x * x) / n_cols + eps)
-    w = tl.load(w_ptr + cols, mask=mask, other=0.).to(tl.float32)
+    w_norm = tl.load(w_norm_ptr + cols, mask=mask, other=0.).to(tl.float32)
+    normed = (x / rms) * w_norm
 
-    y = (x / rms) * w
-    tl.store(y_ptr + row * n_cols + cols, y.to(tl.bfloat16), mask=mask)
-
-# Production kernels fuse this with the following Linear; here we keep it simple.
+    # ... project normed → Q, K, V via fused matmul (omitted for brevity)
+    # then write Q, K, V directly into the KV cache slot for this position
 ```
+
+The point isn't that you'll write this — it's that when you read a vLLM or sglang kernel and see `rmsnorm_qkv_rope_proj_kernel`, you'll know what each fused step does and why it's fused.
 
 ### Key Insight
 
-Hardware does not bend to your model; your serving stack bends to the hardware. The fastest open-source inference engines are not "well-engineered Python" — they are bundles of hand-tuned kernels carefully matched to specific silicon (CUTLASS shapes for H100, Triton kernels for Hopper TMA, hand-written kernels for AMD MI300X). When you compare two engines on the same model, the gap is almost always at the kernel layer. Long-term, the cost-of-inference race will be won by whoever closes the gap between a model architect's intention and the silicon's actual capabilities — and the easiest way to participate is to learn to read a profiler.
+Hardware does not bend to your model; your serving stack bends to the hardware. The fastest open-source inference engines are not "well-engineered Python" — they are bundles of hand-tuned kernels carefully matched to specific silicon (CUTLASS shapes for H100, TMA-aware kernels for Hopper, hand-written ROCm kernels for AMD MI300X, FP4 kernels for Blackwell). When you compare two engines on the same model, the gap is almost always at the kernel layer. Long-term, the cost-of-inference race will be won by whoever closes the gap between a model architect's intention and the silicon's actual capabilities — and the easiest way to participate is to learn to read a profiler.
 
 ### Resources
 
-- [Dao et al. — *FlashAttention 2* (2023)](https://arxiv.org/abs/2307.08691)
-- [Dao et al. — *FlashAttention 3* (2024)](https://arxiv.org/abs/2407.08608)
+- [Dao et al. — *FlashAttention 2* (2023)](https://arxiv.org/abs/2307.08691) and [*FlashAttention 3* (2024)](https://arxiv.org/abs/2407.08608)
+- [FlashDecoding blog (Dao et al., 2023)](https://crfm.stanford.edu/2023/10/12/flashdecoding.html)
 - [NVIDIA *CUTLASS* docs and examples](https://github.com/NVIDIA/cutlass)
-- [OpenAI *Triton* docs and tutorials](https://triton-lang.org/)
-- [NVIDIA *Hopper architecture* whitepaper](https://resources.nvidia.com/en-us-tensor-core)
+- [OpenAI *Triton* docs](https://triton-lang.org/)
 - [NVIDIA *Nsight Systems* user guide](https://docs.nvidia.com/nsight-systems/)
 - [`gpu-mode` Discord and lecture series](https://github.com/gpu-mode/lectures) — the inference-kernel community
+- [AI Hardware Phases 2–4](../ai-hardware/) — for the architecture and kernel-writing foundation this phase builds on
 
 ---
 
@@ -836,23 +914,22 @@ Hardware does not bend to your model; your serving stack bends to the hardware. 
 
 A 70B model fits on a single high-end GPU; a 400B+ MoE doesn't. Beyond a single device, inference becomes a distributed-systems problem: how to split the model across GPUs, how to route requests, how to keep the KV cache coherent. This is also where the operational complexity of a real production stack lives.
 
+> The distributed-*training* playbook (DDP, FSDP, ZeRO, training-time TP/PP) belongs to [PyTorch Deep Dive Phase 7](../pytorch-deep-dive/#phase-7-distributed-training--ddp-fsdp-and-beyond) and [LLM Phase 4](../llm/#phase-4-scaling-laws-and-training-infrastructure). The trade-offs are different at serving time: batch sizes are small, requests are heterogeneous, KV cache is shared state, and SLOs replace MFU as the objective. This phase is the inference-specific cut.
+
 ### Concepts to Learn
 
-- **Tensor parallelism (TP)** for inference — same as in training, but with different trade-offs:
-  - Shard each layer's weight matrices across GPUs (e.g., split `W_q` column-wise across TP=4)
-  - Each forward pass needs an all-reduce after attention and after the MLP
-  - Within an NVLink-connected node, TP up to 8 is fine; across nodes, the communication dominates
-- **Pipeline parallelism (PP)** for inference — layers split across GPU groups, micro-batches pipelined. Less common for serving than for training, but used for very large models that don't fit in one node
-- **Expert parallelism (EP)** for MoE — experts distributed across GPUs; tokens routed to the GPU holding the chosen expert via all-to-all. Heavy network use, mitigated by capacity-factor tuning and expert co-location
+- **Tensor parallelism (TP) for inference** — sharded layer weights, all-reduce after attention and after the MLP. The serving twist: batch sizes are small, so per-iteration communication is a larger share of wall-clock than in training. TP up to 8 within an NVLink node is fine; across nodes the communication dominates
+- **Pipeline parallelism (PP) for inference** — less common than for training because it adds latency (each request waits for all pipeline stages), but used for very large models that don't fit in one node. The "bubble" overhead is a tail-latency problem, not a throughput one
+- **Expert parallelism (EP) for MoE** — experts distributed across GPUs; tokens routed to the GPU holding the chosen expert via all-to-all. Heavy network use, mitigated by capacity-factor tuning and expert co-location. DeepSeek-V3 and the current generation of frontier MoE checkpoints all use EP
 - **Replication (data parallelism)** — many *complete copies* of the model, requests load-balanced across them. The default scaling axis for small-to-mid models. Independent fault domains, easy to reason about
-- **Sharding across model parallelism + replication** — e.g., a 70B model with TP=2 (fits in 2 GPUs) replicated 4× for throughput
+- **Sharding across model parallelism + replication** — e.g., a 70B model with TP=2 (fits in 2 GPUs) replicated 4× for throughput. The most common production layout for mid-size models
 - **Disaggregated prefill / decode** — separate GPU pools for prefill and decode:
   - Prefill nodes are compute-rich, sized for big GEMMs
   - Decode nodes are bandwidth-rich, sized for KV-cache reads
   - When a request finishes prefill, the **KV cache is transferred** to a decode node (over RDMA / NVLink)
   - Different aggregate ratios for different workloads — chat is more decode-heavy; RAG is more prefill-heavy
 - **KV cache transfer** is the new wire protocol — for disaggregated systems, moving 2–10 GB of KV across NICs efficiently is itself a hard engineering problem. Mooncake, NIXL, and similar systems are emerging as the data plane
-- **Load balancing strategies**:
+- **Load balancing strategies** (the routing layer that sits above the inference engines):
   - Round-robin (fine for homogeneous requests)
   - Least-outstanding-requests (better under heterogeneous lengths)
   - **Prefix-aware routing** — route to the replica whose prefix cache already has the request's system prompt. Huge TTFT win for multi-tenant systems with shared prompts
@@ -896,13 +973,13 @@ A 70B model fits on a single high-end GPU; a 400B+ MoE doesn't. Beyond a single 
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| TP=2 from scratch | Two GPUs, manually shard a model's attention layers; verify outputs match single-GPU | ⭐⭐⭐⭐⭐ |
-| vLLM multi-replica | Stand up 4 vLLM replicas behind a simple round-robin LB; load-test with `oha`; report aggregate throughput | ⭐⭐⭐ |
-| Prefix-aware routing | Build a tiny routing layer that hashes on prompt prefix; verify cache hit rate improves | ⭐⭐⭐⭐ |
-| Disaggregated prototype | Two processes: prefill emits KV blocks, decode consumes them. Use shared memory or RDMA; measure overhead vs. unified | ⭐⭐⭐⭐⭐ |
-| Failure-mode drill | Kill one replica mid-load-test; verify graceful failover; measure user-visible impact | ⭐⭐⭐⭐ |
-| Session-affinity routing | Implement sticky routing on `session_id`; verify multi-turn KV cache hit rate | ⭐⭐⭐ |
-| Cross-region latency | Deploy in two regions, measure TTFT delta with regional routing on / off | ⭐⭐⭐ |
+| [TP=2 from scratch](projects/44-tp-2-from-scratch/README.md) | Two GPUs, manually shard a model's attention layers; verify outputs match single-GPU | ⭐⭐⭐⭐⭐ |
+| [vLLM multi-replica](projects/45-vllm-multi-replica/README.md) | Stand up 4 vLLM replicas behind a simple round-robin LB; load-test with `oha`; report aggregate throughput | ⭐⭐⭐ |
+| [Prefix-aware routing](projects/46-prefix-aware-routing/README.md) | Build a tiny routing layer that hashes on prompt prefix; verify cache hit rate improves | ⭐⭐⭐⭐ |
+| [Disaggregated prototype](projects/47-disaggregated-prototype/README.md) | Two processes: prefill emits KV blocks, decode consumes them. Use shared memory or RDMA; measure overhead vs. unified | ⭐⭐⭐⭐⭐ |
+| [Failure-mode drill](projects/48-failure-mode-drill/README.md) | Kill one replica mid-load-test; verify graceful failover; measure user-visible impact | ⭐⭐⭐⭐ |
+| [Session-affinity routing](projects/49-session-affinity-routing/README.md) | Implement sticky routing on `session_id`; verify multi-turn KV cache hit rate | ⭐⭐⭐ |
+| [Cross-region latency](projects/50-cross-region-latency/README.md) | Deploy in two regions, measure TTFT delta with regional routing on / off | ⭐⭐⭐ |
 
 ### Sample Code: A Prefix-Aware Router (Sketch)
 
@@ -927,7 +1004,8 @@ class PrefixRouter:
         if h in self.affinity:
             r = self.affinity[h]
             # Only honor affinity if the replica isn't overloaded
-            if self.load[r] < self.load.values_min() + 2:
+            min_load = min(self.load.values()) if self.load else 0
+            if self.load[r] < min_load + 2:
                 self.load[r] += 1
                 return r
         # Fall back: least-loaded replica, remember its affinity
@@ -971,9 +1049,10 @@ Once the basics are solid, real workloads pile on requirements that don't fit cl
   - Pre-encode and cache retrieved documents' KV at indexing time (KV-prefill caching)
   - Reuse the same retrieved document's cache across many queries (shared blocks via PagedAttention)
   - Trade-off: storing pre-computed KV is much bigger than storing the document text, but eliminates per-query prefill cost
+  - The retrieval pipeline (chunking, embedding, reranking) itself belongs to the LLM guide; see [LLM Phase 7](../llm/#phase-7-retrieval-tools-and-agents). What this guide owns is the *serving side*: where the cache lives, how it's shared, and how a retrieved-document prefix becomes a TTFT win
 - **Structured / constrained generation** — force outputs to conform to a regex, JSON schema, or formal grammar:
   - At each decode step, compute the set of token IDs that can continue a valid output, mask the rest in the logits, then sample
-  - **Outlines, lm-format-enforcer, sglang regex/json modes** — production implementations
+  - **Outlines, lm-format-enforcer, sglang regex/json modes, xgrammar** — production implementations
   - Cost: the mask computation per step. For JSON schemas, this is cheap; for arbitrary regex, it can require precomputed automata
   - Reliability: with constraints, JSON-mode failure rate drops from ~5% to ~0% on small models. The biggest reliability win in tool-calling
 - **Tool-call / function-call serving** — a constrained-generation special case where the output format is a JSON schema describing a tool invocation. Most production agent stacks live here
@@ -984,6 +1063,7 @@ Once the basics are solid, real workloads pile on requirements that don't fit cl
   - The economic killer feature for SaaS deployments — one base model, thousands of fine-tunes
 - **Speculative decoding for tool-using agents** — when most of the output is a fixed schema (e.g., `{"tool":"web_search","args":{...`), prompt-lookup or schema-aware speculation accepts huge spans for free
 - **Quantization + LoRA + speculation interactions** — they mostly compose, but there are corner cases (e.g., a LoRA adapter trained against BF16 weights applied on top of an INT4 quantized base requires a different application path). Test every cross product
+- **Stateful agent sessions** — long-running tool-using sessions that span minutes to hours. The KV cache becomes a *session resource*, not a per-request one. It needs lifecycle management (creation, renewal, eviction), backpressure (refuse new sessions when GPU is full), and graceful degradation (re-prefill on cache loss)
 - **Embedding and reranker serving** — adjacent but distinct workloads: encoder models, fixed-size output, no decode loop. Different optimization profile: pure prefill, very high batch sizes, ideal for big-batch GEMM. Don't try to serve them in the same engine as decoder models unless the engine explicitly supports it
 
 ### Multi-LoRA Serving, Schematically
@@ -1049,6 +1129,7 @@ print(json.dumps(out, indent=2))
 | Custom grammar | Build a regex-based grammar for a domain-specific output (e.g., SQL); enforce it at decode time | ⭐⭐⭐⭐ |
 | Multi-LoRA serving | Stand up Lorax or S-LoRA; train 5 small adapters; serve them all from one base; measure throughput vs. 5 replicas | ⭐⭐⭐⭐⭐ |
 | Speculation + JSON-mode | Add prompt-lookup speculation to a JSON-mode workload; measure speedup (often dramatic — schemas are highly predictable) | ⭐⭐⭐⭐ |
+| Stateful session API | Build a session API that keeps a multi-turn KV cache alive across calls and evicts under pressure; verify cache-hit rate | ⭐⭐⭐⭐⭐ |
 | Ring attention from scratch | 4-GPU ring attention; measure scaling efficiency at 64k context | ⭐⭐⭐⭐⭐ |
 
 ### Key Insight
@@ -1061,6 +1142,7 @@ The "table-stakes" serving features that turn a prototype into a product — lon
 - [Chen et al. — *Punica: Multi-Tenant LoRA Serving* (2024)](https://arxiv.org/abs/2310.18547)
 - [Liu et al. — *Ring Attention with Blockwise Transformers* (2023)](https://arxiv.org/abs/2310.01889)
 - [Willard & Louf — *Efficient Guided Generation for LLMs* (Outlines, 2023)](https://arxiv.org/abs/2307.09702)
+- [Dong et al. — *xgrammar* (2024)](https://arxiv.org/abs/2411.15100) — fast structured-output engine
 - [sglang docs — *RadixAttention and structured outputs*](https://github.com/sgl-project/sglang)
 - [Predibase/Lorax](https://github.com/predibase/lorax) — multi-LoRA serving engine
 - [Anthropic — *Prompt caching*](https://www.anthropic.com/news/prompt-caching) — productized prefix-cache concept
@@ -1175,23 +1257,25 @@ The cost-per-token graph and the latency-distribution graph are the two charts t
 
 ---
 
-## Phase 10: Frontier Topics
+## Phase 10: Frontier Topics in Serving
 
 The state of the art in inference is moving fast. Some of what's described in this guide will look quaint in two years; some of it has been settled engineering since 2023 and is unlikely to change. This phase is the open thread of what's currently being researched, what is being deployed at the bleeding edge, and what people in the field are watching for in the next 24 months.
+
+> The frontier of *silicon* itself (co-packaged optics, chiplets, compute-in-memory, neuromorphic, custom hyperscaler ASICs) belongs to [AI Hardware Phase 10](../ai-hardware/#phase-10-frontier-topics). This phase is the frontier of the *serving stack* that sits on top.
 
 ### Concepts and Trends to Watch
 
 - **Reasoning-model inference economics** — long-CoT models (R1-style) generate 10× the tokens of a chat model for hard problems. Inference cost balloons; serving stacks need to manage variance in output length more carefully. Expect **adaptive thinking budgets**, where the model decides at runtime how much to think
-- **Inference-time scaling laws** — for a fixed model, plotting accuracy vs. inference compute is increasingly clean. The frontier is no longer "bigger model" exclusively; it's "smarter use of inference tokens." Serving stacks need to expose, account, and bill for *thinking tokens* separately
+- **Inference-time scaling laws** — for a fixed model, plotting accuracy vs. inference compute is increasingly clean. The frontier is no longer "bigger model" exclusively; it's "smarter use of inference tokens." Serving stacks need to expose, account, and bill for *thinking tokens* separately. The capability story lives in [LLM Phase 6](../llm/#phase-6-reasoning-and-inference-time-compute); this guide owns the *serving* implications
 - **Speculative-everything** — speculative decoding is the warm-up. Speculative tool calls, speculative retrieval, speculative agent steps are all under active research. Anything you can *guess and verify* is a candidate
 - **Agentic inference** — long-running, multi-turn, tool-using sessions. Serving systems must support **stateful KV sessions** that live for minutes to hours, survive cache evictions, span retrieval stalls, and gracefully retry on tool failures. The single-prompt-single-response abstraction breaks
 - **KV-cache sharing as a first-class API** — explicit prompt prefix caching (Anthropic's, OpenAI's, etc.) is the appetizer. Coming: explicit user-controlled cache handles, cross-request cache pinning, cache-as-a-service
 - **Disaggregated everything** — beyond prefill/decode separation, expect dedicated pools for embedding, reranking, tool execution, vision encoding, and draft models. The trend is fine-grained specialization with KV/embedding handoffs over fast fabrics
-- **New silicon** — Blackwell (B100/B200, GB200) brings FP4 native, 8 TB/s HBM, and bigger fabrics; AMD MI355X and Trillium TPUs target similar; non-GPU accelerators (Groq, Cerebras, SambaNova) target *latency-per-token* as a differentiator. The cost-per-token curve will move sharply in 2026–2027
+- **Serving new silicon** — Blackwell (B200/GB200) brings FP4 native, 8 TB/s HBM, and bigger fabrics; AMD MI355X and Trillium TPUs target similar; non-GPU accelerators (Groq, Cerebras, SambaNova, Etched) target *latency-per-token* as a differentiator. The cost-per-token curve will move sharply through 2026–2027 — but only for stacks that retune kernels and schedulers for each new fabric
 - **Edge and on-device inference** — 1–8B models on phones, laptops, and embedded silicon. Apple's MLX, NVIDIA's TensorRT-LLM-on-Jetson, Qualcomm's NPUs, Intel's NPU stack. The same KV-cache and quantization principles apply, with extra constraints around battery and unified memory
-- **Sub-1B "tiny" models** as routers — most queries don't need a frontier model. Cheap routers that decide *which* model serves each query are increasingly the front of the stack
-- **Mixture-of-Experts serving** at scale — MoE models (DeepSeek-V3, frontier MoE checkpoints) require expert-parallelism, all-to-all communication on every token, and very careful capacity-factor tuning. Best practices are still solidifying
-- **Trust and security for inference** — confidential computing (NVIDIA H100 confidential, AMD SEV-SNP) so customers can serve weights they don't trust; cryptographic attestations of which model served a request; sandboxing tool execution
+- **Sub-1B "tiny" models as routers** — most queries don't need a frontier model. Cheap routers that decide *which* model serves each query are increasingly the front of the stack
+- **Mixture-of-Experts serving at scale** — MoE models (DeepSeek-V3, Qwen3-MoE, frontier MoE checkpoints) require expert-parallelism, all-to-all communication on every token, and very careful capacity-factor tuning. Best practices are still solidifying
+- **Trust and security for inference** — confidential computing (NVIDIA H100/H200 confidential, AMD SEV-SNP) so customers can serve weights they don't trust; cryptographic attestations of which model served a request; sandboxing tool execution
 - **The unbundling of "serving"** — what is one platform today is splintering: pure inference engines, schedulers, gateways, observability, eval-in-the-loop, fine-tune services. Buy-vs-build decisions get more numerous
 
 ### A Map of What's Open and What's Settled
@@ -1243,12 +1327,12 @@ The frontier of inference systems is not bigger models — it is **smarter use o
 | Phase | Duration | Outcome |
 |-------|----------|---------|
 | 0. Prerequisites | 0–1 week | Tools installed; profiler runs; roofline thinking internalized |
-| 1. Request anatomy | 3–5 days | Manual decode loop + streaming server in production-ish shape |
+| 1. Request anatomy | 3–5 days | Manual decode loop + streaming server in production-ish shape; non-LLM workload map drawn |
 | 2. KV cache | 1 week | Cache size in head; paged-cache prototype; prefix-share measured |
 | 3. Batching | 1–2 weeks | Continuous-batching simulator; one chunked-prefill experiment |
 | 4. Speculative decoding | 1 week | Working spec-decode loop; acceptance and speedup measured |
-| 5. Quantization | 1–2 weeks | INT8 + INT4 model served; quality regression eval gating it |
-| 6. Kernels and hardware | 2 weeks | Triton attention kernel; profiler trace explained line by line |
+| 5. Serving-time quantization | 1–2 weeks | INT4 + FP8 deployments served; quality regression gate gating them |
+| 6. Inference kernels & hardware | 1–2 weeks | Profiler trace explained line by line; roofline plot for your engine |
 | 7. Distributed serving | 2 weeks | Multi-replica deploy; prefix-aware routing; disaggregated PoC |
 | 8. Long context + multi-LoRA | 1–2 weeks | Structured JSON-mode shipped; multi-LoRA serving stood up |
 | 9. Observability + cost | 1 week | Dashboards live; $/M-tokens defensible; SLOs published |
@@ -1265,7 +1349,7 @@ The frontier of inference systems is not bigger models — it is **smarter use o
 3. **Match training and inference exactly.** Chat templates, BOS/EOS, special tokens. The "model is dumber in production" stories almost always trace here. Inference-time prompts must be byte-identical to training-time format.
 4. **Profile in production-like conditions, not benchmark-perfect ones.** Single-stream benchmarks lie. Real workloads have heterogeneous lengths, concurrent users, jagged arrival distributions, and clients that disconnect. Build your load generator to look like reality.
 5. **Speculative decoding is the rare "free" win.** Add it early, tune `k`, measure acceptance per workload. Then add prompt-lookup for copy-heavy workloads.
-6. **Don't over-quantize.** FP8 is safe; INT4 needs a quality gate; sub-4-bit needs a real ablation. Re-evaluate every time you change the recipe.
+6. **Don't over-quantize, and gate every deploy.** FP8 is safe; INT4 needs a quality gate; sub-4-bit needs a real ablation. Re-evaluate every time you change the recipe.
 7. **Run a smaller model, well-tuned, before reaching for a bigger one.** Most production teams over-serve. A fine-tuned 8B that fits in one GPU beats a 70B on three GPUs for many real tasks.
 8. **One base + many adapters, not many replicas.** Multi-LoRA is the default architecture for any SaaS LLM platform with per-tenant fine-tunes. Adopt it before the replica count gets embarrassing.
 9. **Build the observability before you need it.** Dashboards added during an incident are dashboards built badly. Day-1 metrics list: TTFT, TPOT, throughput, cache occupancy, GPU memory-bandwidth utilization, error rate.
@@ -1318,6 +1402,7 @@ The frontier of inference systems is not bigger models — it is **smarter use o
 - [Sheng et al. — *S-LoRA* (2023)](https://arxiv.org/abs/2311.03285)
 - [Zhang et al. — *H2O* (2023)](https://arxiv.org/abs/2306.14048)
 - [Xiao et al. — *StreamingLLM / Attention Sinks* (2023)](https://arxiv.org/abs/2309.17453)
+- [Dong et al. — *xgrammar* (2024)](https://arxiv.org/abs/2411.15100)
 
 ### Engines You Should Read
 - [`vllm`](https://github.com/vllm-project/vllm) — the reference open-source inference engine; the cleanest scheduler/cache code
@@ -1333,10 +1418,18 @@ The frontier of inference systems is not bigger models — it is **smarter use o
 - [CUTLASS](https://github.com/NVIDIA/cutlass) — NVIDIA's GEMM template library
 - [bitsandbytes](https://github.com/bitsandbytes-foundation/bitsandbytes) — quick PTQ + QLoRA
 - [AutoGPTQ](https://github.com/PanQiWei/AutoGPTQ), [AutoAWQ](https://github.com/casper-hansen/AutoAWQ) — PTQ toolkits
-- [Outlines](https://github.com/dottxt-ai/outlines), [lm-format-enforcer](https://github.com/noamgat/lm-format-enforcer) — structured generation
+- [Outlines](https://github.com/dottxt-ai/outlines), [lm-format-enforcer](https://github.com/noamgat/lm-format-enforcer), [xgrammar](https://github.com/mlc-ai/xgrammar) — structured generation
 - [Lorax](https://github.com/predibase/lorax), [Punica](https://github.com/punica-ai/punica) — multi-LoRA serving
 - [oha](https://github.com/hatoo/oha), [vegeta](https://github.com/tsenart/vegeta) — load generators
 - [Nsight Systems](https://developer.nvidia.com/nsight-systems), [Nsight Compute](https://developer.nvidia.com/nsight-compute) — NVIDIA profilers
+
+### Companion Guides in This Collection
+- [LLM](../llm/) — model architecture, training, post-training, evaluation; the upstream of every model you serve
+- [AI Hardware](../ai-hardware/) — GPU/TPU architecture, kernel writing, numeric formats, the silicon substrate
+- [PyTorch Deep Dive](../pytorch-deep-dive/) — autograd, `torch.compile`, profiling, custom kernels, distributed training
+- [Multimodal Learning](../multimodal-learning/) — VLM, embedding, and any-to-any serving patterns
+- [Image Generation](../image-generation/) and [Video Generation](../video-generation/) — diffusion serving (no KV cache, different optimization profile)
+- [Robotics](../robotics/) — real-time policy inference at the latency end of the spectrum
 
 ### Talks Worth Watching
 - [Karpathy — *State of GPT*](https://www.youtube.com/watch?v=bZQun8Y4L2A) — includes inference-side intuition
@@ -1356,6 +1449,7 @@ The frontier of inference systems is not bigger models — it is **smarter use o
 
 - [ ] Can explain prefill vs. decode, including which side of the roofline each lives on
 - [ ] Can compute KV-cache size for any model from its config in 30 seconds
+- [ ] Can name the right serving pattern (autoregressive LLM, diffusion, embedding, VLM, robot policy) for a given workload
 - [ ] Have implemented a manual decode loop with a KV cache, end to end
 - [ ] Have stood up a streaming server with TTFT and ITL metrics
 - [ ] Understand why continuous batching beats static batching by >10×
@@ -1363,7 +1457,7 @@ The frontier of inference systems is not bigger models — it is **smarter use o
 - [ ] Have implemented (or carefully read) a paged KV cache
 - [ ] Have measured prefix-cache hit rate and TTFT delta on a real workload
 - [ ] Have implemented greedy speculative decoding and measured acceptance rate
-- [ ] Have quantized a model to INT4 (or FP8) and re-run a real quality eval
+- [ ] Have quantized a model to INT4 (or FP8) and re-run a real quality eval through a deploy gate
 - [ ] Have profiled a single decode step in Nsight and explained the longest kernel
 - [ ] Have read a non-trivial scheduler implementation (vLLM, sglang, TGI)
 - [ ] Have stood up a multi-replica deployment with a prefix-aware router

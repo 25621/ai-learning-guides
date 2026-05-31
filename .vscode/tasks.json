@@ -18,7 +18,7 @@
     {
       "label": "Docusaurus: Stop",
       "type": "shell",
-      "command": "pkill -f '[d]ocusaurus start' || true",
+      "command": "if pkill -f '[d]ocusaurus start'; then sleep 2; fi",
       "problemMatcher": [],
       "presentation": {
         "panel": "dedicated",
@@ -51,27 +51,12 @@
     },
     {
       "label": "Docusaurus: Restart",
-      "type": "shell",
-      "command": "pkill -f '[d]ocusaurus start' || true && npm run start",
-      "options": {
-        "cwd": "${workspaceFolder}/docusaurus-site"
-      },
-      "isBackground": true,
-      "problemMatcher": {
-        "owner": "docusaurus",
-        "pattern": {
-          "regexp": "^$"
-        },
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": ".*Starting.*",
-          "endsPattern": ".*(Server running|Local:|Docusaurus website is running at:).*"
-        }
-      },
-      "presentation": {
-        "panel": "dedicated",
-        "reveal": "always"
-      }
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Docusaurus: Stop",
+        "Docusaurus: Start"
+      ],
+      "problemMatcher": []
     },
     {
       "label": "Docusaurus: Build and Restart",
