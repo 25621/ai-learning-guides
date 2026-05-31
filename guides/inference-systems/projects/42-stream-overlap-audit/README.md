@@ -8,7 +8,7 @@
 
 ## Key Insight
 
-This project finds a spot where the CPU and GPU take turns instead of working at the same time — for example the GPU finishes a step and then sits idle while the CPU turns the new token IDs back into text ([detokenization](/shared/glossary/#detokenization)). It then runs that CPU work *alongside* the next GPU [forward pass](/shared/glossary/#forward-pass) — using separate [CUDA streams](/shared/glossary/#cuda-stream) so the two do not block each other — and measures the speedup. ("It" here is the CPU detokenization work being moved off the critical path.)
+This project hunts for a wasteful spot where the CPU and GPU run one after another — each sitting idle while the other works — when they could be running at the same time. For example, the GPU finishes a step and then waits, doing nothing, while the CPU turns the new token IDs back into text ([detokenization](/shared/glossary/#detokenization)). It then runs that CPU work *alongside* the next GPU [forward pass](/shared/glossary/#forward-pass) — using separate [CUDA streams](/shared/glossary/#cuda-stream) so the two do not block each other — and measures the speedup. ("It" here is the CPU detokenization work being moved off the critical path.)
 
 ## Why This Matters
 
