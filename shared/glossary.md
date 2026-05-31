@@ -59,7 +59,7 @@ Making embeddings from different modalities comparable in a shared space
 The layered sequence of post-training steps that turns a raw [base model](/shared/glossary/#base-model) into a helpful, safe assistant — typically [SFT](/shared/glossary/#sft), then a [reward model](/shared/glossary/#reward-model), then [RLHF](/shared/glossary/#rlhf) (or [DPO](/shared/glossary/#dpo)). Like the stations on an assembly line, each layer builds on the one below it: the model first learns to follow instructions, then learns what people prefer, then is tuned to actually prefer it. "Alignment" here means getting the model's behavior to match human intent.
 
 ### AllReduce {#allreduce}
-A collective op that sums tensors across all ranks and gives every rank the result
+A team operation in distributed computing: every worker ([rank](/shared/glossary/#rank)) starts with its own array of numbers, and AllReduce adds them all together and hands the *same* combined result back to everyone. (A [tensor](/shared/glossary/#tensor) here is just a grid of numbers, not a function; "summing tensors" means lining up two equal-shaped grids and adding matching cells — `[1,2,3] + [10,20,30] = [11,22,33]`.) Imagine four friends who each counted part of a crowd: they pool their counts, add them up, and all walk away knowing the same total. In [tensor-parallel](/shared/glossary/#tensor-parallelism-tp) inference each GPU computes part of a layer, and an AllReduce combines those partial results so every GPU ends up holding the full answer before the next layer runs.
 
 ### AMP {#amp}
 Automatic Mixed Precision — running operations in 16-bit floats ([float16](/shared/glossary/#float16) or [bfloat16](/shared/glossary/#bfloat16)) where it is safe, to save memory and speed up training while keeping a [float32](/shared/glossary/#float32) copy of the weights.
@@ -533,7 +533,7 @@ Grouped-Query Attention — sharing K/V [heads](/shared/glossary/#heads) across 
 Summing the [gradients](/shared/glossary/#gradients) from several small batches before calling the [optimizer](/shared/glossary/#optimizer), so the update matches a larger effective batch size without its memory cost.
 
 ### Gradients {#gradients}
-The vector of [partial derivatives](/shared/glossary/#partial-derivative) of a function with respect to its inputs. In neural networks, gradients represent the direction and magnitude of the change required to minimize the [loss function](/shared/glossary/#loss-function).
+The vector of [partial derivatives](/shared/glossary/#partial-derivative) of a function with respect to each of its parameters — the list of slopes telling you how much the output would change if you nudged each one. For a concrete example, take a tiny model `y = w·x + b` with [weight](/shared/glossary/#weights) `w = 2`, [bias](/shared/glossary/#biases) `b = 1`, and input `x = 3`, so it predicts `y = 7`; if the target was `10`, the [loss](/shared/glossary/#loss-function) is `L = (y − target)² = 9`. Its gradient is the pair `∂L/∂w = 2(y−target)·x = −18` and `∂L/∂b = 2(y−target) = −6` — the negative signs say "raise `w` and `b` to cut the error," and the bigger number on `w` means it has more influence here. That is exactly the direction and magnitude the [optimizer](/shared/glossary/#optimizer) follows downhill, like feeling which way a hillside slopes and how steeply.
 
 ### Gradient checkpointing {#gradient-checkpointing}
 A memory-saving technique that discards intermediate activations during the forward pass and recomputes them during the backward pass.
@@ -758,7 +758,7 @@ A tiny, educational autograd engine implemented in basic Python by Andrej Karpat
 A hashing technique for estimating how similar two documents are, used to find and remove near-duplicate text at corpus scale (see [deduplication](/shared/glossary/#deduplication)).
 
 ### MLP {#mlp}
-Multi-Layer Perceptron — a [feedforward neural network](/shared/glossary/#ffn) of one or more fully-connected (linear) layers separated by non-linear [activations](/shared/glossary/#activations). In [transformer](/shared/glossary/#transformer) architectures, each block contains an [attention](/shared/glossary/#attention) sublayer followed by an MLP sublayer (often using [SwiGLU](/shared/glossary/#swiglu) activation).
+Multi-Layer Perceptron — the simplest kind of neural network (also called a [feedforward network](/shared/glossary/#ffn)): a stack of *fully-connected layers* with a *non-linear [activation](/shared/glossary/#activations)* in between. A **fully-connected layer** means every input number connects to every output number, each connection carrying its own [weight](/shared/glossary/#weights) — like a voting panel where every voter influences every result. A **non-linear activation** (such as ReLU or [SwiGLU](/shared/glossary/#swiglu)) is a simple bend applied after each layer; you need one because stacking plain linear layers just collapses back into a single straight line, so the bend is what lets the network learn curved, complicated patterns. In a [transformer](/shared/glossary/#transformer), the model is a tall stack of identical **blocks**, and each block has two sublayers in order: an [attention](/shared/glossary/#attention) sublayer (tokens look at each other) then an MLP sublayer (each token is processed on its own). So going up the stack it really does look like *attention → MLP → attention → MLP → …* — attention passes notes around the room, the MLP is each person quietly thinking about what they just read.
 
 ### MMDiT {#mmdit}
 Multi-Modal Diffusion Transformer — joint text+image attention layers, used in SD3 and Flux
@@ -804,6 +804,9 @@ Running several [attention](/shared/glossary/#attention) operations ([heads](/sh
 
 ### Multi-LoRA {#multi-lora}
 Serving many fine-tuned adapters on a single shared base model
+
+### Multi-tenant {#multi-tenant}
+One shared system serving many independent users or customers ("tenants") at the same time, who must not see or slow down one another — like an apartment building where many families live under one roof but each behind their own locked door. A multi-tenant inference service mixes everyone's requests onto the same GPUs, which is why fair scheduling, per-user rate limits, and tricks like shared-[prefix cache](/shared/glossary/#prefix-cache) routing matter so much.
 
 ### NaN {#nan}
 "Not a Number" — a floating-point value representing an undefined or unrepresentable result (e.g., `0/0` or `inf - inf`). In PyTorch, NaNs often appear when [gradients](/shared/glossary/#gradients) explode or when taking the logarithm of zero/negative numbers.
