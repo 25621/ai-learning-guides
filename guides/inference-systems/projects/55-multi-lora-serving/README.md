@@ -2,13 +2,13 @@
 
 ---
 
-> One base model in memory, a thousand fine-tunes on top — no replica explosion.
+> One base model in memory, a thousand fine-tunes on top — not a thousand full copies of the model.
 
 ---
 
 ## Key Insight
 
-This project stands up a multi-adapter engine (Lorax or S-LoRA), trains 5 small [LoRA](/shared/glossary/#lora) adapters, and serves them all from a *single* copy of the base model, then compares [throughput](/shared/glossary/#throughput) against running 5 separate replicas. The trick is batching requests that use *different* adapters into one forward pass — see [multi-LoRA](/shared/glossary/#multi-lora).
+This project stands up a multi-adapter engine ([Lorax or S-LoRA](/shared/glossary/#lorax--s-lora)), trains 5 small [LoRA](/shared/glossary/#lora) adapters, and serves them all from a *single* copy of the base model, then compares [throughput](/shared/glossary/#throughput) against running 5 separate replicas. The trick is batching requests that use *different* adapters into one forward pass — see [multi-LoRA](/shared/glossary/#multi-lora).
 
 ## Why This Matters
 

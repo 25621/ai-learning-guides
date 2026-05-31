@@ -708,7 +708,7 @@ Spreading incoming requests across several copies of a service so no single one 
 The raw, unnormalized scores a model produces at its output, one per [vocabulary](/shared/glossary/#vocabulary) entry, before they are turned into probabilities by [softmax](/shared/glossary/#softmax). Like the points each contestant has scored at the end of a game — bigger means "more likely the next token" — but to read them as percentages you have to normalize. [Sampling](/shared/glossary/#sampling) rules ([temperature](/shared/glossary/#temperature), [top-k](/shared/glossary/#top-k), [top-p](/shared/glossary/#top-p)) all reshape the logits before the random draw, and [`argmax`](/shared/glossary/#argmax) of the logits is what [greedy decoding](/shared/glossary/#greedy-decoding) picks.
 
 ### LoRA {#lora}
-[Low-Rank](/shared/glossary/#low-rank) Adaptation — fine-tune by adding small low-rank matrices, freeze the base
+Low-Rank Adaptation — a cheap way to fine-tune a huge model without rewriting it. Instead of changing the model's billions of frozen [weights](/shared/glossary/#weights), you leave them all untouched and bolt on a tiny pair of extra [low-rank](/shared/glossary/#low-rank) matrices that nudge the output. Like leaving a printed textbook exactly as it is and slipping in a few sticky notes that change how you read it: the notes are small to store, quick to write, and you can keep a different set of notes for each task and swap them in and out.
 
 ### Loss function {#loss-function}
 A mathematical function that measures the difference between a model's prediction and the actual target. The goal of training is to minimize this value using [gradients](/shared/glossary/#gradients).
@@ -827,7 +827,7 @@ Open-source physics engine; the de facto manipulation/locomotion simulator
 Running several [attention](/shared/glossary/#attention) operations ([heads](/shared/glossary/#heads)) in parallel, each with its own learned projections of queries, keys, and values, then concatenating their results. Like having several readers skim the same sentence for different things — one tracks the grammar, another tracks who-did-what — and then pooling what each one noticed.
 
 ### Multi-LoRA {#multi-lora}
-Serving many fine-tuned adapters on a single shared base model
+Serving many [LoRA](/shared/glossary/#lora) adapters from one shared copy of the base model at the same time. Keeping LoRA's sticky-note picture: one cookbook (the base model) plus a drawer full of sticky-note sets (the adapters), one set per customer. The kitchen keeps a *single* cookbook and just grabs the right set of notes for each order, instead of buying a whole new cookbook for every customer — so one GPU can serve hundreds of fine-tunes at once.
 
 ### Multi-tenant {#multi-tenant}
 One shared system serving many independent users or customers ("tenants") at the same time, who must not see or slow down one another — like an apartment building where many families live under one roof but each behind their own locked door. A multi-tenant inference service mixes everyone's requests onto the same GPUs, which is why fair scheduling, per-user rate limits, and tricks like shared-[prefix cache](/shared/glossary/#prefix-cache) routing matter so much.
@@ -857,7 +857,7 @@ A long-context test that hides one fact (the "needle") inside a long stretch of 
 The training objective of an [LLM](/shared/glossary/#llm): given the tokens so far, predict the next one, scored with [cross-entropy](/shared/glossary/#cross-entropy) [loss](/shared/glossary/#loss-function).
 
 ### N-gram {#n-gram}
-A run of `n` tokens (or words) sitting next to each other — "the cat sat" is a 3-gram. By matching the most recent few tokens against earlier text, you can often guess what comes next from what followed the same phrase before, which is exactly how prompt-lookup speculative decoding builds its drafts for free.
+A run of `n` tokens (or words) sitting next to each other. Here a *gram* just means one item — one word or token (the word comes from Greek *gramma*, "something written") — and the *n* says how many of them in a row, so "the cat sat" is a 3-gram (three words in a row) and "cat" on its own is a 1-gram. By matching the most recent few tokens against earlier text, you can often guess what comes next from what followed the same phrase before, which is exactly how prompt-lookup speculative decoding builds its drafts for free.
 
 ### nn.Module {#nnmodule}
 PyTorch's base class for all neural network components; acts as a registry that automatically tracks sub-modules, parameters, and buffers assigned in `__init__`
@@ -1028,7 +1028,7 @@ Reducing weight / activation precision (FP16, BF16, FP8, INT8, INT4) to save mem
 sglang's KV cache organized as a radix tree keyed on prompt prefixes for automatic sharing
 
 ### RAG {#rag}
-Retrieval-Augmented Generation — fetch documents, prepend to prompt, then generate
+Retrieval-Augmented Generation — give the model an "open-book exam" instead of asking it to answer from memory alone. First a search step fetches the documents most relevant to the question (from a company wiki, a manual, the web), then those documents are pasted into the prompt, and only then does the model write its answer using them as notes. This lets it use fresh or private facts it was never trained on, and makes it easy to check where an answer came from.
 
 ### rank {#rank}
 The unique integer ID of a process in a distributed job. `RANK` is the global ID across all machines; `LOCAL_RANK` is the ID within one machine; `WORLD_SIZE` is the total number of processes.
