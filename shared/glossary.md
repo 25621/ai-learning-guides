@@ -533,7 +533,26 @@ Grouped-Query Attention — sharing K/V [heads](/shared/glossary/#heads) across 
 Summing the [gradients](/shared/glossary/#gradients) from several small batches before calling the [optimizer](/shared/glossary/#optimizer), so the update matches a larger effective batch size without its memory cost.
 
 ### Gradients {#gradients}
-The vector of [partial derivatives](/shared/glossary/#partial-derivative) of a function with respect to each of its parameters — the list of slopes telling you how much the output would change if you nudged each one. For a concrete example, take a tiny model `y = w·x + b` with [weight](/shared/glossary/#weights) `w = 2`, [bias](/shared/glossary/#biases) `b = 1`, and input `x = 3`, so it predicts `y = 7`; if the target was `10`, the [loss](/shared/glossary/#loss-function) is `L = (y − target)² = 9`. Its gradient is the pair `∂L/∂w = 2(y−target)·x = −18` and `∂L/∂b = 2(y−target) = −6`. These come from the chain rule: since `L = (y−target)²`, a small change in `y` changes `L` by `2(y−target)`; and because `y = w·x + b`, nudging `w` moves `y` by `x` (so you multiply by `x`, here 3), while nudging `b` moves `y` by `1` (so there is no extra factor). The negative signs say "raise `w` and `b` to cut the error." "Bigger" here means bigger in *size* — the absolute value, ignoring the sign: `|−18| > |−6|`, so `w` has more influence than `b` even though `−18` is the more negative number. That direction-and-size is exactly what the [optimizer](/shared/glossary/#optimizer) follows downhill, like feeling which way a hillside slopes and how steeply.
+
+The vector of [partial derivatives](/shared/glossary/#partial-derivative) of a function with respect to each of its parameters. Think of it as a list of slopes telling you exactly the rate of change of the output with respect to each parameter.
+
+**The Intuition**
+This combination of direction and size is exactly what an [optimizer](/shared/glossary/#optimizer) follows downhill—much like feeling which way a hillside slopes and how steeply to find the lowest point.
+
+**A Concrete Example**
+Consider a simple model `y = w·x + b` with [weight](/shared/glossary/#weights) `w = 2`, [bias](/shared/glossary/#biases) `b = 1`, and input `x = 3`. 
+* **Prediction:** `y = 2·3 + 1 = 7`
+* **Target:** `10`
+* **[Loss](/shared/glossary/#loss-function):** `L = (y - target)² = (7 - 10)² = 9`
+
+**Calculating the Gradient**
+Using the chain rule, we can determine the exact rate of change of the Loss (`L`) with respect to `w` and `b`. Since the derivative of `L` with respect to `y` is `2(y - target)`, and the partial derivative of `y` with respect to `w` is `x` (while with respect to `b` it is `1`), the gradients are calculated as follows:
+* **For Weight (w):** `∂L/∂w = (∂L/∂y) · (∂y/∂w) = 2(y - target) · x = 2(-3) · 3 = -18`
+* **For Bias (b):** `∂L/∂b = (∂L/∂y) · (∂y/∂b) = 2(y - target) · 1 = 2(-3) · 1 = -6`
+
+**Interpreting the Results**
+* **Direction (The Sign):** The negative signs indicate that you need to *increase* both `w` and `b` to reduce the error.
+* **Magnitude (The Size):** "Bigger" here refers to the absolute value (`|-18| > |-6|`). Even though `-18` is a more negative number than `-6`, its magnitude is larger. This means the weight (`w`) has a much stronger influence on the loss than the bias (`b`).
 
 ### Gradient checkpointing {#gradient-checkpointing}
 A memory-saving technique that discards intermediate activations during the forward pass and recomputes them during the backward pass.
