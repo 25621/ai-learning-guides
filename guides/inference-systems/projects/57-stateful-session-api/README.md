@@ -2,7 +2,7 @@
 
 ---
 
-> A multi-turn conversation is just a KV cache you refuse to throw away.
+> Think of a [multi-turn conversation](/shared/glossary/#multi-turn-conversation) like keeping a notebook open instead of erasing the whiteboard after every question. In AI terms, it's just a [KV cache](/shared/glossary/#kv-cache) you refuse to throw away.
 
 ---
 

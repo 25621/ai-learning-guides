@@ -832,6 +832,9 @@ Serving many [LoRA](/shared/glossary/#lora) adapters from one shared copy of the
 ### Multi-tenant {#multi-tenant}
 One shared system serving many independent users or customers ("tenants") at the same time, who must not see or slow down one another — like an apartment building where many families live under one roof but each behind their own locked door. A multi-tenant inference service mixes everyone's requests onto the same GPUs, which is why fair scheduling, per-user rate limits, and tricks like shared-[prefix cache](/shared/glossary/#prefix-cache) routing matter so much.
 
+### Multi-turn conversation {#multi-turn-conversation}
+A chat where the user and the AI take turns talking back and forth, building on what was said earlier, like a natural human conversation. For example, if you ask "What's a good movie?" and then ask "Who stars in it?", the AI remembers the movie from the first turn. Instead of starting from scratch every time, the system keeps the past conversation in its [KV cache](/shared/glossary/#kv-cache) — like keeping an open notebook on your desk instead of erasing the whiteboard after every question.
+
 ### NaN {#nan}
 "Not a Number" — a floating-point value representing an undefined or unrepresentable result (e.g., `0/0` or `inf - inf`). In PyTorch, NaNs often appear when [gradients](/shared/glossary/#gradients) explode or when taking the logarithm of zero/negative numbers.
 

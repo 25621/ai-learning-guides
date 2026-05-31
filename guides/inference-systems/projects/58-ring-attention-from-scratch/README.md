@@ -8,7 +8,7 @@
 
 ## Key Insight
 
-This project implements [ring attention](/shared/glossary/#ring-attention) across 4 GPUs and measures how efficiently it scales at a 64k-token context. Each GPU holds one slice of the sequence ([context parallelism](/shared/glossary/#context-parallelism)) and passes its keys and values to its neighbor around a ring, round after round, until every slice has attended to every other slice — building the full [KV cache](/shared/glossary/#kv-cache) no single GPU could hold alone.
+This project implements [ring attention](/shared/glossary/#ring-attention) across 4 GPUs and measures how efficiently it scales at a 64k-token context. Each GPU holds one slice of the sequence ([context parallelism](/shared/glossary/#context-parallelism)). Because a single GPU doesn't have enough memory (VRAM) to hold all the keys and values at once for such a massive text, it passes its keys and values to its neighbor around a ring, round after round, until every slice has attended to every other slice — building the full [KV cache](/shared/glossary/#kv-cache) no single GPU could hold alone.
 
 ## Why This Matters
 
