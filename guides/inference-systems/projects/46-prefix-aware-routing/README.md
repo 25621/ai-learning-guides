@@ -2,13 +2,13 @@
 
 ---
 
-> Send requests that share an opening to the same replica, so its cache is already warm.
+> Send every request that begins the same way to the same server, so its shared opening is processed once, not over and over.
 
 ---
 
 ## Key Insight
 
-This project builds a small routing layer that sends requests with the same starting tokens to the same replica — so that replica's [prefix cache](/shared/glossary/#prefix-cache) already holds their shared [system prompt](/shared/glossary/#system-prompt) — and verifies the cache hit rate goes up.
+This project builds a small routing layer that sends requests sharing the same opening tokens to the same replica. Because those requests all start with the same long [system prompt](/shared/glossary/#system-prompt), the first one to arrive makes that replica compute it once and save the result in its [prefix cache](/shared/glossary/#prefix-cache); every later request sent there reuses that saved work instead of redoing it, and the project checks that this raises the cache hit rate. It's like sending everyone who orders the same set menu to the one chef who has prepped the shared starter, instead of scattering them across kitchens that each cook it from scratch.
 
 ## Why This Matters
 
