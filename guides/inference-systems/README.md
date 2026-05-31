@@ -973,13 +973,13 @@ A 70B model fits on a single high-end GPU; a 400B+ MoE doesn't. Beyond a single 
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| TP=2 from scratch | Two GPUs, manually shard a model's attention layers; verify outputs match single-GPU | ⭐⭐⭐⭐⭐ |
-| vLLM multi-replica | Stand up 4 vLLM replicas behind a simple round-robin LB; load-test with `oha`; report aggregate throughput | ⭐⭐⭐ |
-| Prefix-aware routing | Build a tiny routing layer that hashes on prompt prefix; verify cache hit rate improves | ⭐⭐⭐⭐ |
-| Disaggregated prototype | Two processes: prefill emits KV blocks, decode consumes them. Use shared memory or RDMA; measure overhead vs. unified | ⭐⭐⭐⭐⭐ |
-| Failure-mode drill | Kill one replica mid-load-test; verify graceful failover; measure user-visible impact | ⭐⭐⭐⭐ |
-| Session-affinity routing | Implement sticky routing on `session_id`; verify multi-turn KV cache hit rate | ⭐⭐⭐ |
-| Cross-region latency | Deploy in two regions, measure TTFT delta with regional routing on / off | ⭐⭐⭐ |
+| [TP=2 from scratch](projects/44-tp-2-from-scratch/README.md) | Two GPUs, manually shard a model's attention layers; verify outputs match single-GPU | ⭐⭐⭐⭐⭐ |
+| [vLLM multi-replica](projects/45-vllm-multi-replica/README.md) | Stand up 4 vLLM replicas behind a simple round-robin LB; load-test with `oha`; report aggregate throughput | ⭐⭐⭐ |
+| [Prefix-aware routing](projects/46-prefix-aware-routing/README.md) | Build a tiny routing layer that hashes on prompt prefix; verify cache hit rate improves | ⭐⭐⭐⭐ |
+| [Disaggregated prototype](projects/47-disaggregated-prototype/README.md) | Two processes: prefill emits KV blocks, decode consumes them. Use shared memory or RDMA; measure overhead vs. unified | ⭐⭐⭐⭐⭐ |
+| [Failure-mode drill](projects/48-failure-mode-drill/README.md) | Kill one replica mid-load-test; verify graceful failover; measure user-visible impact | ⭐⭐⭐⭐ |
+| [Session-affinity routing](projects/49-session-affinity-routing/README.md) | Implement sticky routing on `session_id`; verify multi-turn KV cache hit rate | ⭐⭐⭐ |
+| [Cross-region latency](projects/50-cross-region-latency/README.md) | Deploy in two regions, measure TTFT delta with regional routing on / off | ⭐⭐⭐ |
 
 ### Sample Code: A Prefix-Aware Router (Sketch)
 
