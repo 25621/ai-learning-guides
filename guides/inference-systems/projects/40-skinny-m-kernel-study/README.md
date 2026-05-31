@@ -8,7 +8,7 @@
 
 ## Key Insight
 
-This project takes a decode-shaped [GEMM](/shared/glossary/#gemm) (a matrix multiply with a very small batch dimension) and compares how [cuBLAS](/shared/glossary/#cublas), a [Triton](/shared/glossary/#triton) version, and Marlin perform on it — reporting [TFLOPs](/shared/glossary/#tflops) and memory bandwidth.
+This project takes a decode-shaped [GEMM](/shared/glossary/#gemm) (a matrix multiply with a very small batch dimension) and compares how [cuBLAS](/shared/glossary/#cublas), a [Triton](/shared/glossary/#triton) version, and [Marlin](/shared/glossary/#marlin) perform on it — reporting [TFLOPs](/shared/glossary/#tflops) and memory bandwidth.
 
 ## Why This Matters
 

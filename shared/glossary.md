@@ -281,7 +281,7 @@ NVIDIA's optimized library of dense linear-algebra [kernels](/shared/glossary/#k
 NVIDIA's GPU compute backend; tensors on the `cuda` device run their kernels here
 
 ### CUDA Graphs {#cuda-graphs}
-A way to record a whole sequence of GPU [kernel](/shared/glossary/#kernel) launches once and then replay the entire batch with a single command, instead of telling the GPU what to do step by step every time. Like pressing "play" on a saved macro rather than retyping the same keystrokes — it removes the per-launch bookkeeping, which matters in [decode](/shared/glossary/#decode) where each token fires dozens of tiny kernels and the launch cost itself becomes significant.
+A way to record a whole sequence of GPU [kernel](/shared/glossary/#kernel) launches once and then replay the entire batch with a single command, instead of telling the GPU what to do step by step every time. Like pressing "play" on a saved macro rather than retyping the same keystrokes — it removes the per-launch bookkeeping, which matters in [decode](/shared/glossary/#decode) where each token fires dozens of tiny kernels and the launch cost itself becomes significant. Because a captured graph is *fixed*, it cannot directly follow a sequence that grows by one token every step; engines get around this by capturing a separate graph for each common shape — for example one per [batch](/shared/glossary/#batch) size or per padded sequence-length "bucket" — and replaying whichever one matches, falling back to ordinary step-by-step launches for rare shapes that have no captured graph.
 
 ### CUDA stream {#cuda-stream}
 A queue of GPU work that runs in order, but *independently* of other streams — so the GPU can be doing one stream's job while the CPU prepares the next, or two streams can overlap. Like separate checkout lanes at a store: putting independent tasks in different lanes lets them progress at the same time instead of waiting in one long line, which is how a serving stack overlaps [detokenization](/shared/glossary/#detokenization) or KV transfer with the next forward pass.
@@ -314,7 +314,7 @@ Denoising Diffusion Probabilistic Models — the foundational 2020 paper and tra
 Function approximation + bootstrapping + off-policy data → instability
 
 ### Decode {#decode}
-The token-by-token half of LLM inference: after [prefill](/shared/glossary/#prefill) digests the prompt, the model generates one new token per forward pass, each step reading the whole [KV cache](/shared/glossary/#kv-cache) before producing the next [logits](/shared/glossary/#logits). Like writing a sentence one word at a time while glancing back over every word already written — fast per step, but the constant re-reading of the page is what bounds speed. Decode is [memory-bandwidth-bound](/shared/glossary/#roofline) on a GPU, the opposite of [prefill](/shared/glossary/#prefill), and is what most serving optimizations target.
+The token-by-token half of LLM inference: after [prefill](/shared/glossary/#prefill) digests the prompt, the model generates one new token per [forward pass](/shared/glossary/#forward-pass), each step reading the whole [KV cache](/shared/glossary/#kv-cache) before producing the next [logits](/shared/glossary/#logits). Like writing a sentence one word at a time while glancing back over every word already written — fast per step, but the constant re-reading of the page is what bounds speed. Decode is [memory-bandwidth-bound](/shared/glossary/#roofline) on a GPU, the opposite of [prefill](/shared/glossary/#prefill), and is what most serving optimizations target.
 
 ### Decoupled {#decoupled}
 A training technique where two effects that are mathematically equivalent in standard SGD are separated into independent operations. In AdamW, weight decay is decoupled from the gradient update so that the regularization strength is not scaled by the adaptive learning rate.
@@ -446,7 +446,7 @@ A large, openly released [pretraining](/shared/glossary/#pretraining) dataset bu
 Forward / Inverse Kinematics — compute end-effector pose from joints or vice versa
 
 ### FlashAttention {#flashattention}
-IO-aware attention kernel that avoids materializing the T×T score matrix in HBM
+A much faster way to compute [attention](/shared/glossary/#attention) that never writes the giant token-by-token score table to slow [HBM](/shared/glossary/#hbm) memory. Plain attention builds the full `T × T` grid of how strongly every token attends to every other token, parks it in HBM, then reads it back — a flood of slow memory traffic. FlashAttention instead works on small tiles inside the chip's fast on-chip memory (SRAM) and keeps a running total, so the huge grid never has to be stored at all. Like adding up a long column of numbers in your head as you go instead of writing every subtotal on paper — same answer, far fewer trips to the slow notebook. Every modern inference engine relies on it.
 
 ### FlashDecoding {#flashdecoding}
 A version of [FlashAttention](/shared/glossary/#flashattention) tuned for the [decode](/shared/glossary/#decode) step, where there is just one new query token but a long [KV cache](/shared/glossary/#kv-cache) to read. It splits that long read across many GPU workers so the [HBM](/shared/glossary/#hbm) bandwidth stays fully used instead of one worker plodding through the cache alone — the trick that lets engines like [vLLM](/shared/glossary/#vllm) hit near-peak bandwidth on decode-heavy traffic.
@@ -471,6 +471,9 @@ Working backward from a training failure to the operation that first caused it, 
 
 ### Forward hook {#forward-hook}
 A callback registered on an `nn.Module` that PyTorch calls automatically after the module's forward pass, receiving the input and output tensors; used for capturing activations and debugging
+
+### Forward pass {#forward-pass}
+One complete run of an input through the *whole* network — every layer in order, from the first to the last — to produce an output (for an [LLM](/shared/glossary/#llm), the [logits](/shared/glossary/#logits) for the next token). It means start-to-finish through *all* the layers, not a single layer. Like running a part down an entire assembly line once to get the finished product. The reverse direction, used in training to compute [gradients](/shared/glossary/#gradients), is the [backward pass](/shared/glossary/#backward-pass).
 
 ### FP8 {#fp8}
 8-bit floating point — half the bits of [bfloat16](/shared/glossary/#bfloat16). Comes in two flavors: **E4M3** (4 [exponent](/shared/glossary/#exponent) bits + 3 [mantissa](/shared/glossary/#mantissa) bits) keeps a bit more precision and is used for [weights](/shared/glossary/#weights) and the forward [activations](/shared/glossary/#activations); **E5M2** (5 [exponent](/shared/glossary/#exponent) + 2 [mantissa](/shared/glossary/#mantissa)) trades precision for a wider range and is used for gradients, which can be very large or very small. Supported by [Hopper](/shared/glossary/#hopper) and later NVIDIA GPUs, it is rapidly becoming the modern default serving precision.
@@ -712,6 +715,9 @@ Scalar measure of how "easy" motion is from a given configuration (e.g. `sqrt(de
 ### Mantissa {#mantissa}
 The part of a [floating-point](https://en.wikipedia.org/wiki/Floating-point_arithmetic) number that holds the *precision digits* — the significant figures sitting in front of the scale factor. In `3.5 × 10¹²`, the `3.5` is the mantissa (also called the *significand*). More mantissa bits give finer resolution between nearby values; fewer mantissa bits leave larger gaps between representable numbers. [FP8](/shared/glossary/#fp8)'s `E4M3` format means 4 [exponent](/shared/glossary/#exponent) bits + 3 mantissa bits, so it can only distinguish about 8 distinct values between each consecutive power of two — coarse, but small enough to fit twice as many numbers in the same memory as [bfloat16](/shared/glossary/#bfloat16).
 
+### Marlin {#marlin}
+A specialized GPU [kernel](/shared/glossary/#kernel) for mixed-precision [matmul](/shared/glossary/#matmul) — 4-bit [weights](/shared/glossary/#weights) multiplied by 16-bit [activations](/shared/glossary/#activations) — built to stay fast even on the skinny, small-batch shapes of [decode](/shared/glossary/#decode). It unpacks the 4-bit weights on the fly while keeping the [Tensor Cores](/shared/glossary/#tensor-core) busy, so a [quantized](/shared/glossary/#quantization) model runs nearly as fast as the math allows. (Named after the fast-swimming marlin fish.)
+
 ### matmul {#matmul}
 Matrix multiplication — the dominant compute operation in neural networks; written `A @ B` in PyTorch.
 
@@ -938,7 +944,7 @@ VAE failure mode: encoder collapses to the prior; latent carries no information
 Proximal Policy Optimization — the [workhorse](/shared/glossary/#workhorse) [on-policy](/shared/glossary/#on-policy) RL algorithm, used in classic RLHF
 
 ### Prefill {#prefill}
-Processing the prompt in one parallel forward pass before decoding begins
+The first stage of LLM inference: reading the *entire* prompt at once to fill the [KV cache](/shared/glossary/#kv-cache), before any new tokens are generated. Because all the prompt's tokens can be processed together in a single [forward pass](/shared/glossary/#forward-pass), prefill is compute-heavy and fast per token — like a reader skimming a whole page at a glance to grasp it before starting to write a reply. It is the opposite of [decode](/shared/glossary/#decode), which then produces the answer one token at a time, and prefill time is what sets the [time to first token](/shared/glossary/#ttft).
 
 ### Prefix cache {#prefix-cache}
 Sharing KV cache across requests that begin with the same tokens (e.g., system prompts)
