@@ -241,6 +241,9 @@ When items from an evaluation [benchmark](/shared/glossary/#benchmark) accidenta
 ### Content-addressable token mixing {#content-addressable-token-mixing}
 The routing and retrieval of information between tokens based on their query-key similarity (as in [attention](/shared/glossary/#attention)) rather than their positions
 
+### Context parallelism {#context-parallelism}
+Splitting one very long prompt across several GPUs by sequence position, so each GPU holds and processes a different slice of the tokens. Like handing each of four friends one chapter of the same long book to read at the same time, instead of one person reading all four chapters alone. It is how engines serve 100k–1M-token contexts whose [KV cache](/shared/glossary/#kv-cache) would never fit on a single GPU.
+
 ### Context window {#context-window}
 The maximum number of tokens the model can attend over in one forward pass
 
@@ -1074,6 +1077,9 @@ A policy that maximizes the reward signal without doing what was intended
 
 ### Reward model {#reward-model}
 A model trained on human preference comparisons to score how good a response is; it stands in for a human rater so [RLHF](/shared/glossary/#rlhf) can score millions of answers automatically.
+
+### Ring attention {#ring-attention}
+A way to run [attention](/shared/glossary/#attention) over a very long sequence that is split across several GPUs ([context parallelism](/shared/glossary/#context-parallelism)): each GPU passes its slice of the keys and values to its neighbor around a circle, round after round, until every GPU has seen every other slice. Like people seated around a dinner table passing dishes one seat at a time so everyone eventually tastes every dish. This lets the GPUs handle a sequence far longer than any one of them could hold alone.
 
 ### RLAIF {#rlaif}
 Reinforcement Learning from **AI** Feedback — the same recipe as [RLHF](/shared/glossary/#rlhf) but the preference labels (or grades) are produced by another, stronger LLM following a written rubric instead of by paid human raters. Like swapping a panel of human judges for a single expert judge who works for free, never sleeps, and applies the same rules every time. Cheaper and faster than human labeling, often nearly as good on well-defined tasks, and the basis of [Constitutional AI](/shared/glossary/#constitutional-ai).

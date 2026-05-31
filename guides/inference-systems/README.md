@@ -1123,14 +1123,14 @@ print(json.dumps(out, indent=2))
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Needle-in-a-haystack | Measure recall at increasing context lengths up to your engine's limit; identify the cliff | ⭐⭐⭐ |
-| Prefix KV caching | Pre-compute KV for 1000 retrieved documents; measure cold vs. warm TTFT delta | ⭐⭐⭐⭐ |
-| JSON-mode reliability | Same prompt, same model, with and without constrained decoding; measure schema-validity rate on 1000 generations | ⭐⭐⭐ |
-| Custom grammar | Build a regex-based grammar for a domain-specific output (e.g., SQL); enforce it at decode time | ⭐⭐⭐⭐ |
-| Multi-LoRA serving | Stand up Lorax or S-LoRA; train 5 small adapters; serve them all from one base; measure throughput vs. 5 replicas | ⭐⭐⭐⭐⭐ |
-| Speculation + JSON-mode | Add prompt-lookup speculation to a JSON-mode workload; measure speedup (often dramatic — schemas are highly predictable) | ⭐⭐⭐⭐ |
-| Stateful session API | Build a session API that keeps a multi-turn KV cache alive across calls and evicts under pressure; verify cache-hit rate | ⭐⭐⭐⭐⭐ |
-| Ring attention from scratch | 4-GPU ring attention; measure scaling efficiency at 64k context | ⭐⭐⭐⭐⭐ |
+| [Needle-in-a-haystack](projects/51-needle-in-a-haystack/README.md) | Measure recall at increasing context lengths up to your engine's limit; identify the cliff | ⭐⭐⭐ |
+| [Prefix KV caching](projects/52-prefix-kv-caching/README.md) | Pre-compute KV for 1000 retrieved documents; measure cold vs. warm TTFT delta | ⭐⭐⭐⭐ |
+| [JSON-mode reliability](projects/53-json-mode-reliability/README.md) | Same prompt, same model, with and without constrained decoding; measure schema-validity rate on 1000 generations | ⭐⭐⭐ |
+| [Custom grammar](projects/54-custom-grammar/README.md) | Build a regex-based grammar for a domain-specific output (e.g., SQL); enforce it at decode time | ⭐⭐⭐⭐ |
+| [Multi-LoRA serving](projects/55-multi-lora-serving/README.md) | Stand up Lorax or S-LoRA; train 5 small adapters; serve them all from one base; measure throughput vs. 5 replicas | ⭐⭐⭐⭐⭐ |
+| [Speculation + JSON-mode](projects/56-speculation-json-mode/README.md) | Add prompt-lookup speculation to a JSON-mode workload; measure speedup (often dramatic — schemas are highly predictable) | ⭐⭐⭐⭐ |
+| [Stateful session API](projects/57-stateful-session-api/README.md) | Build a session API that keeps a multi-turn KV cache alive across calls and evicts under pressure; verify cache-hit rate | ⭐⭐⭐⭐⭐ |
+| [Ring attention from scratch](projects/58-ring-attention-from-scratch/README.md) | 4-GPU ring attention; measure scaling efficiency at 64k context | ⭐⭐⭐⭐⭐ |
 
 ### Key Insight
 
