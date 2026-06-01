@@ -290,6 +290,18 @@ const sidebars = {
                 {type: 'doc', id: 'guides/image-generation/projects/real-nvp-toy/README', label: 'Real NVP toy'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 2: Autoencoders and VAEs',
+              items: [
+                {type: 'doc', id: 'guides/image-generation/projects/tiny-ae-on-mnist/README', label: 'Tiny AE on MNIST'},
+                {type: 'doc', id: 'guides/image-generation/projects/vanilla-vae/README', label: 'Vanilla VAE'},
+                {type: 'doc', id: 'guides/image-generation/projects/beta-vae-study/README', label: 'β-VAE study'},
+                {type: 'doc', id: 'guides/image-generation/projects/conditional-vae/README', label: 'Conditional VAE'},
+                {type: 'doc', id: 'guides/image-generation/projects/hierarchical-vae/README', label: 'Hierarchical VAE'},
+                {type: 'doc', id: 'guides/image-generation/projects/latent-traversal/README', label: 'Latent traversal'},
+              ],
+            },
           ],
         },
         {type: 'doc', id: 'guides/reinforcement-learning/README', label: 'Reinforcement Learning'},

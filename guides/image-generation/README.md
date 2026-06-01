@@ -227,12 +227,12 @@ At sample time:
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Tiny AE on MNIST | 28×28 → 32-dim latent → 28×28; observe that linear interpolation in latent space gives reasonable mid-digits | ⭐⭐ |
-| Vanilla VAE | Same dataset, full ELBO; sample from `N(0, I)` and decode; compare blur vs the AE | ⭐⭐⭐ |
-| β-VAE study | Sweep β from 0 to 10; observe the trade-off between reconstruction and KL; identify posterior collapse | ⭐⭐⭐ |
-| Conditional VAE | Add class conditioning; verify you can sample a specific MNIST digit | ⭐⭐⭐ |
-| Hierarchical VAE | Two-level latent (one 8×8, one 4×4); see whether quality improves on CIFAR-10 | ⭐⭐⭐⭐ |
-| Latent traversal | Take a trained VAE on CelebA; walk along single latent dimensions; identify ones that control hair, smile, lighting | ⭐⭐⭐ |
+| [Tiny AE on MNIST](projects/06-tiny-ae-on-mnist/README.md) | 28×28 → 32-dim latent → 28×28; observe that linear interpolation in latent space gives reasonable mid-digits | ⭐⭐ |
+| [Vanilla VAE](projects/07-vanilla-vae/README.md) | Same dataset, full ELBO; sample from `N(0, I)` and decode; compare blur vs the AE | ⭐⭐⭐ |
+| [β-VAE study](projects/08-beta-vae-study/README.md) | Sweep β from 0 to 10; observe the trade-off between reconstruction and KL; identify posterior collapse | ⭐⭐⭐ |
+| [Conditional VAE](projects/09-conditional-vae/README.md) | Add class conditioning; verify you can sample a specific MNIST digit | ⭐⭐⭐ |
+| [Hierarchical VAE](projects/10-hierarchical-vae/README.md) | Two-level latent (one 8×8, one 4×4); see whether quality improves on CIFAR-10 | ⭐⭐⭐⭐ |
+| [Latent traversal](projects/11-latent-traversal/README.md) | Take a trained VAE on CelebA; walk along single latent dimensions; identify ones that control hair, smile, lighting | ⭐⭐⭐ |
 
 ### Sample Code: A VAE ELBO Step
 

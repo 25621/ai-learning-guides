@@ -97,6 +97,9 @@ The operation `softmax(QKᵀ/√d) V` — [content-addressable token mixing](/sh
 ### Attention sink {#attention-sink}
 The first few tokens of a sequence, which [attention](/shared/glossary/#attention) heads keep putting weight on no matter what those tokens actually say. They are called a *sink* in the plumbing sense — a drain where leftover water collects: on every step the [softmax](/shared/glossary/#softmax) has to spread a full 100% of attention across the tokens, so when a head has nothing important to look at, that spare attention drains into these first tokens. Because the model leans on them, [KV cache](/shared/glossary/#kv-cache) eviction schemes deliberately keep these tokens even when they look unimportant, which keeps quality stable in long-context serving.
 
+### Autoencoder {#autoencoder}
+A neural network that learns to copy its input to its output through a narrow middle layer. It has two halves: an *encoder* that squeezes the input down to a small set of numbers, and a *decoder* that rebuilds the original from those numbers. Because the middle is much smaller than the input, the network cannot simply memorize — it is forced to keep only the most important features, like writing a short summary of a long article and then reconstructing the article from the summary. That small middle representation is called the [latent space](/shared/glossary/#latent-space).
+
 ### autograd {#autograd}
 The [reverse-mode](/shared/glossary/#reverse-mode) automatic differentiation engine
 
@@ -190,6 +193,9 @@ Control Barrier Function — runtime safety filter via a constraint on `ḣ`
 ### CDNA / RDNA {#cdna--rdna}
 AMD's datacenter / consumer GPU architectures
 
+### CelebA {#celeba}
+A dataset of about 200,000 photos of celebrity faces, each labeled with attributes such as "smiling," "wearing glasses," or "blond hair." Because every image is a face, it is a favorite for studying generative models of a single, well-defined kind of picture — you can easily judge whether a generated face looks real, and the attribute labels let you check whether the model learned to control features like hair or expression.
+
 ### CFG (classifier-free guidance) {#cfg-classifier-free-guidance}
 Inference trick: combine conditional and unconditional model outputs to amplify conditioning
 
@@ -216,6 +222,9 @@ Splitting documents into smaller passages (often a few hundred tokens each) befo
 
 ### CIFAR-10 {#cifar-10}
 A classic dataset of 60,000 tiny 32×32 color photos sorted into 10 everyday categories (airplane, cat, dog, ship, truck, and so on). Because the images are small and the whole set downloads in seconds, it is a go-to "hello world" for image models — big enough to be interesting, small enough to train on a laptop. The name stands for "Canadian Institute For Advanced Research, 10 classes." See also [MNIST](/shared/glossary/#mnist), its even simpler grayscale cousin.
+
+### Class conditioning {#class-conditioning}
+Telling a generative model *which* category to produce instead of leaving it to chance. You feed the model a label (for example, the digit "7" or the class "cat") alongside its usual input, so at generation time you can ask for exactly that class. Without it, the model draws a random sample from everything it learned; with it, you steer the output — like ordering a specific flavor instead of accepting whatever scoop you are handed.
 
 ### CLIP {#clip}
 Contrastive Language-Image Pretraining — paired text-image dual encoder
@@ -638,6 +647,9 @@ The independent, parallel [attention](/shared/glossary/#attention) sub-computati
 ### Hessian {#hessian}
 The matrix of all second partial derivatives of a function — it captures the *curvature* of a loss landscape, not just its slope. Where the [gradient](/shared/glossary/#gradients) tells you "which way is downhill," the Hessian tells you "and how sharply does it bend." Like the difference between knowing a road slopes down and knowing whether it banks into a tight curve or stretches out almost flat. For real LLMs the full Hessian is too big to store (rows × columns each equal to the parameter count), so methods like [GPTQ](/shared/glossary/#gptq) use cheap approximations of it — typically built from a small [batch](/shared/glossary/#batch) of [calibration](/shared/glossary/#calibration) activations — to decide which weights matter most when [quantizing](/shared/glossary/#quantization).
 
+### Hierarchical VAE {#hierarchical-vae}
+A [VAE](/shared/glossary/#vae) with several layers of latent variables stacked at different scales instead of just one. Higher levels capture the big picture (overall layout and shape) while lower levels fill in fine detail (texture and edges), much like an artist who first sketches rough shapes and then adds the small touches. Splitting the work across levels lets the model represent complex images far better than a single flat [latent space](/shared/glossary/#latent-space) can. NVAE and Very Deep VAE are well-known examples.
+
 ### Holonomic {#holonomic}
 A vehicle whose instantaneous motion can be any direction (mecanum, omni)
 
@@ -715,6 +727,9 @@ A regularization technique that adds a penalty proportional to the squared magni
 
 ### Latency {#latency}
 The time it takes to complete a single request, from input to output; distinct from [throughput](/shared/glossary/#throughput), which counts how many requests finish per second.
+
+### Latent space {#latent-space}
+The compressed set of numbers a model uses to represent its data internally, after stripping away the raw detail. Each point in this space stands for one possible output, and nearby points usually mean similar outputs — so you can smoothly "walk" from one to another and watch the result morph. Think of it as the model's private map of its world: instead of a full 28×28-pixel image, an [autoencoder](/shared/glossary/#autoencoder) might describe each digit with just 32 numbers, and that 32-number space is the latent space.
 
 ### Latent video {#latent-video}
 Compressed (T', H', W', C) tensor produced by a 3D VAE
@@ -1046,7 +1061,7 @@ A judge's tendency to pick an answer based on *where* it sits rather than *what*
 Extending a model's context length by linearly rescaling [RoPE](/shared/glossary/#rope) position indices so longer sequences fall within the trained range
 
 ### Posterior collapse {#posterior-collapse}
-VAE failure mode: encoder collapses to the prior; latent carries no information
+A [VAE](/shared/glossary/#vae) failure where the decoder grows strong enough to reconstruct inputs on its own and simply ignores the [latent space](/shared/glossary/#latent-space). The encoder then stops bothering to encode anything and just outputs the default prior, so the latent variables carry no information about the input — like a student who has memorized the answer key and no longer reads the question. When this happens the [KL divergence](/shared/glossary/#kl-divergence) term drops toward zero and the latent code becomes useless for generation.
 
 ### Postmortem {#postmortem}
 A written review done after an incident — an outage, a slowdown — that lays out what happened, how it was detected and fixed, and what will stop it recurring. A good one is *blameless*: it focuses on the system and the process, not on punishing a person, like an air-crash investigation whose goal is safer future flights rather than someone to fire.
@@ -1145,7 +1160,7 @@ A way to draw samples from a target distribution by proposing easy guesses and k
 Rectified Linear Unit — the most common and simplest [activation function](/shared/glossary/#activations): it keeps positive numbers unchanged and turns every negative number into 0 (`max(0, x)`). Like a one-way valve that lets water through in one direction and blocks it in the other. That single sharp bend is enough to give a network its non-linear power, and because it is so cheap to compute it was the default for years; newer models often swap it for smoother curves like [Swish](/shared/glossary/#swish) or [GELU](/shared/glossary/#gelu).
 
 ### Reparameterization trick {#reparameterization-trick}
-`z = μ + σ · ε` — lets gradients flow through a random sample
+A way to keep training signal flowing through a random sampling step. Instead of drawing the latent `z` directly from the encoder's distribution (which is random and so blocks [gradients](/shared/glossary/#gradients)), you draw plain noise `ε` from a fixed bell curve and compute `z = μ + σ · ε`. The randomness now lives in `ε`, which has no learnable parts, so the network's `μ` and `σ` stay on a clean differentiable path — like rolling one shared die and then scaling the result, rather than building the dice into the machine itself. This is the trick that lets a [VAE](/shared/glossary/#vae) be trained with ordinary backpropagation.
 
 ### Reranker {#reranker}
 A second-stage model that re-scores the top candidates from a fast first-stage retriever and reorders them by true relevance — usually a [cross-encoder](/shared/glossary/#cross-encoder). The "retrieve then rerank" two-stage pattern is standard in search and [RAG](/shared/glossary/#rag).
@@ -1478,7 +1493,7 @@ Video-to-Video
 A problem during training where [gradients](/shared/glossary/#gradients) become extremely small, effectively preventing the weights from changing their value and stalling the learning process.
 
 ### VAE {#vae}
-Variational Autoencoder — encoder/decoder pair trained on the [ELBO](/shared/glossary/#elbo)
+Variational Autoencoder — an [autoencoder](/shared/glossary/#autoencoder) whose encoder outputs not a single point but a small *cloud* of possibility (a mean and a spread) for each input, and whose decoder samples from that cloud to rebuild the image. Training on the [ELBO](/shared/glossary/#elbo) presses those clouds to fit neatly under one standard bell-curve shape, so afterwards you can draw a brand-new point from that shape and decode it into a fresh image the model has never seen. That sampling ability is what makes a VAE a *generative* model rather than just a compressor.
 
 ### Validation loss {#validation-loss}
 The [loss](/shared/glossary/#loss-function) measured on held-out data the model was not trained on; the honest signal of how well training is generalizing.
@@ -1569,6 +1584,9 @@ A 1×1 convolution with zero-initialized weights and bias; used by ControlNet to
 
 ### ZMP {#zmp}
 Zero-Moment Point — classical biped balance criterion
+
+### β-VAE {#β-vae}
+A [VAE](/shared/glossary/#vae) variant that multiplies the [KL divergence](/shared/glossary/#kl-divergence) part of the [ELBO](/shared/glossary/#elbo) by an adjustable knob called β. Turning β up past 1 pressures the model to use its [latent space](/shared/glossary/#latent-space) more tidily, often making individual latent dimensions line up with meaningful features (like rotation or thickness) — but push it too far and the model stops reconstructing the input well. It is the simplest way to trade reconstruction quality against a cleaner, more interpretable latent.
 
 ### σ-schedule (Karras) {#σ-schedule-karras}
 The EDM reformulation: parameterize diffusion by noise standard deviation σ rather than discrete timestep
