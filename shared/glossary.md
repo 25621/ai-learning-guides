@@ -425,7 +425,7 @@ Karras et al. 2022 — a reformulation of diffusion in σ-space with clean preco
 Extended Kalman Filter — Kalman filter linearized about the current estimate
 
 ### ELBO {#elbo}
-Evidence Lower Bound — the variational objective trained by VAEs
+Evidence Lower Bound — a mathematical score used to train generative models like [VAEs](/shared/glossary/#vae). It balances two goals: recreating the original input accurately, and keeping the model's internal representation organized. Think of it like packing for a trip: you want to bring everything you need (accurate recreation) but also pack it neatly so the suitcase closes easily (organized representation). The ELBO is the score that measures how well the model balances both tasks.
 
 ### Elementwise operation {#elementwise-operation}
 An operation applied independently to each element of a tensor (e.g. add, multiply, ReLU), where output position `i` depends only on input position `i`.
@@ -557,7 +557,7 @@ GEneral Matrix Multiply — the workhorse operation `C = A × B` on two matrices
 A single-file format for storing a [quantized](/shared/glossary/#quantization) model — weights plus all the metadata needed to run it — popularized by [`llama.cpp`](https://github.com/ggerganov/llama.cpp). Like a self-contained zip that a laptop or phone can open and run without extra setup, it is the format of choice for [edge and on-device inference](/shared/glossary/#edge-inference).
 
 ### Glow {#glow}
-A well-known [normalizing flow](/shared/glossary/#normalizing-flow) model (from OpenAI, 2018) that improved on [Real NVP](/shared/glossary/#real-nvp) by adding learnable 1×1 [convolutions](/shared/glossary/#convolution-layers) that shuffle and mix the channels between steps, letting it generate sharp, high-resolution faces. It showed that flows could produce convincing images and smoothly morph one face into another, though they were later overtaken by [diffusion models](/shared/glossary/#diffusion-model) on hard, real-world images.
+A well-known [normalizing flow](/shared/glossary/#normalizing-flow) model (from OpenAI, 2018) that improved on [Real NVP](/shared/glossary/#real-nvp) by adding [learnable](/shared/glossary/#learnable) 1×1 [convolutions](/shared/glossary/#convolution-layers) that shuffle and mix the channels between steps, letting it generate sharp, high-resolution faces. It showed that flows could produce convincing images and smoothly morph one face into another, though they were later overtaken by [diffusion models](/shared/glossary/#diffusion-model) on hard, real-world images.
 
 ### GLU {#glu}
 Gated Linear Unit — a layer that computes *two* things from the input and multiplies them together element by element: one is the actual content, the other is a "gate" (a [non-linearity](/shared/glossary/#activations) whose output sits near 0–1) that decides how much of that content to let through. Like a row of dimmer switches, one per wire, that the network *learns* to turn up or down — rather than a plain on/off. Being able to suppress parts of its own signal makes a GLU more expressive than a single linear layer; [SwiGLU](/shared/glossary/#swiglu) is the popular variant that uses [Swish](/shared/glossary/#swish) for the gate.
@@ -725,6 +725,9 @@ Latent Consistency Model — consistency-distilled few-step latent diffusion
 ### LDM {#ldm}
 Latent Diffusion Model — diffusion in the latent space of a VAE (i.e., Stable Diffusion)
 
+### Learnable {#learnable}
+Refers to parts of an AI model (like weights or parameters) that are not set in stone by the programmer, but are instead adjusted automatically during training to improve performance. Like the knobs on a radio that tune themselves until the station comes in perfectly clear, rather than being glued in place.
+
 ### Learning rate {#learning-rate}
 The step size an [optimizer](/shared/glossary/#optimizer) takes when nudging the [weights](/shared/glossary/#weights) along the [gradient](/shared/glossary/#gradients). Too large and training overshoots and diverges; too small and it crawls — like choosing how big a step to take walking downhill in fog. It is usually ramped up during [warmup](/shared/glossary/#warmup) and then decayed over the run.
 
@@ -890,7 +893,7 @@ A chat where the user and the AI take turns talking back and forth, building on 
 A model trained from scratch on all modalities with a unified vocabulary
 
 ### Network in Network {#network-in-network}
-A design idea where a tiny neural network is tucked *inside* a single layer of a bigger one, so that layer can do more thinking than a plain filter could. A normal [convolution layer](/shared/glossary/#convolution-layers) slides a simple filter that just takes a weighted sum of each patch; a network-in-network slides a small multi-step mini-network over each patch instead, letting it recognize more complicated local patterns on the spot. Picture a factory line where, instead of one worker stamping each part, every station hides a little expert team that inspects and shapes the part before passing it on. The idea (from the 2013 *Network In Network* paper) inspired the [Inception network](/shared/glossary/#inception-network)'s building blocks — which is why Inception was nicknamed after the movie about a dream inside a dream.
+A design idea where a tiny neural network is tucked *inside* a single layer of a bigger one, so that layer can do more thinking than a plain filter could. A normal [convolution layer](/shared/glossary/#convolution-layers) slides a simple filter that just takes a weighted sum of each [patch](/shared/glossary/#patch); a network-in-network slides a small multi-step mini-network over each patch instead, letting it recognize more complicated local patterns on the spot. Picture a factory line where, instead of one worker stamping each part, every station hides a little expert team that inspects and shapes the part before passing it on. The idea (from the 2013 *Network In Network* paper) inspired the [Inception network](/shared/glossary/#inception-network)'s building blocks — which is why Inception was nicknamed after the movie about a dream inside a dream.
 
 ### Numerical issues {#numerical-issues}
 Problems arising from the finite precision of floating-point numbers, such as [underflow](/shared/glossary/#underflow), overflow, or loss of precision, which can lead to unstable training or [NaN](/shared/glossary/#nan) values.
@@ -987,6 +990,9 @@ How much a function changes when you nudge just one of its inputs and hold all t
 
 ### PagedAttention {#pagedattention}
 A way of storing the [KV cache](/shared/glossary/#kv-cache) for many concurrent requests by splitting each request's cache into small fixed-size "pages" that the engine can scatter freely around GPU memory and look up through a per-request page table — the same idea operating systems use for virtual memory. It removes the wasted space and fragmentation you get when each request needs its own contiguous chunk, which is why [vLLM](/shared/glossary/#vllm) made it the default scheme.
+
+### Patch {#patch}
+A small rectangular section of an image. Instead of looking at an entire image at once, models often break it down into a grid of these smaller blocks to process them one by one. Like cutting a jigsaw puzzle into individual pieces and examining each piece separately before seeing how they fit together.
 
 ### Patchification {#patchification}
 Splitting a (latent) tensor into a sequence of patch tokens for a transformer
@@ -1472,7 +1478,7 @@ Video-to-Video
 A problem during training where [gradients](/shared/glossary/#gradients) become extremely small, effectively preventing the weights from changing their value and stalling the learning process.
 
 ### VAE {#vae}
-Variational Autoencoder — encoder/decoder pair trained on the ELBO
+Variational Autoencoder — encoder/decoder pair trained on the [ELBO](/shared/glossary/#elbo)
 
 ### Validation loss {#validation-loss}
 The [loss](/shared/glossary/#loss-function) measured on held-out data the model was not trained on; the honest signal of how well training is generalizing.
