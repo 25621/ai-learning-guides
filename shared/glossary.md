@@ -58,6 +58,9 @@ Making embeddings from different modalities comparable in a shared space
 ### Alignment stack {#alignment-stack}
 The layered sequence of post-training steps that turns a raw [base model](/shared/glossary/#base-model) into a helpful, safe assistant — typically [SFT](/shared/glossary/#sft), then a [reward model](/shared/glossary/#reward-model), then [RLHF](/shared/glossary/#rlhf) (or [DPO](/shared/glossary/#dpo)). Like the stations on an assembly line, each layer builds on the one below it: the model first learns to follow instructions, then learns what people prefer, then is tuned to actually prefer it. "Alignment" here means getting the model's behavior to match human intent.
 
+### All-to-all token routing {#all-to-all-token-routing}
+In a [Mixture-of-Experts (MoE)](/shared/glossary/#moe) model spread across many GPUs, tokens must be sent to the specific GPU that holds the expert they need. "All-to-all" is the massive communication step where every GPU simultaneously sends its tokens to every other GPU and receives tokens in return. Imagine a busy postal sorting center where workers at different tables all throw packages to each other's tables at the exact same time—it requires incredibly fast network connections to prevent a traffic jam.
+
 ### AllReduce {#allreduce}
 A team operation in distributed computing: every worker ([rank](/shared/glossary/#rank)) starts with its own array of numbers, and AllReduce adds them all together and hands the *same* combined result back to everyone. (A [tensor](/shared/glossary/#tensor) here is just a grid of numbers, not a function; "summing tensors" means lining up two equal-shaped grids and adding matching cells — `[1,2,3] + [10,20,30] = [11,22,33]`.) Imagine four friends who each counted part of a crowd: they pool their counts, add them up, and all walk away knowing the same total. In [tensor-parallel](/shared/glossary/#tensor-parallelism-tp) inference each GPU computes part of a layer, and an AllReduce combines those partial results so every GPU ends up holding the full answer before the next layer runs.
 
@@ -157,6 +160,9 @@ Standard likelihood metric for image models; `-log₂ p(x) / D`
 ### BPE {#bpe}
 Byte-Pair Encoding — subword [tokenization](/shared/glossary/#tokenizer) by greedy frequent-pair merges. It starts from raw bytes and repeatedly glues together the neighboring pair that appears most often, building up reusable chunks. For example, on lots of English text BPE notices `t` and `h` sit side by side constantly and merges them into `th`; a later round merges `th` + `e` into `the`. So a common word like `the` ends up as a single token, while a rarer word like `tokenizer` is left as familiar pieces such as `token` + `izer`. "Greedy" means each round simply takes the single most-frequent merge available, never looking ahead to see whether a different choice would pay off later.
 
+### Broadcasting {#broadcasting}
+A tensor operation trick where a smaller tensor is automatically stretched to match the shape of a larger one without actually copying data in memory. Like painting a stripe down a wall: you only load the stripe pattern once, but apply it everywhere as you roll.
+
 ### C++ extension {#c-extension}
 A custom operation written in C++ (optionally with CUDA), compiled and loaded so it can be called from Python like a built-in PyTorch op.
 
@@ -241,6 +247,9 @@ When items from an evaluation [benchmark](/shared/glossary/#benchmark) accidenta
 ### Content-addressable token mixing {#content-addressable-token-mixing}
 The routing and retrieval of information between tokens based on their query-key similarity (as in [attention](/shared/glossary/#attention)) rather than their positions
 
+### Context parallelism {#context-parallelism}
+Splitting one very long prompt across several GPUs by sequence position, so each GPU holds and processes a different slice of the tokens. Like handing each of four friends one chapter of the same long book to read at the same time, instead of one person reading all four chapters alone. It is how engines serve 100k–1M-token contexts whose [KV cache](/shared/glossary/#kv-cache) would never fit on a single GPU.
+
 ### Context window {#context-window}
 The maximum number of tokens the model can attend over in one forward pass
 
@@ -258,6 +267,9 @@ A tensor that owns its own storage, independent of any source tensor; created by
 
 ### Cosine decay {#cosine-decay}
 A [learning-rate](/shared/glossary/#learning-rate) schedule that, after [warmup](/shared/glossary/#warmup), lowers the rate along the smooth downward half of a cosine curve until it reaches near zero by the end of training. The step size starts large and eases off gently — like braking smoothly as you coast up to a stop sign instead of slamming the pedal at the last moment — which helps the model settle into a good solution. It is the long-standing default schedule, before newer recipes like [WSD](/shared/glossary/#wsd).
+
+### Cost per million tokens {#cost-per-million-tokens}
+The standard price unit for running a model in production: how many dollars it costs to generate one million tokens of output. You get it by dividing the hardware's hourly cost by how many tokens it produces per hour — like working out a car's cost per mile from its fuel bill and the distance it covers. Almost every serving optimization, from [batching](/shared/glossary/#batching) to [quantization](/shared/glossary/#quantization), is ultimately a way to push this one number down.
 
 ### CoT {#cot}
 Chain of Thought — prompting or training a model to write out its reasoning step by step before giving a final answer, the way a student shows their work on a math problem instead of blurting out just the result.
@@ -391,6 +403,9 @@ PyTorch's default execution, where each operation runs immediately as its Python
 ### EAGLE / Medusa {#eagle--medusa}
 Self-speculation: extra heads on the target model propose tokens, no separate draft model
 
+### Edge inference {#edge-inference}
+Running a model directly on the device in front of the user — a phone, laptop, car, or small embedded board — instead of sending the request to a data-center GPU. Like cooking at home rather than ordering delivery: it is private and works without a network, but you are limited to the small "kitchen" the device has, so models are kept small (1–8B), heavily [quantized](/shared/glossary/#quantization), and tuned to sip battery and fit in shared memory.
+
 ### EDM {#edm}
 Karras et al. 2022 — a reformulation of diffusion in σ-space with clean preconditioning
 
@@ -415,6 +430,12 @@ A dense vector that represents a token (or other item) so the model can compute 
 ### Embedding matrix {#embedding-matrix}
 The lookup table `E ∈ ℝ^{V×d}` that turns each token ID into a dense vector by selecting its row; growing the [vocabulary](/shared/glossary/#vocabulary) means adding rows
 
+### Enormous on paper {#enormous-on-paper}
+Describes a model like a [Mixture-of-Experts (MoE)](/shared/glossary/#moe) that has a massive total number of parameters (e.g., 100 billion), but only uses a small fraction of them (e.g., 10 billion) for any single word. Like a giant university with 5,000 courses listed in its catalog (enormous on paper)—no single student takes all 5,000 courses. Each student only takes a few classes at a time, so the cost per student remains low, even though the total catalog is huge.
+
+### Error budget {#error-budget}
+The small amount of failure an [SLO](/shared/glossary/#slo) allows. If your target is 99.9% success, the remaining 0.1% — about 43 minutes a month — is your error budget. Like a monthly data allowance on a phone plan: you can "spend" it on risky deploys and experiments, but once it runs out you stop taking risks until it resets. It turns reliability from a vague goal into a balance you can watch.
+
 ### ExecuTorch {#executorch}
 PyTorch's lightweight runtime for running models on mobile and edge devices, built on the graph captured by [`torch.export`](/shared/glossary/#torchexport).
 
@@ -422,7 +443,7 @@ PyTorch's lightweight runtime for running models on mobile and edge devices, bui
 In a [Mixture-of-Experts (MoE)](/shared/glossary/#moe), one of several parallel [MLP](/shared/glossary/#mlp) sub-networks; a router sends each token to only the top few experts instead of all of them. Like a hospital triage desk that routes each patient to the right specialist rather than making everyone see every doctor — lots of expertise on hand, but only a little used per case.
 
 ### Expert parallelism (EP) {#expert-parallelism-ep}
-For MoE models, distributing experts across GPUs with all-to-all token routing
+For MoE models, distributing experts across GPUs with [all-to-all token routing](/shared/glossary/#all-to-all-token-routing)
 
 ### Exponent {#exponent}
 The part of a [floating-point](https://en.wikipedia.org/wiki/Floating-point_arithmetic) number that records its *scale* — how many places to shift the decimal point. In scientific notation like `3.5 × 10¹²`, the `12` is the exponent (using base 10 instead of base 2). More exponent bits give a wider range of representable magnitudes, from astronomically large to vanishingly small; fewer exponent bits mean values overflow or [underflow](/shared/glossary/#underflow) more easily. This is why [FP8](/shared/glossary/#fp8) has two flavors: **E5M2** (5 exponent bits) for gradients that can swing wildly in size, and **E4M3** (4 exponent bits) for activations that stay in a tighter range. See also [mantissa](/shared/glossary/#mantissa).
@@ -519,6 +540,9 @@ Gaussian Error Linear Unit — a smooth activation function widely used in trans
 
 ### GEMM {#gemm}
 GEneral Matrix Multiply — the workhorse operation `C = A × B` on two matrices, and the single most common heavy computation inside a neural network. GPUs are built to do GEMMs fast; nearly every layer's forward pass is one. When one input is very "skinny" (a tiny batch, as in single-token [decode](/shared/glossary/#decode)) the GPU's [Tensor Cores](/shared/glossary/#tensor-core) sit half-idle, so that case needs a different kernel from a big, square prefill GEMM.
+
+### GGUF {#gguf}
+A single-file format for storing a [quantized](/shared/glossary/#quantization) model — weights plus all the metadata needed to run it — popularized by [`llama.cpp`](https://github.com/ggerganov/llama.cpp). Like a self-contained zip that a laptop or phone can open and run without extra setup, it is the format of choice for [edge and on-device inference](/shared/glossary/#edge-inference).
 
 ### GLU {#glu}
 Gated Linear Unit — a layer that computes *two* things from the input and multiplies them together element by element: one is the actual content, the other is a "gate" (a [non-linearity](/shared/glossary/#activations) whose output sits near 0–1) that decides how much of that content to let through. Like a row of dimmer switches, one per wire, that the network *learns* to turn up or down — rather than a plain on/off. Being able to suppress parts of its own signal makes a GLU more expressive than a single linear layer; [SwiGLU](/shared/glossary/#swiglu) is the popular variant that uses [Swish](/shared/glossary/#swish) for the gate.
@@ -701,11 +725,14 @@ Using a strong [LLM](/shared/glossary/#llm) to grade or compare other models' an
 ### Load balancing {#load-balancing}
 Spreading incoming requests across several copies of a service so no single one is overwhelmed while others sit idle — like a supermarket opening more checkout lanes and a greeter waving each new customer to the shortest one. The simplest rule is *round-robin* (hand requests out in turn, 1-2-3-1-2-3…); smarter rules send each request to the least-busy replica or to the one whose cache is already warm. The component that does this is a *load balancer*.
 
+### Load shedding {#load-shedding}
+Deliberately dropping or rejecting some requests when a server is overloaded, so the ones it does accept still meet their targets. Returning a fast "try again later" to low-priority traffic is far kinder than letting every request crawl — like a busy restaurant turning new walk-ins away so the diners already seated still get served on time. It usually works hand in hand with [admission control](/shared/glossary/#admission-control) and request priority.
+
 ### Logits {#logits}
 The raw, unnormalized scores a model produces at its output, one per [vocabulary](/shared/glossary/#vocabulary) entry, before they are turned into probabilities by [softmax](/shared/glossary/#softmax). Like the points each contestant has scored at the end of a game — bigger means "more likely the next token" — but to read them as percentages you have to normalize. [Sampling](/shared/glossary/#sampling) rules ([temperature](/shared/glossary/#temperature), [top-k](/shared/glossary/#top-k), [top-p](/shared/glossary/#top-p)) all reshape the logits before the random draw, and [`argmax`](/shared/glossary/#argmax) of the logits is what [greedy decoding](/shared/glossary/#greedy-decoding) picks.
 
 ### LoRA {#lora}
-[Low-Rank](/shared/glossary/#low-rank) Adaptation — fine-tune by adding small low-rank matrices, freeze the base
+Low-Rank Adaptation — a cheap way to fine-tune a huge model without rewriting it. Instead of changing the model's billions of frozen [weights](/shared/glossary/#weights), you leave them all untouched and bolt on a tiny pair of extra [low-rank](/shared/glossary/#low-rank) matrices that nudge the output. Like leaving a printed textbook exactly as it is and slipping in a few sticky notes that change how you read it: the notes are small to store, quick to write, and you can keep a different set of notes for each task and swap them in and out.
 
 ### Loss function {#loss-function}
 A mathematical function that measures the difference between a model's prediction and the actual target. The goal of training is to minimize this value using [gradients](/shared/glossary/#gradients).
@@ -794,7 +821,7 @@ Empirical finding that different-modality embeddings stay in separable regions
 GAN failure mode: generator produces few distinct outputs
 
 ### MoE {#moe}
-Mixture-of-Experts — sparse routing across N expert [MLPs](/shared/glossary/#mlp); high total params, fixed compute per token
+Mixture-of-Experts — instead of one big [MLP](/shared/glossary/#mlp) per layer, the model holds many parallel "[expert](/shared/glossary/#expert)" MLPs and a small router sends each token to only the top few. Like a big company where every question goes to just the two or three relevant specialists rather than the whole staff, the model can hold a huge number of total [parameters](/shared/glossary/#weights) while doing only a fixed, small amount of compute per token. The serving catch: which experts get used shifts with the workload, so keeping them evenly busy across GPUs ([expert parallelism](/shared/glossary/#expert-parallelism-ep)) is the hard part.
 
 ### Momentum {#momentum}
 A technique that accumulates a moving average of past gradients to dampen oscillations and accelerate gradient descent in consistent directions
@@ -824,10 +851,13 @@ Open-source physics engine; the de facto manipulation/locomotion simulator
 Running several [attention](/shared/glossary/#attention) operations ([heads](/shared/glossary/#heads)) in parallel, each with its own learned projections of queries, keys, and values, then concatenating their results. Like having several readers skim the same sentence for different things — one tracks the grammar, another tracks who-did-what — and then pooling what each one noticed.
 
 ### Multi-LoRA {#multi-lora}
-Serving many fine-tuned adapters on a single shared base model
+Serving many [LoRA](/shared/glossary/#lora) adapters from one shared copy of the base model at the same time. Keeping LoRA's sticky-note picture: one cookbook (the base model) plus a drawer full of sticky-note sets (the adapters), one set per customer. The kitchen keeps a *single* cookbook and just grabs the right set of notes for each order, instead of buying a whole new cookbook for every customer — so one GPU can serve hundreds of fine-tunes at once.
 
 ### Multi-tenant {#multi-tenant}
 One shared system serving many independent users or customers ("tenants") at the same time, who must not see or slow down one another — like an apartment building where many families live under one roof but each behind their own locked door. A multi-tenant inference service mixes everyone's requests onto the same GPUs, which is why fair scheduling, per-user rate limits, and tricks like shared-[prefix cache](/shared/glossary/#prefix-cache) routing matter so much.
+
+### Multi-turn conversation {#multi-turn-conversation}
+A chat where the user and the AI take turns talking back and forth, building on what was said earlier, like a natural human conversation. For example, if you ask "What's a good movie?" and then ask "Who stars in it?", the AI remembers the movie from the first turn. Instead of starting from scratch every time, the system keeps the past conversation in its [KV cache](/shared/glossary/#kv-cache) — like keeping an open notebook on your desk instead of erasing the whiteboard after every question.
 
 ### NaN {#nan}
 "Not a Number" — a floating-point value representing an undefined or unrepresentable result (e.g., `0/0` or `inf - inf`). In PyTorch, NaNs often appear when [gradients](/shared/glossary/#gradients) explode or when taking the logarithm of zero/negative numbers.
@@ -854,7 +884,7 @@ A long-context test that hides one fact (the "needle") inside a long stretch of 
 The training objective of an [LLM](/shared/glossary/#llm): given the tokens so far, predict the next one, scored with [cross-entropy](/shared/glossary/#cross-entropy) [loss](/shared/glossary/#loss-function).
 
 ### N-gram {#n-gram}
-A run of `n` tokens (or words) sitting next to each other — "the cat sat" is a 3-gram. By matching the most recent few tokens against earlier text, you can often guess what comes next from what followed the same phrase before, which is exactly how prompt-lookup speculative decoding builds its drafts for free.
+A run of `n` tokens (or words) sitting next to each other. Here a *gram* just means one item — one word or token (the word comes from Greek *gramma*, "something written") — and the *n* says how many of them in a row, so "the cat sat" is a 3-gram (three words in a row) and "cat" on its own is a 1-gram. By matching the most recent few tokens against earlier text, you can often guess what comes next from what followed the same phrase before, which is exactly how prompt-lookup speculative decoding builds its drafts for free.
 
 ### nn.Module {#nnmodule}
 PyTorch's base class for all neural network components; acts as a registry that automatically tracks sub-modules, parameters, and buffers assigned in `__init__`
@@ -873,6 +903,9 @@ NVIDIA's GPU-GPU interconnect; much faster than PCIe
 
 ### NVSwitch {#nvswitch}
 NVLink switch chip; full-bandwidth all-to-all within a node
+
+### Observability {#observability}
+The practice of making a running system's inner state visible from the outside — through metrics, logs, and traces — so you can ask new questions about *why* it is misbehaving without adding new code. Like the dashboard and warning lights in a car: you can tell what is wrong while still driving, instead of pulling the engine apart. For a serving stack it is the difference between knowing "p99 [latency](/shared/glossary/#latency) tripled at 9 a.m." and finding out only when users complain.
 
 ### Off-policy {#off-policy}
 The data comes from a different policy than the one being optimized
@@ -931,6 +964,9 @@ Splitting a (latent) tensor into a sequence of patch tokens for a transformer
 ### PCIe {#pcie}
 The standard CPU-GPU connection (and slower GPU-GPU when no NVLink)
 
+### Percentile {#percentile}
+A way to describe where a value ranks in a sorted list: the p99 [latency](/shared/glossary/#latency) is the time that 99% of requests beat, with only the slowest 1% taking longer. Unlike an average, which a single huge outlier can hide, percentiles expose the slow tail that users actually feel — like reporting "even the slowest of the top 99% of diners was served within 20 minutes" instead of a misleading table-wide average. Serving teams quote p50, p95, and p99 rather than the mean for exactly this reason.
+
 ### Perceptual loss (LPIPS) {#perceptual-loss-lpips}
 Loss computed in the feature space of a pretrained classifier; sharper than pixel MSE
 
@@ -966,6 +1002,9 @@ Extending a model's context length by linearly rescaling [RoPE](/shared/glossary
 
 ### Posterior collapse {#posterior-collapse}
 VAE failure mode: encoder collapses to the prior; latent carries no information
+
+### Postmortem {#postmortem}
+A written review done after an incident — an outage, a slowdown — that lays out what happened, how it was detected and fixed, and what will stop it recurring. A good one is *blameless*: it focuses on the system and the process, not on punishing a person, like an air-crash investigation whose goal is safer future flights rather than someone to fire.
 
 ### PPO {#ppo}
 Proximal Policy Optimization — the [workhorse](/shared/glossary/#workhorse) [on-policy](/shared/glossary/#on-policy) RL algorithm, used in classic RLHF
@@ -1025,13 +1064,16 @@ Reducing weight / activation precision (FP16, BF16, FP8, INT8, INT4) to save mem
 sglang's KV cache organized as a radix tree keyed on prompt prefixes for automatic sharing
 
 ### RAG {#rag}
-Retrieval-Augmented Generation — fetch documents, prepend to prompt, then generate
+Retrieval-Augmented Generation — give the model an "open-book exam" instead of asking it to answer from memory alone. First a search step fetches the documents most relevant to the question (from a company wiki, a manual, the web), then those documents are pasted into the prompt, and only then does the model write its answer using them as notes. This lets it use fresh or private facts it was never trained on, and makes it easy to check where an answer came from.
 
 ### rank {#rank}
 The unique integer ID of a process in a distributed job. `RANK` is the global ID across all machines; `LOCAL_RANK` is the ID within one machine; `WORLD_SIZE` is the total number of processes.
 
 ### RDMA {#rdma}
 Remote Direct Memory Access — letting one machine read or write another machine's memory directly over the network, without either CPU stopping to copy the data. Like a pneumatic tube that drops a package straight onto a coworker's desk instead of handing it to a courier who walks it over. In disaggregated serving it is how a [prefill](/shared/glossary/#prefill) node ships a multi-gigabyte [KV cache](/shared/glossary/#kv-cache) to a [decode](/shared/glossary/#decode) node fast enough to be worth splitting them.
+
+### Reasoning model {#reasoning-model}
+An [LLM](/shared/glossary/#llm) trained to think out loud at length — writing a long [chain of thought](/shared/glossary/#cot) before its final answer — to solve harder problems (math, code, logic). Like a student who fills a page of scratch work before writing the answer, it is far more capable on tough questions but also far more expensive to serve, because one hard problem can produce 10× the tokens of a normal chat reply. Managing that swing in output length is the main serving challenge it creates.
 
 ### ReAct {#react}
 A simple [agent](/shared/glossary/#agent) pattern that interleaves **Rea**soning and **Act**ing: the model writes a thought, takes an action with a tool, reads the observation, then repeats — the loop most basic agents are built on.
@@ -1075,6 +1117,12 @@ A policy that maximizes the reward signal without doing what was intended
 ### Reward model {#reward-model}
 A model trained on human preference comparisons to score how good a response is; it stands in for a human rater so [RLHF](/shared/glossary/#rlhf) can score millions of answers automatically.
 
+### Right-sizing {#right-sizing}
+Choosing the smallest, cheapest model that still clears your quality bar for a task, instead of defaulting to the biggest one available. A well-trained 8B model often passes the same eval as a 70B at a fraction of the [cost per million tokens](/shared/glossary/#cost-per-million-tokens) — like hiring a capable specialist instead of an expensive all-rounder for a job that doesn't need one. Most production teams over-serve, so right-sizing is one of the easiest cost wins.
+
+### Ring attention {#ring-attention}
+A way to run [attention](/shared/glossary/#attention) over a very long sequence that is split across several GPUs ([context parallelism](/shared/glossary/#context-parallelism)): each GPU passes its slice of the keys and values to its neighbor around a circle, round after round, until every GPU has seen every other slice. Like people seated around a dinner table passing dishes one seat at a time so everyone eventually tastes every dish. This lets the GPUs handle a sequence far longer than any one of them could hold alone.
+
 ### RLAIF {#rlaif}
 Reinforcement Learning from **AI** Feedback — the same recipe as [RLHF](/shared/glossary/#rlhf) but the preference labels (or grades) are produced by another, stronger LLM following a written rubric instead of by paid human raters. Like swapping a panel of human judges for a single expert judge who works for free, never sleeps, and applies the same rules every time. Cheaper and faster than human labeling, often nearly as good on well-defined tasks, and the basis of [Constitutional AI](/shared/glossary/#constitutional-ai).
 
@@ -1104,6 +1152,9 @@ Rotary Position [Embedding](/shared/glossary/#embedding) — encodes position by
 
 ### ROS / ROS 2 {#ros--ros-2}
 Robot Operating System — robotics middleware (ROS 2 is the modern version)
+
+### Router model {#router-model}
+A small, cheap model that sits at the front of a serving stack and decides *which* model should answer each request — for example, sending an easy question to a fast 1B model and only escalating hard ones to a slow, expensive 70B model. Like a hospital triage nurse who handles simple cases on the spot and forwards the serious ones to a specialist, it saves money because most queries never need the biggest model.
 
 ### RRT {#rrt}
 Rapidly-exploring Random Tree — single-query sampling-based planner
@@ -1180,8 +1231,11 @@ Single Instruction Multiple Threads; NVIDIA's execution model
 ### SLAM {#slam}
 Simultaneous Localization and Mapping
 
+### SLI {#sli}
+Service Level Indicator — the actual measured number for how well a service is doing, such as the real percentage of requests that succeeded or answered within 500 ms. The [SLO](/shared/glossary/#slo) is the *target*; the SLI is the *measurement* you compare against it — like the speedometer reading (SLI) versus the posted speed limit (SLO).
+
 ### SLO {#slo}
-Service Level Objective — a quantified commitment (e.g., P95 TTFT < 500 ms)
+Service Level Objective — a specific, measurable promise about how a service should perform, such as "p95 [TTFT](/shared/glossary/#ttft) under 500 ms" or "99.9% of requests succeed." It is the target you design toward and get alerted on, like a delivery company promising most parcels arrive within two days. The measured reality you check it against is the [SLI](/shared/glossary/#sli), and the slack it allows for failure is the [error budget](/shared/glossary/#error-budget).
 
 ### SM {#sm}
 Streaming Multiprocessor; the GPU's "core"
@@ -1193,7 +1247,7 @@ The function that turns a vector of scores into a probability distribution — e
 Reserved [vocabulary](/shared/glossary/#vocabulary) entries that mark structure rather than text — e.g. `<bos>`, `<eos>`, `<pad>`, and chat-boundary tokens like `<|im_start|>`
 
 ### Speculative decoding {#speculative-decoding}
-Use a draft model to propose tokens; verify with the target in one parallel pass; accepted tokens are appended
+A trick to make [decode](/shared/glossary/#decode) faster for free: a small, fast "draft" model guesses the next few tokens, and the big "target" model checks all of them in a single parallel pass, keeping every guess that matches what it would have produced and discarding the rest. Like an editor who reads a sentence a junior writer drafted and approves the part that is already correct rather than writing every word from scratch — the answer is identical to what the target alone would say, just reached in fewer slow steps. It works because decode is starved for memory bandwidth, so the GPU has spare compute to verify several guesses at once.
 
 ### State dict {#state-dict}
 A Python `OrderedDict` that maps every parameter and buffer name to its tensor value; the standard format for saving, loading, and transplanting PyTorch model weights
@@ -1276,6 +1330,9 @@ Tera (10¹²) floating-point operations per second
 ### TGI {#tgi}
 Short for **Text Generation Inference** — Hugging Face's open-source LLM serving engine, similar in role to [vLLM](/shared/glossary/#vllm). It implements [continuous batching](/shared/glossary/#continuous-batching), [PagedAttention](/shared/glossary/#pagedattention), and quantized inference behind a simple HTTP API, and is one of the two engines most commonly used to put an LLM in front of real users.
 
+### Thinking budget {#thinking-budget}
+A cap on how many tokens a [reasoning model](/shared/glossary/#reasoning-model) is allowed to spend thinking before it must give an answer — like telling a student "you have ten minutes of scratch work, then write your answer." It lets a serving system trade accuracy for cost and [latency](/shared/glossary/#latency): a bigger budget usually means better answers on hard problems but slower, pricier responses.
+
 ### Throughput {#throughput}
 How much work is completed per unit of time — for training, the number of examples processed per second.
 
@@ -1290,6 +1347,9 @@ The mapping from string to integer IDs; trained, frozen, part of the model contr
 
 ### Tokens per byte {#tokens-per-byte}
 A measure of tokenizer efficiency: how many tokens it emits per byte of input text; higher means the same text costs more tokens
+
+### Tool call {#tool-call}
+When an [LLM](/shared/glossary/#llm), instead of answering directly, emits a structured request to run an external function — search the web, query a database, run code — and then continues once it sees the result. Like a person pausing mid-task to look something up or use a calculator, it is the basic action an [agent](/shared/glossary/#agent) takes in its loop.
 
 ### Top-k {#top-k}
 A [sampling](/shared/glossary/#sampling) rule that keeps only the `k` most likely next tokens and draws from those, throwing away the long tail. With `k=1` it always takes the single best word (greedy decoding); with `k=50` it chooses among the top 50 — like ordering only from a menu's 50 most popular dishes instead of the whole cookbook.
@@ -1314,6 +1374,9 @@ PyTorch's launcher command that starts one process per GPU and sets the `RANK`, 
 
 ### TorchScript {#torchscript}
 The legacy serialization/IR for PyTorch; superseded by `torch.export`
+
+### Trained or just prompted {#trained-or-just-prompted}
+A choice in how you create a small helper model (like a [router model](/shared/glossary/#router-model)). You can either "train" it (by fine-tuning its weights on thousands of examples, like sending someone to medical school) or "just prompt" it (by taking an existing smart model and simply giving it a written instruction like "You are a router, decide if this question is hard or easy," like handing a smart assistant a checklist). Training takes more effort upfront but is faster and cheaper to run; prompting is quick to set up but costs more per request since you process the instructions every time.
 
 ### Transformer {#transformer}
 The decoder-only / encoder-only / encoder-decoder architecture built from [attention](/shared/glossary/#attention) + [MLP](/shared/glossary/#mlp) blocks

@@ -1123,14 +1123,14 @@ print(json.dumps(out, indent=2))
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Needle-in-a-haystack | Measure recall at increasing context lengths up to your engine's limit; identify the cliff | ⭐⭐⭐ |
-| Prefix KV caching | Pre-compute KV for 1000 retrieved documents; measure cold vs. warm TTFT delta | ⭐⭐⭐⭐ |
-| JSON-mode reliability | Same prompt, same model, with and without constrained decoding; measure schema-validity rate on 1000 generations | ⭐⭐⭐ |
-| Custom grammar | Build a regex-based grammar for a domain-specific output (e.g., SQL); enforce it at decode time | ⭐⭐⭐⭐ |
-| Multi-LoRA serving | Stand up Lorax or S-LoRA; train 5 small adapters; serve them all from one base; measure throughput vs. 5 replicas | ⭐⭐⭐⭐⭐ |
-| Speculation + JSON-mode | Add prompt-lookup speculation to a JSON-mode workload; measure speedup (often dramatic — schemas are highly predictable) | ⭐⭐⭐⭐ |
-| Stateful session API | Build a session API that keeps a multi-turn KV cache alive across calls and evicts under pressure; verify cache-hit rate | ⭐⭐⭐⭐⭐ |
-| Ring attention from scratch | 4-GPU ring attention; measure scaling efficiency at 64k context | ⭐⭐⭐⭐⭐ |
+| [Needle-in-a-haystack](projects/51-needle-in-a-haystack/README.md) | Measure recall at increasing context lengths up to your engine's limit; identify the cliff | ⭐⭐⭐ |
+| [Prefix KV caching](projects/52-prefix-kv-caching/README.md) | Pre-compute KV for 1000 retrieved documents; measure cold vs. warm TTFT delta | ⭐⭐⭐⭐ |
+| [JSON-mode reliability](projects/53-json-mode-reliability/README.md) | Same prompt, same model, with and without constrained decoding; measure schema-validity rate on 1000 generations | ⭐⭐⭐ |
+| [Custom grammar](projects/54-custom-grammar/README.md) | Build a regex-based grammar for a domain-specific output (e.g., SQL); enforce it at decode time | ⭐⭐⭐⭐ |
+| [Multi-LoRA serving](projects/55-multi-lora-serving/README.md) | Stand up Lorax or S-LoRA; train 5 small adapters; serve them all from one base; measure throughput vs. 5 replicas | ⭐⭐⭐⭐⭐ |
+| [Speculation + JSON-mode](projects/56-speculation-json-mode/README.md) | Add prompt-lookup speculation to a JSON-mode workload; measure speedup (often dramatic — schemas are highly predictable) | ⭐⭐⭐⭐ |
+| [Stateful session API](projects/57-stateful-session-api/README.md) | Build a session API that keeps a multi-turn KV cache alive across calls and evicts under pressure; verify cache-hit rate | ⭐⭐⭐⭐⭐ |
+| [Ring attention from scratch](projects/58-ring-attention-from-scratch/README.md) | 4-GPU ring attention; measure scaling efficiency at 64k context | ⭐⭐⭐⭐⭐ |
 
 ### Key Insight
 
@@ -1234,14 +1234,14 @@ A working inference system needs to *prove* it works under load, in production, 
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Metric instrumentation | Wire a vLLM server to Prometheus + Grafana; ship dashboards for all metrics in the figure above | ⭐⭐⭐ |
-| Synthetic load tests | Generate workloads with realistic prompt/output length distributions; benchmark at 1×, 2×, 5× concurrency | ⭐⭐⭐ |
-| SLO simulation | Define a P95 TTFT < 500 ms SLO; sweep arrival rate until it breaks; identify the bottleneck | ⭐⭐⭐⭐ |
-| Error budget tracker | Implement a daily SLI/SLO computation that exhausts an error budget under a chosen failure mode | ⭐⭐⭐⭐ |
-| Cost report | For your serving stack, produce a defensible $/M-output-tokens number; identify the top three line items | ⭐⭐⭐ |
-| Right-sizing experiment | Same workload, 7B vs. 13B vs. 70B; report quality (a real eval) and cost; recommend a tier | ⭐⭐⭐⭐ |
-| Load-shedding policy | Implement priority-aware admission control; verify SLOs hold for high-prio under 2× overload | ⭐⭐⭐⭐ |
-| Postmortem drill | Inject a real failure (replica crash, cache thrash); run the incident; write the postmortem | ⭐⭐⭐⭐ |
+| [Metric instrumentation](projects/59-metric-instrumentation/README.md) | Wire a vLLM server to Prometheus + Grafana; ship dashboards for all metrics in the figure above | ⭐⭐⭐ |
+| [Synthetic load tests](projects/60-synthetic-load-tests/README.md) | Generate workloads with realistic prompt/output length distributions; benchmark at 1×, 2×, 5× concurrency | ⭐⭐⭐ |
+| [SLO simulation](projects/61-slo-simulation/README.md) | Define a P95 TTFT < 500 ms SLO; sweep arrival rate until it breaks; identify the bottleneck | ⭐⭐⭐⭐ |
+| [Error budget tracker](projects/62-error-budget-tracker/README.md) | Implement a daily SLI/SLO computation that exhausts an error budget under a chosen failure mode | ⭐⭐⭐⭐ |
+| [Cost report](projects/63-cost-report/README.md) | For your serving stack, produce a defensible $/M-output-tokens number; identify the top three line items | ⭐⭐⭐ |
+| [Right-sizing experiment](projects/64-right-sizing-experiment/README.md) | Same workload, 7B vs. 13B vs. 70B; report quality (a real eval) and cost; recommend a tier | ⭐⭐⭐⭐ |
+| [Load-shedding policy](projects/65-load-shedding-policy/README.md) | Implement priority-aware admission control; verify SLOs hold for high-prio under 2× overload | ⭐⭐⭐⭐ |
+| [Postmortem drill](projects/66-postmortem-drill/README.md) | Inject a real failure (replica crash, cache thrash); run the incident; write the postmortem | ⭐⭐⭐⭐ |
 
 ### Key Insight
 
@@ -1299,13 +1299,13 @@ The state of the art in inference is moving fast. Some of what's described in th
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Reasoning-model serving | Serve a long-CoT model; measure output-token variance, design a thinking-budget knob | ⭐⭐⭐⭐ |
-| Stateful sessions | Build a session API that preserves KV cache across turns, evicts cleanly under pressure | ⭐⭐⭐⭐⭐ |
-| Router model | Train (or prompt) a tiny model to route between a 1B "fast path" and a 70B "slow path"; measure quality and cost | ⭐⭐⭐⭐ |
-| MoE serving | Stand up a Mixtral or DeepSeek MoE; measure expert-imbalance under your workload | ⭐⭐⭐⭐⭐ |
-| FP4 (Blackwell) inference | If hardware available, benchmark FP4 weights + activations against FP8; measure quality | ⭐⭐⭐⭐⭐ |
-| On-device build | Compile a 3B model to MLX / TensorRT-LLM-Jetson / GGUF; measure tokens/sec on a real device | ⭐⭐⭐⭐ |
-| Speculative agent steps | In an agent loop, speculatively execute the most likely next tool call; verify and roll back if wrong | ⭐⭐⭐⭐⭐ |
+| [Reasoning-model serving](projects/67-reasoning-model-serving/README.md) | Serve a long-CoT model; measure output-token variance, design a thinking-budget knob | ⭐⭐⭐⭐ |
+| [Stateful sessions](projects/68-stateful-sessions/README.md) | Build a session API that preserves KV cache across turns, evicts cleanly under pressure | ⭐⭐⭐⭐⭐ |
+| [Router model](projects/69-router-model/README.md) | Train (or prompt) a tiny model to route between a 1B "fast path" and a 70B "slow path"; measure quality and cost | ⭐⭐⭐⭐ |
+| [MoE serving](projects/70-moe-serving/README.md) | Stand up a Mixtral or DeepSeek MoE; measure expert-imbalance under your workload | ⭐⭐⭐⭐⭐ |
+| [FP4 (Blackwell) inference](projects/71-fp4-blackwell-inference/README.md) | If hardware available, benchmark FP4 weights + activations against FP8; measure quality | ⭐⭐⭐⭐⭐ |
+| [On-device build](projects/72-on-device-build/README.md) | Compile a 3B model to MLX / TensorRT-LLM-Jetson / GGUF; measure tokens/sec on a real device | ⭐⭐⭐⭐ |
+| [Speculative agent steps](projects/73-speculative-agent-steps/README.md) | In an agent loop, speculatively execute the most likely next tool call; verify and roll back if wrong | ⭐⭐⭐⭐⭐ |
 
 ### Key Insight
 
