@@ -140,11 +140,11 @@ This is the same scaling pain that drives latent diffusion in Phase 7.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Manifold visualizer | Draw 1,000 CIFAR-10 images and 1,000 uniform-random images; PCA both into 2D; observe the manifold | ⭐⭐ |
-| Bits-per-dim baseline | Compute the bits-per-dim of a uniform distribution over `[0, 255]^d` on a small image dataset; this is the "no model" floor | ⭐⭐ |
-| Tiny PixelCNN | Implement a small autoregressive pixel model on MNIST; sample row by row; observe the speed (slow!) and quality (decent) | ⭐⭐⭐ |
-| FID from scratch | Implement Fréchet Inception Distance: extract Inception features, compute means/covariances, plug into the closed-form formula | ⭐⭐⭐ |
-| Real NVP toy | Implement a small normalizing flow on 2D toy data (moons, swiss roll); visualize learned density vs samples | ⭐⭐⭐ |
+| [Manifold visualizer](projects/01-manifold-visualizer/README.md) | Draw 1,000 CIFAR-10 images and 1,000 uniform-random images; PCA both into 2D; observe the manifold | ⭐⭐ |
+| [Bits-per-dim baseline](projects/02-bits-per-dim-baseline/README.md) | Compute the bits-per-dim of a uniform distribution over `[0, 255]^d` on a small image dataset; this is the "no model" floor | ⭐⭐ |
+| [Tiny PixelCNN](projects/03-tiny-pixelcnn/README.md) | Implement a small autoregressive pixel model on MNIST; sample row by row; observe the speed (slow!) and quality (decent) | ⭐⭐⭐ |
+| [FID from scratch](projects/04-fid-from-scratch/README.md) | Implement Fréchet Inception Distance: extract Inception features, compute means/covariances, plug into the closed-form formula | ⭐⭐⭐ |
+| [Real NVP toy](projects/05-real-nvp-toy/README.md) | Implement a small normalizing flow on 2D toy data (moons, swiss roll); visualize learned density vs samples | ⭐⭐⭐ |
 
 ### Sample Code: Loading and Normalizing Images for a Generative Model
 

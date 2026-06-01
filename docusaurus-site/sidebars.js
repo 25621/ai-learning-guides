@@ -274,7 +274,24 @@ const sidebars = {
             },
           ],
         },
-        {type: 'doc', id: 'guides/image-generation/README', label: 'Image Generation'},
+        {
+          type: 'category',
+          label: 'Image Generation',
+          link: {type: 'doc', id: 'guides/image-generation/README'},
+          items: [
+            {
+              type: 'category',
+              label: 'Phase 1: Foundations — Images, Likelihoods, and the Manifold Problem',
+              items: [
+                {type: 'doc', id: 'guides/image-generation/projects/manifold-visualizer/README', label: 'Manifold visualizer'},
+                {type: 'doc', id: 'guides/image-generation/projects/bits-per-dim-baseline/README', label: 'Bits-per-dim baseline'},
+                {type: 'doc', id: 'guides/image-generation/projects/tiny-pixelcnn/README', label: 'Tiny PixelCNN'},
+                {type: 'doc', id: 'guides/image-generation/projects/fid-from-scratch/README', label: 'FID from scratch'},
+                {type: 'doc', id: 'guides/image-generation/projects/real-nvp-toy/README', label: 'Real NVP toy'},
+              ],
+            },
+          ],
+        },
         {type: 'doc', id: 'guides/reinforcement-learning/README', label: 'Reinforcement Learning'},
         {type: 'doc', id: 'guides/video-generation/README', label: 'Video Generation'},
         {type: 'doc', id: 'guides/robotics/README', label: 'Robotics'},

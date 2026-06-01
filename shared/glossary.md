@@ -100,6 +100,9 @@ The first few tokens of a sequence, which [attention](/shared/glossary/#attentio
 ### autograd {#autograd}
 The [reverse-mode](/shared/glossary/#reverse-mode) automatic differentiation engine
 
+### Autoregressive model {#autoregressive-model}
+A model that generates a sequence one piece at a time, where each new piece is predicted from all the pieces produced so far — like writing a sentence word by word, with every word depending on the words already on the page. For images, an autoregressive model (such as PixelCNN) draws pixel by pixel in a fixed order. This makes the math clean and the samples sharp, but generation is slow because each step has to wait for the previous one, with no way to compute them all at once.
+
 ### AWQ {#awq}
 Activation-aware Weight Quantization — preserve weights important to large activations
 
@@ -155,7 +158,7 @@ Using a current estimate (e.g., `V(s')`) in the target instead of a full return
 The single slowest stage in a pipeline, which caps the overall speed; in training this is often the data loader rather than the model.
 
 ### bpd (bits per dimension) {#bpd-bits-per-dimension}
-Standard likelihood metric for image models; `-log₂ p(x) / D`
+The standard likelihood metric for image models: the average number of bits needed to store each number (dimension) in an image, computed as `-log₂ p(x) / D`. Think of it as how "surprised" the model is per pixel-value — a better model predicts the data more confidently and so needs fewer bits, like a good compressor that zips a file smaller. A model that thinks all 256 pixel values are equally likely scores exactly 8 bits per dimension, so any real model must come in under 8 to show it learned something.
 
 ### BPE {#bpe}
 Byte-Pair Encoding — subword [tokenization](/shared/glossary/#tokenizer) by greedy frequent-pair merges. It starts from raw bytes and repeatedly glues together the neighboring pair that appears most often, building up reusable chunks. For example, on lots of English text BPE notices `t` and `h` sit side by side constantly and merges them into `th`; a later round merges `th` + `e` into `the`. So a common word like `the` ends up as a single token, while a rarer word like `tokenizer` is left as familiar pieces such as `token` + `izer`. "Greedy" means each round simply takes the single most-frequent merge available, never looking ahead to see whether a different choice would pay off later.
@@ -458,7 +461,7 @@ Feed-Forward Network — the small [MLP](/shared/glossary/#mlp) inside each [tra
 Force/Torque sensor — six-axis force and moment at a wrist or fingertip
 
 ### FID {#fid}
-Fréchet Inception Distance — the standard sample-quality metric for image generation
+Fréchet Inception Distance — the standard sample-quality metric for image generation. It runs both real and generated images through a pretrained Inception network to turn each image into a feature vector, then measures how far apart the two clouds of features sit by comparing their means and covariances (their centers and spreads). A lower FID means the generated images look statistically more like the real ones — picture two overlapping clouds of dots: the more they overlap, the smaller the distance.
 
 ### FineWeb-Edu {#fineweb-edu}
 A large, openly released [pretraining](/shared/glossary/#pretraining) dataset built by running a [quality filter](/shared/glossary/#quality-filter) over crawled web pages and keeping only the educational-looking ones — like skimming a huge pile of internet text and saving just the pages that read like a textbook. Models trained on it often beat models trained on far more unfiltered text, making it a go-to example that data quality can matter more than raw quantity.
@@ -758,6 +761,9 @@ Linear-Quadratic Regulator — optimal linear feedback for quadratic cost
 ### MagViT-v2 {#magvit-v2}
 The strongest open recipe for discrete video tokenization
 
+### Manifold {#manifold}
+The thin, curved surface inside a much larger space where real data actually lives. A 32×32 color image is a point in a space of 3,072 numbers, but almost every random point in that space looks like static — only a vanishingly small, smoothly connected sliver of it looks like a real photo, and that sliver is the manifold. A useful analogy: a sheet of paper is a 2D surface, but if you crumple it and drop it into a room it traces out a thin curved shape floating in 3D space; the paper is the manifold and the room is the full space. Learning to generate images is largely learning the shape of this surface so you only ever land on it.
+
 ### Manipulability {#manipulability}
 Scalar measure of how "easy" motion is from a given configuration (e.g. `sqrt(det(JJᵀ))`)
 
@@ -898,6 +904,9 @@ The `non_blocking=True` flag on `.to()` / `.cuda()` that lets a host→device co
 ### Normalization {#normalization}
 Rescaling a layer's outputs so they keep a consistent size — typically zero mean and unit variance (LayerNorm) or unit root-mean-square ([RMSNorm](/shared/glossary/#rmsnorm)). Like adjusting every photo to the same brightness before comparing them, it stops numbers from ballooning or vanishing as they flow through a deep network, which is what keeps training stable.
 
+### Normalizing flow {#normalizing-flow}
+A generative model that starts from simple random noise (usually a plain Gaussian "bell curve") and pushes it through a chain of *reversible* steps to reshape it into realistic data — like kneading a smooth ball of dough into a detailed shape, where you can always un-knead it back. Because every step can be run backwards exactly, a flow can also report the precise probability of any data point, which most generative models cannot do. The price for that exactness is that each step must stay reversible, which heavily constrains the architecture; examples include Real NVP and Glow.
+
 ### NVLink {#nvlink}
 NVIDIA's GPU-GPU interconnect; much faster than PCIe
 
@@ -960,6 +969,9 @@ A way of storing the [KV cache](/shared/glossary/#kv-cache) for many concurrent 
 
 ### Patchification {#patchification}
 Splitting a (latent) tensor into a sequence of patch tokens for a transformer
+
+### PCA (principal component analysis) {#pca-principal-component-analysis}
+A technique that finds the few directions along which data varies the most and uses them to compress many numbers down to a handful, so high-dimensional data can be drawn on a 2D plot. Imagine photographing a 3D object from the angle that reveals its shape best — PCA picks that most-informative "camera angle" automatically. It is a quick, standard first step for *seeing* the structure in data, such as checking whether real images cluster together while random noise scatters apart.
 
 ### PCIe {#pcie}
 The standard CPU-GPU connection (and slower GPU-GPU when no NVLink)
