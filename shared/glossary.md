@@ -58,6 +58,9 @@ Making embeddings from different modalities comparable in a shared space
 ### Alignment stack {#alignment-stack}
 The layered sequence of post-training steps that turns a raw [base model](/shared/glossary/#base-model) into a helpful, safe assistant — typically [SFT](/shared/glossary/#sft), then a [reward model](/shared/glossary/#reward-model), then [RLHF](/shared/glossary/#rlhf) (or [DPO](/shared/glossary/#dpo)). Like the stations on an assembly line, each layer builds on the one below it: the model first learns to follow instructions, then learns what people prefer, then is tuned to actually prefer it. "Alignment" here means getting the model's behavior to match human intent.
 
+### All-to-all token routing {#all-to-all-token-routing}
+In a [Mixture-of-Experts (MoE)](/shared/glossary/#moe) model spread across many GPUs, tokens must be sent to the specific GPU that holds the expert they need. "All-to-all" is the massive communication step where every GPU simultaneously sends its tokens to every other GPU and receives tokens in return. Imagine a busy postal sorting center where workers at different tables all throw packages to each other's tables at the exact same time—it requires incredibly fast network connections to prevent a traffic jam.
+
 ### AllReduce {#allreduce}
 A team operation in distributed computing: every worker ([rank](/shared/glossary/#rank)) starts with its own array of numbers, and AllReduce adds them all together and hands the *same* combined result back to everyone. (A [tensor](/shared/glossary/#tensor) here is just a grid of numbers, not a function; "summing tensors" means lining up two equal-shaped grids and adding matching cells — `[1,2,3] + [10,20,30] = [11,22,33]`.) Imagine four friends who each counted part of a crowd: they pool their counts, add them up, and all walk away knowing the same total. In [tensor-parallel](/shared/glossary/#tensor-parallelism-tp) inference each GPU computes part of a layer, and an AllReduce combines those partial results so every GPU ends up holding the full answer before the next layer runs.
 
@@ -427,6 +430,9 @@ A dense vector that represents a token (or other item) so the model can compute 
 ### Embedding matrix {#embedding-matrix}
 The lookup table `E ∈ ℝ^{V×d}` that turns each token ID into a dense vector by selecting its row; growing the [vocabulary](/shared/glossary/#vocabulary) means adding rows
 
+### Enormous on paper {#enormous-on-paper}
+Describes a model like a [Mixture-of-Experts (MoE)](/shared/glossary/#moe) that has a massive total number of parameters (e.g., 100 billion), but only uses a small fraction of them (e.g., 10 billion) for any single word. Like a giant university with 5,000 courses listed in its catalog (enormous on paper)—no single student takes all 5,000 courses. Each student only takes a few classes at a time, so the cost per student remains low, even though the total catalog is huge.
+
 ### Error budget {#error-budget}
 The small amount of failure an [SLO](/shared/glossary/#slo) allows. If your target is 99.9% success, the remaining 0.1% — about 43 minutes a month — is your error budget. Like a monthly data allowance on a phone plan: you can "spend" it on risky deploys and experiments, but once it runs out you stop taking risks until it resets. It turns reliability from a vague goal into a balance you can watch.
 
@@ -437,7 +443,7 @@ PyTorch's lightweight runtime for running models on mobile and edge devices, bui
 In a [Mixture-of-Experts (MoE)](/shared/glossary/#moe), one of several parallel [MLP](/shared/glossary/#mlp) sub-networks; a router sends each token to only the top few experts instead of all of them. Like a hospital triage desk that routes each patient to the right specialist rather than making everyone see every doctor — lots of expertise on hand, but only a little used per case.
 
 ### Expert parallelism (EP) {#expert-parallelism-ep}
-For MoE models, distributing experts across GPUs with all-to-all token routing
+For MoE models, distributing experts across GPUs with [all-to-all token routing](/shared/glossary/#all-to-all-token-routing)
 
 ### Exponent {#exponent}
 The part of a [floating-point](https://en.wikipedia.org/wiki/Floating-point_arithmetic) number that records its *scale* — how many places to shift the decimal point. In scientific notation like `3.5 × 10¹²`, the `12` is the exponent (using base 10 instead of base 2). More exponent bits give a wider range of representable magnitudes, from astronomically large to vanishingly small; fewer exponent bits mean values overflow or [underflow](/shared/glossary/#underflow) more easily. This is why [FP8](/shared/glossary/#fp8) has two flavors: **E5M2** (5 exponent bits) for gradients that can swing wildly in size, and **E4M3** (4 exponent bits) for activations that stay in a tighter range. See also [mantissa](/shared/glossary/#mantissa).
@@ -1368,6 +1374,9 @@ PyTorch's launcher command that starts one process per GPU and sets the `RANK`, 
 
 ### TorchScript {#torchscript}
 The legacy serialization/IR for PyTorch; superseded by `torch.export`
+
+### Trained or just prompted {#trained-or-just-prompted}
+A choice in how you create a small helper model (like a [router model](/shared/glossary/#router-model)). You can either "train" it (by fine-tuning its weights on thousands of examples, like sending someone to medical school) or "just prompt" it (by taking an existing smart model and simply giving it a written instruction like "You are a router, decide if this question is hard or easy," like handing a smart assistant a checklist). Training takes more effort upfront but is faster and cheaper to run; prompting is quick to set up but costs more per request since you process the instructions every time.
 
 ### Transformer {#transformer}
 The decoder-only / encoder-only / encoder-decoder architecture built from [attention](/shared/glossary/#attention) + [MLP](/shared/glossary/#mlp) blocks

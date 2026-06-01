@@ -8,7 +8,7 @@
 
 ## Key Insight
 
-This project builds a tiny [router model](/shared/glossary/#router-model) (trained or just prompted) that looks at each incoming request and decides whether to send it down a fast 1B "easy path" or escalate it to a slow, expensive 70B "hard path." You then measure the two things that matter: answer quality and [cost per token](/shared/glossary/#cost-per-million-tokens), to see how much you save without users noticing.
+This project builds a tiny [router model](/shared/glossary/#router-model) ([trained or just prompted](/shared/glossary/#trained-or-just-prompted)) that looks at each incoming request and decides whether to send it down a fast 1B "easy path" or escalate it to a slow, expensive 70B "hard path." You then measure the two things that matter: answer quality and [cost per token](/shared/glossary/#cost-per-million-tokens), to see how much you save without users noticing.
 
 ## Why This Matters
 
