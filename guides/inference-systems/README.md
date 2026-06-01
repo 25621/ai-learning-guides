@@ -1299,13 +1299,13 @@ The state of the art in inference is moving fast. Some of what's described in th
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Reasoning-model serving | Serve a long-CoT model; measure output-token variance, design a thinking-budget knob | ⭐⭐⭐⭐ |
-| Stateful sessions | Build a session API that preserves KV cache across turns, evicts cleanly under pressure | ⭐⭐⭐⭐⭐ |
-| Router model | Train (or prompt) a tiny model to route between a 1B "fast path" and a 70B "slow path"; measure quality and cost | ⭐⭐⭐⭐ |
-| MoE serving | Stand up a Mixtral or DeepSeek MoE; measure expert-imbalance under your workload | ⭐⭐⭐⭐⭐ |
-| FP4 (Blackwell) inference | If hardware available, benchmark FP4 weights + activations against FP8; measure quality | ⭐⭐⭐⭐⭐ |
-| On-device build | Compile a 3B model to MLX / TensorRT-LLM-Jetson / GGUF; measure tokens/sec on a real device | ⭐⭐⭐⭐ |
-| Speculative agent steps | In an agent loop, speculatively execute the most likely next tool call; verify and roll back if wrong | ⭐⭐⭐⭐⭐ |
+| [Reasoning-model serving](projects/67-reasoning-model-serving/README.md) | Serve a long-CoT model; measure output-token variance, design a thinking-budget knob | ⭐⭐⭐⭐ |
+| [Stateful sessions](projects/68-stateful-sessions/README.md) | Build a session API that preserves KV cache across turns, evicts cleanly under pressure | ⭐⭐⭐⭐⭐ |
+| [Router model](projects/69-router-model/README.md) | Train (or prompt) a tiny model to route between a 1B "fast path" and a 70B "slow path"; measure quality and cost | ⭐⭐⭐⭐ |
+| [MoE serving](projects/70-moe-serving/README.md) | Stand up a Mixtral or DeepSeek MoE; measure expert-imbalance under your workload | ⭐⭐⭐⭐⭐ |
+| [FP4 (Blackwell) inference](projects/71-fp4-blackwell-inference/README.md) | If hardware available, benchmark FP4 weights + activations against FP8; measure quality | ⭐⭐⭐⭐⭐ |
+| [On-device build](projects/72-on-device-build/README.md) | Compile a 3B model to MLX / TensorRT-LLM-Jetson / GGUF; measure tokens/sec on a real device | ⭐⭐⭐⭐ |
+| [Speculative agent steps](projects/73-speculative-agent-steps/README.md) | In an agent loop, speculatively execute the most likely next tool call; verify and roll back if wrong | ⭐⭐⭐⭐⭐ |
 
 ### Key Insight
 

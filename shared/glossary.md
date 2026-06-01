@@ -400,6 +400,9 @@ PyTorch's default execution, where each operation runs immediately as its Python
 ### EAGLE / Medusa {#eagle--medusa}
 Self-speculation: extra heads on the target model propose tokens, no separate draft model
 
+### Edge inference {#edge-inference}
+Running a model directly on the device in front of the user — a phone, laptop, car, or small embedded board — instead of sending the request to a data-center GPU. Like cooking at home rather than ordering delivery: it is private and works without a network, but you are limited to the small "kitchen" the device has, so models are kept small (1–8B), heavily [quantized](/shared/glossary/#quantization), and tuned to sip battery and fit in shared memory.
+
 ### EDM {#edm}
 Karras et al. 2022 — a reformulation of diffusion in σ-space with clean preconditioning
 
@@ -531,6 +534,9 @@ Gaussian Error Linear Unit — a smooth activation function widely used in trans
 
 ### GEMM {#gemm}
 GEneral Matrix Multiply — the workhorse operation `C = A × B` on two matrices, and the single most common heavy computation inside a neural network. GPUs are built to do GEMMs fast; nearly every layer's forward pass is one. When one input is very "skinny" (a tiny batch, as in single-token [decode](/shared/glossary/#decode)) the GPU's [Tensor Cores](/shared/glossary/#tensor-core) sit half-idle, so that case needs a different kernel from a big, square prefill GEMM.
+
+### GGUF {#gguf}
+A single-file format for storing a [quantized](/shared/glossary/#quantization) model — weights plus all the metadata needed to run it — popularized by [`llama.cpp`](https://github.com/ggerganov/llama.cpp). Like a self-contained zip that a laptop or phone can open and run without extra setup, it is the format of choice for [edge and on-device inference](/shared/glossary/#edge-inference).
 
 ### GLU {#glu}
 Gated Linear Unit — a layer that computes *two* things from the input and multiplies them together element by element: one is the actual content, the other is a "gate" (a [non-linearity](/shared/glossary/#activations) whose output sits near 0–1) that decides how much of that content to let through. Like a row of dimmer switches, one per wire, that the network *learns* to turn up or down — rather than a plain on/off. Being able to suppress parts of its own signal makes a GLU more expressive than a single linear layer; [SwiGLU](/shared/glossary/#swiglu) is the popular variant that uses [Swish](/shared/glossary/#swish) for the gate.
@@ -809,7 +815,7 @@ Empirical finding that different-modality embeddings stay in separable regions
 GAN failure mode: generator produces few distinct outputs
 
 ### MoE {#moe}
-Mixture-of-Experts — sparse routing across N expert [MLPs](/shared/glossary/#mlp); high total params, fixed compute per token
+Mixture-of-Experts — instead of one big [MLP](/shared/glossary/#mlp) per layer, the model holds many parallel "[expert](/shared/glossary/#expert)" MLPs and a small router sends each token to only the top few. Like a big company where every question goes to just the two or three relevant specialists rather than the whole staff, the model can hold a huge number of total [parameters](/shared/glossary/#weights) while doing only a fixed, small amount of compute per token. The serving catch: which experts get used shifts with the workload, so keeping them evenly busy across GPUs ([expert parallelism](/shared/glossary/#expert-parallelism-ep)) is the hard part.
 
 ### Momentum {#momentum}
 A technique that accumulates a moving average of past gradients to dampen oscillations and accelerate gradient descent in consistent directions
@@ -1060,6 +1066,9 @@ The unique integer ID of a process in a distributed job. `RANK` is the global ID
 ### RDMA {#rdma}
 Remote Direct Memory Access — letting one machine read or write another machine's memory directly over the network, without either CPU stopping to copy the data. Like a pneumatic tube that drops a package straight onto a coworker's desk instead of handing it to a courier who walks it over. In disaggregated serving it is how a [prefill](/shared/glossary/#prefill) node ships a multi-gigabyte [KV cache](/shared/glossary/#kv-cache) to a [decode](/shared/glossary/#decode) node fast enough to be worth splitting them.
 
+### Reasoning model {#reasoning-model}
+An [LLM](/shared/glossary/#llm) trained to think out loud at length — writing a long [chain of thought](/shared/glossary/#cot) before its final answer — to solve harder problems (math, code, logic). Like a student who fills a page of scratch work before writing the answer, it is far more capable on tough questions but also far more expensive to serve, because one hard problem can produce 10× the tokens of a normal chat reply. Managing that swing in output length is the main serving challenge it creates.
+
 ### ReAct {#react}
 A simple [agent](/shared/glossary/#agent) pattern that interleaves **Rea**soning and **Act**ing: the model writes a thought, takes an action with a tool, reads the observation, then repeats — the loop most basic agents are built on.
 
@@ -1137,6 +1146,9 @@ Rotary Position [Embedding](/shared/glossary/#embedding) — encodes position by
 
 ### ROS / ROS 2 {#ros--ros-2}
 Robot Operating System — robotics middleware (ROS 2 is the modern version)
+
+### Router model {#router-model}
+A small, cheap model that sits at the front of a serving stack and decides *which* model should answer each request — for example, sending an easy question to a fast 1B model and only escalating hard ones to a slow, expensive 70B model. Like a hospital triage nurse who handles simple cases on the spot and forwards the serious ones to a specialist, it saves money because most queries never need the biggest model.
 
 ### RRT {#rrt}
 Rapidly-exploring Random Tree — single-query sampling-based planner
@@ -1229,7 +1241,7 @@ The function that turns a vector of scores into a probability distribution — e
 Reserved [vocabulary](/shared/glossary/#vocabulary) entries that mark structure rather than text — e.g. `<bos>`, `<eos>`, `<pad>`, and chat-boundary tokens like `<|im_start|>`
 
 ### Speculative decoding {#speculative-decoding}
-Use a draft model to propose tokens; verify with the target in one parallel pass; accepted tokens are appended
+A trick to make [decode](/shared/glossary/#decode) faster for free: a small, fast "draft" model guesses the next few tokens, and the big "target" model checks all of them in a single parallel pass, keeping every guess that matches what it would have produced and discarding the rest. Like an editor who reads a sentence a junior writer drafted and approves the part that is already correct rather than writing every word from scratch — the answer is identical to what the target alone would say, just reached in fewer slow steps. It works because decode is starved for memory bandwidth, so the GPU has spare compute to verify several guesses at once.
 
 ### State dict {#state-dict}
 A Python `OrderedDict` that maps every parameter and buffer name to its tensor value; the standard format for saving, loading, and transplanting PyTorch model weights
@@ -1312,6 +1324,9 @@ Tera (10¹²) floating-point operations per second
 ### TGI {#tgi}
 Short for **Text Generation Inference** — Hugging Face's open-source LLM serving engine, similar in role to [vLLM](/shared/glossary/#vllm). It implements [continuous batching](/shared/glossary/#continuous-batching), [PagedAttention](/shared/glossary/#pagedattention), and quantized inference behind a simple HTTP API, and is one of the two engines most commonly used to put an LLM in front of real users.
 
+### Thinking budget {#thinking-budget}
+A cap on how many tokens a [reasoning model](/shared/glossary/#reasoning-model) is allowed to spend thinking before it must give an answer — like telling a student "you have ten minutes of scratch work, then write your answer." It lets a serving system trade accuracy for cost and [latency](/shared/glossary/#latency): a bigger budget usually means better answers on hard problems but slower, pricier responses.
+
 ### Throughput {#throughput}
 How much work is completed per unit of time — for training, the number of examples processed per second.
 
@@ -1326,6 +1341,9 @@ The mapping from string to integer IDs; trained, frozen, part of the model contr
 
 ### Tokens per byte {#tokens-per-byte}
 A measure of tokenizer efficiency: how many tokens it emits per byte of input text; higher means the same text costs more tokens
+
+### Tool call {#tool-call}
+When an [LLM](/shared/glossary/#llm), instead of answering directly, emits a structured request to run an external function — search the web, query a database, run code — and then continues once it sees the result. Like a person pausing mid-task to look something up or use a calculator, it is the basic action an [agent](/shared/glossary/#agent) takes in its loop.
 
 ### Top-k {#top-k}
 A [sampling](/shared/glossary/#sampling) rule that keeps only the `k` most likely next tokens and draws from those, throwing away the long tail. With `k=1` it always takes the single best word (greedy decoding); with `k=50` it chooses among the top 50 — like ordering only from a menu's 50 most popular dishes instead of the whole cookbook.
