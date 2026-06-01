@@ -214,6 +214,9 @@ Splitting long prompts across multiple iterations to interleave with decode step
 ### Chunking {#chunking}
 Splitting documents into smaller passages (often a few hundred tokens each) before indexing them for retrieval, so a search returns a focused snippet instead of a whole book.
 
+### CIFAR-10 {#cifar-10}
+A classic dataset of 60,000 tiny 32×32 color photos sorted into 10 everyday categories (airplane, cat, dog, ship, truck, and so on). Because the images are small and the whole set downloads in seconds, it is a go-to "hello world" for image models — big enough to be interesting, small enough to train on a laptop. The name stands for "Canadian Institute For Advanced Research, 10 classes." See also [MNIST](/shared/glossary/#mnist), its even simpler grayscale cousin.
+
 ### CLIP {#clip}
 Contrastive Language-Image Pretraining — paired text-image dual encoder
 
@@ -276,6 +279,9 @@ The standard price unit for running a model in production: how many dollars it c
 
 ### CoT {#cot}
 Chain of Thought — prompting or training a model to write out its reasoning step by step before giving a final answer, the way a student shows their work on a math problem instead of blurting out just the result.
+
+### Covariance {#covariance}
+A measure of how two quantities move *together*: when one is above its average, does the other tend to be above too (positive covariance), below (negative), or neither (near zero)? Stacked up for many quantities at once it becomes a *covariance matrix*, which describes the overall shape and spread of a [cloud of points](/shared/glossary/#point-cloud) — how wide it is in each direction and how tilted. Picture a scatter of darts on a board: the covariance tells you whether the cloud is a tight circle, a wide oval, or a diagonal streak. [FID](/shared/glossary/#fid) compares the covariances of real and generated image features to check that the two clouds have the same *shape*, not just the same center.
 
 ### CQL {#cql}
 Conservative Q-Learning — offline RL with a pessimistic Q penalty
@@ -461,7 +467,7 @@ Feed-Forward Network — the small [MLP](/shared/glossary/#mlp) inside each [tra
 Force/Torque sensor — six-axis force and moment at a wrist or fingertip
 
 ### FID {#fid}
-Fréchet Inception Distance — the standard sample-quality metric for image generation. It runs both real and generated images through a pretrained Inception network to turn each image into a feature vector, then measures how far apart the two clouds of features sit by comparing their means and covariances (their centers and spreads). A lower FID means the generated images look statistically more like the real ones — picture two overlapping clouds of dots: the more they overlap, the smaller the distance.
+Fréchet Inception Distance — the standard sample-quality metric for image generation. It runs both real and generated images through a pretrained [Inception network](/shared/glossary/#inception-network) to turn each image into a feature vector, then measures how far apart the two [clouds](/shared/glossary/#point-cloud) of features sit by comparing their means and [covariances](/shared/glossary/#covariance) (their centers and spreads). A lower FID means the generated images look statistically more like the real ones — picture two overlapping clouds of dots: the more they overlap, the smaller the distance.
 
 ### FineWeb-Edu {#fineweb-edu}
 A large, openly released [pretraining](/shared/glossary/#pretraining) dataset built by running a [quality filter](/shared/glossary/#quality-filter) over crawled web pages and keeping only the educational-looking ones — like skimming a huge pile of internet text and saving just the pages that read like a textbook. Models trained on it often beat models trained on far more unfiltered text, making it a go-to example that data quality can matter more than raw quantity.
@@ -546,6 +552,9 @@ GEneral Matrix Multiply — the workhorse operation `C = A × B` on two matrices
 
 ### GGUF {#gguf}
 A single-file format for storing a [quantized](/shared/glossary/#quantization) model — weights plus all the metadata needed to run it — popularized by [`llama.cpp`](https://github.com/ggerganov/llama.cpp). Like a self-contained zip that a laptop or phone can open and run without extra setup, it is the format of choice for [edge and on-device inference](/shared/glossary/#edge-inference).
+
+### Glow {#glow}
+A well-known [normalizing flow](/shared/glossary/#normalizing-flow) model (from OpenAI, 2018) that improved on [Real NVP](/shared/glossary/#real-nvp) by adding learnable 1×1 convolutions that shuffle and mix the channels between steps, letting it generate sharp, high-resolution faces. It showed that flows could produce convincing images and smoothly morph one face into another, though they were later overtaken by [diffusion models](/shared/glossary/#diffusion-model) on hard, real-world images.
 
 ### GLU {#glu}
 Gated Linear Unit — a layer that computes *two* things from the input and multiplies them together element by element: one is the actual content, the other is a "gate" (a [non-linearity](/shared/glossary/#activations) whose output sits near 0–1) that decides how much of that content to let through. Like a row of dimmer switches, one per wire, that the network *learns* to turn up or down — rather than a plain on/off. Being able to suppress parts of its own signal makes a GLU more expressive than a single linear layer; [SwiGLU](/shared/glossary/#swiglu) is the popular variant that uses [Swish](/shared/glossary/#swish) for the gate.
@@ -646,6 +655,9 @@ Command a virtual spring-damper between end-effector and reference
 
 ### IMU {#imu}
 Inertial Measurement Unit — gyroscope + accelerometer (often + magnetometer)
+
+### Inception network {#inception-network}
+A famous image-classification [convolutional neural network](/shared/glossary/#cnn) (the "Inception" / GoogLeNet family) trained on millions of labeled photos. Along the way it learns to boil any image down to a compact *feature vector* — a list of numbers that captures *what is in the picture* (fur, wheels, sky) rather than the raw pixels. Because those features are such good summaries of image content, quality metrics like [FID](/shared/glossary/#fid) reuse a frozen, pretrained Inception network as a fixed yardstick instead of training anything new — like always using the same trusted scale to weigh two bags so the comparison is fair. (It was nicknamed "Inception" after the movie, for its "network inside a network" design.)
 
 ### Indexing {#indexing}
 Mapping a multidimensional index `[i, j, …]` to a flat storage position via `offset + Σ iₖ·strideₖ`
@@ -820,6 +832,9 @@ Multi-Modal Diffusion Transformer — joint text+image attention layers, used in
 ### MMLU {#mmlu}
 Massive Multitask Language Understanding — a 57-subject multiple-choice [benchmark](/shared/glossary/#benchmark) (history, law, medicine, math, and more) that became the standard quick test of how much general knowledge a model has, like a giant trivia exam spanning many school subjects at once.
 
+### MNIST {#mnist}
+A classic dataset of 70,000 small 28×28 grayscale images of handwritten digits 0–9. It is the most common "hello world" for image models — tiny, clean, and quick to train on — so a brand-new idea is almost always tried on MNIST first, before anyone risks it on harder, fuller-color data like [CIFAR-10](/shared/glossary/#cifar-10).
+
 ### Modality gap {#modality-gap}
 Empirical finding that different-modality embeddings stay in separable regions
 
@@ -905,7 +920,7 @@ The `non_blocking=True` flag on `.to()` / `.cuda()` that lets a host→device co
 Rescaling a layer's outputs so they keep a consistent size — typically zero mean and unit variance (LayerNorm) or unit root-mean-square ([RMSNorm](/shared/glossary/#rmsnorm)). Like adjusting every photo to the same brightness before comparing them, it stops numbers from ballooning or vanishing as they flow through a deep network, which is what keeps training stable.
 
 ### Normalizing flow {#normalizing-flow}
-A generative model that starts from simple random noise (usually a plain Gaussian "bell curve") and pushes it through a chain of *reversible* steps to reshape it into realistic data — like kneading a smooth ball of dough into a detailed shape, where you can always un-knead it back. Because every step can be run backwards exactly, a flow can also report the precise probability of any data point, which most generative models cannot do. The price for that exactness is that each step must stay reversible, which heavily constrains the architecture; examples include Real NVP and Glow.
+A generative model that starts from simple random noise (usually a plain Gaussian "bell curve") and pushes it through a chain of *reversible* steps to reshape it into realistic data — like kneading a smooth ball of dough into a detailed shape, where you can always un-knead it back. Why can you *always* un-knead it? Because every step is deliberately built to be undoable: it only ever stretches, shifts, or folds the dough in a way that has an exact opposite, and it never merges two blobs into one or throws any dough away. For example, if a step's rule is "double this number and add 3," its reverse is simply "subtract 3, then halve" — feed the output back through and you recover the original number exactly, with nothing lost. (An ordinary neural network is *not* like this: it mashes information together — like flattening the dough — so there is no way to run it backwards.) Because every step can be run backwards exactly, a flow can also report the precise probability of any data point, which most generative models cannot do. The price for that exactness is that each step must stay reversible, which heavily constrains the architecture; examples include [Real NVP](/shared/glossary/#real-nvp) and [Glow](/shared/glossary/#glow).
 
 ### NVLink {#nvlink}
 NVIDIA's GPU-GPU interconnect; much faster than PCIe
@@ -997,11 +1012,17 @@ Page-locked CPU memory that enables faster, asynchronous transfers to the GPU; e
 ### Pinocchio {#pinocchio}
 Fast rigid-body dynamics library (CRBA, RNEA, ABA)
 
+### PixelCNN {#pixelcnn}
+An [autoregressive](/shared/glossary/#autoregressive-model) image model that draws a picture one pixel at a time, predicting each pixel from the pixels already drawn above it and to its left — like filling in a coloring grid square by square, always glancing back at what you have already colored to decide the next color. The image quality is strong and it can report an exact [probability](/shared/glossary/#probability-density) for any picture, but generating one is slow because the pixels must come out strictly in order, each waiting on the one before it.
+
 ### Plücker coordinates {#plücker-coordinates}
 6D representation of a camera ray; standard for camera-conditioning
 
 ### PoC {#poc}
 Proof of Concept — a small, rough build whose only job is to show that an idea *can* work, before anyone invests in a polished version. Like frying one test pancake to check the batter before making the whole stack: you are not trying to serve it, just to learn whether the approach is sound.
+
+### Point cloud {#point-cloud}
+A loose scatter of dots in space, where each dot is one data item placed by its numbers. Turn every image in a batch into a [feature vector](/shared/glossary/#inception-network) — a single point — and the whole batch becomes a cloud of such points. Comparing two clouds (say, real images vs. generated ones) is how a metric like [FID](/shared/glossary/#fid) measures similarity: it is like comparing two swarms of bees and asking whether they are hovering in the same spot and spread out in the same shape.
 
 ### Policy {#policy}
 In reinforcement learning, the model being trained to choose what to do next — for an [LLM](/shared/glossary/#llm), the network that picks the next token. "Improving the policy" just means making those choices earn more reward.
@@ -1035,6 +1056,9 @@ Probabilistic Roadmap — multi-query sampling-based planner
 
 ### PRM800K {#prm800k}
 A public dataset of about 800,000 human labels that mark each step of a math solution as right or wrong, released by OpenAI to train [process reward models](/shared/glossary/#process-reward-model). Rather than only checking whether the final answer was correct, human graders read each worked solution line by line — like a math teacher putting a check or an X next to every step of a student's proof, not just the boxed answer at the bottom. Because the feedback is step-level, a model trained on it learns to spot exactly where the reasoning went off the rails instead of whether the ending happened to be lucky. It is the standard training set for the step-by-step scorers used in [Best-of-N](/shared/glossary/#best-of-n) re-ranking.
+
+### Probability density {#probability-density}
+A function that says how *likely* each possible value is — high where real data points pile up, low in the empty regions where they rarely fall. For a 2D dataset you can picture it as a heatmap: bright ridges over the crowded spots, dark valleys over the bare ones. It must stay non-negative everywhere, and all of it added up (the total volume under the surface) equals exactly 1, since *some* value always occurs. Most generative models can only *draw* new samples; a [normalizing flow](/shared/glossary/#normalizing-flow) is special because it can also report the exact probability density of any point you hand it.
 
 ### Probability flow ODE {#probability-flow-ode}
 The deterministic ODE equivalent of the reverse-time diffusion SDE
@@ -1083,6 +1107,9 @@ The unique integer ID of a process in a distributed job. `RANK` is the global ID
 
 ### RDMA {#rdma}
 Remote Direct Memory Access — letting one machine read or write another machine's memory directly over the network, without either CPU stopping to copy the data. Like a pneumatic tube that drops a package straight onto a coworker's desk instead of handing it to a courier who walks it over. In disaggregated serving it is how a [prefill](/shared/glossary/#prefill) node ships a multi-gigabyte [KV cache](/shared/glossary/#kv-cache) to a [decode](/shared/glossary/#decode) node fast enough to be worth splitting them.
+
+### Real NVP {#real-nvp}
+Short for "Real-valued Non-Volume Preserving" — an early, influential [normalizing flow](/shared/glossary/#normalizing-flow) design. Its trick at each step: split the numbers into two halves, leave one half completely untouched, and use that untouched half to decide how to stretch and shift the other half. Because the untouched half is still right there, the step is trivially *reversible* (you can recompute the stretch-and-shift and undo it) and its effect on [probability density](/shared/glossary/#probability-density) is cheap to calculate. This made flows practical to train and inspired later models like [Glow](/shared/glossary/#glow).
 
 ### Reasoning model {#reasoning-model}
 An [LLM](/shared/glossary/#llm) trained to think out loud at length — writing a long [chain of thought](/shared/glossary/#cot) before its final answer — to solve harder problems (math, code, logic). Like a student who fills a page of scratch work before writing the answer, it is far more capable on tough questions but also far more expensive to serve, because one hard problem can produce 10× the tokens of a normal chat reply. Managing that swing in output length is the main serving challenge it creates.
