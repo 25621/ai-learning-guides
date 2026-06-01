@@ -224,7 +224,7 @@ Contrastive Language-Image Pretraining — paired text-image dual encoder
 A solution you can write down and compute directly with a fixed formula, instead of reaching it through many rounds of trial-and-error. Solving `2x = 10` by writing `x = 5` is closed-form; nudging `x` up and down until both sides match is not. In [DPO](/shared/glossary/#dpo) a closed-form objective lets the model learn straight from preference pairs with one training [loss](/shared/glossary/#loss-function), skipping the slow [reward model](/shared/glossary/#reward-model)-plus-[PPO](/shared/glossary/#ppo) loop of classic [RLHF](/shared/glossary/#rlhf).
 
 ### CNN {#cnn}
-Convolutional Neural Network — a neural network built mainly from convolution layers; the standard architecture for image tasks.
+Convolutional Neural Network — a neural network built mainly from [convolution layers](/shared/glossary/#convolution-layers); the standard architecture for image tasks. Instead of staring at the whole picture at once, a CNN slides a small magnifying glass across the image, checking one little patch at a time for simple features — an edge here, a splash of color there. Early layers spot these tiny patterns; deeper layers stitch them into bigger ideas (edges become a whisker, whiskers become a cat). Because the *same* magnifying glass is reused over every patch, a CNN needs far fewer [parameters](/shared/glossary/#parameters) than a network that wired up every pixel separately — and it can recognize a cat whether it sits in the corner or the center of the photo.
 
 ### Collate function {#collate-function}
 The function a [DataLoader](/shared/glossary/#dataloader) uses to combine a list of individual samples into one batched tensor; a custom one can pad variable-length data.
@@ -267,6 +267,9 @@ A serving trick where the GPU adds new requests into the running [batch](/shared
 
 ### ControlNet {#controlnet}
 Architecture that adds an auxiliary conditioning branch (depth, pose, edges, …) to a frozen diffusion model
+
+### Convolution layers {#convolution-layers}
+The building-block layers of a [CNN](/shared/glossary/#cnn). Each one slides a small grid of learned numbers — a *filter* (also called a *kernel*) — step by step across the image, and at every stop it multiplies the filter against the patch underneath, adds up the result, and writes that single number into a new grid. Sweep the whole image and those numbers form a "feature map" that lights up wherever the filter's pattern appears. Picture a stencil cut in the shape of a vertical edge: drag it over a photo and it leaves a bright mark everywhere there *is* a vertical edge and stays dark elsewhere. One filter might hunt for edges, another for a patch of red, another for a curve; stacking many convolution layers lets the network build up from simple textures to whole objects. Reusing the same small filter everywhere is what keeps convolutions cheap and lets them spot a pattern no matter where it sits in the picture.
 
 ### copy {#copy}
 A tensor that owns its own storage, independent of any source tensor; created by `.clone()`, or automatically by operations like `.contiguous()` and `reshape` when a view is not possible
@@ -362,7 +365,7 @@ Turning a sequence of token IDs back into a UTF-8 string — the reverse of what
 Denavit-Hartenberg parameters — textbook arm-geometry description
 
 ### Diffusion model {#diffusion-model}
-A generative model that learns to *un-noise* an image (or video, or audio) — training starts from clean data, gradually adds Gaussian noise until it looks like static, and teaches the network to reverse one small step of that corruption. At inference time you start from pure static and call the network many times (often 4–50), each call removing a bit of noise until a coherent picture emerges. Like sculpting in reverse: the marble starts as a featureless block of noise and the model chips away until the shape appears. Stable Diffusion is the best-known example.
+A generative model that learns to *un-noise* an image (or video, or audio) — training starts from clean data, gradually adds Gaussian noise until it looks like static, and teaches the network to reverse one small step of that corruption. At inference time you start from pure static and call the network many times (often 4–50), each call removing a bit of noise until a coherent picture emerges. Like sculpting in reverse: the marble starts as a featureless block of noise and the model chips away until the shape appears. [Stable Diffusion](/shared/glossary/#stable-diffusion) is the best-known example.
 
 ### Disaggregated serving {#disaggregated-serving}
 Running prefill and decode on separate GPU pools with KV cache transfer between them
@@ -554,7 +557,7 @@ GEneral Matrix Multiply — the workhorse operation `C = A × B` on two matrices
 A single-file format for storing a [quantized](/shared/glossary/#quantization) model — weights plus all the metadata needed to run it — popularized by [`llama.cpp`](https://github.com/ggerganov/llama.cpp). Like a self-contained zip that a laptop or phone can open and run without extra setup, it is the format of choice for [edge and on-device inference](/shared/glossary/#edge-inference).
 
 ### Glow {#glow}
-A well-known [normalizing flow](/shared/glossary/#normalizing-flow) model (from OpenAI, 2018) that improved on [Real NVP](/shared/glossary/#real-nvp) by adding learnable 1×1 convolutions that shuffle and mix the channels between steps, letting it generate sharp, high-resolution faces. It showed that flows could produce convincing images and smoothly morph one face into another, though they were later overtaken by [diffusion models](/shared/glossary/#diffusion-model) on hard, real-world images.
+A well-known [normalizing flow](/shared/glossary/#normalizing-flow) model (from OpenAI, 2018) that improved on [Real NVP](/shared/glossary/#real-nvp) by adding learnable 1×1 [convolutions](/shared/glossary/#convolution-layers) that shuffle and mix the channels between steps, letting it generate sharp, high-resolution faces. It showed that flows could produce convincing images and smoothly morph one face into another, though they were later overtaken by [diffusion models](/shared/glossary/#diffusion-model) on hard, real-world images.
 
 ### GLU {#glu}
 Gated Linear Unit — a layer that computes *two* things from the input and multiplies them together element by element: one is the actual content, the other is a "gate" (a [non-linearity](/shared/glossary/#activations) whose output sits near 0–1) that decides how much of that content to let through. Like a row of dimmer switches, one per wire, that the network *learns* to turn up or down — rather than a plain on/off. Being able to suppress parts of its own signal makes a GLU more expressive than a single linear layer; [SwiGLU](/shared/glossary/#swiglu) is the popular variant that uses [Swish](/shared/glossary/#swish) for the gate.
@@ -657,7 +660,7 @@ Command a virtual spring-damper between end-effector and reference
 Inertial Measurement Unit — gyroscope + accelerometer (often + magnetometer)
 
 ### Inception network {#inception-network}
-A famous image-classification [convolutional neural network](/shared/glossary/#cnn) (the "Inception" / GoogLeNet family) trained on millions of labeled photos. Along the way it learns to boil any image down to a compact *feature vector* — a list of numbers that captures *what is in the picture* (fur, wheels, sky) rather than the raw pixels. Because those features are such good summaries of image content, quality metrics like [FID](/shared/glossary/#fid) reuse a frozen, pretrained Inception network as a fixed yardstick instead of training anything new — like always using the same trusted scale to weigh two bags so the comparison is fair. (It was nicknamed "Inception" after the movie, for its "network inside a network" design.)
+A famous image-classification [convolutional neural network](/shared/glossary/#cnn) (the "Inception" / GoogLeNet family) trained on millions of labeled photos. Along the way it learns to boil any image down to a compact *feature vector* — a list of numbers that captures *what is in the picture* (fur, wheels, sky) rather than the raw pixels. Because those features are such good summaries of image content, quality metrics like [FID](/shared/glossary/#fid) reuse a frozen, pretrained Inception network as a fixed yardstick instead of training anything new — like always using the same trusted scale to weigh two bags so the comparison is fair. (It was nicknamed "Inception" after the movie, for its "[network inside a network](/shared/glossary/#network-in-network)" design.)
 
 ### Indexing {#indexing}
 Mapping a multidimensional index `[i, j, …]` to a flat storage position via `offset + Σ iₖ·strideₖ`
@@ -886,6 +889,9 @@ A chat where the user and the AI take turns talking back and forth, building on 
 ### Native multimodal {#native-multimodal}
 A model trained from scratch on all modalities with a unified vocabulary
 
+### Network in Network {#network-in-network}
+A design idea where a tiny neural network is tucked *inside* a single layer of a bigger one, so that layer can do more thinking than a plain filter could. A normal [convolution layer](/shared/glossary/#convolution-layers) slides a simple filter that just takes a weighted sum of each patch; a network-in-network slides a small multi-step mini-network over each patch instead, letting it recognize more complicated local patterns on the spot. Picture a factory line where, instead of one worker stamping each part, every station hides a little expert team that inspects and shapes the part before passing it on. The idea (from the 2013 *Network In Network* paper) inspired the [Inception network](/shared/glossary/#inception-network)'s building blocks — which is why Inception was nicknamed after the movie about a dream inside a dream.
+
 ### Numerical issues {#numerical-issues}
 Problems arising from the finite precision of floating-point numbers, such as [underflow](/shared/glossary/#underflow), overflow, or loss of precision, which can lead to unstable training or [NaN](/shared/glossary/#nan) values.
 
@@ -1013,7 +1019,7 @@ Page-locked CPU memory that enables faster, asynchronous transfers to the GPU; e
 Fast rigid-body dynamics library (CRBA, RNEA, ABA)
 
 ### PixelCNN {#pixelcnn}
-An [autoregressive](/shared/glossary/#autoregressive-model) image model that draws a picture one pixel at a time, predicting each pixel from the pixels already drawn above it and to its left — like filling in a coloring grid square by square, always glancing back at what you have already colored to decide the next color. The image quality is strong and it can report an exact [probability](/shared/glossary/#probability-density) for any picture, but generating one is slow because the pixels must come out strictly in order, each waiting on the one before it.
+An [autoregressive](/shared/glossary/#autoregressive-model) image model — a [CNN (Convolutional Neural Network)](/shared/glossary/#cnn) repurposed for generation — that draws a picture one pixel at a time, predicting each pixel from the pixels already drawn above it and to its left — like filling in a coloring grid square by square, always glancing back at what you have already colored to decide the next color. The image quality is strong and it can report an exact [probability](/shared/glossary/#probability-density) for any picture, but generating one is slow because the pixels must come out strictly in order, each waiting on the one before it.
 
 ### Plücker coordinates {#plücker-coordinates}
 6D representation of a camera ray; standard for camera-conditioning
@@ -1022,7 +1028,7 @@ An [autoregressive](/shared/glossary/#autoregressive-model) image model that dra
 Proof of Concept — a small, rough build whose only job is to show that an idea *can* work, before anyone invests in a polished version. Like frying one test pancake to check the batter before making the whole stack: you are not trying to serve it, just to learn whether the approach is sound.
 
 ### Point cloud {#point-cloud}
-A loose scatter of dots in space, where each dot is one data item placed by its numbers. Turn every image in a batch into a [feature vector](/shared/glossary/#inception-network) — a single point — and the whole batch becomes a cloud of such points. Comparing two clouds (say, real images vs. generated ones) is how a metric like [FID](/shared/glossary/#fid) measures similarity: it is like comparing two swarms of bees and asking whether they are hovering in the same spot and spread out in the same shape.
+A loose scatter of dots in space, where each dot is one data item placed by its numbers. Turn every image in a [batch](/shared/glossary/#batch) into a [feature vector](/shared/glossary/#inception-network) — a single point — and the whole batch becomes a cloud of such points. Comparing two clouds (say, real images vs. generated ones) is how a metric like [FID](/shared/glossary/#fid) measures similarity: it is like comparing two swarms of bees and asking whether they are hovering in the same spot and spread out in the same shape.
 
 ### Policy {#policy}
 In reinforcement learning, the model being trained to choose what to do next — for an [LLM](/shared/glossary/#llm), the network that picks the next token. "Improving the policy" just means making those choices earn more reward.
@@ -1287,6 +1293,9 @@ Reserved [vocabulary](/shared/glossary/#vocabulary) entries that mark structure 
 
 ### Speculative decoding {#speculative-decoding}
 A trick to make [decode](/shared/glossary/#decode) faster for free: a small, fast "draft" model guesses the next few tokens, and the big "target" model checks all of them in a single parallel pass, keeping every guess that matches what it would have produced and discarding the rest. Like an editor who reads a sentence a junior writer drafted and approves the part that is already correct rather than writing every word from scratch — the answer is identical to what the target alone would say, just reached in fewer slow steps. It works because decode is starved for memory bandwidth, so the GPU has spare compute to verify several guesses at once.
+
+### Stable Diffusion {#stable-diffusion}
+The best-known open-source [diffusion model](/shared/glossary/#diffusion-model) for turning a text prompt into an image (first released by Stability AI in 2022). Its key trick is to do the slow denoising work in a small compressed space (the [latent](/shared/glossary/#ldm) space of a [VAE](/shared/glossary/#vae)) rather than on full-size pixels — like sketching a scene as a rough thumbnail first and only blowing it up to full resolution at the very end — which makes it light enough to run on a single consumer GPU. Because the weights were released publicly, it sparked a huge ecosystem of fine-tunes and add-ons such as [LoRA](/shared/glossary/#lora), [ControlNet](/shared/glossary/#controlnet), and [DreamBooth](/shared/glossary/#dreambooth).
 
 ### State dict {#state-dict}
 A Python `OrderedDict` that maps every parameter and buffer name to its tensor value; the standard format for saving, loading, and transplanting PyTorch model weights
