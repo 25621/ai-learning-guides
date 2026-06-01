@@ -157,6 +157,9 @@ Standard likelihood metric for image models; `-log₂ p(x) / D`
 ### BPE {#bpe}
 Byte-Pair Encoding — subword [tokenization](/shared/glossary/#tokenizer) by greedy frequent-pair merges. It starts from raw bytes and repeatedly glues together the neighboring pair that appears most often, building up reusable chunks. For example, on lots of English text BPE notices `t` and `h` sit side by side constantly and merges them into `th`; a later round merges `th` + `e` into `the`. So a common word like `the` ends up as a single token, while a rarer word like `tokenizer` is left as familiar pieces such as `token` + `izer`. "Greedy" means each round simply takes the single most-frequent merge available, never looking ahead to see whether a different choice would pay off later.
 
+### Broadcasting {#broadcasting}
+A tensor operation trick where a smaller tensor is automatically stretched to match the shape of a larger one without actually copying data in memory. Like painting a stripe down a wall: you only load the stripe pattern once, but apply it everywhere as you roll.
+
 ### C++ extension {#c-extension}
 A custom operation written in C++ (optionally with CUDA), compiled and loaded so it can be called from Python like a built-in PyTorch op.
 

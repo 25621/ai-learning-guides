@@ -1234,14 +1234,14 @@ A working inference system needs to *prove* it works under load, in production, 
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Metric instrumentation | Wire a vLLM server to Prometheus + Grafana; ship dashboards for all metrics in the figure above | ⭐⭐⭐ |
-| Synthetic load tests | Generate workloads with realistic prompt/output length distributions; benchmark at 1×, 2×, 5× concurrency | ⭐⭐⭐ |
-| SLO simulation | Define a P95 TTFT < 500 ms SLO; sweep arrival rate until it breaks; identify the bottleneck | ⭐⭐⭐⭐ |
-| Error budget tracker | Implement a daily SLI/SLO computation that exhausts an error budget under a chosen failure mode | ⭐⭐⭐⭐ |
-| Cost report | For your serving stack, produce a defensible $/M-output-tokens number; identify the top three line items | ⭐⭐⭐ |
-| Right-sizing experiment | Same workload, 7B vs. 13B vs. 70B; report quality (a real eval) and cost; recommend a tier | ⭐⭐⭐⭐ |
-| Load-shedding policy | Implement priority-aware admission control; verify SLOs hold for high-prio under 2× overload | ⭐⭐⭐⭐ |
-| Postmortem drill | Inject a real failure (replica crash, cache thrash); run the incident; write the postmortem | ⭐⭐⭐⭐ |
+| [Metric instrumentation](projects/59-metric-instrumentation/README.md) | Wire a vLLM server to Prometheus + Grafana; ship dashboards for all metrics in the figure above | ⭐⭐⭐ |
+| [Synthetic load tests](projects/60-synthetic-load-tests/README.md) | Generate workloads with realistic prompt/output length distributions; benchmark at 1×, 2×, 5× concurrency | ⭐⭐⭐ |
+| [SLO simulation](projects/61-slo-simulation/README.md) | Define a P95 TTFT < 500 ms SLO; sweep arrival rate until it breaks; identify the bottleneck | ⭐⭐⭐⭐ |
+| [Error budget tracker](projects/62-error-budget-tracker/README.md) | Implement a daily SLI/SLO computation that exhausts an error budget under a chosen failure mode | ⭐⭐⭐⭐ |
+| [Cost report](projects/63-cost-report/README.md) | For your serving stack, produce a defensible $/M-output-tokens number; identify the top three line items | ⭐⭐⭐ |
+| [Right-sizing experiment](projects/64-right-sizing-experiment/README.md) | Same workload, 7B vs. 13B vs. 70B; report quality (a real eval) and cost; recommend a tier | ⭐⭐⭐⭐ |
+| [Load-shedding policy](projects/65-load-shedding-policy/README.md) | Implement priority-aware admission control; verify SLOs hold for high-prio under 2× overload | ⭐⭐⭐⭐ |
+| [Postmortem drill](projects/66-postmortem-drill/README.md) | Inject a real failure (replica crash, cache thrash); run the incident; write the postmortem | ⭐⭐⭐⭐ |
 
 ### Key Insight
 
