@@ -262,6 +262,9 @@ A tensor that owns its own storage, independent of any source tensor; created by
 ### Cosine decay {#cosine-decay}
 A [learning-rate](/shared/glossary/#learning-rate) schedule that, after [warmup](/shared/glossary/#warmup), lowers the rate along the smooth downward half of a cosine curve until it reaches near zero by the end of training. The step size starts large and eases off gently — like braking smoothly as you coast up to a stop sign instead of slamming the pedal at the last moment — which helps the model settle into a good solution. It is the long-standing default schedule, before newer recipes like [WSD](/shared/glossary/#wsd).
 
+### Cost per million tokens {#cost-per-million-tokens}
+The standard price unit for running a model in production: how many dollars it costs to generate one million tokens of output. You get it by dividing the hardware's hourly cost by how many tokens it produces per hour — like working out a car's cost per mile from its fuel bill and the distance it covers. Almost every serving optimization, from [batching](/shared/glossary/#batching) to [quantization](/shared/glossary/#quantization), is ultimately a way to push this one number down.
+
 ### CoT {#cot}
 Chain of Thought — prompting or training a model to write out its reasoning step by step before giving a final answer, the way a student shows their work on a math problem instead of blurting out just the result.
 
@@ -417,6 +420,9 @@ A dense vector that represents a token (or other item) so the model can compute 
 
 ### Embedding matrix {#embedding-matrix}
 The lookup table `E ∈ ℝ^{V×d}` that turns each token ID into a dense vector by selecting its row; growing the [vocabulary](/shared/glossary/#vocabulary) means adding rows
+
+### Error budget {#error-budget}
+The small amount of failure an [SLO](/shared/glossary/#slo) allows. If your target is 99.9% success, the remaining 0.1% — about 43 minutes a month — is your error budget. Like a monthly data allowance on a phone plan: you can "spend" it on risky deploys and experiments, but once it runs out you stop taking risks until it resets. It turns reliability from a vague goal into a balance you can watch.
 
 ### ExecuTorch {#executorch}
 PyTorch's lightweight runtime for running models on mobile and edge devices, built on the graph captured by [`torch.export`](/shared/glossary/#torchexport).
@@ -704,6 +710,9 @@ Using a strong [LLM](/shared/glossary/#llm) to grade or compare other models' an
 ### Load balancing {#load-balancing}
 Spreading incoming requests across several copies of a service so no single one is overwhelmed while others sit idle — like a supermarket opening more checkout lanes and a greeter waving each new customer to the shortest one. The simplest rule is *round-robin* (hand requests out in turn, 1-2-3-1-2-3…); smarter rules send each request to the least-busy replica or to the one whose cache is already warm. The component that does this is a *load balancer*.
 
+### Load shedding {#load-shedding}
+Deliberately dropping or rejecting some requests when a server is overloaded, so the ones it does accept still meet their targets. Returning a fast "try again later" to low-priority traffic is far kinder than letting every request crawl — like a busy restaurant turning new walk-ins away so the diners already seated still get served on time. It usually works hand in hand with [admission control](/shared/glossary/#admission-control) and request priority.
+
 ### Logits {#logits}
 The raw, unnormalized scores a model produces at its output, one per [vocabulary](/shared/glossary/#vocabulary) entry, before they are turned into probabilities by [softmax](/shared/glossary/#softmax). Like the points each contestant has scored at the end of a game — bigger means "more likely the next token" — but to read them as percentages you have to normalize. [Sampling](/shared/glossary/#sampling) rules ([temperature](/shared/glossary/#temperature), [top-k](/shared/glossary/#top-k), [top-p](/shared/glossary/#top-p)) all reshape the logits before the random draw, and [`argmax`](/shared/glossary/#argmax) of the logits is what [greedy decoding](/shared/glossary/#greedy-decoding) picks.
 
@@ -880,6 +889,9 @@ NVIDIA's GPU-GPU interconnect; much faster than PCIe
 ### NVSwitch {#nvswitch}
 NVLink switch chip; full-bandwidth all-to-all within a node
 
+### Observability {#observability}
+The practice of making a running system's inner state visible from the outside — through metrics, logs, and traces — so you can ask new questions about *why* it is misbehaving without adding new code. Like the dashboard and warning lights in a car: you can tell what is wrong while still driving, instead of pulling the engine apart. For a serving stack it is the difference between knowing "p99 [latency](/shared/glossary/#latency) tripled at 9 a.m." and finding out only when users complain.
+
 ### Off-policy {#off-policy}
 The data comes from a different policy than the one being optimized
 
@@ -937,6 +949,9 @@ Splitting a (latent) tensor into a sequence of patch tokens for a transformer
 ### PCIe {#pcie}
 The standard CPU-GPU connection (and slower GPU-GPU when no NVLink)
 
+### Percentile {#percentile}
+A way to describe where a value ranks in a sorted list: the p99 [latency](/shared/glossary/#latency) is the time that 99% of requests beat, with only the slowest 1% taking longer. Unlike an average, which a single huge outlier can hide, percentiles expose the slow tail that users actually feel — like reporting "even the slowest of the top 99% of diners was served within 20 minutes" instead of a misleading table-wide average. Serving teams quote p50, p95, and p99 rather than the mean for exactly this reason.
+
 ### Perceptual loss (LPIPS) {#perceptual-loss-lpips}
 Loss computed in the feature space of a pretrained classifier; sharper than pixel MSE
 
@@ -972,6 +987,9 @@ Extending a model's context length by linearly rescaling [RoPE](/shared/glossary
 
 ### Posterior collapse {#posterior-collapse}
 VAE failure mode: encoder collapses to the prior; latent carries no information
+
+### Postmortem {#postmortem}
+A written review done after an incident — an outage, a slowdown — that lays out what happened, how it was detected and fixed, and what will stop it recurring. A good one is *blameless*: it focuses on the system and the process, not on punishing a person, like an air-crash investigation whose goal is safer future flights rather than someone to fire.
 
 ### PPO {#ppo}
 Proximal Policy Optimization — the [workhorse](/shared/glossary/#workhorse) [on-policy](/shared/glossary/#on-policy) RL algorithm, used in classic RLHF
@@ -1081,6 +1099,9 @@ A policy that maximizes the reward signal without doing what was intended
 ### Reward model {#reward-model}
 A model trained on human preference comparisons to score how good a response is; it stands in for a human rater so [RLHF](/shared/glossary/#rlhf) can score millions of answers automatically.
 
+### Right-sizing {#right-sizing}
+Choosing the smallest, cheapest model that still clears your quality bar for a task, instead of defaulting to the biggest one available. A well-trained 8B model often passes the same eval as a 70B at a fraction of the [cost per million tokens](/shared/glossary/#cost-per-million-tokens) — like hiring a capable specialist instead of an expensive all-rounder for a job that doesn't need one. Most production teams over-serve, so right-sizing is one of the easiest cost wins.
+
 ### Ring attention {#ring-attention}
 A way to run [attention](/shared/glossary/#attention) over a very long sequence that is split across several GPUs ([context parallelism](/shared/glossary/#context-parallelism)): each GPU passes its slice of the keys and values to its neighbor around a circle, round after round, until every GPU has seen every other slice. Like people seated around a dinner table passing dishes one seat at a time so everyone eventually tastes every dish. This lets the GPUs handle a sequence far longer than any one of them could hold alone.
 
@@ -1189,8 +1210,11 @@ Single Instruction Multiple Threads; NVIDIA's execution model
 ### SLAM {#slam}
 Simultaneous Localization and Mapping
 
+### SLI {#sli}
+Service Level Indicator — the actual measured number for how well a service is doing, such as the real percentage of requests that succeeded or answered within 500 ms. The [SLO](/shared/glossary/#slo) is the *target*; the SLI is the *measurement* you compare against it — like the speedometer reading (SLI) versus the posted speed limit (SLO).
+
 ### SLO {#slo}
-Service Level Objective — a quantified commitment (e.g., P95 TTFT < 500 ms)
+Service Level Objective — a specific, measurable promise about how a service should perform, such as "p95 [TTFT](/shared/glossary/#ttft) under 500 ms" or "99.9% of requests succeed." It is the target you design toward and get alerted on, like a delivery company promising most parcels arrive within two days. The measured reality you check it against is the [SLI](/shared/glossary/#sli), and the slack it allows for failure is the [error budget](/shared/glossary/#error-budget).
 
 ### SM {#sm}
 Streaming Multiprocessor; the GPU's "core"
