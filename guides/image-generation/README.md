@@ -4,6 +4,17 @@ A comprehensive guide to understanding and building image generation systems —
 
 > **Image generation is density estimation in disguise.** You are trying to learn `p(image)` — or more usefully, `p(image | text)` — over a space with millions of dimensions, where almost every point is noise and the manifold of "real-looking pictures" is vanishingly thin. The history of the field is the history of finding tractable surrogates for that intractable objective: adversarial games, variational bounds, denoising scores. Diffusion won; understanding *why* it won is the point of this guide.
 
+### Scope and boundaries
+
+This guide owns the **generative modeling of still images** end to end: the model families (VAEs, GANs, diffusion, flow), the tokenizers and backbones they run on, and everything that makes a trained image model controllable, fast, and measurable. To keep the AI Learning Guides mutually exclusive and collectively exhaustive, it deliberately stops at a few borders:
+
+- **Adding the time axis** — temporal consistency, 3D/causal video VAEs, world models — belongs to [Video Generation](../video-generation/), which assumes everything here.
+- **CLIP, contrastive pretraining, VLMs, and unified any-to-any models** belong to [Multimodal Learning](../multimodal-learning/). This guide *uses* a CLIP/T5 text encoder as a frozen component but does not teach how to train one, and it treats discrete-token image generation as a *generation* technique — deferring the "one transformer for every modality" framing to the multimodal guide.
+- **Serving, batching, and latency engineering** for deployed image models belong to [Inference Systems](../inference-systems/); **kernel-level performance and quantization** belong to [AI Hardware](../ai-hardware/).
+- **Tensor, autograd, mixed-precision, and training-loop fundamentals** are assumed from [PyTorch Deep Dive](../pytorch-deep-dive/).
+
+Everything else about getting from `p(image)` to a controllable, deployable generator is in scope.
+
 ---
 
 ## Table of Contents
@@ -280,8 +291,9 @@ Continuous latents give you diffusion. Discrete latents give you transformers, l
 - **Autoregressive image generation from discrete tokens**:
   - Raster-order transformers (the original DALL-E)
   - Parti, Muse — masked-token / parallel-decode variants
+  - **VAR (Visual Autoregressive Modeling)** — next-*scale* prediction instead of next-token; coarse-to-fine generation that is both faster and higher-quality than raster-order AR (NeurIPS 2024 best paper)
   - Modern token-based image gen (LlamaGen, Show-o, Emu3) — "GPT for images"
-- **The continuous-vs-discrete debate** for image generation in 2026: diffusion still leads on quality, but discrete-token approaches are catching up and integrate naturally with LLMs (any-to-any models)
+- **The continuous-vs-discrete debate** for image generation in 2026: diffusion still leads on raw quality, but discrete-token approaches are catching up fast, and the strongest *native multimodal* systems (GPT-4o image generation, Gemini) now generate images token-by-token. The unified-model angle is the [Multimodal Learning guide](../multimodal-learning/)'s territory; here we care only about generating images from tokens
 
 ### The VQ-VAE Picture
 
@@ -355,7 +367,7 @@ class VectorQuantizer(nn.Module):
 
 ### Key Insight
 
-Once you tokenize an image — turn it into a discrete sequence with a fixed vocabulary — it becomes "just another language" for a transformer. This is the bet behind Parti, Emu3, Chameleon, and the entire "any-to-any" line of research: if you can tokenize every modality (image, audio, video, action), one transformer can model the joint distribution with one next-token-prediction loss. The current state of play is that this works, but discrete-token image gen still trails diffusion on raw quality at the same scale. The frontier is closing fast.
+Once you tokenize an image — turn it into a discrete sequence with a fixed vocabulary — it becomes "just another language" for a transformer, and the entire autoregressive/masked-token toolkit from language modeling transfers directly. That is the bet behind Parti, LlamaGen, and VAR on the image-only side. Extending the *same* tokens across modalities (image + text + audio + action) so that one transformer models the joint distribution — Chameleon, Emu3, the whole "any-to-any" line — is the subject of the [Multimodal Learning guide](../multimodal-learning/); here we care only about generating *images* from tokens. The current state of play: discrete-token image gen still trails diffusion on raw quality at the same scale, but the gap is closing, and as of 2025 the strongest native multimodal models generate images token-by-token rather than by diffusion.
 
 ### Resources
 
@@ -367,6 +379,7 @@ Once you tokenize an image — turn it into a discrete sequence with a fixed voc
 - [FSQ paper](https://arxiv.org/abs/2309.15505)
 - [MagViT-v2 paper](https://arxiv.org/abs/2310.05737)
 - [LlamaGen (Sun et al., 2024)](https://arxiv.org/abs/2406.06525) — "GPT for images" recipe
+- [VAR — Visual Autoregressive Modeling (Tian et al., 2024)](https://arxiv.org/abs/2404.02905) — next-scale prediction; NeurIPS 2024 best paper
 
 ---
 
@@ -1092,6 +1105,7 @@ The operational reality of image generation: data, compute, eval, fast inference
 - **Synthetic captions** — the single highest-leverage data trick. Recaptioning web images with a strong VLM (LLaVA, Qwen2-VL, GPT-4o) dramatically improves prompt adherence. This is the secret behind DALL-E 3's compositional ability
 - **Aspect-ratio bucketing**: train on multiple aspect ratios together for variable-resolution inference; don't center-crop everything to square
 - **Curriculum**: start at low resolution and small captions, scale up gradually
+- **Representation alignment (REPA)**: regularize a DiT's intermediate features toward those of a pretrained self-supervised encoder (DINOv2) during training. Cuts diffusion-transformer training time dramatically (often >10×) and is now a near-standard accelerator for new DiT/flow models
 - **Compute budgets**:
   - SD-1.5 was trained on ~256 A100s for several weeks
   - SDXL: noticeably more
@@ -1135,6 +1149,8 @@ The evaluation problem in image generation is bad, and people keep papering over
 - **High-resolution and ultra-high-resolution**: 4K and beyond; cascaded approaches, patch-based generation, attention sparsity
 - **Compositional and structured generation**: making models reliably count, position, and relate multiple objects
 - **Safety**: watermarking (e.g., SynthID, Tree-Ring), deepfake detection, dataset poisoning attacks (Glaze, Nightshade), consent and provenance
+- **Native multimodal image generation**: as of 2025 the strongest "image models" are no longer standalone — GPT-4o image generation and Gemini produce images autoregressively inside a single multimodal model. The boundary between "image generator" and "multimodal model" is dissolving; the [Multimodal Learning guide](../multimodal-learning/) owns the unified-model side, while this guide owns the image-generation mechanics those models reuse
+- **Autoregressive and scale-prediction models**: VAR (next-scale prediction) and the LlamaGen line are reviving token-based image generation as a serious competitor to diffusion on both quality and speed
 - **Unified image gen + understanding**: models that both generate and recognize (Show-o, Emu3, Transfusion). The natural next step toward GPT-4o-style omni models
 - **Editing and re-rendering** at production quality: precise local edits, identity preservation through edits, multi-step iterative editing
 
@@ -1263,6 +1279,8 @@ Image generation in 2026 is converging *fast*. The architectural recipe (VAE + D
 | 2023 | [Consistency Models](https://arxiv.org/abs/2303.01469) | Few-step sampling |
 | 2023 | [DALL-E 3 (technical report)](https://cdn.openai.com/papers/dall-e-3.pdf) | Synthetic-caption recipe |
 | 2024 | [SD3 (MMDiT)](https://arxiv.org/abs/2403.03206) | Joint text-image transformer + RF |
+| 2024 | [VAR](https://arxiv.org/abs/2404.02905) | Next-scale autoregressive image gen (NeurIPS best paper) |
+| 2024 | [REPA](https://arxiv.org/abs/2410.06940) | Representation alignment accelerates DiT training |
 | 2024 | [Flux.1](https://blackforestlabs.ai/) | Current open frontier |
 
 ### Tools You Should Know
