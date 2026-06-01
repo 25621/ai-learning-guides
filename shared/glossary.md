@@ -1160,7 +1160,11 @@ A way to draw samples from a target distribution by proposing easy guesses and k
 Rectified Linear Unit — the most common and simplest [activation function](/shared/glossary/#activations): it keeps positive numbers unchanged and turns every negative number into 0 (`max(0, x)`). Like a one-way valve that lets water through in one direction and blocks it in the other. That single sharp bend is enough to give a network its non-linear power, and because it is so cheap to compute it was the default for years; newer models often swap it for smoother curves like [Swish](/shared/glossary/#swish) or [GELU](/shared/glossary/#gelu).
 
 ### Reparameterization trick {#reparameterization-trick}
-A way to keep training signal flowing through a random sampling step. Instead of drawing the latent `z` directly from the encoder's distribution (which is random and so blocks [gradients](/shared/glossary/#gradients)), you draw plain noise `ε` from a fixed bell curve and compute `z = μ + σ · ε`. The randomness now lives in `ε`, which has no learnable parts, so the network's `μ` and `σ` stay on a clean differentiable path — like rolling one shared die and then scaling the result, rather than building the dice into the machine itself. This is the trick that lets a [VAE](/shared/glossary/#vae) be trained with ordinary backpropagation.
+A method to keep the training signal flowing through a random sampling step, enabling models like [VAEs](/shared/glossary/#vae) to be trained with ordinary backpropagation. 
+* **The Problem:** Drawing the latent variable `z` directly from the encoder's distribution introduces randomness that blocks the flow of [gradients](/shared/glossary/#gradients).
+* **The Solution:** The trick separates the randomness by drawing plain noise `ε` from a fixed standard normal distribution (a bell curve). You then compute `z = μ + σ · ε`.
+* **Why it Works:** The randomness is now isolated in `ε` (which has no learnable parts). As a result, the network's `μ` and `σ` remain on a clean, differentiable path. 
+* **Analogy:** It is like rolling one shared die outside the machine and then scaling the result, rather than building the dice into the machine itself.
 
 ### Reranker {#reranker}
 A second-stage model that re-scores the top candidates from a fast first-stage retriever and reorders them by true relevance — usually a [cross-encoder](/shared/glossary/#cross-encoder). The "retrieve then rerank" two-stage pattern is standard in search and [RAG](/shared/glossary/#rag).
