@@ -314,6 +314,18 @@ const sidebars = {
                 {type: 'doc', id: 'guides/image-generation/projects/masked-token-model/README', label: 'Masked-token model'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 4: Generative Adversarial Networks',
+              items: [
+                {type: 'doc', id: 'guides/image-generation/projects/vanilla-gan-on-mnist/README', label: 'Vanilla GAN on MNIST'},
+                {type: 'doc', id: 'guides/image-generation/projects/wgan-gp/README', label: 'WGAN-GP'},
+                {type: 'doc', id: 'guides/image-generation/projects/conditional-gan/README', label: 'Conditional GAN'},
+                {type: 'doc', id: 'guides/image-generation/projects/stylegan-tour/README', label: 'StyleGAN tour'},
+                {type: 'doc', id: 'guides/image-generation/projects/gan-inversion/README', label: 'GAN inversion'},
+                {type: 'doc', id: 'guides/image-generation/projects/fid-head-to-head/README', label: 'FID head-to-head'},
+              ],
+            },
           ],
         },
         {type: 'doc', id: 'guides/reinforcement-learning/README', label: 'Reinforcement Learning'},

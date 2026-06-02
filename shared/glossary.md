@@ -37,6 +37,9 @@ Adaptive Moment Estimation — gradient-descent optimizer that maintains per-par
 ### AdamW {#adamw}
 Adam optimizer with decoupled weight decay: the regularization term shrinks the parameter directly rather than being folded into the gradient update
 
+### Adaptive instance normalization (AdaIN) {#adaptive-instance-normalization-adain}
+A way to push a "style" into a network's features: first normalize a feature map so it has mean 0 and variance 1 (wiping out its current style), then rescale and shift it using two numbers — a scale and a bias — predicted from a style code. Like erasing a drawing down to a plain pencil outline and then re-coloring it from a palette you hand in. [StyleGAN](/shared/glossary/#stylegan) applies AdaIN at every layer so a single style code can steer image features at every scale.
+
 ### ADD (Adversarial Diffusion Distillation) {#add-adversarial-diffusion-distillation}
 SDXL Turbo's recipe: distill a multi-step diffusion model into a 1–4-step student using a discriminator loss
 
@@ -253,6 +256,9 @@ Simplified geometry used for collision tests, distinct from visual mesh
 ### Column-wise partitioning {#column-wise-partitioning}
 Splitting a weight matrix along its column (output) dimension so that each GPU holds a vertical slice and computes part of the output independently — the standard first step in [Megatron](/shared/glossary/#megatron)-style [tensor parallelism](/shared/glossary/#tensor-parallelism-tp).
 
+### Conditional GAN (cGAN) {#conditional-gan-cgan}
+A [GAN](/shared/glossary/#gans) that is told *which* kind of image to make instead of producing a random one. The class label (for example, the digit "7") is fed to both the [generator](/shared/glossary/#generator) and the [discriminator](/shared/glossary/#discriminator), so generation becomes [class-conditioned](/shared/glossary/#class-conditioning) — you ask for a category and get it. Like a vending machine where you press a button for the snack you want rather than taking whatever drops. See also [projection discriminator](/shared/glossary/#projection-discriminator), an efficient way to feed the label to the critic.
+
 ### Consistency model {#consistency-model}
 A diffusion-derived model that samples in 1–4 steps via consistency distillation
 
@@ -337,6 +343,9 @@ The default way to train across many GPUs: put a full copy of the model on each 
 ### DataLoader {#dataloader}
 PyTorch's iterator that pulls samples from a Dataset, groups them into batches, and can load them in parallel using [worker processes](/shared/glossary/#worker-processes).
 
+### DCGAN {#dcgan}
+Deep Convolutional [GAN](/shared/glossary/#gans) — the 2015 recipe that first made GAN training reliable, by building both the [generator](/shared/glossary/#generator) and [discriminator](/shared/glossary/#discriminator) out of [convolution layers](/shared/glossary/#convolution-layers) with a few simple rules (batch normalization, no pooling layers, specific activations). Before it, GANs often fell apart mid-training; DCGAN's architecture became the default starting point that almost every later image GAN built on.
+
 ### DDIM {#ddim}
 Deterministic, accelerated sampler for diffusion models
 
@@ -385,6 +394,9 @@ A generative model that learns to *un-noise* an image (or video, or audio) — t
 ### Disaggregated serving {#disaggregated-serving}
 Running prefill and decode on separate GPU pools with KV cache transfer between them
 
+### Discriminator {#discriminator}
+The "critic" half of a [GAN](/shared/glossary/#gans): a network that looks at an image and outputs how likely it is to be real rather than made by the [generator](/shared/glossary/#generator). It is trained like a detective spotting fakes, and its verdicts are the only teaching signal the generator ever gets — as the discriminator sharpens, the generator is forced to make more convincing images. In [Wasserstein GANs](/shared/glossary/#wasserstein-gan-wgan) it outputs an unbounded score instead of a 0–1 probability and is usually called a *critic*.
+
 ### Dispatcher {#dispatcher}
 The PyTorch component that routes `torch.foo(...)` calls to the right backend/dtype kernel
 
@@ -429,6 +441,9 @@ PyTorch's default execution, where each operation runs immediately as its Python
 
 ### EAGLE / Medusa {#eagle--medusa}
 Self-speculation: extra heads on the target model propose tokens, no separate draft model
+
+### Earth Mover's Distance {#earth-movers-distance}
+A way to measure how far apart two distributions are by the smallest amount of "work" needed to reshape one pile into the other — imagine shovelling a heap of dirt into the shape of a second heap, where work is dirt moved times distance carried. Also called the Wasserstein distance, it gives a smooth, meaningful number even when the two piles barely overlap, which is exactly why [Wasserstein GANs](/shared/glossary/#wasserstein-gan-wgan) use it in place of the original [GAN](/shared/glossary/#gans) loss that goes flat in that case.
 
 ### Edge inference {#edge-inference}
 Running a model directly on the device in front of the user — a phone, laptop, car, or small embedded board — instead of sending the request to a data-center GPU. Like cooking at home rather than ordering delivery: it is private and works without a network, but you are limited to the small "kitchen" the device has, so models are kept small (1–8B), heavily [quantized](/shared/glossary/#quantization), and tuned to sip battery and fit in shared memory.
@@ -553,8 +568,11 @@ Fréchet Video Distance — the standard (and flawed) automatic eval metric for 
 ### GAE {#gae}
 Generalized Advantage Estimation — TD(λ) for advantages
 
+### GAN inversion {#gan-inversion}
+Running a [GAN](/shared/glossary/#gans) backwards: given a real photo, find the input [latent](/shared/glossary/#latent-space) code that makes the [generator](/shared/glossary/#generator) reproduce it. A trained generator only goes code → image, so inversion recovers the missing code either by optimizing it to lower reconstruction error or by training an encoder to predict it in one shot. It is the step that lets you *edit* a real image — once you have its code, nudging the code changes the picture.
+
 ### GANs (Generative Adversarial Networks) {#gans}
-A class of generative models in which a generator network and a discriminator network are trained adversarially. The generator learns to produce realistic samples to fool the discriminator, which learns to distinguish real from generated data.
+A class of generative models that trains two networks in a contest. A [generator](/shared/glossary/#generator) turns random noise into fake images, and a [discriminator](/shared/glossary/#discriminator) tries to tell those fakes from real ones; each one makes the other better, like a counterfeiter and a detective locked in an arms race. At the end you keep the generator, which by then makes images realistic enough to fool a well-trained critic. GANs produce sharp samples but are famously unstable to train — see [mode collapse](/shared/glossary/#mode-collapse).
 
 ### Gated {#gated}
 An operation where one path of a neural network modulates the information flow in another path via element-wise multiplication (e.g. in a [SwiGLU](/shared/glossary/#swiglu) block).
@@ -567,6 +585,9 @@ Gaussian Error Linear Unit — a smooth activation function widely used in trans
 
 ### GEMM {#gemm}
 GEneral Matrix Multiply — the workhorse operation `C = A × B` on two matrices, and the single most common heavy computation inside a neural network. GPUs are built to do GEMMs fast; nearly every layer's forward pass is one. When one input is very "skinny" (a tiny batch, as in single-token [decode](/shared/glossary/#decode)) the GPU's [Tensor Cores](/shared/glossary/#tensor-core) sit half-idle, so that case needs a different kernel from a big, square prefill GEMM.
+
+### Generator {#generator}
+The half of a [GAN](/shared/glossary/#gans) that actually makes images: it takes a vector of random noise and maps it to a picture, learning to fool the [discriminator](/shared/glossary/#discriminator) into judging its output as real. It never sees the real images directly — it learns only from whether the discriminator was fooled, like a forger who improves purely from a detective's reactions. After training, the generator alone is what you keep and sample from.
 
 ### GGUF {#gguf}
 A single-file format for storing a [quantized](/shared/glossary/#quantization) model — weights plus all the metadata needed to run it — popularized by [`llama.cpp`](https://github.com/ggerganov/llama.cpp). Like a self-contained zip that a laptop or phone can open and run without extra setup, it is the format of choice for [edge and on-device inference](/shared/glossary/#edge-inference).
@@ -610,6 +631,9 @@ Using the chain rule, we can determine the exact rate of change of the Loss (`L`
 
 ### Gradient checkpointing {#gradient-checkpointing}
 A memory-saving technique that discards intermediate activations during the forward pass and recomputes them during the backward pass.
+
+### Gradient penalty {#gradient-penalty}
+An extra [loss](/shared/glossary/#loss-function) term used in [Wasserstein GANs](/shared/glossary/#wasserstein-gan-wgan) (WGAN-GP) that keeps the critic 1-[Lipschitz](/shared/glossary/#lipschitz-constraint) — meaning its output cannot change faster than its input. It works by measuring the size of the critic's [gradient](/shared/glossary/#gradients) with respect to its input image and pushing that size toward 1. This replaces the original WGAN's blunt trick of clipping weights to a fixed range, which often hurt quality, and is the main reason WGAN-GP trains so stably.
 
 ### GradScaler {#gradscaler}
 A helper used with [float16](/shared/glossary/#float16) mixed-precision training that multiplies the loss before the backward pass, preventing small gradients from rounding to zero ([underflow](/shared/glossary/#underflow)).
@@ -758,6 +782,9 @@ Light Detection And Ranging — laser range scanner
 ### Linear probe {#linear-probe}
 A small linear classifier trained on the frozen hidden [activations](/shared/glossary/#activations) of a layer of a neural network to test whether that layer has *already* encoded some property — for example, "is this sentence true?", "what is the capital of this country?", or "which language is this?" Like sticking a voltmeter into one wire of a circuit to see what signal is flowing past that point; you don't change the circuit, you just read what's already there. The standard first tool in [mechanistic interpretability](/shared/glossary/#mechanistic-interpretability).
 
+### Lipschitz constraint {#lipschitz-constraint}
+A limit on how fast a function's output can change as its input changes: a 1-Lipschitz function never changes its output by more than the distance you moved the input. Picture a road whose slope is capped so it can never get steeper than 45° — no cliffs allowed. [Wasserstein GANs](/shared/glossary/#wasserstein-gan-wgan) require their critic to obey this so the [Earth Mover's Distance](/shared/glossary/#earth-movers-distance) it estimates stays valid, which is what the [gradient penalty](/shared/glossary/#gradient-penalty) enforces.
+
 ### LLM {#llm}
 Large Language Model — a [transformer](/shared/glossary/#transformer) trained on large amounts of text to predict and generate language.
 
@@ -869,7 +896,7 @@ A classic dataset of 70,000 small 28×28 grayscale images of handwritten digits 
 Empirical finding that different-modality embeddings stay in separable regions
 
 ### Mode collapse {#mode-collapse}
-GAN failure mode: generator produces few distinct outputs
+A [GAN](/shared/glossary/#gans) failure where the [generator](/shared/glossary/#generator) discovers a few outputs that reliably fool the [discriminator](/shared/glossary/#discriminator) and just keeps making those, ignoring the variety in the real data — like a comedian who finds one joke that always lands and tells only that joke. Each sample may look fine on its own, but the model has stopped covering most of the data. It is the defining instability of GAN training; its discrete-latent cousin is [codebook collapse](/shared/glossary/#codebook-collapse).
 
 ### MoE {#moe}
 Mixture-of-Experts — instead of one big [MLP](/shared/glossary/#mlp) per layer, the model holds many parallel "[expert](/shared/glossary/#expert)" MLPs and a small router sends each token to only the top few. Like a big company where every question goes to just the two or three relevant specialists rather than the whole staff, the model can hold a huge number of total [parameters](/shared/glossary/#weights) while doing only a fixed, small amount of compute per token. The serving catch: which experts get used shifts with the workload, so keeping them evenly busy across GPUs ([expert parallelism](/shared/glossary/#expert-parallelism-ep)) is the hard part.
@@ -1113,6 +1140,9 @@ A scorer that grades each individual step of a model's reasoning rather than jus
 
 ### Profiler {#profiler}
 A tool (`torch.profiler`) that records how long each operation in a training step takes, used to locate performance [bottlenecks](/shared/glossary/#bottleneck).
+
+### Projection discriminator {#projection-discriminator}
+A way to feed a class label into a [conditional GAN](/shared/glossary/#conditional-gan-cgan)'s [discriminator](/shared/glossary/#discriminator) by taking a dot product between the image's features and a learned vector for that class, then adding it to the score — rather than just gluing the label on as an extra input. This matches how the math of conditioning actually factorizes, so it conditions more strongly for almost no extra cost, and it became the standard trick for class-conditional GANs such as BigGAN.
 
 ### Projector {#projector}
 The (usually small) network that maps one modality's features into another's space
@@ -1370,6 +1400,9 @@ Sending the model's reply to the client one piece at a time as it is generated, 
 ### Stride {#stride}
 The number of storage elements to step over for each dimension of a tensor
 
+### StyleGAN {#stylegan}
+A family of [GANs](/shared/glossary/#gans) (StyleGAN, StyleGAN2, StyleGAN3) famous for photorealistic faces — the models behind sites like `thispersondoesnotexist.com`. Instead of feeding the noise in only at the input, it first maps the noise into an intermediate [W latent space](/shared/glossary/#w-and-w-latent-spaces) and injects that style code into every layer through [adaptive instance normalization](/shared/glossary/#adaptive-instance-normalization-adain). This design "disentangles" the latent space, so moving in one direction tends to change a single attribute (hair, age, lighting) while leaving the rest alone.
+
 ### SWE (Software Engineering) {#swe}
 Short for **Software Engineering** — the discipline of building, testing, and maintaining software systems. In the AI/LLM context, "SWE" usually appears in compound terms like [SWE-bench](/shared/glossary/#swe-bench) or "SWE-style agent," meaning an [agent](/shared/glossary/#agent) that does the kind of work a human software engineer does: reading code, diagnosing bugs, writing fixes, and running tests.
 
@@ -1577,11 +1610,17 @@ A [VQ-VAE](/shared/glossary/#vq-vae) trained with two extra signals so its recon
 ### VQ-VAE {#vq-vae}
 Vector-Quantized [VAE](/shared/glossary/#vae) — an [autoencoder](/shared/glossary/#autoencoder) whose latent code is forced to be *discrete*. Instead of letting the encoder output any continuous numbers, each patch of the image must be described using an entry chosen from a small fixed [codebook](/shared/glossary/#codebook), like painting only with the colors in a numbered paint set. Turning an image into a grid of these code indices lets you treat it as a sequence of [tokens](/shared/glossary/#token-visualaudio) and generate it with the same tools used for language. It is trained with a [straight-through estimator](/shared/glossary/#straight-through-estimator) so gradients can flow through the non-differentiable lookup.
 
+### W and W+ latent spaces {#w-and-w-latent-spaces}
+The editable latent spaces inside [StyleGAN](/shared/glossary/#stylegan). **W** is the intermediate code the input noise is first mapped into; because StyleGAN's training disentangles it, single directions in W tend to control single attributes, which makes it good for editing. **W+** relaxes this by giving *each* layer its own W code instead of sharing one, so it can represent and reconstruct a specific image more precisely — the space [GAN inversion](/shared/glossary/#gan-inversion) usually targets when matching a real photo.
+
 ### Warmup {#warmup}
 The opening phase of training where the learning rate ramps up from near zero to its peak, stabilizing the first noisy updates
 
 ### Warp {#warp}
 32 threads scheduled in lockstep on NVIDIA GPUs
+
+### Wasserstein GAN (WGAN) {#wasserstein-gan-wgan}
+A [GAN](/shared/glossary/#gans) variant that replaces the original loss with the [Earth Mover's Distance](/shared/glossary/#earth-movers-distance) between the real and generated image distributions. The original loss gives almost no [gradient](/shared/glossary/#gradients) once the [discriminator](/shared/glossary/#discriminator) wins, stalling training; the Earth Mover's Distance stays informative even when the two distributions barely overlap, so the [generator](/shared/glossary/#generator) keeps learning. It requires the critic to obey a [Lipschitz constraint](/shared/glossary/#lipschitz-constraint), enforced in the popular WGAN-GP version by a [gradient penalty](/shared/glossary/#gradient-penalty).
 
 ### WBC {#wbc}
 Whole-Body Control — fast QP solving for joint torques from task-space goals

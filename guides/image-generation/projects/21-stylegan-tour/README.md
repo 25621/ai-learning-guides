@@ -1,0 +1,5 @@
+# StyleGAN Tour
+
+## Key Insight
+
+Standard GANs feed the noise vector in only at the input and let the layers do the rest. [StyleGAN](/shared/glossary/#stylegan) instead first maps the noise into an intermediate [W latent space](/shared/glossary/#w-and-w-latent-spaces) and then injects that code into *every* layer through [adaptive instance normalization (AdaIN)](/shared/glossary/#adaptive-instance-normalization-adain) — a step that rescales each layer's feature maps using shift-and-scale numbers derived from the style code, so the one code steers features at every scale from pose down to skin texture. Because of this design the [latent space](/shared/glossary/#latent-space) becomes "disentangled": moving along one direction tends to change a single attribute (hair, smile, lighting) while leaving the rest alone. This project runs inference on a pretrained StyleGAN2 face model — the kind behind sites like `thispersondoesnotexist.com` — and compares editing in the shared W code versus the roomier W+ space, which gives each layer its own code for finer, more local control.

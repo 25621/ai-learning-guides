@@ -431,12 +431,12 @@ In practice: equilibrium is rarely reached; you stop at the prettiest checkpoint
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Vanilla GAN on MNIST | Implement DCGAN; train; observe mode collapse risk and oscillating losses | ⭐⭐⭐ |
-| WGAN-GP | Replace the loss with Wasserstein + gradient penalty; observe training stability improvement | ⭐⭐⭐⭐ |
-| Conditional GAN | Add class conditioning via projection discriminator; train on CIFAR-10; verify class control | ⭐⭐⭐ |
-| StyleGAN tour | Run inference on a pretrained StyleGAN2 face model; explore W vs W+ latent edits | ⭐⭐ |
-| GAN inversion | Given a real image, find the `z` such that `G(z) ≈ image` — via optimization, then via a learned encoder | ⭐⭐⭐⭐ |
-| FID head-to-head | Train a DCGAN and a tiny VAE on the same dataset; compare FID, training time, and stability | ⭐⭐⭐ |
+| [Vanilla GAN on MNIST](projects/18-vanilla-gan-on-mnist/README.md) | Implement DCGAN; train; observe mode collapse risk and oscillating losses | ⭐⭐⭐ |
+| [WGAN-GP](projects/19-wgan-gp/README.md) | Replace the loss with Wasserstein + gradient penalty; observe training stability improvement | ⭐⭐⭐⭐ |
+| [Conditional GAN](projects/20-conditional-gan/README.md) | Add class conditioning via projection discriminator; train on CIFAR-10; verify class control | ⭐⭐⭐ |
+| [StyleGAN tour](projects/21-stylegan-tour/README.md) | Run inference on a pretrained StyleGAN2 face model; explore W vs W+ latent edits | ⭐⭐ |
+| [GAN inversion](projects/22-gan-inversion/README.md) | Given a real image, find the `z` such that `G(z) ≈ image` — via optimization, then via a learned encoder | ⭐⭐⭐⭐ |
+| [FID head-to-head](projects/23-fid-head-to-head/README.md) | Train a DCGAN and a tiny VAE on the same dataset; compare FID, training time, and stability | ⭐⭐⭐ |
 
 ### Sample Code: The Non-Saturating GAN Loss
 
