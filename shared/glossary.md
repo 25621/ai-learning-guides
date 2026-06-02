@@ -431,6 +431,9 @@ Computing the gradient of a gradient by tracking the backward pass operations in
 ### Downstream {#downstream}
 The later, real-world tasks a model is eventually judged on — such as question answering or coding — as opposed to the [pretraining](/shared/glossary/#pretraining) objective it was trained on. "Downstream scores" measure how much a change (cleaner data, a better [learning rate](/shared/glossary/#learning-rate)) actually pays off on those end tasks, the way a river's health downstream reflects what happened upstream at the source.
 
+### DPM-Solver {#dpm-solver}
+A fast sampler for [diffusion models](/shared/glossary/#diffusion-model). Because a trained diffusion model defines a smooth ODE that carries noise to an image, sampling is just numerically solving that ODE — and DPM-Solver exploits the *known* mathematical form of that ODE (part of it can be solved exactly, leaving only a small remainder to approximate) so it needs far fewer steps than a generic solver, often 10–20 instead of hundreds. Like knowing the exact shape of a hill so you can take a few long, confident strides down it instead of cautious tiny shuffles. Its improved version, **DPM-Solver++**, refines this for the guided, high-[CFG](/shared/glossary/#cfg-classifier-free-guidance) setting used in real text-to-image models.
+
 ### DPO {#dpo}
 Direct Preference Optimization — [closed-form](/shared/glossary/#closed-form) RLHF without a reward model or [PPO](/shared/glossary/#ppo)
 
@@ -465,7 +468,7 @@ A way to measure how far apart two distributions are by the smallest amount of "
 Running a model directly on the device in front of the user — a phone, laptop, car, or small embedded board — instead of sending the request to a data-center GPU. Like cooking at home rather than ordering delivery: it is private and works without a network, but you are limited to the small "kitchen" the device has, so models are kept small (1–8B), heavily [quantized](/shared/glossary/#quantization), and tuned to sip battery and fit in shared memory.
 
 ### EDM {#edm}
-Karras et al. 2022 — a reformulation of diffusion in σ-space with clean preconditioning
+A cleaned-up reformulation of [diffusion](/shared/glossary/#diffusion-model) (Karras et al. 2022) that strips away historical baggage and makes training and sampling much easier to tune. Two ideas carry it: index noise by its standard deviation σ rather than a discrete timestep (the [σ-schedule](/shared/glossary/#σ-schedule-karras)), and *precondition* the network — rescale its input, output, and per-σ loss weight so it always sees roughly unit-variance signals no matter how much noise is present. The result is a flat, forgiving hyperparameter surface. A useful rule of thumb: if a 2020-era diffusion paper feels obscure, restate it in EDM's language and it usually becomes obvious.
 
 ### EKF {#ekf}
 Extended Kalman Filter — Kalman filter linearized about the current estimate
@@ -493,6 +496,9 @@ Describes a model like a [Mixture-of-Experts (MoE)](/shared/glossary/#moe) that 
 
 ### Error budget {#error-budget}
 The small amount of failure an [SLO](/shared/glossary/#slo) allows. If your target is 99.9% success, the remaining 0.1% — about 43 minutes a month — is your error budget. Like a monthly data allowance on a phone plan: you can "spend" it on risky deploys and experiments, but once it runs out you stop taking risks until it resets. It turns reliability from a vague goal into a balance you can watch.
+
+### Euler method {#euler-method}
+The simplest way to numerically solve a differential equation: look at the slope where you currently are, take one straight-line step in that direction, then repeat. It is easy to implement but accumulates error quickly because it ignores how the slope changes *during* the step, so diffusion samplers built on it need many steps to stay accurate. Like steering a car by only ever looking at the road directly under the bumper. Contrast with [Heun's method](/shared/glossary/#heuns-method) and [DPM-Solver](/shared/glossary/#dpm-solver), which correct for the changing slope and so need far fewer steps.
 
 ### ExecuTorch {#executorch}
 PyTorch's lightweight runtime for running models on mobile and edge devices, built on the graph captured by [`torch.export`](/shared/glossary/#torchexport).
@@ -693,6 +699,9 @@ The independent, parallel [attention](/shared/glossary/#attention) sub-computati
 ### Hessian {#hessian}
 The matrix of all second partial derivatives of a function — it captures the *curvature* of a loss landscape, not just its slope. Where the [gradient](/shared/glossary/#gradients) tells you "which way is downhill," the Hessian tells you "and how sharply does it bend." Like the difference between knowing a road slopes down and knowing whether it banks into a tight curve or stretches out almost flat. For real LLMs the full Hessian is too big to store (rows × columns each equal to the parameter count), so methods like [GPTQ](/shared/glossary/#gptq) use cheap approximations of it — typically built from a small [batch](/shared/glossary/#batch) of [calibration](/shared/glossary/#calibration) activations — to decide which weights matter most when [quantizing](/shared/glossary/#quantization).
 
+### Heun's method {#heuns-method}
+A second-order ODE solver that improves on the [Euler method](/shared/glossary/#euler-method) with a predict-then-correct step: it takes a tentative Euler step, measures the slope at that new point too, then moves using the *average* of the start and end slopes. Averaging the two slopes cancels much of the error Euler makes, so Heun reaches the same accuracy in far fewer steps — which is why it is the default sampler in [EDM](/shared/glossary/#edm). Like checking the road both where you are and where you're about to be, then steering down the middle. Named after the German mathematician Karl Heun.
+
 ### Hierarchical VAE {#hierarchical-vae}
 A [VAE](/shared/glossary/#vae) with several layers of latent variables stacked at different scales instead of just one. Higher levels capture the big picture (overall layout and shape) while lower levels fill in fine detail (texture and edges), much like an artist who first sketches rough shapes and then adds the small touches. Splitting the work across levels lets the model represent complex images far better than a single flat [latent space](/shared/glossary/#latent-space) can. [NVAE](/shared/glossary/#nvae) and [Very Deep VAE](/shared/glossary/#very-deep-vae) are well-known examples.
 
@@ -770,6 +779,9 @@ A [scratchpad](/shared/glossary/#scratchpad) that stores the [attention](/shared
 
 ### L2 regularization {#l2-regularization}
 A regularization technique that adds a penalty proportional to the squared magnitude of model weights to the loss function, encouraging smaller weights and reducing overfitting. In standard adaptive optimizers such as [Adam](/shared/glossary/#adam), this penalty is folded into the gradient and scaled by the adaptive learning rate, which is why [AdamW](/shared/glossary/#adamw) uses [decoupled](/shared/glossary/#decoupled) weight decay instead.
+
+### Langevin dynamics {#langevin-dynamics}
+A way to draw samples from a distribution when you only know its [score](/shared/glossary/#score) — the [gradient](/shared/glossary/#gradients) of its log-density. You start from a random point and repeatedly take a small step in the score direction (uphill toward higher probability) while also adding a little random noise each step so you explore rather than collapse onto a single peak. The uphill pull plus the random shake settles the point into high-probability regions in the right proportions, like a ball jiggling around a bumpy bowl and spending most of its time in the deepest dips. It is the sampling method behind the original [score](/shared/glossary/#score)-based generative models. Named after the physicist Paul Langevin.
 
 ### Latency {#latency}
 The time it takes to complete a single request, from input to output; distinct from [throughput](/shared/glossary/#throughput), which counts how many requests finish per second.
@@ -1152,7 +1164,7 @@ A public dataset of about 800,000 human labels that mark each step of a math sol
 A function that says how *likely* each possible value is — high where real data points pile up, low in the empty regions where they rarely fall. For a 2D dataset you can picture it as a heatmap: bright ridges over the crowded spots, dark valleys over the bare ones. It must stay non-negative everywhere, and all of it added up (the total volume under the surface) equals exactly 1, since *some* value always occurs. Most generative models can only *draw* new samples; a [normalizing flow](/shared/glossary/#normalizing-flow) is special because it can also report the exact probability density of any point you hand it.
 
 ### Probability flow ODE {#probability-flow-ode}
-The deterministic ODE equivalent of the reverse-time diffusion SDE
+The deterministic twin of a diffusion model's reverse-time [SDE](/shared/glossary/#sde-stochastic-differential-equation): an ODE with no injected randomness that produces the *same* distribution of images at every noise level. Determinism buys two things the stochastic sampler can't: the same starting noise always maps to the same image (so you can interpolate between samples and invert a real image back to its noise), and the model's exact log-likelihood of any image — how probable it thinks that image is — becomes computable via the ODE's change-of-variables. It is the basis of fast deterministic samplers like [DDIM](/shared/glossary/#ddim).
 
 ### Process reward model {#process-reward-model}
 A scorer that grades each individual step of a model's reasoning rather than just the final answer — like a teacher marking every line of a proof, not only the last one — so a mistake can be caught at the exact step it happens. Contrast with an [outcome reward model](/shared/glossary/#outcome-reward-model).
@@ -1332,8 +1344,14 @@ The part of an inference server that decides, at every step, which requests to s
 ### Score {#score}
 The [gradient](/shared/glossary/#gradients) of the log-probability of the data with respect to the input, written `∇_x log p(x)`. It points in the direction that makes an image *more likely* under the data distribution — in plain terms, "which way should I nudge these pixels to make this look more like a real image?" Diffusion models implicitly learn this at every noise level, so generation becomes a matter of repeatedly stepping in the score's direction, from noise toward a realistic sample.
 
+### Score matching {#score-matching}
+A way to train a generative model by teaching it the [score](/shared/glossary/#score) — the gradient of log-density, "which way makes this more likely" — instead of the density itself, which avoids ever computing an intractable normalizing constant. The practical version, *denoising score matching*, sidesteps needing the true score: add a known amount of Gaussian noise to each training example and have the network predict the direction back to the clean point, which provably equals the score of the noised data. (A relative, *sliced* score matching, estimates it instead by checking random one-dimensional projections.) Once the score is learned, you generate by following it with [Langevin dynamics](/shared/glossary/#langevin-dynamics). This is the lens that reveals [diffusion models](/shared/glossary/#diffusion-model) as score estimators trained at many noise levels.
+
 ### Scratchpad {#scratchpad}
 A temporary, fast-access workspace where intermediate results are stashed so they don't have to be recomputed later. Like a math student's scratch paper next to an exam: jot the partial sums, look them up later, move on much faster than redoing each calculation. In serving, the [KV cache](/shared/glossary/#kv-cache) is the model's scratchpad — every key and value it has already computed sits there ready to be reused on the next decode step.
+
+### SDE (stochastic differential equation) {#sde-stochastic-differential-equation}
+An equation describing how something evolves over time under both a predictable push (the "drift") and continuous random jitter (the "diffusion") — like the path of a pollen grain carried by a current while being constantly buffeted by water molecules. A [diffusion model](/shared/glossary/#diffusion-model) can be written as an SDE that gradually turns an image into noise; reversing that SDE turns noise back into an image. The reverse SDE has a deterministic twin with identical statistics, the [probability flow ODE](/shared/glossary/#probability-flow-ode), and the two standard noising conventions are the [VP and VE SDE](/shared/glossary/#vp--ve-sde) families.
 
 ### SDF {#sdf}
 Signed Distance Field — scalar field giving distance to nearest obstacle (negative inside)
@@ -1630,7 +1648,7 @@ The fixed set of tokens a [tokenizer](/shared/glossary/#tokenizer) can produce, 
 NVIDIA's 2017 GPU architecture (V100) and the first generation to ship [Tensor Cores](/shared/glossary/#tensor-core), the dedicated matmul units that made deep-learning training dramatically faster. Subsequent generations — Turing, Ampere, [Hopper](/shared/glossary/#hopper), [Blackwell](/shared/glossary/#blackwell) — kept Tensor Cores and added support for ever-lower-precision formats. Named after the Italian physicist Alessandro Volta.
 
 ### VP / VE SDE {#vp--ve-sde}
-Variance-Preserving / Variance-Exploding — the two SDE families for diffusion
+The two standard ways to define the forward noising process of a [diffusion model](/shared/glossary/#diffusion-model), each written as an [SDE](/shared/glossary/#sde-stochastic-differential-equation). Variance-Preserving (VP) — the family [DDPM](/shared/glossary/#ddpm) uses — shrinks the original signal as it adds noise so the total variance stays around 1 the whole way. Variance-Exploding (VE) — used by the early [score](/shared/glossary/#score)-based models — leaves the signal untouched and simply piles on ever-larger noise, so the variance grows without bound. They are mathematically interconvertible and reach similar quality, but differ in numerical conditioning and in which samplers behave well.
 
 ### VQ-GAN {#vq-gan}
 A [VQ-VAE](/shared/glossary/#vq-vae) trained with two extra signals so its reconstructions look sharp instead of blurry: a [perceptual loss](/shared/glossary/#perceptual-loss-lpips) that compares images by their high-level features rather than exact pixels, and a patch discriminator — a small critic from the [GAN](/shared/glossary/#gans) world that scores whether each local region of an image looks real. The combination pushes the decoder to commit to crisp, specific details. This is the recipe [Stable Diffusion](/shared/glossary/#stable-diffusion)'s [VAE](/shared/glossary/#vae) descends from.
@@ -1698,7 +1716,7 @@ Zero-Moment Point — classical biped balance criterion
 A [VAE](/shared/glossary/#vae) variant that multiplies the [KL divergence](/shared/glossary/#kl-divergence) part of the [ELBO](/shared/glossary/#elbo) by an adjustable knob called β. Turning β up past 1 pressures the model to use its [latent space](/shared/glossary/#latent-space) more tidily, often making individual latent dimensions line up with meaningful features (like rotation or thickness) — but push it too far and the model stops reconstructing the input well. It is the simplest way to trade reconstruction quality against a cleaner, more interpretable latent.
 
 ### σ-schedule (Karras) {#σ-schedule-karras}
-The EDM reformulation: parameterize diffusion by noise standard deviation σ rather than discrete timestep
+The [EDM](/shared/glossary/#edm) convention of describing each noise level by its standard deviation σ (a real number) rather than by a discrete timestep `t` (an index from 0 to ~1000). Because σ directly measures "how much noise is on the image right now," the math for training and sampling becomes cleaner and sampler step sizes are easier to choose. Like labeling oven settings by their actual temperature instead of an arbitrary dial number from 1 to 10.
 
 ---
 

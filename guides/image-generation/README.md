@@ -679,12 +679,12 @@ def sample_with_cfg(model, x_t, t, cond, scale=7.5):
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Score matching from scratch | Implement denoising score matching on 2D toy data (8-Gaussians, swiss roll); verify with Langevin sampling | ⭐⭐⭐ |
-| Higher-order sampler | Implement DPM-Solver++ or Heun for an existing DDPM; verify 10–20 steps is enough | ⭐⭐⭐⭐ |
-| Classifier-free guidance | Add label-dropout training (10% null condition); implement CFG at inference; sweep the scale 1.0 → 12.0 | ⭐⭐⭐ |
-| EDM reparameterization | Re-derive your CIFAR-10 model in the Karras σ-space; verify it trains and samples; observe the cleaner hyperparameter surface | ⭐⭐⭐⭐ |
-| Probability flow ODE | Convert your SDE sampler to the deterministic ODE; verify samples and compute exact log-likelihood | ⭐⭐⭐⭐⭐ |
-| VP vs VE comparison | Train the same model under both SDE families; compare FID, training stability, and sampler behavior | ⭐⭐⭐⭐ |
+| [Score matching from scratch](projects/30-score-matching-from-scratch/README.md) | Implement denoising score matching on 2D toy data (8-Gaussians, swiss roll); verify with Langevin sampling | ⭐⭐⭐ |
+| [Higher-order sampler](projects/31-higher-order-sampler/README.md) | Implement DPM-Solver++ or Heun for an existing DDPM; verify 10–20 steps is enough | ⭐⭐⭐⭐ |
+| [Classifier-free guidance](projects/32-classifier-free-guidance/README.md) | Add label-dropout training (10% null condition); implement CFG at inference; sweep the scale 1.0 → 12.0 | ⭐⭐⭐ |
+| [EDM reparameterization](projects/33-edm-reparameterization/README.md) | Re-derive your CIFAR-10 model in the Karras σ-space; verify it trains and samples; observe the cleaner hyperparameter surface | ⭐⭐⭐⭐ |
+| [Probability flow ODE](projects/34-probability-flow-ode/README.md) | Convert your SDE sampler to the deterministic ODE; verify samples and compute exact log-likelihood | ⭐⭐⭐⭐⭐ |
+| [VP vs VE comparison](projects/35-vp-vs-ve-comparison/README.md) | Train the same model under both SDE families; compare FID, training stability, and sampler behavior | ⭐⭐⭐⭐ |
 
 ### Key Insight
 

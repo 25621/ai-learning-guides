@@ -338,6 +338,18 @@ const sidebars = {
                 {type: 'doc', id: 'guides/image-generation/projects/classifier-guidance/README', label: 'Classifier guidance'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 6: Score-Based, EDM, and Modern Diffusion Theory',
+              items: [
+                {type: 'doc', id: 'guides/image-generation/projects/score-matching-from-scratch/README', label: 'Score matching from scratch'},
+                {type: 'doc', id: 'guides/image-generation/projects/higher-order-sampler/README', label: 'Higher-order sampler'},
+                {type: 'doc', id: 'guides/image-generation/projects/classifier-free-guidance/README', label: 'Classifier-free guidance'},
+                {type: 'doc', id: 'guides/image-generation/projects/edm-reparameterization/README', label: 'EDM reparameterization'},
+                {type: 'doc', id: 'guides/image-generation/projects/probability-flow-ode/README', label: 'Probability flow ODE'},
+                {type: 'doc', id: 'guides/image-generation/projects/vp-vs-ve-comparison/README', label: 'VP vs VE comparison'},
+              ],
+            },
           ],
         },
         {type: 'doc', id: 'guides/reinforcement-learning/README', label: 'Reinforcement Learning'},

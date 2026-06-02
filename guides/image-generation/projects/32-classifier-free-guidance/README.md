@@ -1,0 +1,5 @@
+# Classifier-Free Guidance
+
+## Key Insight
+
+[Classifier-free guidance (CFG)](/shared/glossary/#cfg-classifier-free-guidance) is the single biggest practical trick in modern text-to-image generation: it makes samples follow the prompt far more closely, and unlike the earlier [classifier guidance](/shared/glossary/#classifier-guidance) it needs no separate classifier at all. The recipe is to train *one* model that sometimes sees the real condition and sometimes a "null" (empty) condition — done by randomly dropping the condition about 10% of the time during training — so the same network learns both the conditional and unconditional prediction. At sampling time you run it twice and extrapolate: start from the unconditional prediction and push *away* from it and *toward* the conditional one, with a "guidance scale" controlling how hard you push. This sharpens the output toward modes the prompt strongly implies, but turn the scale too high and you get oversaturated, less diverse images — the trade-off this project maps by sweeping the scale from 1.0 to 12.0.
