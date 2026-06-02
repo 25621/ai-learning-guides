@@ -235,6 +235,12 @@ A solution you can write down and compute directly with a fixed formula, instead
 ### CNN {#cnn}
 Convolutional Neural Network — a neural network built mainly from [convolution layers](/shared/glossary/#convolution-layers); the standard architecture for image tasks. Instead of staring at the whole picture at once, a CNN slides a small magnifying glass across the image, checking one little patch at a time for simple features — an edge here, a splash of color there. Early layers spot these tiny patterns; deeper layers stitch them into bigger ideas (edges become a whisker, whiskers become a cat). Because the *same* magnifying glass is reused over every patch, a CNN needs far fewer [parameters](/shared/glossary/#parameters) than a network that wired up every pixel separately — and it can recognize a cat whether it sits in the corner or the center of the photo.
 
+### Codebook {#codebook}
+The fixed list of code vectors a [VQ-VAE](/shared/glossary/#vq-vae) is allowed to use to describe an image — think of it as a numbered paint set, where every patch of the picture must be painted using one of the colors on the palette rather than any color imaginable. The encoder looks at a patch, finds the closest entry in this list, and stores just that entry's index, which is what makes the latent code *discrete*. A bigger codebook offers more "colors" (finer detail) but is harder to use fully — see [codebook collapse](/shared/glossary/#codebook-collapse).
+
+### Codebook collapse {#codebook-collapse}
+A failure where a [VQ-VAE](/shared/glossary/#vq-vae) ends up using only a few entries of its [codebook](/shared/glossary/#codebook) and ignores the rest — like owning a 64-color crayon box but only ever drawing with three. The unused entries are wasted capacity, so the model stores less detail than its codebook size suggests and reconstructions stay blurry. Common fixes are [EMA](/shared/glossary/#ema-weights) codebook updates, re-initializing dead (never-chosen) entries near popular ones, and k-means warmup. It is the discrete-latent cousin of [mode collapse](/shared/glossary/#mode-collapse) in GANs.
+
 ### Collate function {#collate-function}
 The function a [DataLoader](/shared/glossary/#dataloader) uses to combine a list of individual samples into one batched tensor; a custom one can pad variable-length data.
 
@@ -533,7 +539,7 @@ PyTorch's built-in fused [attention](/shared/glossary/#attention) function (in `
 Fully Sharded Data Parallel — shard params, grads, and optimizer state across [ranks](/shared/glossary/#rank)
 
 ### FSQ {#fsq}
-Finite Scalar Quantization — codebook-free discrete tokenization
+Finite Scalar Quantization — a way to make discrete image [tokens](/shared/glossary/#token-visualaudio) *without* a learned [codebook](/shared/glossary/#codebook). Instead of looking up the nearest entry in a trained table, it simply rounds each coordinate of the latent to the nearest value on a fixed grid, like snapping every measurement to the nearest tick on a ruler. Because there is nothing to train in the quantizer, it is simpler and sidesteps [codebook collapse](/shared/glossary/#codebook-collapse), yet stays competitive with [VQ-VAE](/shared/glossary/#vq-vae).
 
 ### Function calling {#function-calling}
 The mechanism by which a model uses a tool: it emits a structured request (such as JSON naming a function and its arguments), an external program runs that request, and the result is handed back to the model. Also called tool use.
@@ -806,6 +812,9 @@ The part of a [floating-point](https://en.wikipedia.org/wiki/Floating-point_arit
 ### Marlin {#marlin}
 A specialized GPU [kernel](/shared/glossary/#kernel) for mixed-precision [matmul](/shared/glossary/#matmul) — 4-bit [weights](/shared/glossary/#weights) multiplied by 16-bit [activations](/shared/glossary/#activations) — built to stay fast even on the skinny, small-batch shapes of [decode](/shared/glossary/#decode). It unpacks the 4-bit weights on the fly while keeping the [Tensor Cores](/shared/glossary/#tensor-core) busy, so a [quantized](/shared/glossary/#quantization) model runs nearly as fast as the math allows. (Named after the fast-swimming marlin fish.)
 
+### MaskGIT {#maskgit}
+A way to generate image [tokens](/shared/glossary/#token-visualaudio) in parallel instead of one at a time. Starting from a grid where almost every token is hidden ("masked"), a [transformer](/shared/glossary/#transformer) predicts them all at once, keeps only the predictions it is most confident about, and repeats over a handful of rounds until the grid is full. The analogy is filling in a crossword: lock in the answers you are sure of first, and the rest get easier. This makes it much faster than raster-order [autoregressive](/shared/glossary/#autoregressive-model) generation.
+
 ### matmul {#matmul}
 Matrix multiplication — the dominant compute operation in neural networks; written `A @ B` in PyTorch.
 
@@ -1025,7 +1034,7 @@ The standard CPU-GPU connection (and slower GPU-GPU when no NVLink)
 A way to describe where a value ranks in a sorted list: the p99 [latency](/shared/glossary/#latency) is the time that 99% of requests beat, with only the slowest 1% taking longer. Unlike an average, which a single huge outlier can hide, percentiles expose the slow tail that users actually feel — like reporting "even the slowest of the top 99% of diners was served within 20 minutes" instead of a misleading table-wide average. Serving teams quote p50, p95, and p99 rather than the mean for exactly this reason.
 
 ### Perceptual loss (LPIPS) {#perceptual-loss-lpips}
-Loss computed in the feature space of a pretrained classifier; sharper than pixel MSE
+A loss that compares two images by the features a pretrained network sees in them, rather than by their raw pixels. Two photos shifted by a single pixel are nearly identical to a human eye but very different under pixel-by-pixel error; a perceptual loss judges them the way an eye does, rewarding matching textures and shapes. Training with it (LPIPS is the popular version) gives much sharper results than plain pixel MSE, which tends to blur. It is widely used inside [VQ-GAN](/shared/glossary/#vq-gan) and VAE training.
 
 ### permute {#permute}
 Reorders all of a tensor's dimensions by rewriting strides — never copies
@@ -1344,7 +1353,7 @@ A user-supplied substring that tells the server "as soon as the generated text c
 The 1-D buffer that a tensor is a view into
 
 ### Straight-through estimator {#straight-through-estimator}
-A technique used to bypass non-differentiable operations by passing gradients unchanged through the operation during the backward pass.
+A trick for training through a step that has no usable gradient — such as the nearest-[codebook](/shared/glossary/#codebook)-entry lookup in a [VQ-VAE](/shared/glossary/#vq-vae). On the [forward pass](/shared/glossary/#forward-pass) the hard, non-differentiable operation runs as usual; on the [backward pass](/shared/glossary/#backward-pass) the model simply *pretends* that step was the identity and passes the gradient straight through unchanged. It is like sketching along a ruler and then erasing the ruler's marks: the rough step shapes the result, but learning flows as if it were never there.
 
 ### Streaming {#streaming}
 Sending the model's reply to the client one piece at a time as it is generated, instead of waiting for the whole answer and then returning it in a single response. Over HTTP this is usually done with Server-Sent Events (SSE) or chunked transfer encoding; the connection stays open and the server flushes each new token as soon as it is sampled. Like a waiter who brings each course out as it leaves the kitchen rather than holding the whole meal until dessert is ready — the user sees [TTFT](/shared/glossary/#ttft) drop dramatically even though total generation time is the same.
@@ -1422,7 +1431,7 @@ How much work is completed per unit of time — for training, the number of exam
 Splitting a large computation into small blocks ("tiles") that fit in fast on-chip memory, so a [kernel](/shared/glossary/#kernel) reads slow memory fewer times.
 
 ### Token (visual/audio) {#token-visualaudio}
-Discrete code from a VQ-VAE or neural codec; lets transformers treat the modality like language
+A discrete code that stands for a small piece of an image or sound, produced by a [VQ-VAE](/shared/glossary/#vq-vae) or neural codec. Just as a [tokenizer](/shared/glossary/#tokenizer) chops text into word-pieces, an image tokenizer turns a picture into a grid of these codes drawn from a fixed vocabulary — so a [transformer](/shared/glossary/#transformer) can model images (or audio) with the same machinery it uses for language.
 
 ### Tokenizer {#tokenizer}
 The mapping from string to integer IDs; trained, frozen, part of the model contract
@@ -1554,10 +1563,10 @@ NVIDIA's 2017 GPU architecture (V100) and the first generation to ship [Tensor C
 Variance-Preserving / Variance-Exploding — the two SDE families for diffusion
 
 ### VQ-GAN {#vq-gan}
-VQ-VAE trained with perceptual + adversarial losses; SD's VAE recipe descends from this
+A [VQ-VAE](/shared/glossary/#vq-vae) trained with two extra signals so its reconstructions look sharp instead of blurry: a [perceptual loss](/shared/glossary/#perceptual-loss-lpips) that compares images by their high-level features rather than exact pixels, and a patch discriminator — a small critic from the [GAN](/shared/glossary/#gans) world that scores whether each local region of an image looks real. The combination pushes the decoder to commit to crisp, specific details. This is the recipe [Stable Diffusion](/shared/glossary/#stable-diffusion)'s VAE descends from.
 
 ### VQ-VAE {#vq-vae}
-Vector-quantized VAE — discrete latent codes from a learned codebook
+Vector-Quantized [VAE](/shared/glossary/#vae) — an [autoencoder](/shared/glossary/#autoencoder) whose latent code is forced to be *discrete*. Instead of letting the encoder output any continuous numbers, each patch of the image must be described using an entry chosen from a small fixed [codebook](/shared/glossary/#codebook), like painting only with the colors in a numbered paint set. Turning an image into a grid of these code indices lets you treat it as a sequence of [tokens](/shared/glossary/#token-visualaudio) and generate it with the same tools used for language. It is trained with a [straight-through estimator](/shared/glossary/#straight-through-estimator) so gradients can flow through the non-differentiable lookup.
 
 ### Warmup {#warmup}
 The opening phase of training where the learning rate ramps up from near zero to its peak, stabilizing the first noisy updates

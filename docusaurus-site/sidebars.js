@@ -302,6 +302,18 @@ const sidebars = {
                 {type: 'doc', id: 'guides/image-generation/projects/latent-traversal/README', label: 'Latent traversal'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 3: Discrete Latents — VQ-VAE, VQ-GAN, and Modern Tokenizers',
+              items: [
+                {type: 'doc', id: 'guides/image-generation/projects/vq-vae-on-cifar-10/README', label: 'VQ-VAE on CIFAR-10'},
+                {type: 'doc', id: 'guides/image-generation/projects/codebook-collapse-hunt/README', label: 'Codebook collapse hunt'},
+                {type: 'doc', id: 'guides/image-generation/projects/vq-gan/README', label: 'VQ-GAN'},
+                {type: 'doc', id: 'guides/image-generation/projects/fsq-tokenizer/README', label: 'FSQ tokenizer'},
+                {type: 'doc', id: 'guides/image-generation/projects/tiny-image-transformer/README', label: 'Tiny image transformer'},
+                {type: 'doc', id: 'guides/image-generation/projects/masked-token-model/README', label: 'Masked-token model'},
+              ],
+            },
           ],
         },
         {type: 'doc', id: 'guides/reinforcement-learning/README', label: 'Reinforcement Learning'},

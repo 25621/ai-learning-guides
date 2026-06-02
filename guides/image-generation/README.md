@@ -322,12 +322,12 @@ Loss = ||x - x̂||²                                       ← reconstruction
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| VQ-VAE on CIFAR-10 | 256-entry codebook, 8×8 latent grid per image; visualize codebook usage and reconstructions | ⭐⭐⭐⭐ |
-| Codebook collapse hunt | Train VQ with a too-large codebook; identify and fix collapse via EMA updates and dead-code re-init | ⭐⭐⭐ |
-| VQ-GAN | Add LPIPS + patch discriminator to your VQ-VAE; observe reconstructions go from blurry to sharp | ⭐⭐⭐⭐ |
-| FSQ tokenizer | Implement finite-scalar quantization (no learned codebook); compare to VQ on reconstruction FID | ⭐⭐⭐⭐ |
-| Tiny image transformer | Train a small autoregressive transformer over the VQ-GAN tokens of CIFAR-10; sample row by row | ⭐⭐⭐⭐⭐ |
-| Masked-token model | Implement a MaskGIT-style parallel decoder over the same tokens; compare sampling speed and quality | ⭐⭐⭐⭐⭐ |
+| [VQ-VAE on CIFAR-10](projects/12-vq-vae-on-cifar-10/README.md) | 256-entry codebook, 8×8 latent grid per image; visualize codebook usage and reconstructions | ⭐⭐⭐⭐ |
+| [Codebook collapse hunt](projects/13-codebook-collapse-hunt/README.md) | Train VQ with a too-large codebook; identify and fix collapse via EMA updates and dead-code re-init | ⭐⭐⭐ |
+| [VQ-GAN](projects/14-vq-gan/README.md) | Add LPIPS + patch discriminator to your VQ-VAE; observe reconstructions go from blurry to sharp | ⭐⭐⭐⭐ |
+| [FSQ tokenizer](projects/15-fsq-tokenizer/README.md) | Implement finite-scalar quantization (no learned codebook); compare to VQ on reconstruction FID | ⭐⭐⭐⭐ |
+| [Tiny image transformer](projects/16-tiny-image-transformer/README.md) | Train a small autoregressive transformer over the VQ-GAN tokens of CIFAR-10; sample row by row | ⭐⭐⭐⭐⭐ |
+| [Masked-token model](projects/17-masked-token-model/README.md) | Implement a MaskGIT-style parallel decoder over the same tokens; compare sampling speed and quality | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: A VQ Codebook Lookup with the Straight-Through Estimator
 
