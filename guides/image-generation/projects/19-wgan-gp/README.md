@@ -1,0 +1,5 @@
+# WGAN-GP
+
+## Key Insight
+
+The original GAN loss can stall: once the [discriminator](/shared/glossary/#discriminator) gets too good, it hands back almost no useful gradient, so the [generator](/shared/glossary/#generator) stops learning. [Wasserstein GAN (WGAN)](/shared/glossary/#wasserstein-gan-wgan) swaps that loss for the [Earth Mover's Distance](/shared/glossary/#earth-movers-distance) — the amount of "work" needed to reshape the pile of generated images into the pile of real ones — which gives a smooth, always-informative signal even when the two distributions barely overlap. For that distance to be valid the critic must be 1-[Lipschitz](/shared/glossary/#lipschitz-constraint) (its output cannot change faster than its input), and this project enforces it with a [gradient penalty](/shared/glossary/#gradient-penalty): an extra loss term that pushes the size of the critic's input gradient toward 1, replacing the cruder weight-clipping of the original WGAN. The payoff you will see is far steadier training and much less fiddling with hyperparameters.

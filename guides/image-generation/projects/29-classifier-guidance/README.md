@@ -1,0 +1,5 @@
+# Classifier Guidance
+
+## Key Insight
+
+[Classifier guidance](/shared/glossary/#classifier-guidance) was the first trick that made conditional [DDPM](/shared/glossary/#ddpm) samples both sharp and on-target: you train a separate image classifier *on noisy images*, then during sampling nudge each denoising step in the direction its [gradient](/shared/glossary/#gradients) says will make the chosen class more likely. Intuitively the classifier whispers "a little more cat-ness, this way" at every step, and that push — a [score](/shared/glossary/#score)-like signal, the gradient of a log-probability with respect to the image — sharpens the output toward the requested class. The catch is that it needs an extra, specially-trained noisy classifier, exactly the cost that [classifier-free guidance (CFG)](/shared/glossary/#cfg-classifier-free-guidance) later removed by folding the same effect into the diffusion model itself. This project builds the original: train the noisy classifier on [CIFAR-10](/shared/glossary/#cifar-10) and use its gradients to steer the samples.
