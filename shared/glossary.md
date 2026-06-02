@@ -151,6 +151,9 @@ An adjustment applied in the Adam family of optimizers to counteract the zero-in
 ### Biases {#biases}
 The smaller, additive group of learned [parameters](/shared/glossary/#parameters) in a layer — the `b` in `y = xW + b`. After the [weights](/shared/glossary/#weights) combine the inputs, each output neuron adds its own bias: a fixed offset that shifts the result up or down no matter what the input was. Like the `+ b` that lets a line `y = mx + b` sit above or below the origin, or a starting balance in a bank account before any transactions — it gives each neuron a baseline to lean toward.
 
+### BigGAN {#biggan}
+A large [class-conditional GAN](/shared/glossary/#conditional-gan-cgan) from 2018 that was the first to make GAN-generated images look convincingly realistic at high resolution across the thousand everyday categories of ImageNet (dogs, mushrooms, coffee mugs, and so on). Its recipe was mostly "make everything bigger and steadier": much larger [batches](/shared/glossary/#batch), more [parameters](/shared/glossary/#parameters), and a [projection discriminator](/shared/glossary/#projection-discriminator) to feed in the class label cleanly. Like discovering that a decent home cake recipe just needed a bigger oven, more eggs, and a steadier hand to reach bakery quality. Its best-known trick is the *truncation trade-off*: drawing the input noise closer to the average gives cleaner, more typical images at the cost of variety, so you can dial between "safe and pretty" and "wild and diverse."
+
 ### Blackwell {#blackwell}
 NVIDIA's 2024 GPU architecture (B100, B200, B200 Ultra) and the successor to [Hopper](/shared/glossary/#hopper). Like swapping a sports car engine for a more powerful one of the same shape, it keeps the same overall design as Hopper but doubles down on low-precision math — better [FP8](/shared/glossary/#fp8) throughput and brand-new FP4 [Tensor Cores](/shared/glossary/#tensor-core) — which is what makes it the preferred chip for the largest 2025-era training and serving runs.
 
@@ -408,6 +411,13 @@ When the kind of data a model sees in production slowly changes away from the da
 
 ### DiT {#dit}
 Diffusion Transformer — Peebles & Xie's transformer-based diffusion backbone
+
+### Dot product {#dot-product}
+A way to boil two equal-length lists of numbers (two *vectors*) down to a single number: multiply them position by position, then add up all the products. For `[1, 2, 3] · [4, 5, 6]` you compute `1·4 + 2·5 + 3·6 = 4 + 10 + 18 = 32`.
+
+**What it does (the effect).** The dot product works as a *similarity score* between two vectors. It comes out large and positive when the two lists "point the same way" — their big numbers sit in the same slots — near zero when they are unrelated, and negative when they pull in opposite directions. Analogy: imagine two friends each rate ten movies from −5 to +5. Multiply their scores movie by movie and add them up: if they both loved and both hated the same films the total is a big positive number (very alike); if their tastes are unrelated the pluses and minuses cancel out near zero; if one loved what the other hated it goes negative. The dot product is exactly that "how aligned are we?" number.
+
+**How to calculate it with vectors (and matmul).** Doing one dot product is the multiply-and-sum above. Doing *many* at once is precisely what [matrix multiplication](/shared/glossary/#matmul) (`matmul`, written `A @ B`) is built from: each number in the output grid is the dot product of one row of the left matrix with one column of the right matrix. So a single `matmul` is just a big batch of dot products computed together. This is why, in a [projection discriminator](/shared/glossary/#projection-discriminator), "taking a dot product between the image's features and a learned class vector" is simply measuring how much the image lines up with that class — a high dot product means "this really looks like that category."
 
 ### Double backward {#double-backward}
 Computing the gradient of a gradient by tracking the backward pass operations in a new computation graph.
@@ -783,7 +793,7 @@ Light Detection And Ranging — laser range scanner
 A small linear classifier trained on the frozen hidden [activations](/shared/glossary/#activations) of a layer of a neural network to test whether that layer has *already* encoded some property — for example, "is this sentence true?", "what is the capital of this country?", or "which language is this?" Like sticking a voltmeter into one wire of a circuit to see what signal is flowing past that point; you don't change the circuit, you just read what's already there. The standard first tool in [mechanistic interpretability](/shared/glossary/#mechanistic-interpretability).
 
 ### Lipschitz constraint {#lipschitz-constraint}
-A limit on how fast a function's output can change as its input changes: a 1-Lipschitz function never changes its output by more than the distance you moved the input. Picture a road whose slope is capped so it can never get steeper than 45° — no cliffs allowed. [Wasserstein GANs](/shared/glossary/#wasserstein-gan-wgan) require their critic to obey this so the [Earth Mover's Distance](/shared/glossary/#earth-movers-distance) it estimates stays valid, which is what the [gradient penalty](/shared/glossary/#gradient-penalty) enforces.
+A limit on how fast a function's output can change as its input changes: a 1-Lipschitz function never changes its output by more than the distance you moved the input. Picture a road whose slope is capped so it can never get steeper than 45° — no cliffs allowed. (The name simply honors the 19th-century German mathematician Rudolf Lipschitz, who first wrote down this "bounded-steepness" condition; it is *not* a description of the rule itself, the way "Celsius" is just a person's name rather than a word about temperature.) [Wasserstein GANs](/shared/glossary/#wasserstein-gan-wgan) require their critic to obey this so the [Earth Mover's Distance](/shared/glossary/#earth-movers-distance) it estimates stays valid, which is what the [gradient penalty](/shared/glossary/#gradient-penalty) enforces.
 
 ### LLM {#llm}
 Large Language Model — a [transformer](/shared/glossary/#transformer) trained on large amounts of text to predict and generate language.
@@ -1142,7 +1152,7 @@ A scorer that grades each individual step of a model's reasoning rather than jus
 A tool (`torch.profiler`) that records how long each operation in a training step takes, used to locate performance [bottlenecks](/shared/glossary/#bottleneck).
 
 ### Projection discriminator {#projection-discriminator}
-A way to feed a class label into a [conditional GAN](/shared/glossary/#conditional-gan-cgan)'s [discriminator](/shared/glossary/#discriminator) by taking a dot product between the image's features and a learned vector for that class, then adding it to the score — rather than just gluing the label on as an extra input. This matches how the math of conditioning actually factorizes, so it conditions more strongly for almost no extra cost, and it became the standard trick for class-conditional GANs such as BigGAN.
+A way to feed a class label into a [conditional GAN](/shared/glossary/#conditional-gan-cgan)'s [discriminator](/shared/glossary/#discriminator) by taking a dot product between the image's features and a learned vector for that class, then adding it to the score — rather than just gluing the label on as an extra input. This matches how the math of conditioning actually factorizes, so it conditions more strongly for almost no extra cost, and it became the standard trick for class-conditional GANs such as [BigGAN](/shared/glossary/#biggan).
 
 ### Projector {#projector}
 The (usually small) network that maps one modality's features into another's space
@@ -1401,7 +1411,13 @@ Sending the model's reply to the client one piece at a time as it is generated, 
 The number of storage elements to step over for each dimension of a tensor
 
 ### StyleGAN {#stylegan}
-A family of [GANs](/shared/glossary/#gans) (StyleGAN, StyleGAN2, StyleGAN3) famous for photorealistic faces — the models behind sites like `thispersondoesnotexist.com`. Instead of forcing random noise directly into a rigid spherical shape (which tangles attributes together), it first passes the noise through a mapping network to "iron out" the warped space into an intermediate [W latent space](/shared/glossary/#w-and-w-latent-spaces). It then injects this unwarped style code into every generation layer through [adaptive instance normalization](/shared/glossary/#adaptive-instance-normalization-adain). This design "disentangles" the latent space, so moving in one direction smoothly changes a single attribute (hair, age, lighting) while leaving the rest completely untouched.
+A family of [GANs](/shared/glossary/#gans) (StyleGAN, [StyleGAN2](/shared/glossary/#stylegan2), [StyleGAN3](/shared/glossary/#stylegan3)) famous for photorealistic faces — the models behind sites like `thispersondoesnotexist.com`. Instead of forcing random noise directly into a rigid spherical shape (which tangles attributes together), it first passes the noise through a mapping network to "iron out" the warped space into an intermediate [W latent space](/shared/glossary/#w-and-w-latent-spaces). It then injects this unwarped style code into every generation layer through [adaptive instance normalization](/shared/glossary/#adaptive-instance-normalization-adain). This design "disentangles" the latent space, so moving in one direction smoothly changes a single attribute (hair, age, lighting) while leaving the rest completely untouched.
+
+### StyleGAN2 {#stylegan2}
+The 2020 follow-up to [StyleGAN](/shared/glossary/#stylegan) that fixed its most visible flaw: blob-like "water droplet" artifacts that smeared across otherwise perfect faces. The team traced those blobs back to the [adaptive instance normalization](/shared/glossary/#adaptive-instance-normalization-adain) step and redesigned how the style code is applied (a tweak called *weight demodulation*), which made the images noticeably cleaner and sharper. Think of it as the same camera with a smudge wiped off the lens. It is the everyday workhorse behind most "this person does not exist" face demos — the model this guide's [StyleGAN tour](/guides/image-generation/projects/stylegan-tour/) runs inference on.
+
+### StyleGAN3 {#stylegan3}
+The 2021 version of [StyleGAN](/shared/glossary/#stylegan), redesigned to be "alias-free." Earlier StyleGANs secretly tied tiny details to fixed screen positions, so when you slowly turned or moved a generated face, the hair and skin pores would cling to the same pixels instead of travelling with the head — a glitch called *aliasing*. StyleGAN3 rebuilt the internal layers so every feature moves smoothly along with the image, which made it far better for animation and video. Analogy: a sticker stuck to your car window stays put as the car drives off, but a pattern *painted on the car* rides along with it — StyleGAN3 paints the details onto the moving object.
 
 ### SWE (Software Engineering) {#swe}
 Short for **Software Engineering** — the discipline of building, testing, and maintaining software systems. In the AI/LLM context, "SWE" usually appears in compound terms like [SWE-bench](/shared/glossary/#swe-bench) or "SWE-style agent," meaning an [agent](/shared/glossary/#agent) that does the kind of work a human software engineer does: reading code, diagnosing bugs, writing fixes, and running tests.
@@ -1622,7 +1638,7 @@ The opening phase of training where the learning rate ramps up from near zero to
 32 threads scheduled in lockstep on NVIDIA GPUs
 
 ### Wasserstein GAN (WGAN) {#wasserstein-gan-wgan}
-A [GAN](/shared/glossary/#gans) variant that replaces the original loss with the [Earth Mover's Distance](/shared/glossary/#earth-movers-distance) between the real and generated image distributions. The original loss gives almost no [gradient](/shared/glossary/#gradients) once the [discriminator](/shared/glossary/#discriminator) wins, stalling training; the Earth Mover's Distance stays informative even when the two distributions barely overlap, so the [generator](/shared/glossary/#generator) keeps learning. It requires the critic to obey a [Lipschitz constraint](/shared/glossary/#lipschitz-constraint), enforced in the popular WGAN-GP version by a [gradient penalty](/shared/glossary/#gradient-penalty).
+A [GAN](/shared/glossary/#gans) variant that replaces the original loss with the [Earth Mover's Distance](/shared/glossary/#earth-movers-distance) between the real and generated image distributions. The original loss gives almost no [gradient](/shared/glossary/#gradients) once the [discriminator](/shared/glossary/#discriminator) wins, stalling training; the Earth Mover's Distance stays informative even when the two distributions barely overlap, so the [generator](/shared/glossary/#generator) keeps learning. It requires the critic to obey a [Lipschitz constraint](/shared/glossary/#lipschitz-constraint), enforced in the popular [WGAN-GP](/shared/glossary/#wgan-gp) version by a [gradient penalty](/shared/glossary/#gradient-penalty).
 
 ### WBC {#wbc}
 Whole-Body Control — fast QP solving for joint torques from task-space goals
@@ -1635,6 +1651,9 @@ A regularization technique that shrinks model parameters toward zero at each upd
 
 ### Weights {#weights}
 The main, larger group of learned [parameters](/shared/glossary/#parameters) in a layer — the `W` in `y = xW + b` — that decide how strongly each input affects each output. Think of the volume sliders on a soundboard: a big weight turns an input way up, a near-zero weight mutes it, and a negative weight flips it. During training the [optimizer](/shared/glossary/#optimizer) keeps nudging these sliders to lower the [loss](/shared/glossary/#loss-function), and they make up the bulk of a model's size.
+
+### WGAN-GP {#wgan-gp}
+Short for **Wasserstein GAN with Gradient Penalty** — the most popular and reliable recipe for training a [Wasserstein GAN](/shared/glossary/#wasserstein-gan-wgan). A Wasserstein GAN only works if its critic obeys a [Lipschitz constraint](/shared/glossary/#lipschitz-constraint) (its output can't change too fast). The original WGAN enforced that bluntly, by clipping every critic [weight](/shared/glossary/#weights) back into a fixed range after each step — a heavy-handed move that often crippled the model's quality. WGAN-GP replaces the clipping with a gentle [gradient penalty](/shared/glossary/#gradient-penalty) that simply nudges the size of the critic's [gradient](/shared/glossary/#gradients) toward 1, which keeps training far more stable. Like keeping a car at the speed limit with a smooth governor that eases off the gas, instead of a hard rev-cut that jerks the whole engine every time you nudge past it.
 
 ### Worker processes {#worker-processes}
 Background subprocesses that a [DataLoader](/shared/glossary/#dataloader) spawns to load and preprocess data in parallel with GPU computation.
