@@ -104,7 +104,7 @@ A neural network that learns to copy its input to its output through a narrow mi
 The [reverse-mode](/shared/glossary/#reverse-mode) automatic differentiation engine
 
 ### Autoregressive model {#autoregressive-model}
-A model that generates a sequence one piece at a time, where each new piece is predicted from all the pieces produced so far — like writing a sentence word by word, with every word depending on the words already on the page. For images, an autoregressive model (such as PixelCNN) draws pixel by pixel in a fixed order. This makes the math clean and the samples sharp, but generation is slow because each step has to wait for the previous one, with no way to compute them all at once.
+A model that generates a sequence one piece at a time, where each new piece is predicted from all the pieces produced so far — like writing a sentence word by word, with every word depending on the words already on the page. The name says what it does: *auto* means "self" and *regression* means "predicting a value from earlier values," so the model predicts each new piece by regressing on its own previous outputs — it feeds on itself. For images, an autoregressive model (such as PixelCNN) draws pixel by pixel in a fixed order. This makes the math clean and the samples sharp, but generation is slow because each step has to wait for the previous one, with no way to compute them all at once.
 
 ### AWQ {#awq}
 Activation-aware Weight Quantization — preserve weights important to large activations
@@ -239,7 +239,7 @@ Convolutional Neural Network — a neural network built mainly from [convolution
 The fixed list of code vectors a [VQ-VAE](/shared/glossary/#vq-vae) is allowed to use to describe an image — think of it as a numbered paint set, where every patch of the picture must be painted using one of the colors on the palette rather than any color imaginable. The encoder looks at a patch, finds the closest entry in this list, and stores just that entry's index, which is what makes the latent code *discrete*. A bigger codebook offers more "colors" (finer detail) but is harder to use fully — see [codebook collapse](/shared/glossary/#codebook-collapse).
 
 ### Codebook collapse {#codebook-collapse}
-A failure where a [VQ-VAE](/shared/glossary/#vq-vae) ends up using only a few entries of its [codebook](/shared/glossary/#codebook) and ignores the rest — like owning a 64-color crayon box but only ever drawing with three. The unused entries are wasted capacity, so the model stores less detail than its codebook size suggests and reconstructions stay blurry. Common fixes are [EMA](/shared/glossary/#ema-weights) codebook updates, re-initializing dead (never-chosen) entries near popular ones, and k-means warmup. It is the discrete-latent cousin of [mode collapse](/shared/glossary/#mode-collapse) in GANs.
+A failure where a [VQ-VAE](/shared/glossary/#vq-vae) ends up using only a few entries of its [codebook](/shared/glossary/#codebook) and ignores the rest — like owning a 64-color crayon box but only ever drawing with three. The unused entries are wasted capacity, so the model stores less detail than its codebook size suggests and reconstructions stay blurry. Common fixes are [EMA](/shared/glossary/#ema-weights) codebook updates, re-initializing dead (never-chosen) entries near popular ones, and k-means warmup. It is the discrete-latent cousin of [mode collapse](/shared/glossary/#mode-collapse) in [GANs](/shared/glossary/#gans).
 
 ### Collate function {#collate-function}
 The function a [DataLoader](/shared/glossary/#dataloader) uses to combine a list of individual samples into one batched tensor; a custom one can pad variable-length data.
@@ -485,7 +485,7 @@ Feed-Forward Network — the small [MLP](/shared/glossary/#mlp) inside each [tra
 Force/Torque sensor — six-axis force and moment at a wrist or fingertip
 
 ### FID {#fid}
-Fréchet Inception Distance — the standard sample-quality metric for image generation. It runs both real and generated images through a pretrained [Inception network](/shared/glossary/#inception-network) to turn each image into a feature vector, then measures how far apart the two [clouds](/shared/glossary/#point-cloud) of features sit by comparing their means and [covariances](/shared/glossary/#covariance) (their centers and spreads). A lower FID means the generated images look statistically more like the real ones — picture two overlapping clouds of dots: the more they overlap, the smaller the distance.
+Fréchet Inception Distance — the standard sample-quality metric for image generation. ("Fréchet," after the mathematician Maurice Fréchet, names the *Fréchet distance*: a way to measure how far apart two probability distributions sit.) It runs both real and generated images through a pretrained [Inception network](/shared/glossary/#inception-network) to turn each image into a feature vector, then measures how far apart the two [clouds](/shared/glossary/#point-cloud) of features sit by comparing their means and [covariances](/shared/glossary/#covariance) (their centers and spreads). A lower FID means the generated images look statistically more like the real ones — picture two overlapping clouds of dots: the more they overlap, the smaller the distance. The real images here are only a *yardstick*, not an ingredient: your model invents brand-new images from random noise and never copies the real ones — FID simply needs a pile of real photos to compare those inventions against so it can score how convincing they are.
 
 ### FineWeb-Edu {#fineweb-edu}
 A large, openly released [pretraining](/shared/glossary/#pretraining) dataset built by running a [quality filter](/shared/glossary/#quality-filter) over crawled web pages and keeping only the educational-looking ones — like skimming a huge pile of internet text and saving just the pages that read like a textbook. Models trained on it often beat models trained on far more unfiltered text, making it a go-to example that data quality can matter more than raw quantity.
@@ -813,7 +813,7 @@ The part of a [floating-point](https://en.wikipedia.org/wiki/Floating-point_arit
 A specialized GPU [kernel](/shared/glossary/#kernel) for mixed-precision [matmul](/shared/glossary/#matmul) — 4-bit [weights](/shared/glossary/#weights) multiplied by 16-bit [activations](/shared/glossary/#activations) — built to stay fast even on the skinny, small-batch shapes of [decode](/shared/glossary/#decode). It unpacks the 4-bit weights on the fly while keeping the [Tensor Cores](/shared/glossary/#tensor-core) busy, so a [quantized](/shared/glossary/#quantization) model runs nearly as fast as the math allows. (Named after the fast-swimming marlin fish.)
 
 ### MaskGIT {#maskgit}
-A way to generate image [tokens](/shared/glossary/#token-visualaudio) in parallel instead of one at a time. Starting from a grid where almost every token is hidden ("masked"), a [transformer](/shared/glossary/#transformer) predicts them all at once, keeps only the predictions it is most confident about, and repeats over a handful of rounds until the grid is full. The analogy is filling in a crossword: lock in the answers you are sure of first, and the rest get easier. This makes it much faster than raster-order [autoregressive](/shared/glossary/#autoregressive-model) generation.
+A way to generate image [tokens](/shared/glossary/#token-visualaudio) in parallel instead of one at a time. Starting from a grid where almost every token is hidden ("masked"), a [transformer](/shared/glossary/#transformer) predicts them all at once, keeps only the predictions it is most confident about, and repeats over a handful of rounds until the grid is full. The analogy is filling in a crossword: lock in the answers you are sure of first, and the rest get easier. This makes it much faster than [raster-order](/shared/glossary/#raster-order) [autoregressive](/shared/glossary/#autoregressive-model) generation, which must fill the grid one token at a time.
 
 ### matmul {#matmul}
 Matrix multiplication — the dominant compute operation in neural networks; written `A @ B` in PyTorch.
@@ -892,6 +892,9 @@ Metal Performance Shaders — the GPU backend for Apple Silicon
 ### MQA {#mqa}
 Multi-Query Attention — all query heads share a single key/value head; the most aggressive [KV-cache](/shared/glossary/#kv-cache) saver, at some quality cost
 
+### MSE (mean squared error) {#mse-mean-squared-error}
+The most basic way to score how wrong a prediction is: at each point take the difference between the predicted and true value, square it (so overshoots and undershoots both count as positive, and big misses are punished extra), then average over all points. For images it compares pixel by pixel, so a guess that is a little off everywhere still scores well — which is exactly why training on MSE alone tends to produce *blurry* results: when the model is unsure, the safest low-MSE answer is to predict the average of all the plausible pixels, and an average of sharp options looks like a smudge. This is the failure a [perceptual loss](/shared/glossary/#perceptual-loss-lpips) is designed to avoid.
+
 ### MT-Bench {#mt-bench}
 A benchmark that scores a chat model's answers to a set of multi-turn questions, often using a strong [LLM](/shared/glossary/#llm) as the judge; a quick proxy for how helpful an assistant feels.
 
@@ -918,6 +921,9 @@ A model trained from scratch on all modalities with a unified vocabulary
 
 ### Network in Network {#network-in-network}
 A design idea where a tiny neural network is tucked *inside* a single layer of a bigger one, so that layer can do more thinking than a plain filter could. A normal [convolution layer](/shared/glossary/#convolution-layers) slides a simple filter that just takes a weighted sum of each [patch](/shared/glossary/#patch); a network-in-network slides a small multi-step mini-network over each patch instead, letting it recognize more complicated local patterns on the spot. Picture a factory line where, instead of one worker stamping each part, every station hides a little expert team that inspects and shapes the part before passing it on. The idea (from the 2013 *Network In Network* paper) inspired the [Inception network](/shared/glossary/#inception-network)'s building blocks — which is why Inception was nicknamed after the movie about a dream inside a dream.
+
+### Neural codec {#neural-codec}
+A neural network that learns to *compress* a signal — audio, an image, or video — into a compact code and then rebuild it, a learned cousin of hand-designed formats like MP3 or JPEG. ("Codec" = **co**der + **dec**oder.) The encoder squeezes the signal down to a small set of numbers or [tokens](/shared/glossary/#token-visualaudio) and the decoder reconstructs it; because the whole thing is trained on real data instead of hand-tuned, it can often pack more quality into fewer bits. A [VQ-VAE](/shared/glossary/#vq-vae) is one example used for images.
 
 ### Numerical issues {#numerical-issues}
 Problems arising from the finite precision of floating-point numbers, such as [underflow](/shared/glossary/#underflow), overflow, or loss of precision, which can lead to unstable training or [NaN](/shared/glossary/#nan) values.
@@ -1034,7 +1040,7 @@ The standard CPU-GPU connection (and slower GPU-GPU when no NVLink)
 A way to describe where a value ranks in a sorted list: the p99 [latency](/shared/glossary/#latency) is the time that 99% of requests beat, with only the slowest 1% taking longer. Unlike an average, which a single huge outlier can hide, percentiles expose the slow tail that users actually feel — like reporting "even the slowest of the top 99% of diners was served within 20 minutes" instead of a misleading table-wide average. Serving teams quote p50, p95, and p99 rather than the mean for exactly this reason.
 
 ### Perceptual loss (LPIPS) {#perceptual-loss-lpips}
-A loss that compares two images by the features a pretrained network sees in them, rather than by their raw pixels. Two photos shifted by a single pixel are nearly identical to a human eye but very different under pixel-by-pixel error; a perceptual loss judges them the way an eye does, rewarding matching textures and shapes. Training with it (LPIPS is the popular version) gives much sharper results than plain pixel MSE, which tends to blur. It is widely used inside [VQ-GAN](/shared/glossary/#vq-gan) and VAE training.
+A loss that compares two images by the features a pretrained network sees in them, rather than by their raw pixels. Two photos shifted by a single pixel are nearly identical to a human eye but very different under pixel-by-pixel error; a perceptual loss judges them the way an eye does, rewarding matching textures and shapes. Training with it (LPIPS — Learned Perceptual Image Patch Similarity — is the popular version) gives much sharper results than plain pixel [MSE](/shared/glossary/#mse-mean-squared-error), which tends to blur. It is widely used inside [VQ-GAN](/shared/glossary/#vq-gan) and VAE training.
 
 ### permute {#permute}
 Reorders all of a tensor's dimensions by rewriting strides — never copies
@@ -1143,6 +1149,9 @@ Retrieval-Augmented Generation — give the model an "open-book exam" instead of
 
 ### rank {#rank}
 The unique integer ID of a process in a distributed job. `RANK` is the global ID across all machines; `LOCAL_RANK` is the ID within one machine; `WORLD_SIZE` is the total number of processes.
+
+### Raster order {#raster-order}
+Walking through a 2D grid of pixels (or image [tokens](/shared/glossary/#token-visualaudio)) one row at a time, left to right and top to bottom — the exact path your eyes take reading a page. The name comes from how old CRT TVs and monitors painted the screen: an electron beam swept across in horizontal lines called *raster* lines (from the Latin *rastrum*, "rake," because the lines look raked across the glass). An [autoregressive](/shared/glossary/#autoregressive-model) image model that generates in raster order produces the top-left pixel first and the bottom-right pixel last.
 
 ### RDMA {#rdma}
 Remote Direct Memory Access — letting one machine read or write another machine's memory directly over the network, without either CPU stopping to copy the data. Like a pneumatic tube that drops a package straight onto a coworker's desk instead of handing it to a courier who walks it over. In disaggregated serving it is how a [prefill](/shared/glossary/#prefill) node ships a multi-gigabyte [KV cache](/shared/glossary/#kv-cache) to a [decode](/shared/glossary/#decode) node fast enough to be worth splitting them.
@@ -1431,7 +1440,7 @@ How much work is completed per unit of time — for training, the number of exam
 Splitting a large computation into small blocks ("tiles") that fit in fast on-chip memory, so a [kernel](/shared/glossary/#kernel) reads slow memory fewer times.
 
 ### Token (visual/audio) {#token-visualaudio}
-A discrete code that stands for a small piece of an image or sound, produced by a [VQ-VAE](/shared/glossary/#vq-vae) or neural codec. Just as a [tokenizer](/shared/glossary/#tokenizer) chops text into word-pieces, an image tokenizer turns a picture into a grid of these codes drawn from a fixed vocabulary — so a [transformer](/shared/glossary/#transformer) can model images (or audio) with the same machinery it uses for language.
+A discrete code that stands for a small piece of an image or sound, produced by a [VQ-VAE](/shared/glossary/#vq-vae) or [neural codec](/shared/glossary/#neural-codec). Just as a [tokenizer](/shared/glossary/#tokenizer) chops text into word-pieces, an image tokenizer turns a picture into a grid of these codes drawn from a fixed vocabulary — so a [transformer](/shared/glossary/#transformer) can model images (or audio) with the same machinery it uses for language.
 
 ### Tokenizer {#tokenizer}
 The mapping from string to integer IDs; trained, frozen, part of the model contract
@@ -1563,7 +1572,7 @@ NVIDIA's 2017 GPU architecture (V100) and the first generation to ship [Tensor C
 Variance-Preserving / Variance-Exploding — the two SDE families for diffusion
 
 ### VQ-GAN {#vq-gan}
-A [VQ-VAE](/shared/glossary/#vq-vae) trained with two extra signals so its reconstructions look sharp instead of blurry: a [perceptual loss](/shared/glossary/#perceptual-loss-lpips) that compares images by their high-level features rather than exact pixels, and a patch discriminator — a small critic from the [GAN](/shared/glossary/#gans) world that scores whether each local region of an image looks real. The combination pushes the decoder to commit to crisp, specific details. This is the recipe [Stable Diffusion](/shared/glossary/#stable-diffusion)'s VAE descends from.
+A [VQ-VAE](/shared/glossary/#vq-vae) trained with two extra signals so its reconstructions look sharp instead of blurry: a [perceptual loss](/shared/glossary/#perceptual-loss-lpips) that compares images by their high-level features rather than exact pixels, and a patch discriminator — a small critic from the [GAN](/shared/glossary/#gans) world that scores whether each local region of an image looks real. The combination pushes the decoder to commit to crisp, specific details. This is the recipe [Stable Diffusion](/shared/glossary/#stable-diffusion)'s [VAE](/shared/glossary/#vae) descends from.
 
 ### VQ-VAE {#vq-vae}
 Vector-Quantized [VAE](/shared/glossary/#vae) — an [autoencoder](/shared/glossary/#autoencoder) whose latent code is forced to be *discrete*. Instead of letting the encoder output any continuous numbers, each patch of the image must be described using an entry chosen from a small fixed [codebook](/shared/glossary/#codebook), like painting only with the colors in a numbered paint set. Turning an image into a grid of these code indices lets you treat it as a sequence of [tokens](/shared/glossary/#token-visualaudio) and generate it with the same tools used for language. It is trained with a [straight-through estimator](/shared/glossary/#straight-through-estimator) so gradients can flow through the non-differentiable lookup.
