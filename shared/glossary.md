@@ -203,7 +203,7 @@ AMD's datacenter / consumer GPU architectures
 A dataset of about 200,000 photos of celebrity faces, each labeled with attributes such as "smiling," "wearing glasses," or "blond hair." Because every image is a face, it is a favorite for studying generative models of a single, well-defined kind of picture — you can easily judge whether a generated face looks real, and the attribute labels let you check whether the model learned to control features like hair or expression.
 
 ### CFG (classifier-free guidance) {#cfg-classifier-free-guidance}
-Inference trick: combine conditional and unconditional model outputs to amplify conditioning
+Classifier-free guidance — the standard inference trick for making a [diffusion model](/shared/glossary/#diffusion-model) follow its prompt more closely. The model is trained to run both *with* the condition (the prompt or label) and *without* it; at sampling time you take the difference between the two predictions and amplify it, pushing the output away from "generic" and toward "matches the prompt." Unlike [classifier guidance](/shared/glossary/#classifier-guidance), it needs no separate classifier — the same generator provides both signals — which is why it became universal in text-to-image models. A guidance-scale knob trades diversity for prompt adherence.
 
 ### CFG fusion {#cfg-fusion}
 A diffusion-serving optimization for [classifier-free guidance](/shared/glossary/#cfg-classifier-free-guidance), which normally needs *two* model passes per denoising step — one conditioned on the prompt, one unconditioned. CFG fusion runs both in a single batched forward pass (stacking them as a batch of two) instead of two separate calls, so the GPU is launched once per step rather than twice. Like cooking two portions in one pan instead of washing up between them — same result, far less overhead.
@@ -231,6 +231,9 @@ A classic dataset of 60,000 tiny 32×32 color photos sorted into 10 everyday cat
 
 ### Class conditioning {#class-conditioning}
 Telling a generative model *which* category to produce instead of leaving it to chance. You feed the model a label (for example, the digit "7" or the class "cat") alongside its usual input, so at generation time you can ask for exactly that class. Without it, the model draws a random sample from everything it learned; with it, you steer the output — like ordering a specific flavor instead of accepting whatever scoop you are handed.
+
+### Classifier guidance {#classifier-guidance}
+An early technique for steering a [diffusion model](/shared/glossary/#diffusion-model) toward a chosen class or label: you train a separate image classifier that can read *noisy* images, then at each denoising step add a nudge in the direction of its [gradient](/shared/glossary/#gradients) — the direction that makes the target class more likely. Like a critic standing over a painter and pointing "more toward a cat" at every brushstroke, it trades a little sample diversity for much stronger adherence to the condition. Its drawback is the extra cost of training and running that dedicated noisy classifier, which [classifier-free guidance (CFG)](/shared/glossary/#cfg-classifier-free-guidance) later eliminated by getting the same steering from the generator itself.
 
 ### CLIP {#clip}
 Contrastive Language-Image Pretraining — paired text-image dual encoder
@@ -350,7 +353,7 @@ PyTorch's iterator that pulls samples from a Dataset, groups them into batches, 
 Deep Convolutional [GAN](/shared/glossary/#gans) — the 2015 recipe that first made GAN training reliable, by building both the [generator](/shared/glossary/#generator) and [discriminator](/shared/glossary/#discriminator) out of [convolution layers](/shared/glossary/#convolution-layers) with a few simple rules (batch normalization, no pooling layers, specific activations). Before it, GANs often fell apart mid-training; DCGAN's architecture became the default starting point that almost every later image GAN built on.
 
 ### DDIM {#ddim}
-Deterministic, accelerated sampler for diffusion models
+Denoising Diffusion Implicit Models — a way to sample from an already-trained [DDPM](/shared/glossary/#ddpm) far faster. Where DDPM's reverse process is *stochastic* (it injects fresh randomness at every step and may need ~1000 steps), DDIM makes the path *deterministic*: the same starting noise always yields the same image, and the smooth path lets you skip most steps, so ~50 steps match 1000-step quality. Crucially it reuses the same trained network — DDIM changes only how you *sample*, not how you *train*. Like taking a few long, confident strides across a room instead of many tiny shuffles.
 
 ### DDP {#ddp}
 Distributed Data Parallel — replicate model, split batch, all-reduce gradients
@@ -359,7 +362,7 @@ Distributed Data Parallel — replicate model, split batch, all-reduce gradients
 Deep Deterministic Policy Gradient — the first deep-RL continuous-control algorithm
 
 ### DDPM {#ddpm}
-Denoising Diffusion Probabilistic Models — the foundational 2020 paper and training recipe
+Denoising Diffusion Probabilistic Models — the foundational 2020 paper and recipe that kicked off the modern [diffusion](/shared/glossary/#diffusion-model) era. Training is disarmingly simple: take a clean image, add a known amount of random (Gaussian) noise, and teach a network (usually a [U-Net](/shared/glossary/#u-net)) to predict that noise so it can be subtracted back off; the [loss](/shared/glossary/#loss-function) is just [mean squared error](/shared/glossary/#mse-mean-squared-error) on the noise. To generate, start from pure static and repeat the learned "remove a little noise" step many times (classically 1000) until an image appears. Because there is no adversarial game, it sidesteps the [mode collapse](/shared/glossary/#mode-collapse) that plagues [GANs](/shared/glossary/#gans).
 
 ### Deadly triad {#deadly-triad}
 Function approximation + bootstrapping + off-policy data → instability
@@ -989,6 +992,9 @@ PyTorch's base class for all neural network components; acts as a registry that 
 ### Node (distributed) {#node-distributed}
 One physical machine (server) in a distributed job, usually holding several GPUs; multi-node training spreads work across several of them over a network.
 
+### Noise schedule {#noise-schedule}
+The recipe a [diffusion model](/shared/glossary/#diffusion-model) follows for *how much* noise to add at each step of its forward (noising) process — and therefore how much the denoiser must remove at each reverse step. A *linear* schedule raises the noise level by equal amounts every step; a *cosine* schedule ramps up gently at the start and end, keeping recognizable image structure alive for more of the process, which usually trains better. Think of it as a dimmer switch for how quickly a picture fades to static: turn it down too fast (linear) and most steps see only static, leaving little to learn from. The choice mainly affects training quality and how many sampling steps you need, not the model architecture.
+
 ### non_blocking {#non_blocking}
 The `non_blocking=True` flag on `.to()` / `.cuda()` that lets a host→device copy run asynchronously from pinned memory
 
@@ -1318,7 +1324,7 @@ The empirical finding that a model's [loss](/shared/glossary/#loss-function) dro
 The part of an inference server that decides, at every step, which requests to start, which to keep generating, and which to pause when memory runs low — like an air-traffic controller choosing which planes take off, keep flying, or circle, so the runway (the GPU) is always busy but never overloaded. A good scheduler is often worth more real-world [throughput](/shared/glossary/#throughput) than any single clever kernel.
 
 ### Score {#score}
-`∇_x log p(x)` — diffusion training implicitly learns this
+The [gradient](/shared/glossary/#gradients) of the log-probability of the data with respect to the input, written `∇_x log p(x)`. It points in the direction that makes an image *more likely* under the data distribution — in plain terms, "which way should I nudge these pixels to make this look more like a real image?" Diffusion models implicitly learn this at every noise level, so generation becomes a matter of repeatedly stepping in the score's direction, from noise toward a realistic sample.
 
 ### Scratchpad {#scratchpad}
 A temporary, fast-access workspace where intermediate results are stashed so they don't have to be recomputed later. Like a math student's scratch paper next to an exam: jot the partial sums, look them up later, move on much faster than redoing each calculation. In serving, the [KV cache](/shared/glossary/#kv-cache) is the model's scratchpad — every key and value it has already computed sits there ready to be reused on the next decode step.
@@ -1555,7 +1561,7 @@ NVIDIA's production server for hosting models behind an HTTP/gRPC API, with [bat
 Time to *produce* the first token — the elapsed time from when a request arrives at the server until the model returns its first output token, dominated by [prefill](/shared/glossary/#prefill) plus any queue wait. Like a restaurant's "time until your drink arrives" — felt separately from the rest of the meal, and the first thing the user actually notices.
 
 ### U-Net {#u-net}
-Encoder-decoder architecture with skip connections; the standard diffusion backbone before DiT
+An encoder-decoder network whose name comes from its U shape: the left arm shrinks the image down to a small, abstract summary while the right arm builds it back up to full size, with *skip connections* that hand each down-sampling layer's detail straight across to its matching up-sampling layer. Those skips are what let it keep fine pixel detail while still reasoning about the whole image, which is why it became the standard backbone for [diffusion models](/shared/glossary/#diffusion-model) (before [DiT](/shared/glossary/#dit) brought in transformers). It was originally invented for medical-image segmentation.
 
 ### Underflow {#underflow}
 Condition where a floating-point value is too small to be represented and rounds to zero; common with `float16` when accumulating very small gradients

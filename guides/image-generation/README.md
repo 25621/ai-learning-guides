@@ -568,12 +568,12 @@ Each block also receives:
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| DDPM on MNIST | Implement the forward process and a small U-Net; train; sample with the full T-step loop | ⭐⭐⭐ |
-| DDPM on CIFAR-10 | Scale up to 32×32 color images; reach FID < 20; this is the "you understand it" milestone | ⭐⭐⭐⭐ |
-| Cosine vs linear schedule | Train two otherwise-identical DDPMs; compare FID and visual quality | ⭐⭐⭐ |
-| DDIM sampler | Add DDIM sampling to your DDPM; verify 50 steps ≈ 1000-step DDPM quality | ⭐⭐⭐ |
-| Class-conditional DDPM | Add label-conditional batch norm or AdaGN; train on CIFAR-10 with labels | ⭐⭐⭐⭐ |
-| Classifier guidance | Train a classifier on noisy CIFAR-10 images; use its gradients to steer DDPM samples | ⭐⭐⭐⭐ |
+| [DDPM on MNIST](projects/24-ddpm-on-mnist/README.md) | Implement the forward process and a small U-Net; train; sample with the full T-step loop | ⭐⭐⭐ |
+| [DDPM on CIFAR-10](projects/25-ddpm-on-cifar-10/README.md) | Scale up to 32×32 color images; reach FID < 20; this is the "you understand it" milestone | ⭐⭐⭐⭐ |
+| [Cosine vs linear schedule](projects/26-cosine-vs-linear-schedule/README.md) | Train two otherwise-identical DDPMs; compare FID and visual quality | ⭐⭐⭐ |
+| [DDIM sampler](projects/27-ddim-sampler/README.md) | Add DDIM sampling to your DDPM; verify 50 steps ≈ 1000-step DDPM quality | ⭐⭐⭐ |
+| [Class-conditional DDPM](projects/28-class-conditional-ddpm/README.md) | Add label-conditional batch norm or AdaGN; train on CIFAR-10 with labels | ⭐⭐⭐⭐ |
+| [Classifier guidance](projects/29-classifier-guidance/README.md) | Train a classifier on noisy CIFAR-10 images; use its gradients to steer DDPM samples | ⭐⭐⭐⭐ |
 
 ### Sample Code: The DDPM Training Step
 

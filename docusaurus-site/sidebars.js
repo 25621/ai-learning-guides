@@ -326,6 +326,18 @@ const sidebars = {
                 {type: 'doc', id: 'guides/image-generation/projects/fid-head-to-head/README', label: 'FID head-to-head'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 5: Diffusion Models — Foundations (DDPM)',
+              items: [
+                {type: 'doc', id: 'guides/image-generation/projects/ddpm-on-mnist/README', label: 'DDPM on MNIST'},
+                {type: 'doc', id: 'guides/image-generation/projects/ddpm-on-cifar-10/README', label: 'DDPM on CIFAR-10'},
+                {type: 'doc', id: 'guides/image-generation/projects/cosine-vs-linear-schedule/README', label: 'Cosine vs linear schedule'},
+                {type: 'doc', id: 'guides/image-generation/projects/ddim-sampler/README', label: 'DDIM sampler'},
+                {type: 'doc', id: 'guides/image-generation/projects/class-conditional-ddpm/README', label: 'Class-conditional DDPM'},
+                {type: 'doc', id: 'guides/image-generation/projects/classifier-guidance/README', label: 'Classifier guidance'},
+              ],
+            },
           ],
         },
         {type: 'doc', id: 'guides/reinforcement-learning/README', label: 'Reinforcement Learning'},
