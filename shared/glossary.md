@@ -648,7 +648,7 @@ The independent, parallel [attention](/shared/glossary/#attention) sub-computati
 The matrix of all second partial derivatives of a function — it captures the *curvature* of a loss landscape, not just its slope. Where the [gradient](/shared/glossary/#gradients) tells you "which way is downhill," the Hessian tells you "and how sharply does it bend." Like the difference between knowing a road slopes down and knowing whether it banks into a tight curve or stretches out almost flat. For real LLMs the full Hessian is too big to store (rows × columns each equal to the parameter count), so methods like [GPTQ](/shared/glossary/#gptq) use cheap approximations of it — typically built from a small [batch](/shared/glossary/#batch) of [calibration](/shared/glossary/#calibration) activations — to decide which weights matter most when [quantizing](/shared/glossary/#quantization).
 
 ### Hierarchical VAE {#hierarchical-vae}
-A [VAE](/shared/glossary/#vae) with several layers of latent variables stacked at different scales instead of just one. Higher levels capture the big picture (overall layout and shape) while lower levels fill in fine detail (texture and edges), much like an artist who first sketches rough shapes and then adds the small touches. Splitting the work across levels lets the model represent complex images far better than a single flat [latent space](/shared/glossary/#latent-space) can. NVAE and Very Deep VAE are well-known examples.
+A [VAE](/shared/glossary/#vae) with several layers of latent variables stacked at different scales instead of just one. Higher levels capture the big picture (overall layout and shape) while lower levels fill in fine detail (texture and edges), much like an artist who first sketches rough shapes and then adds the small touches. Splitting the work across levels lets the model represent complex images far better than a single flat [latent space](/shared/glossary/#latent-space) can. [NVAE](/shared/glossary/#nvae) and [Very Deep VAE](/shared/glossary/#very-deep-vae) are well-known examples.
 
 ### Holonomic {#holonomic}
 A vehicle whose instantaneous motion can be any direction (mecanum, omni)
@@ -945,6 +945,9 @@ Rescaling a layer's outputs so they keep a consistent size — typically zero me
 
 ### Normalizing flow {#normalizing-flow}
 A generative model that starts from simple random noise (usually a plain Gaussian "bell curve") and pushes it through a chain of *reversible* steps to reshape it into realistic data — like kneading a smooth ball of dough into a detailed shape, where you can always un-knead it back. Why can you *always* un-knead it? Because every step is deliberately built to be undoable: it only ever stretches, shifts, or folds the dough in a way that has an exact opposite, and it never merges two blobs into one or throws any dough away. For example, if a step's rule is "double this number and add 3," its reverse is simply "subtract 3, then halve" — feed the output back through and you recover the original number exactly, with nothing lost. (An ordinary neural network is *not* like this: it mashes information together — like flattening the dough — so there is no way to run it backwards.) Because every step can be run backwards exactly, a flow can also report the precise probability of any data point, which most generative models cannot do. The price for that exactness is that each step must stay reversible, which heavily constrains the architecture; examples include [Real NVP](/shared/glossary/#real-nvp) and [Glow](/shared/glossary/#glow).
+
+### NVAE {#nvae}
+Short for *Nouveau VAE* — a [hierarchical VAE](/shared/glossary/#hierarchical-vae) from NVIDIA (2020) that stacks many layers of latent variables through a deep network built from depthwise separable convolutions and residual connections, reaching then state-of-the-art image generation quality. Like a skyscraper where each floor refines the blueprint handed down from above — the top floors sketch the overall shape and the lower floors fill in the fine details. The name "Nouveau" is French for "new," positioning it as a modern reimagining of the classic VAE.
 
 ### NVLink {#nvlink}
 NVIDIA's GPU-GPU interconnect; much faster than PCIe
@@ -1508,11 +1511,17 @@ Expected return; `V(s)` for state-value, `Q(s, a)` for action-value
 ### Value network {#value-network}
 The helper network (the "critic") in some RL algorithms that estimates the [value function](/shared/glossary/#value-function) — its best guess of how much future reward a situation is worth — so the [policy](/shared/glossary/#policy) can tell whether an action turned out better or worse than expected. [PPO](/shared/glossary/#ppo) trains one alongside the policy, which roughly doubles the networks held in memory; [GRPO](/shared/glossary/#grpo) skips it entirely by comparing each sampled answer to the group's average instead, which is what makes it cheaper.
 
+### Vanilla {#vanilla}
+The plain, unmodified, baseline version of a model or algorithm — no special improvements or extra tricks, just the original idea as first described. Like ordering plain vanilla ice cream with no toppings: it is the default flavor before anyone adds anything extra. In machine learning, "vanilla VAE" means the original [VAE](/shared/glossary/#vae) from the 2013 Kingma & Welling paper, before later work added hierarchical latents, β controls, or other refinements. Comparing the vanilla version to improved variants is the clearest way to measure what each addition actually buys.
+
 ### VBench {#vbench}
 Comprehensive open evaluation suite for video generation
 
 ### Verifier {#verifier}
 A program that automatically checks whether an answer is correct — running unit tests, or comparing to a known math result — giving the exact, unhackable reward that [RLVR](/shared/glossary/#rlvr) trains on.
+
+### Very Deep VAE {#very-deep-vae}
+A [hierarchical VAE](/shared/glossary/#hierarchical-vae) (Child, 2021) that scales to dozens of stacked latent variable groups — far more layers than earlier models. Each group only handles a thin slice of the work, with residual-like parameterizations keeping gradients flowing through the depth. Like adding so many floors to a building that no single floor needs to bear much weight, it achieved strong image generation quality, showing that deeper hierarchies can capture richer structure than shallow ones.
 
 ### view {#view}
 A no-copy alias that shares storage with its source; requires a contiguous-compatible layout
