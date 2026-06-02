@@ -25,6 +25,9 @@ A memory-saving trick that throws away the intermediate [activations](/shared/gl
 ### Activations {#activations}
 The intermediate outputs that flow *between* the layers of a network — the numbers each layer hands to the next during the forward pass. If [weights](/shared/glossary/#weights) are the fixed recipe a model learned, activations are the half-finished dish moving down the kitchen line, changing with every new input. Unlike weights, they are not saved after training; they are recomputed fresh each time the model runs on a new input.
 
+### AdaGN (adaptive group normalization) {#adagn-adaptive-group-normalization}
+The trick diffusion models use to push a condition — like a class label or the current denoising step — into the network through its [normalization](/shared/glossary/#normalization) layers. First *group normalization* wipes a group of [activations](/shared/glossary/#activations) clean to mean 0 and variance 1, erasing their current style; then a tiny layer reads the condition and predicts two numbers, a **scale** and a **shift** ([scale-and-shift](/shared/glossary/#scale-and-shift)), that re-stretch and re-center those activations. Picture resetting a photo to neutral brightness and contrast, then letting the label "cat" turn those two knobs to a setting the model learned for cats. It is the group-norm cousin of [AdaIN](/shared/glossary/#adaptive-instance-normalization-adain) and [AdaLN](/shared/glossary/#adaln), and it is how a single model can be steered to generate one chosen class on demand.
+
 ### AdaLN {#adaln}
 Adaptive layer normalization; the conditioning mechanism in DiT
 
@@ -1316,6 +1319,9 @@ An isolated, throwaway environment — like a fenced-off playground — where an
 
 ### Sampling {#sampling}
 Drawing the next token from the model's predicted probability distribution instead of always taking the most likely one; [temperature](/shared/glossary/#temperature), [top-k](/shared/glossary/#top-k), and [top-p](/shared/glossary/#top-p) control how random the choice is.
+
+### Scale-and-shift {#scale-and-shift}
+A two-step tweak applied to a layer's [activations](/shared/glossary/#activations): multiply every value by a learned *scale* and then add a learned *shift* — the operation `y = scale × x + shift`. It is exactly like the brightness and contrast sliders on a photo editor: scale stretches or squashes the range (contrast), and shift nudges everything up or down (brightness). The two numbers are usually the [weights](/shared/glossary/#weights) and [biases](/shared/glossary/#biases) a [normalization](/shared/glossary/#normalization) layer learns; when they are instead predicted from a condition such as a class label, you get conditioning schemes like [AdaGN](/shared/glossary/#adagn-adaptive-group-normalization), [AdaIN](/shared/glossary/#adaptive-instance-normalization-adain), and [AdaLN](/shared/glossary/#adaln).
 
 ### Scaling laws {#scaling-laws}
 The empirical finding that a model's [loss](/shared/glossary/#loss-function) drops in a smooth, predictable curve as you add [parameters](/shared/glossary/#parameters), training data, and compute — like a growth chart that lets you forecast a bigger model's quality from smaller ones before you ever build it.
