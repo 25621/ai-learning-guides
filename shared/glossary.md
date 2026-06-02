@@ -1179,7 +1179,7 @@ Returns a tensor with a new shape, copying only when a no-copy view isn't possib
 A shortcut that adds a block's input to its output (`x + f(x)`), letting [gradients](/shared/glossary/#gradients) flow directly and making deep networks trainable
 
 ### Residual parameterization {#residual-parameterization}
-A modeling trick used in deep [hierarchical VAEs](/shared/glossary/#hierarchical-vae) where each layer of latent variables is expressed as a small *correction* to what the previous layer already predicted, rather than as a full absolute value. Like a GPS giving "turn left in 200 m" instead of stating exact coordinates — each step describes only the gap from where you already are, so no single step has to carry the whole story. Because each latent group only needs to represent a tiny residual change, gradients flow smoothly through many stacked layers and very deep hierarchies become trainable. The idea borrows from [residual connections](/shared/glossary/#residual-connection) in standard networks, applying the same skip-and-add logic to the latent variable structure itself.
+A modeling trick used in deep [hierarchical VAEs](/shared/glossary/#hierarchical-vae) where each layer of latent variables is expressed as a small *correction* to what the previous layer already predicted, rather than as a full absolute value. Like a GPS giving "turn left in 200 m" instead of stating exact coordinates — each step describes only the gap from where you already are, so no single step has to carry the whole story. Because each latent group only needs to represent a tiny residual change, gradients flow smoothly through many stacked layers and very deep hierarchies become trainable. The idea borrows from [residual connections](/shared/glossary/#residual-connection) in standard networks, applying the same [skip-and-add logic](/shared/glossary/#skip-and-add-logic) to the latent variable structure itself.
 
 ### Residual stream {#residual-stream}
 In a [transformer](/shared/glossary/#transformer), the running activation vector that flows through every layer via [residual connections](/shared/glossary/#residual-connection) — each [attention](/shared/glossary/#attention) block and [MLP](/shared/glossary/#mlp) block reads from this stream and adds its update back to it, without erasing what came before. Like a shared bulletin board that every department reads and pins notes to as it passes through the office: by the end of the building, the board carries the combined contribution of every team. Because every layer reads and writes the same vector space, the residual stream is the most natural place to look for interpretable features, which is why [sparse autoencoders (SAEs)](/shared/glossary/#sae) are usually trained on residual-stream [activations](/shared/glossary/#activations).
@@ -1303,6 +1303,9 @@ Sigmoid Linear Unit — just another name for [Swish](/shared/glossary/#swish), 
 
 ### SIMT {#simt}
 Single Instruction Multiple Threads; NVIDIA's execution model
+
+### Skip-and-add logic {#skip-and-add-logic}
+A design pattern in neural networks where a signal bypasses a layer unchanged and is then added back to the layer's output. Think of it like a chef tasting a soup that already has a good base flavor (the "skip" part, where the main base is kept), and deciding to just stir in a pinch of salt (the "add" part) to improve it, rather than throwing the soup out and cooking a new one from scratch. Because the main signal flows straight through, the layer only has to figure out the small correction (the residual) needed to make it better. This keeps information flowing easily in very deep networks.
 
 ### SLAM {#slam}
 Simultaneous Localization and Mapping
