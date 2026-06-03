@@ -963,12 +963,12 @@ def flow_matching_step(model, x_0, cond=None):
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Implement DiT-S/2 | Small DiT (12 blocks, dim 384), patch size 2; train class-conditional on CIFAR-10; compare to your U-Net baseline | ⭐⭐⭐⭐ |
-| 2D RoPE for DiT | Add 2D rotary positional embeddings; verify quality improves vs learned positions | ⭐⭐⭐ |
-| Rectified flow from scratch | Re-train the above with the flow-matching objective; observe convergence and few-step sampling | ⭐⭐⭐⭐ |
-| MMDiT block | Implement an SD3-style joint text-image attention block; train a tiny version on a captioned dataset | ⭐⭐⭐⭐⭐ |
-| Re-flow | Take a trained rectified-flow model; generate (noise, sample) pairs; train a second model on those straight-line paths | ⭐⭐⭐⭐⭐ |
-| Compare DiT and U-Net scaling | Train DiT-S, DiT-B, DiT-L on the same dataset; plot FID vs compute; observe DiT's slope advantage | ⭐⭐⭐⭐⭐ |
+| [Implement DiT-S/2](projects/43-implement-dit-s-2/README.md) | Small DiT (12 blocks, dim 384), patch size 2; train class-conditional on CIFAR-10; compare to your U-Net baseline | ⭐⭐⭐⭐ |
+| [2D RoPE for DiT](projects/44-2d-rope-for-dit/README.md) | Add 2D rotary positional embeddings; verify quality improves vs learned positions | ⭐⭐⭐ |
+| [Rectified flow from scratch](projects/45-rectified-flow-from-scratch/README.md) | Re-train the above with the flow-matching objective; observe convergence and few-step sampling | ⭐⭐⭐⭐ |
+| [MMDiT block](projects/46-mmdit-block/README.md) | Implement an SD3-style joint text-image attention block; train a tiny version on a captioned dataset | ⭐⭐⭐⭐⭐ |
+| [Re-flow](projects/47-re-flow/README.md) | Take a trained rectified-flow model; generate (noise, sample) pairs; train a second model on those straight-line paths | ⭐⭐⭐⭐⭐ |
+| [Compare DiT and U-Net scaling](projects/48-compare-dit-and-u-net-scaling/README.md) | Train DiT-S, DiT-B, DiT-L on the same dataset; plot FID vs compute; observe DiT's slope advantage | ⭐⭐⭐⭐⭐ |
 
 ### Key Insight
 

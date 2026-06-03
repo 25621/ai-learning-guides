@@ -420,7 +420,7 @@ Training a smaller "student" model to copy the output of a larger, more capable 
 When the kind of data a model sees in production slowly changes away from the data it was tuned on — like a store whose regular customers gradually change their tastes, so last year's best-selling stock starts to sit on the shelf. For a [quantized](/shared/glossary/#quantization) model it matters because [calibration](/shared/glossary/#calibration) was fitted to the old traffic, so quality can quietly slip as the new traffic drifts further away.
 
 ### DiT {#dit}
-Diffusion Transformer — Peebles & Xie's transformer-based diffusion backbone
+Diffusion Transformer — Peebles & Xie's diffusion backbone that replaces the [U-Net](/shared/glossary/#u-net) with a pure [transformer](/shared/glossary/#transformer). It chops the noisy image (really its [VAE](/shared/glossary/#vae) [latent](/shared/glossary/#latent-space)) into a grid of small [patches](/shared/glossary/#patchification), turns each patch into a token, and lets [attention](/shared/glossary/#attention) mix them — the same recipe that took over language modeling, now pointed at denoising. The name simply joins "diffusion" (the denoising task) with "transformer" (the architecture). Its big draw is [scaling](/shared/glossary/#scaling-laws): make it wider or deeper and quality improves along a predictable curve, the way a bigger language model reliably gets better. Like swapping a custom-built, image-shaped machine (the U-Net) for a general-purpose assembly line you can just make longer to produce more. Sizes are named DiT-S (small), DiT-B (base), DiT-L (large), and a suffix like "/2" gives the [patch](/shared/glossary/#patchification) size — DiT-S/2 is the small model with 2×2 patches.
 
 ### Dot product {#dot-product}
 A way to boil two equal-length lists of numbers (two *vectors*) down to a single number: multiply them position by position, then add up all the products. For `[1, 2, 3] · [4, 5, 6]` you compute `1·4 + 2·5 + 3·6 = 4 + 10 + 18 = 32`.
@@ -551,7 +551,7 @@ A version of [FlashAttention](/shared/glossary/#flashattention) tuned for the [d
 Floating-Point Operations — a measure of computational complexity representing the number of individual arithmetic operations (additions or multiplications) performed.
 
 ### Flow matching {#flow-matching}
-Training a velocity field that transports noise to data via an ODE; modern alternative to DDPM
+Training a *velocity field* — a model that, given a half-noisy image and a time, predicts which direction and how fast to move it toward a clean image — so that following those arrows turns pure noise into data. Concretely, you draw a straight line between a real image `x_0` and random noise `ε`, pick a random point on that line, and train the model to output the line's direction `ε - x_0`; at generation time you start at noise and repeatedly step along the predicted arrows (solving an [ODE](/shared/glossary/#ode)) until you arrive at a clean image. It is a simpler, more modern alternative to [DDPM](/shared/glossary/#ddpm): there is no [noise schedule](/shared/glossary/#noise-schedule) to tune, just one clean regression target. Like learning the wind currents over a map so that, dropped anywhere in the fog, you always know which way blows toward home.
 
 ### Forensics {#forensics}
 Working backward from a training failure to the operation that first caused it, instead of chasing the visible symptom. In PyTorch this means turning on [autograd](/shared/glossary/#autograd) [anomaly detection](/shared/glossary/#anomaly-detection) to halt at the first [NaN](/shared/glossary/#nan) or bad [gradient](/shared/glossary/#gradients).
@@ -929,7 +929,7 @@ Multi-Layer Perceptron — the simplest kind of neural network (also called a [f
 Attention comes *before* the MLP because a token should gather context from the others first and only then think for itself — you read the room, then form your own thought. The two are built differently: **attention** has each token build a weighted blend of every token's values (that blend is how they "look at each other"), while the **MLP** runs a plain feed-forward on each token's vector alone, with the same weights at every position (that is "on its own"). The bend inside that MLP has grown more capable over time: plain [ReLU](/shared/glossary/#relu) just clips negatives to 0; a [GLU](/shared/glossary/#glu) instead multiplies the content by a learned 0-to-1 "gate" so the network can dial parts of it down; and [SwiGLU](/shared/glossary/#swiglu) is a GLU whose gate uses the smooth [Swish](/shared/glossary/#swish) curve — the modern default.
 
 ### MMDiT {#mmdit}
-Multi-Modal Diffusion Transformer — joint text+image attention layers, used in SD3 and Flux
+Multi-Modal Diffusion [Transformer](/shared/glossary/#transformer) — the [DiT](/shared/glossary/#dit) variant used in SD3 and Flux where text tokens and image tokens flow through the *same* [attention](/shared/glossary/#attention) layers ("joint attention") instead of having the image attend to the text through a separate [cross-attention](/shared/glossary/#cross-attention) step. Each [modality](/shared/glossary/#modality) (text vs image) keeps its own normalization and [MLP](/shared/glossary/#mlp) weights, but they see and influence each other inside one shared attention operation, which helps the model get compositional prompts ("a red cube on a blue sphere") right. Like seating writers and illustrators at one table where everyone hears the whole conversation, instead of passing notes between two separate rooms.
 
 ### MMLU {#mmlu}
 Massive Multitask Language Understanding — a 57-subject multiple-choice [benchmark](/shared/glossary/#benchmark) (history, law, medicine, math, and more) that became the standard quick test of how much general knowledge a model has, like a giant trivia exam spanning many school subjects at once.
@@ -1115,7 +1115,7 @@ A way of storing the [KV cache](/shared/glossary/#kv-cache) for many concurrent 
 A small rectangular section of an image. Instead of looking at an entire image at once, models often break it down into a grid of these smaller blocks to process them one by one. Like cutting a jigsaw puzzle into individual pieces and examining each piece separately before seeing how they fit together.
 
 ### Patchification {#patchification}
-Splitting a (latent) tensor into a sequence of patch tokens for a transformer
+Splitting a (latent) tensor into a sequence of small square [patches](/shared/glossary/#patch) and turning each one into a single token, so a [transformer](/shared/glossary/#transformer) can treat an image like a sentence of words. For example, a 32×32 latent cut into 2×2 patches becomes a sequence of 256 tokens (a 16×16 grid), each a little block projected to the model's hidden width. The patch size is the key knob: smaller patches make more tokens (finer detail but more compute), bigger patches make fewer tokens (cheaper but coarser) — a suffix like "/2" in [DiT](/shared/glossary/#dit)-S/2 means patch size 2. Like slicing a photo into postage-stamp squares and reading them left-to-right, top-to-bottom.
 
 ### PCA (principal component analysis) {#pca-principal-component-analysis}
 A technique that finds the few directions along which data varies the most and uses them to compress many numbers down to a handful, so high-dimensional data can be drawn on a 2D plot. Imagine photographing a 3D object from the angle that reveals its shape best — PCA picks that most-informative "camera angle" automatically. It is a quick, standard first step for *seeing* the structure in data, such as checking whether real images cluster together while random noise scatters apart.
@@ -1259,7 +1259,7 @@ A simple [agent](/shared/glossary/#agent) pattern that interleaves **Rea**soning
 A simple, robust way to merge several ranked lists into one: each item scores the sum of `1 / (rank + constant)` across the lists, so items ranked highly by more than one retriever rise to the top. Common for combining dense and sparse search in [hybrid retrieval](/shared/glossary/#hybrid-retrieval).
 
 ### Rectified flow {#rectified-flow}
-A flow-matching parameterization with straight-line trajectories; popular in 2024+ models
+A [flow-matching](/shared/glossary/#flow-matching) parameterization whose training paths are *straight lines* from noise to data, popular in 2024+ models like SD3 and Flux. Straight trajectories are easy to follow in a few big steps, so sampling needs fewer steps than the curvy paths of older diffusion. You can also "re-flow": after training once, use the model to generate (noise, image) pairs and retrain on those straight pairs, which straightens the paths even further and lets you sample in as few as one or two steps. Like replacing a winding mountain road between two towns with a straight highway — same destination, far fewer turns to take.
 
 ### Reference model {#reference-model}
 A frozen copy of the starting model that [RLHF](/shared/glossary/#rlhf) and [DPO](/shared/glossary/#dpo) measure against (through a [KL](/shared/glossary/#kl-divergence) term) so the model being trained does not drift too far from sensible behavior — a "before" photo to compare every change against.
@@ -1332,7 +1332,7 @@ The spread of responses a model is currently generating when it produces [rollou
 Performance model bounding throughput as min(peak FLOPs, memory bandwidth × arithmetic intensity)
 
 ### RoPE {#rope}
-Rotary Position [Embedding](/shared/glossary/#embedding) — encodes position by rotating Q, K vectors
+Rotary Position [Embedding](/shared/glossary/#embedding) — a way to tell a [transformer](/shared/glossary/#transformer) *where* each token sits by physically rotating its query and key vectors by an angle proportional to the position, so the [attention](/shared/glossary/#attention) [dot product](/shared/glossary/#dot-product) between two tokens depends only on how far apart they are. Because the encoding lives in the rotation rather than an added vector, it extrapolates to longer sequences than the model trained on. **2D RoPE** extends the trick to images: a [patch](/shared/glossary/#patch) token is rotated by its row *and* its column, encoding 2D spatial position. Like giving every seat in a theater a precise angle on a dial, so the model can always work out the spacing between any two seats.
 
 ### ROS / ROS 2 {#ros--ros-2}
 Robot Operating System — robotics middleware (ROS 2 is the modern version)

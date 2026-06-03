@@ -1,0 +1,5 @@
+# Implement DiT-S/2
+
+## Key Insight
+
+This project replaces the [U-Net](/shared/glossary/#u-net) at the heart of a diffusion model with a [Diffusion Transformer (DiT)](/shared/glossary/#dit): you cut the noisy [latent](/shared/glossary/#latent-space) into 2×2 [patches](/shared/glossary/#patchification) (that is the "/2"), feed the resulting sequence of tokens through 12 transformer blocks of width 384 (the "S", for small), and predict the added noise just as before. The conditioning — the timestep plus the class label — enters through [AdaLN-Zero](/shared/glossary/#adaln-zero), which predicts per-channel shift/scale/gate values that start at zero, so each block begins as a do-nothing identity and only gradually learns to modulate the activations. Training it [class-conditionally](/shared/glossary/#class-conditioning) on [CIFAR-10](/shared/glossary/#cifar-10) and comparing [FID](/shared/glossary/#fid) against your earlier U-Net baseline reveals the transformer's real selling point: it is not magically better at this small scale, but it [scales](/shared/glossary/#scaling-laws) far more predictably as you add parameters and compute.

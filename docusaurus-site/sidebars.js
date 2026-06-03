@@ -363,6 +363,18 @@ const sidebars = {
                 {type: 'doc', id: 'guides/image-generation/projects/outpainting/README', label: 'Outpainting'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 8: Diffusion Transformers and Flow Matching',
+              items: [
+                {type: 'doc', id: 'guides/image-generation/projects/implement-dit-s-2/README', label: 'Implement DiT-S/2'},
+                {type: 'doc', id: 'guides/image-generation/projects/44-2d-rope-for-dit/README', label: '2D RoPE for DiT'},
+                {type: 'doc', id: 'guides/image-generation/projects/rectified-flow-from-scratch/README', label: 'Rectified flow from scratch'},
+                {type: 'doc', id: 'guides/image-generation/projects/mmdit-block/README', label: 'MMDiT block'},
+                {type: 'doc', id: 'guides/image-generation/projects/re-flow/README', label: 'Re-flow'},
+                {type: 'doc', id: 'guides/image-generation/projects/compare-dit-and-u-net-scaling/README', label: 'Compare DiT and U-Net scaling'},
+              ],
+            },
           ],
         },
         {type: 'doc', id: 'guides/reinforcement-learning/README', label: 'Reinforcement Learning'},
