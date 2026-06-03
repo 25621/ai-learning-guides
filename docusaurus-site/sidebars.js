@@ -379,7 +379,6 @@ const sidebars = {
               type: 'category',
               label: 'Phase 9: Conditioning, Control, and Personalization',
               items: [
-                {type: 'doc', id: 'guides/image-generation/projects/img2img-and-inpainting/README', label: 'img2img and inpainting'},
                 {type: 'doc', id: 'guides/image-generation/projects/lora-fine-tune/README', label: 'LoRA fine-tune'},
                 {type: 'doc', id: 'guides/image-generation/projects/dreambooth/README', label: 'DreamBooth'},
                 {type: 'doc', id: 'guides/image-generation/projects/textual-inversion/README', label: 'Textual Inversion'},

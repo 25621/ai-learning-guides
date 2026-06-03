@@ -1062,9 +1062,10 @@ class ControlBranch(nn.Module):
 
 ### Projects
 
+> **img2img and inpainting** — the foundational image-conditioning techniques for this phase — are built as a hands-on project back in [Phase 7: Latent Diffusion and Stable Diffusion](#phase-7-latent-diffusion-and-stable-diffusion), since they fall directly out of the latent-diffusion inference loop. Revisit that project here as the entry point to the conditioning and control methods below.
+
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| [img2img and inpainting](projects/37-img2img-and-inpainting/README.md) | Implement both from a vanilla SD inference loop; tune noise strength | ⭐⭐⭐ |
 | [LoRA fine-tune](projects/50-lora-fine-tune/README.md) | Take a pretrained SD checkpoint; fine-tune a LoRA on 20 images of a custom subject; verify it works | ⭐⭐⭐ |
 | [DreamBooth](projects/51-dreambooth/README.md) | Full fine-tune on a small subject set; compare quality and parameter count to LoRA | ⭐⭐⭐⭐ |
 | [Textual Inversion](projects/52-textual-inversion/README.md) | Train just a new token embedding for the same subject; compare to LoRA | ⭐⭐⭐ |
