@@ -52,6 +52,9 @@ Refusing requests early when capacity is saturated, to protect SLOs for accepted
 ### Advantage {#advantage}
 `A(s, a) = Q(s, a) − V(s)` — how much better than the baseline this action is
 
+### Aesthetic score {#aesthetic-score}
+A single number predicting how visually *pleasing* a human would find an image — used to judge generators when realism metrics like [FID](/shared/glossary/#fid) miss the question of "is it beautiful?" You produce it with a small predictor — usually a tiny linear head bolted on top of frozen [CLIP](/shared/glossary/#clip) image [embeddings](/shared/glossary/#embedding) — that has been fit to a dataset of images people rated on a 1–10 scale (the LAION-Aesthetics predictor is the best-known example). To score a new image you embed it with CLIP and pass that embedding through the trained head; the output approximates the average rating a person would give. Think of a film critic who has watched thousands of movies alongside their audience scores and can now glance at a new one and guess its rating. Because it is a learned proxy for taste, it inherits the biases of whoever did the original rating.
+
 ### Agent {#agent}
 An [LLM](/shared/glossary/#llm) placed in a loop so it can plan, choose a tool, act, observe the result, and repeat until a task is finished — turning a one-shot answerer into something that carries out multi-step work, like a worker who keeps taking the next action until the whole job is done.
 
@@ -239,7 +242,7 @@ Telling a generative model *which* category to produce instead of leaving it to 
 An early technique for steering a [diffusion model](/shared/glossary/#diffusion-model) toward a chosen class or label: you train a separate image classifier that can read *noisy* images, then at each denoising step add a nudge in the direction of its [gradient](/shared/glossary/#gradients) — the direction that makes the target class more likely. Like a critic standing over a painter and pointing "more toward a cat" at every brushstroke, it trades a little sample diversity for much stronger adherence to the condition. Its drawback is the extra cost of training and running that dedicated noisy classifier, which [classifier-free guidance (CFG)](/shared/glossary/#cfg-classifier-free-guidance) later eliminated by getting the same steering from the generator itself.
 
 ### CLIP {#clip}
-Contrastive Language-Image Pretraining — paired text-image dual encoder
+Contrastive Language-Image Pretraining — a model that learns to match pictures with the words that describe them. It has two separate encoders: one reads an image, the other reads text, and both map their input into the same shared space of [embeddings](/shared/glossary/#embedding), so a photo of a dog and the caption "a dog" land near each other while the caption "a bicycle" lands far away. It is trained on hundreds of millions of image–caption pairs scraped from the web with a *contrastive* objective: pull each true image–caption pair together and push every mismatched pair apart. Think of it as teaching two translators — one who only speaks "image" and one who only speaks "text" — to agree on a common language, so any picture and its description end up pointing at the same spot. Once trained you can measure how well a caption fits an image (a *CLIP score*), classify images with no extra training by comparing them to label phrases (*zero-shot*), or feed the text encoder into a generator — it is the text encoder inside early [Stable Diffusion](/shared/glossary/#stable-diffusion).
 
 ### Closed-form {#closed-form}
 A solution you can write down and compute directly with a fixed formula, instead of reaching it through many rounds of trial-and-error. Solving `2x = 10` by writing `x = 5` is closed-form; nudging `x` up and down until both sides match is not. In [DPO](/shared/glossary/#dpo) a closed-form objective lets the model learn straight from preference pairs with one training [loss](/shared/glossary/#loss-function), skipping the slow [reward model](/shared/glossary/#reward-model)-plus-[PPO](/shared/glossary/#ppo) loop of classic [RLHF](/shared/glossary/#rlhf).
@@ -320,7 +323,7 @@ A measure of how two quantities move *together*: when one is above its average, 
 Conservative Q-Learning — offline RL with a pessimistic Q penalty
 
 ### Cross-attention {#cross-attention}
-Attention where queries come from one modality and keys/values from another
+A form of [attention](/shared/glossary/#attention) that lets one stream of data look at and pull in information from a *different* source. In ordinary self-attention a sequence attends to itself; in cross-attention the *queries* come from one place (say, the image being denoised) while the *keys* and *values* come from another (say, the text prompt's [embeddings](/shared/glossary/#embedding)) — often a different [modality](/shared/glossary/#modality) entirely. Picture a painter who keeps glancing at a written description while working: each patch of canvas asks the words "which of you matters to me?" and pulls in the answer to decide what to paint. This is exactly how [diffusion models](/shared/glossary/#diffusion-model) inject a text prompt into the image: inside the [U-Net](/shared/glossary/#u-net) the image patches are the queries and the text tokens are the keys and values, so every region of the picture can attend to the words most relevant to it.
 
 ### Cross-encoder {#cross-encoder}
 A model that reads a query and one candidate document *together* in a single pass and outputs one relevance score — far more accurate than comparing their separate [embeddings](/shared/glossary/#embedding), but too slow to run over a whole corpus, so it is used to [rerank](/shared/glossary/#reranker) a short candidate list.
@@ -707,6 +710,9 @@ A second-order ODE solver that improves on the [Euler method](/shared/glossary/#
 ### Hierarchical VAE {#hierarchical-vae}
 A [VAE](/shared/glossary/#vae) with several layers of latent variables stacked at different scales instead of just one. Higher levels capture the big picture (overall layout and shape) while lower levels fill in fine detail (texture and edges), much like an artist who first sketches rough shapes and then adds the small touches. Splitting the work across levels lets the model represent complex images far better than a single flat [latent space](/shared/glossary/#latent-space) can. [NVAE](/shared/glossary/#nvae) and [Very Deep VAE](/shared/glossary/#very-deep-vae) are well-known examples.
 
+### Higher-order sampler {#higher-order-sampler}
+In diffusion sampling, the solver takes a series of discrete steps along an [ODE](/shared/glossary/#ode) path from pure noise toward a finished image. A *higher-order* sampler estimates the shape of that path more accurately at each step by using extra slope measurements, instead of assuming the path is locally a straight line. A first-order method ([Euler](/shared/glossary/#euler-method)) just follows the slope where it currently stands; a second-order method like [Heun's method](/shared/glossary/#heuns-method) or [DPM-Solver++](/shared/glossary/#dpm-solver) also peeks ahead and averages the two slopes, cancelling most of the error. Because each step is more accurate, higher-order samplers reach good image quality in far fewer steps — often 15–25 instead of 50+. Picture driving toward a bend: a first-order driver steers only by where the road points right now and drifts wide, while a higher-order driver also notices how the road is curving ahead and corrects, staying on track with fewer adjustments.
+
 ### Holonomic {#holonomic}
 A vehicle whose instantaneous motion can be any direction (mecanum, omni)
 
@@ -887,6 +893,9 @@ Markov Decision Process — the tuple `(S, A, P, R, γ)`
 ### Mechanistic interpretability {#mechanistic-interpretability}
 The line of research that tries to reverse-engineer *what individual pieces of a neural network actually do* — which neurons or [attention heads](/shared/glossary/#heads) detect what, where a fact is stored, why a particular output came out. Like opening up a watch to see which gears turn the hands, instead of only timing how fast the watch runs. Main tools: [linear probes](/shared/glossary/#linear-probe), [sparse autoencoders](/shared/glossary/#sae), activation patching, and circuit analysis.
 
+### Medical-image segmentation {#medical-image-segmentation}
+The task of labelling *every pixel* in a medical scan (MRI, CT, X-ray, microscopy) as belonging to a particular structure — outlining a tumour, an organ, or a cell boundary — rather than just classifying the whole image with one label. The output is a per-pixel mask, like a precise coloring-book page where each region is filled with its own color. It demands very fine spatial accuracy, since a few pixels can be the difference between the edge of a tumour and healthy tissue, which is exactly why the [U-Net](/shared/glossary/#u-net)'s skip connections — carrying fine detail straight across the network — were originally designed for it. Think of tracing the exact outline of each country on a map instead of just saying "this is a map of Europe."
+
 ### Meta-learning {#meta-learning}
 "Learning to learn" — training a model to adapt quickly to new tasks with few examples. Many meta-learning algorithms, such as MAML, rely on higher-order gradients to optimize across tasks.
 
@@ -927,6 +936,9 @@ Massive Multitask Language Understanding — a 57-subject multiple-choice [bench
 
 ### MNIST {#mnist}
 A classic dataset of 70,000 small 28×28 grayscale images of handwritten digits 0–9. It is the most common "hello world" for image models — tiny, clean, and quick to train on — so a brand-new idea is almost always tried on MNIST first, before anyone risks it on harder, fuller-color data like [CIFAR-10](/shared/glossary/#cifar-10).
+
+### Modality {#modality}
+One type or format of data — text, images, audio, video, a depth map, and so on. Each modality has its own structure (text is a sequence of tokens, an image is a grid of pixels, audio is a waveform), so a model usually needs a dedicated encoder for each one before their information can be combined. A model that handles more than one is called *multimodal*. Think of modalities as the different human senses — sight, hearing, touch — each carrying information about the same world but in a different form, which the brain then has to fuse into one understanding. [Cross-attention](/shared/glossary/#cross-attention) is one common way to let two modalities exchange information.
 
 ### Modality gap {#modality-gap}
 Empirical finding that different-modality embeddings stay in separable regions
@@ -1605,7 +1617,7 @@ NVIDIA's production server for hosting models behind an HTTP/gRPC API, with [bat
 Time to *produce* the first token — the elapsed time from when a request arrives at the server until the model returns its first output token, dominated by [prefill](/shared/glossary/#prefill) plus any queue wait. Like a restaurant's "time until your drink arrives" — felt separately from the rest of the meal, and the first thing the user actually notices.
 
 ### U-Net {#u-net}
-An encoder-decoder network whose name comes from its U shape: the left arm shrinks the image down to a small, abstract summary while the right arm builds it back up to full size, with *skip connections* that hand each down-sampling layer's detail straight across to its matching up-sampling layer. Those skips are what let it keep fine pixel detail while still reasoning about the whole image, which is why it became the standard backbone for [diffusion models](/shared/glossary/#diffusion-model) (before [DiT](/shared/glossary/#dit) brought in transformers). It was originally invented for medical-image segmentation.
+An encoder-decoder network whose name comes from its U shape: the left arm shrinks the image down to a small, abstract summary while the right arm builds it back up to full size, with *skip connections* that hand each down-sampling layer's detail straight across to its matching up-sampling layer. Those skips are what let it keep fine pixel detail while still reasoning about the whole image, which is why it became the standard backbone for [diffusion models](/shared/glossary/#diffusion-model) (before [DiT](/shared/glossary/#dit) brought in transformers). It was originally invented for [medical-image segmentation](/shared/glossary/#medical-image-segmentation).
 
 ### Underflow {#underflow}
 Condition where a floating-point value is too small to be represented and rounds to zero; common with `float16` when accumulating very small gradients
