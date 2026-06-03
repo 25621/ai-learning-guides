@@ -722,6 +722,9 @@ Image-to-Video
 ### Identity function {#identity-function}
 A function that returns its input unchanged: `f(x) = x`. In the context of straight-through estimators, gradients are passed through a non-differentiable operation as if it were the identity function.
 
+### img2img {#img2img}
+Generating a new image that is guided by an existing input image instead of starting from pure noise. You partially noise the input — controlled by a *denoising strength* (0 = keep the original, 1 = ignore it) — then let the [diffusion model](/shared/glossary/#diffusion-model) denoise from there, so the result keeps the rough layout and colors of the input while following the new prompt. Like tracing over a rough sketch: the more you erase first, the more freedom the model has to redraw.
+
 ### Impedance control {#impedance-control}
 Command a virtual spring-damper between end-effector and reference
 
@@ -742,6 +745,9 @@ High-speed network with RDMA; standard for AI clusters
 
 ### InfoNCE {#infonce}
 The contrastive loss used by CLIP; softmax over a similarity matrix
+
+### Inpainting {#inpainting}
+Filling in a masked-out region of an image so the patch blends seamlessly with the rest. You hand the model the surrounding pixels as fixed context and let it generate only the hole — like a restorer repainting a torn corner of a photo to match the surviving picture. With a [diffusion model](/shared/glossary/#diffusion-model) this is done by re-noising and denoising only inside the mask while pasting the known pixels back on every step.
 
 ### int8 {#int8}
 8-bit integer format; storing [weights](/shared/glossary/#weights) or [activations](/shared/glossary/#activations) as int8 uses a quarter of the memory of [float32](/shared/glossary/#float32) and can run faster, at some cost in precision.
@@ -976,6 +982,9 @@ A chat where the user and the AI take turns talking back and forth, building on 
 ### Native multimodal {#native-multimodal}
 A model trained from scratch on all modalities with a unified vocabulary
 
+### Negative prompt {#negative-prompt}
+A second text prompt describing what you do *not* want in the image (e.g. "blurry, extra fingers, watermark"). It works through [classifier-free guidance](/shared/glossary/#cfg-classifier-free-guidance): instead of pushing away from a blank unconditional prediction, the model pushes away from the negative prompt's prediction and toward your real prompt — so naming a flaw steers the result away from it. Like telling an artist "paint a beach, and whatever you do, no people."
+
 ### Network in Network {#network-in-network}
 A design idea where a tiny neural network is tucked *inside* a single layer of a bigger one, so that layer can do more thinking than a plain filter could. A normal [convolution layer](/shared/glossary/#convolution-layers) slides a simple filter that just takes a weighted sum of each [patch](/shared/glossary/#patch); a network-in-network slides a small multi-step mini-network over each patch instead, letting it recognize more complicated local patterns on the spot. Picture a factory line where, instead of one worker stamping each part, every station hides a little expert team that inspects and shapes the part before passing it on. The idea (from the 2013 *Network In Network* paper) inspired the [Inception network](/shared/glossary/#inception-network)'s building blocks — which is why Inception was nicknamed after the movie about a dream inside a dream.
 
@@ -1074,6 +1083,9 @@ A scorer that judges only a solution's final answer as right or wrong, ignoring 
 
 ### Outlines {#outlines}
 An open-source Python library for [constrained generation](/shared/glossary/#constrained-generation): you hand it a regular expression, a JSON schema, or a [Pydantic](/shared/glossary/#pydantic) model and it patches the [LLM](/shared/glossary/#llm)'s decoder to mask out any next-token choices that would break the structure. Like putting guardrails on a road so the car physically cannot drive off the edge no matter how the driver steers, it makes the model's output structurally valid by construction rather than by hope.
+
+### Outpainting {#outpainting}
+[Inpainting](/shared/glossary/#inpainting) applied to the *outside* of an image: you place the original on a larger blank canvas, mark the new border area as the region to fill, and let the model extend the scene outward so it continues naturally past the original frame. Like a painter adding more landscape beyond the edges of an existing painting.
 
 ### Padding {#padding}
 Filling shorter sequences with a placeholder value so that every [sample](/shared/glossary/#sample) in a batch has the same length.
@@ -1477,6 +1489,9 @@ Data-flow matmul fabric used in TPUs
 
 ### T2V {#t2v}
 Text-to-Video
+
+### T5 {#t5}
+A text [transformer](/shared/glossary/#transformer) (Google's "Text-to-Text Transfer Transformer") that reads a sentence and produces rich embeddings of its meaning. Unlike [CLIP](/shared/glossary/#clip)'s text encoder, which was trained only to match images to short captions, T5 was trained on general language tasks, so it captures long, detailed prompts and word order more faithfully — which is why models like Imagen, SD3, and Flux feed it (often the large "T5-XXL" variant) into [cross-attention](/shared/glossary/#cross-attention) for better prompt adherence.
 
 ### Tail latency {#tail-latency}
 The [latency](/shared/glossary/#latency) of the slowest requests (for example the p95 or p99 percentiles) rather than the median (p50); it is what users notice most.

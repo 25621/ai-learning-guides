@@ -780,13 +780,13 @@ once with the null (empty-string) text emb — and linearly combine.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Run SD inference | Generate images with Stable Diffusion 1.5 via `diffusers`; sweep CFG scale, samplers, step counts | ⭐⭐ |
-| img2img and inpainting | Implement both from a vanilla SD inference loop; understand the noise-strength parameter | ⭐⭐⭐ |
-| Train a latent DDPM | Encode CIFAR-10 with an 8× VAE; train a small U-Net in the 4×4 latent; decode and compare to pixel-space | ⭐⭐⭐⭐ |
-| Train a VAE for diffusion | Train a perceptual+adversarial VAE on CelebA; verify it's a good compressor before using it for diffusion | ⭐⭐⭐⭐⭐ |
-| Negative prompts study | Pick 50 prompts; compare quality with and without negative prompts ("ugly, blurry, low quality"); measure FID-CLIP and aesthetics | ⭐⭐ |
-| Long-prompt test | Compare CLIP-L vs T5 conditioning on 200-token prompts; observe adherence differences | ⭐⭐⭐⭐ |
-| Outpainting | Implement outpainting by inpainting an extended canvas around the original image | ⭐⭐⭐ |
+| [Run SD inference](projects/36-run-sd-inference/README.md) | Generate images with Stable Diffusion 1.5 via `diffusers`; sweep CFG scale, samplers, step counts | ⭐⭐ |
+| [img2img and inpainting](projects/37-img2img-and-inpainting/README.md) | Implement both from a vanilla SD inference loop; understand the noise-strength parameter | ⭐⭐⭐ |
+| [Train a latent DDPM](projects/38-train-a-latent-ddpm/README.md) | Encode CIFAR-10 with an 8× VAE; train a small U-Net in the 4×4 latent; decode and compare to pixel-space | ⭐⭐⭐⭐ |
+| [Train a VAE for diffusion](projects/39-train-a-vae-for-diffusion/README.md) | Train a perceptual+adversarial VAE on CelebA; verify it's a good compressor before using it for diffusion | ⭐⭐⭐⭐⭐ |
+| [Negative prompts study](projects/40-negative-prompts-study/README.md) | Pick 50 prompts; compare quality with and without negative prompts ("ugly, blurry, low quality"); measure FID-CLIP and aesthetics | ⭐⭐ |
+| [Long-prompt test](projects/41-long-prompt-test/README.md) | Compare CLIP-L vs T5 conditioning on 200-token prompts; observe adherence differences | ⭐⭐⭐⭐ |
+| [Outpainting](projects/42-outpainting/README.md) | Implement outpainting by inpainting an extended canvas around the original image | ⭐⭐⭐ |
 
 ### Sample Code: A Minimal Latent-Diffusion Training Step
 
