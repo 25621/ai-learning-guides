@@ -196,6 +196,9 @@ PyTorch's core C++ library (the "core ten[sor]" library)
 ### Calibration {#calibration}
 Running a few representative batches of data through a model to learn how big its [activations](/shared/glossary/#activations) typically get — their usual smallest and largest values — before [quantizing](/shared/glossary/#quantization) it. Knowing that range lets static quantization choose one fixed [int8](/shared/glossary/#int8) "scale": the conversion factor that maps the real numbers onto the 256 slots an int8 can hold. It is like measuring the tallest guest you expect before setting a doorframe height — check the real range once, then size the fixed scale so almost nothing gets clipped.
 
+### Canny edge detector {#canny-edge-detector}
+A classic (non-neural) algorithm that reduces a photo to a clean black-and-white map of its outlines — the lines where brightness changes sharply, such as the border between a face and the background. It works by measuring the *gradient* (how fast pixel brightness changes) at every point, keeping only the local peaks so the edges come out one pixel thin, and then linking those peaks into continuous contours. Picture tracing all the hard boundaries of a photo with a fine pen and throwing away the shading in between. [ControlNet](/shared/glossary/#controlnet) uses such an edge map as a conditioning signal: the outline says *where* shapes must go while the prompt decides *what* fills them. Named after its inventor, John Canny.
+
 ### Catastrophic forgetting {#catastrophic-forgetting}
 When training a model on new data erases skills it had already learned, because the new [gradients](/shared/glossary/#gradients) overwrite the old [weights](/shared/glossary/#weights).
 
@@ -302,7 +305,7 @@ Taking an already-pretrained model and training it further on a new corpus to ad
 A serving trick where the GPU adds new requests into the running [batch](/shared/glossary/#batching) — and drops finished ones — at every decode step, instead of waiting for the whole batch to finish together. Like a hotel shuttle that can pick up and drop off passengers anywhere along its loop rather than only at the start and end: far fewer empty seats overall, so [throughput](/shared/glossary/#throughput) goes up dramatically. It is the single largest speedup in modern LLM serving and is the default in [vLLM](/shared/glossary/#vllm) and [TGI](/shared/glossary/#tgi).
 
 ### ControlNet {#controlnet}
-Architecture that adds an auxiliary conditioning branch (depth, pose, edges, …) to a frozen diffusion model
+An add-on that gives a frozen [diffusion model](/shared/glossary/#diffusion-model) precise *spatial* control. It clones the [U-Net](/shared/glossary/#u-net)'s encoder into a parallel branch that reads an auxiliary conditioning image — a depth map, a pose skeleton, a [Canny edge map](/shared/glossary/#canny-edge-detector), a segmentation — and feeds that branch's features back into the original network so the output follows the supplied structure. The base model stays untouched (so its quality and prompt-following are preserved) and only the new branch is trained; the connections use [zero-convolutions](/shared/glossary/#zero-conv) so the branch contributes nothing at first and is learned gradually. Like laying tracing paper with an outline over a painter's canvas: the prompt still chooses colors and texture, but every shape must follow the lines you drew.
 
 ### Convolution layers {#convolution-layers}
 The building-block layers of a [CNN](/shared/glossary/#cnn). Each one slides a small grid of learned numbers — a *filter* (also called a *kernel*) — step by step across the image, and at every stop it multiplies the filter against the patch underneath, adds up the result, and writes that single number into a new grid. Sweep the whole image and those numbers form a "feature map" that lights up wherever the filter's pattern appears. Picture a stencil cut in the shape of a vertical edge: drag it over a photo and it leaves a bright mark everywhere there *is* a vertical edge and stays dark elsewhere. One filter might hunt for edges, another for a patch of red, another for a curve; stacking many convolution layers lets the network build up from simple textures to whole objects. Reusing the same small filter everywhere is what keeps convolutions cheap and lets them spot a pattern no matter where it sits in the picture.
@@ -363,6 +366,9 @@ Deep Convolutional [GAN](/shared/glossary/#gans) — the 2015 recipe that first 
 
 ### DDIM {#ddim}
 Denoising Diffusion Implicit Models — a way to sample from an already-trained [DDPM](/shared/glossary/#ddpm) far faster. Where DDPM's reverse process is *stochastic* (it injects fresh randomness at every step and may need ~1000 steps), DDIM makes the path *deterministic*: the same starting noise always yields the same image, and the smooth path lets you skip most steps, so ~50 steps match 1000-step quality. Crucially it reuses the same trained network — DDIM changes only how you *sample*, not how you *train*. Like taking a few long, confident strides across a room instead of many tiny shuffles.
+
+### DDIM inversion {#ddim-inversion}
+Running the deterministic [DDIM](/shared/glossary/#ddim) sampler *in reverse* to find the starting noise that would regenerate a given real image. Normal sampling goes noise → image by removing a little noise each step; inversion walks the same path backward, image → noise, *adding* the noise the model would have removed. Once you hold that noise you can change the prompt and denoise forward again, and because the path is largely reused the edit keeps the original's layout and pose. The catch is drift: each backward step is only approximate, so the recovered noise does not reconstruct the photo perfectly — *null-text inversion* is a follow-up that fixes this by optimizing the empty-prompt [embedding](/shared/glossary/#embedding) so the reconstruction stays faithful. Like rewinding a tape to the exact frame you want before recording over part of it.
 
 ### DDP {#ddp}
 Distributed Data Parallel — replicate model, split batch, all-reduce gradients
@@ -455,7 +461,7 @@ Deep Q-Network — Q-learning with neural-net function approximation + experienc
 In [speculative decoding](/shared/glossary/#speculative-decoding), a small, fast model that *guesses* the next few tokens so the big [target model](/shared/glossary/#target-model) can check them all at once. Like a quick assistant who scribbles a rough draft for the expert to approve or correct — cheap to run, and most of its guesses turn out right, so the slow expert is consulted far less often.
 
 ### DreamBooth {#dreambooth}
-Fine-tuning recipe for subject personalization; updates the whole model on a few subject images
+A personalization recipe that [fine-tunes](/shared/glossary/#fine-tuning) the *whole* [diffusion model](/shared/glossary/#diffusion-model) on just 3–5 photos of one subject and binds it to a rare trigger word, so you can afterwards prompt "a photo of [V] dog surfing." Because every [weight](/shared/glossary/#weights) is updated the likeness is excellent, but the saved model is full-sized — the opposite trade-off from a lightweight [LoRA](/shared/glossary/#lora). To stop the model from [catastrophically forgetting](/shared/glossary/#catastrophic-forgetting) what other dogs look like, it adds a [prior-preservation loss](/shared/glossary/#prior-preservation-loss) that keeps training on the model's own generic class images. Like memorizing one specific face in such detail that you must consciously remind yourself other faces still exist.
 
 ### dtype {#dtype}
 A tensor's element data type — e.g. `float32`, `float16`, `bfloat16`, `int8`, `bool`
@@ -534,6 +540,9 @@ Force/Torque sensor — six-axis force and moment at a wrist or fingertip
 
 ### FID {#fid}
 Fréchet Inception Distance — the standard sample-quality metric for image generation. ("Fréchet," after the mathematician Maurice Fréchet, names the *Fréchet distance*: a way to measure how far apart two probability distributions sit.) It runs both real and generated images through a pretrained [Inception network](/shared/glossary/#inception-network) to turn each image into a feature vector, then measures how far apart the two [clouds](/shared/glossary/#point-cloud) of features sit by comparing their means and [covariances](/shared/glossary/#covariance) (their centers and spreads). A lower FID means the generated images look statistically more like the real ones — picture two overlapping clouds of dots: the more they overlap, the smaller the distance. The real images here are only a *yardstick*, not an ingredient: your model invents brand-new images from random noise and never copies the real ones — FID simply needs a pile of real photos to compare those inventions against so it can score how convincing they are.
+
+### Fine-tuning {#fine-tuning}
+Taking a model that was already trained on a huge dataset and training it a little further on a small, specific dataset so it picks up a new skill, subject, or style. The big initial training is expensive and done once; fine-tuning is cheap and reuses all that knowledge — like hiring an experienced cook and teaching them your three house recipes rather than training someone from scratch. In image generation you might fine-tune [Stable Diffusion](/shared/glossary/#stable-diffusion) on 20 photos of your pet so it can draw that specific pet. Fine-tuning can update *every* [weight](/shared/glossary/#weights) (as in [DreamBooth](/shared/glossary/#dreambooth)) or just a tiny added piece (as in [LoRA](/shared/glossary/#lora)); the less you change, the smaller and more shareable the result, at some cost in how much new behavior you can absorb.
 
 ### FineWeb-Edu {#fineweb-edu}
 A large, openly released [pretraining](/shared/glossary/#pretraining) dataset built by running a [quality filter](/shared/glossary/#quality-filter) over crawled web pages and keeping only the educational-looking ones — like skimming a huge pile of internet text and saving just the pages that read like a textbook. Models trained on it often beat models trained on far more unfiltered text, making it a go-to example that data quality can matter more than raw quantity.
@@ -621,6 +630,9 @@ Gaussian Error Linear Unit — a smooth activation function widely used in trans
 
 ### GEMM {#gemm}
 GEneral Matrix Multiply — the workhorse operation `C = A × B` on two matrices, and the single most common heavy computation inside a neural network. GPUs are built to do GEMMs fast; nearly every layer's forward pass is one. When one input is very "skinny" (a tiny batch, as in single-token [decode](/shared/glossary/#decode)) the GPU's [Tensor Cores](/shared/glossary/#tensor-core) sit half-idle, so that case needs a different kernel from a big, square prefill GEMM.
+
+### Generalization {#generalization}
+How well a model performs on inputs it has *never seen*, as opposed to merely repeating its training examples. A model that generalizes has captured the underlying *pattern*; one that has only memorized has captured the *examples* — the difference between a student who learned how multiplication works and one who memorized a single times-table and is lost on any new numbers. For a style [LoRA](/shared/glossary/#lora), generalization means the learned look transfers to prompts that never appeared in training; its opposite is [overfitting](/shared/glossary/#overfitting). You measure it by checking performance on held-out inputs, not on the training set.
 
 ### Generator {#generator}
 The half of a [GAN](/shared/glossary/#gans) that actually makes images: it takes a vector of random noise and maps it to a picture, learning to fool the [discriminator](/shared/glossary/#discriminator) into judging its output as real. It never sees the real images directly — it learns only from whether the discriminator was fooled, like a forger who improves purely from a detective's reactions. After training, the generator alone is what you keep and sample from.
@@ -763,6 +775,9 @@ The contrastive loss used by CLIP; softmax over a similarity matrix
 
 ### Inpainting {#inpainting}
 Filling in a masked-out region of an image so the patch blends seamlessly with the rest. You hand the model the surrounding pixels as fixed context and let it generate only the hole — like a restorer repainting a torn corner of a photo to match the surviving picture. With a [diffusion model](/shared/glossary/#diffusion-model) this is done by re-noising and denoising only inside the mask while pasting the known pixels back on every step.
+
+### InstructPix2Pix {#instructpix2pix}
+An image-editing model that takes a photo and a plain-English instruction ("make it winter," "add sunglasses") and returns the edited photo in a single pass — no masks, no per-image optimization. Its real trick is the *training data*: since no one wants to hand-edit thousands of photos, the data is made synthetically — a [large language model](/shared/glossary/#llm) writes an instruction plus before/after captions, and a text-to-image model ([Stable Diffusion](/shared/glossary/#stable-diffusion)) with [Prompt-to-Prompt](/shared/glossary/#prompt-to-prompt) renders a matched image pair that differs *only* in the described change. The finished model is then [fine-tuned](/shared/glossary/#fine-tuning) on millions of these triples. Like teaching an editor by showing them countless "before, instruction, after" flashcards until they can follow any new instruction.
 
 ### int8 {#int8}
 8-bit integer format; storing [weights](/shared/glossary/#weights) or [activations](/shared/glossary/#activations) as int8 uses a quarter of the memory of [float32](/shared/glossary/#float32) and can run faster, at some cost in precision.
@@ -1108,6 +1123,9 @@ An open-source Python library for [constrained generation](/shared/glossary/#con
 ### Outpainting {#outpainting}
 [Inpainting](/shared/glossary/#inpainting) applied to the *outside* of an image: you place the original on a larger blank canvas, mark the new border area as the region to fill, and let the model extend the scene outward so it continues naturally past the original frame. Like a painter adding more landscape beyond the edges of an existing painting.
 
+### Overfitting {#overfitting}
+When a model learns its training examples *too* literally — memorizing their specific details and noise instead of the general pattern — so it does great on the training set but poorly on anything new. A personalization [LoRA](/shared/glossary/#lora) trained for too many steps overfits: asked for "the subject on the moon," it just spits back one of its training photos. The classic analogy is a student who memorizes the exact answers to the practice exam and then fails the real test because the questions are worded differently. You spot it when training accuracy keeps improving while held-out performance gets worse, and you fight it with more data, fewer training steps, or regularization. Its opposite — doing well on unseen inputs — is [generalization](/shared/glossary/#generalization).
+
 ### Padding {#padding}
 Filling shorter sequences with a placeholder value so that every [sample](/shared/glossary/#sample) in a batch has the same length.
 
@@ -1192,6 +1210,9 @@ Sharing KV cache across requests that begin with the same tokens (e.g., system p
 ### Pretraining {#pretraining}
 Self-supervised training on a large unlabeled corpus to predict the next token
 
+### Prior-preservation loss {#prior-preservation-loss}
+An extra training term used by [DreamBooth](/shared/glossary/#dreambooth) to stop a model from forgetting a whole *class* while learning one specific member of it. When you fine-tune on five photos of *your* dog, the model risks deciding every "dog" now looks like yours — a form of [catastrophic forgetting](/shared/glossary/#catastrophic-forgetting). Prior preservation counters this by mixing in the model's *own* generic "a photo of a dog" images during training and asking it to keep reproducing them, so the broad concept of "dog" is preserved while the narrow concept of *your* dog is added on top. Like teaching someone your cousin's face without making them forget what faces in general look like.
+
 ### PRM {#prm}
 Probabilistic Roadmap — multi-query sampling-based planner
 
@@ -1218,6 +1239,9 @@ The (usually small) network that maps one modality's features into another's spa
 
 ### Prompt injection {#prompt-injection}
 An attack in which adversarial text smuggled into something the model reads — a retrieved document, a tool's output, an email, even text inside an image — overrides the original system instructions. Like a customer slipping a fake "manager-approved" note into a server's order pile: the server can't easily tell the planted note from a real one. The hardest unsolved security problem in deployed [LLMs](/shared/glossary/#llm), because the model has no built-in way to separate "instructions" from "data" in its input.
+
+### Prompt-to-Prompt {#prompt-to-prompt}
+A diffusion editing technique that changes *what* an image shows while keeping its layout intact, by reusing the [cross-attention](/shared/glossary/#cross-attention) maps from the original generation. Those attention maps record *which word controls which region* (the word "cat" lights up the cat's pixels); if you swap "cat" for "dog" but force the new run to reuse the old maps, the dog lands in exactly the same pose and place as the cat. Picture keeping a painting's pencil under-drawing fixed and only changing the colors you fill in. It is one of the tools used to build paired before/after data for [InstructPix2Pix](/shared/glossary/#instructpix2pix).
 
 ### PTQ / QAT {#ptq--qat}
 Post-Training Quantization / Quantization-Aware Training
@@ -1561,6 +1585,9 @@ Short for **Text Generation Inference** — Hugging Face's open-source LLM servi
 ### Thinking budget {#thinking-budget}
 A cap on how many tokens a [reasoning model](/shared/glossary/#reasoning-model) is allowed to spend thinking before it must give an answer — like telling a student "you have ten minutes of scratch work, then write your answer." It lets a serving system trade accuracy for cost and [latency](/shared/glossary/#latency): a bigger budget usually means better answers on hard problems but slower, pricier responses.
 
+### Textual Inversion {#textual-inversion}
+A personalization method that teaches a frozen [diffusion model](/shared/glossary/#diffusion-model) a new subject by learning a *single new word* for it — nothing in the model itself changes. Concretely it optimizes one fresh vector added to the [text encoder](/shared/glossary/#clip)'s [embedding matrix](/shared/glossary/#embedding-matrix) (the lookup table of word [embeddings](/shared/glossary/#embedding)) so that this invented "word" makes the model draw your subject. Because only that one vector is trained, the saved file is a few kilobytes — the smallest personalization artifact there is — but its capacity is limited: one vector can pin down a recognizable look yet cannot match the fidelity of [LoRA](/shared/glossary/#lora) or [DreamBooth](/shared/glossary/#dreambooth), since the frozen model can only render what it already knows how to draw. Like coining a single nickname that conjures a specific friend, rather than describing them from scratch every time.
+
 ### Throughput {#throughput}
 How much work is completed per unit of time — for training, the number of examples processed per second.
 
@@ -1756,7 +1783,7 @@ Yet another [RoPE](/shared/glossary/#rope) extensioN method — a context-extens
 [DeepSpeed](/shared/glossary/#deepspeed)'s parameter/gradient/state sharding scheme — comparable to FSDP
 
 ### Zero-conv {#zero-conv}
-A 1×1 convolution with zero-initialized weights and bias; used by ControlNet to add a branch without disturbing init
+A 1×1 [convolution](/shared/glossary/#convolution-layers) whose weights and bias all start at exactly zero, used by [ControlNet](/shared/glossary/#controlnet) to bolt a new branch onto a pretrained model without disturbing it. At initialization a zero-conv outputs nothing, so the new branch adds *zero* to the original network and the model behaves exactly as before — yet because the layer still receives [gradients](/shared/glossary/#gradients), it can gradually learn how much signal to pass through. Like wiring in a new tap that is turned fully off at first, then opened slowly as training discovers how much to let flow. This is what lets ControlNet train a fresh control signal without damaging the base model's existing quality.
 
 ### ZMP {#zmp}
 Zero-Moment Point — classical biped balance criterion

@@ -1064,14 +1064,14 @@ class ControlBranch(nn.Module):
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| img2img and inpainting | Implement both from a vanilla SD inference loop; tune noise strength | ⭐⭐⭐ |
-| LoRA fine-tune | Take a pretrained SD checkpoint; fine-tune a LoRA on 20 images of a custom subject; verify it works | ⭐⭐⭐ |
-| DreamBooth | Full fine-tune on a small subject set; compare quality and parameter count to LoRA | ⭐⭐⭐⭐ |
-| Textual Inversion | Train just a new token embedding for the same subject; compare to LoRA | ⭐⭐⭐ |
-| ControlNet from scratch | Implement the ControlNet "zero-conv" branch; condition on Canny edges; train on a small dataset | ⭐⭐⭐⭐⭐ |
-| InstructPix2Pix-style data | Generate a synthetic instruction-edit dataset using a pretrained T2I + GPT; fine-tune a small editor | ⭐⭐⭐⭐⭐ |
-| DDIM inversion + edit | Invert a real photo into latent noise; modify the prompt; denoise; observe structure preservation | ⭐⭐⭐⭐ |
-| Style LoRA | Train a LoRA on 30 images in a coherent style; verify the style transfers to unseen prompts | ⭐⭐⭐ |
+| [img2img and inpainting](projects/37-img2img-and-inpainting/README.md) | Implement both from a vanilla SD inference loop; tune noise strength | ⭐⭐⭐ |
+| [LoRA fine-tune](projects/50-lora-fine-tune/README.md) | Take a pretrained SD checkpoint; fine-tune a LoRA on 20 images of a custom subject; verify it works | ⭐⭐⭐ |
+| [DreamBooth](projects/51-dreambooth/README.md) | Full fine-tune on a small subject set; compare quality and parameter count to LoRA | ⭐⭐⭐⭐ |
+| [Textual Inversion](projects/52-textual-inversion/README.md) | Train just a new token embedding for the same subject; compare to LoRA | ⭐⭐⭐ |
+| [ControlNet from scratch](projects/53-controlnet-from-scratch/README.md) | Implement the ControlNet "zero-conv" branch; condition on Canny edges; train on a small dataset | ⭐⭐⭐⭐⭐ |
+| [InstructPix2Pix-style data](projects/54-instructpix2pix-style-data/README.md) | Generate a synthetic instruction-edit dataset using a pretrained T2I + GPT; fine-tune a small editor | ⭐⭐⭐⭐⭐ |
+| [DDIM inversion + edit](projects/55-ddim-inversion-edit/README.md) | Invert a real photo into latent noise; modify the prompt; denoise; observe structure preservation | ⭐⭐⭐⭐ |
+| [Style LoRA](projects/56-style-lora/README.md) | Train a LoRA on 30 images in a coherent style; verify the style transfers to unseen prompts | ⭐⭐⭐ |
 
 ### Key Insight
 
