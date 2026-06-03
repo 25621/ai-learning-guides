@@ -398,7 +398,8 @@ Turning a sequence of token IDs back into a UTF-8 string — the reverse of what
 Denavit-Hartenberg parameters — textbook arm-geometry description
 
 ### Diffusion model {#diffusion-model}
-A generative model that learns to *un-noise* an image (or video, or audio) — training starts from clean data, gradually adds Gaussian noise until it looks like static, and teaches the network to reverse one small step of that corruption. At inference time you start from pure static and call the network many times (often 4–50), each call removing a bit of noise until a coherent picture emerges. Like sculpting in reverse: the marble starts as a featureless block of noise and the model chips away until the shape appears. [Stable Diffusion](/shared/glossary/#stable-diffusion) is the best-known example.
+A generative model that learns to *un-noise* an image (or video, or audio). 
+**The Key Intuition:** The model *only* learns the reverse process. The forward process (adding noise) is a fixed, mathematical destruction (like randomly shuffling a puzzle) that requires no learning. The reverse process is the actual learning phase: the network is handed a scrambled image along with a strict label of *how much* noise is currently present (often measured by a timestep `t` or standard deviation `σ`). This noise level acts as a critical condition, physically injected into the network via mechanisms like [AdaGN](/shared/glossary/#adagn-adaptive-group-normalization) so the model knows whether to focus on forming broad outlines (high noise) or tweaking fine details (low noise).
 
 ### Disaggregated serving {#disaggregated-serving}
 Running prefill and decode on separate GPU pools with KV cache transfer between them
@@ -432,7 +433,8 @@ Computing the gradient of a gradient by tracking the backward pass operations in
 The later, real-world tasks a model is eventually judged on — such as question answering or coding — as opposed to the [pretraining](/shared/glossary/#pretraining) objective it was trained on. "Downstream scores" measure how much a change (cleaner data, a better [learning rate](/shared/glossary/#learning-rate)) actually pays off on those end tasks, the way a river's health downstream reflects what happened upstream at the source.
 
 ### DPM-Solver {#dpm-solver}
-A fast sampler for [diffusion models](/shared/glossary/#diffusion-model). Because a trained diffusion model defines a smooth ODE that carries noise to an image, sampling is just numerically solving that ODE — and DPM-Solver exploits the *known* mathematical form of that ODE (part of it can be solved exactly, leaving only a small remainder to approximate) so it needs far fewer steps than a generic solver, often 10–20 instead of hundreds. Like knowing the exact shape of a hill so you can take a few long, confident strides down it instead of cautious tiny shuffles. Its improved version, **DPM-Solver++**, refines this for the guided, high-[CFG](/shared/glossary/#cfg-classifier-free-guidance) setting used in real text-to-image models.
+A fast sampler for [diffusion models](/shared/glossary/#diffusion-model). While the baseline [Euler method](/shared/glossary/#euler-method) blindly takes small straight-line steps based on the immediate slope (requiring hundreds of tiny steps to avoid wandering off-path), DPM-Solver exploits the *known* mathematical curvature of the ODE. By calculating the exact linear parts ahead of time, it can take large, confident strides, effectively reaching the same quality in just 10–20 steps.
+**DPM-Solver++:** An upgraded version optimized for high-[CFG](/shared/glossary/#cfg-classifier-free-guidance) environments. High CFG makes the predicted noise direction ($\epsilon$) oscillate wildly, which confuses the standard DPM-Solver. DPM-Solver++ fixes this by mathematically pivoting the equation to predict the stable *final clean image* ($x_0$) instead of the wavering noise direction. By anchoring its steps to this unmoving final destination, it safely prevents image burn and artifacts even under aggressive guidance.
 
 ### DPO {#dpo}
 Direct Preference Optimization — [closed-form](/shared/glossary/#closed-form) RLHF without a reward model or [PPO](/shared/glossary/#ppo)
@@ -1030,6 +1032,9 @@ NVLink switch chip; full-bandwidth all-to-all within a node
 
 ### Observability {#observability}
 The practice of making a running system's inner state visible from the outside — through metrics, logs, and traces — so you can ask new questions about *why* it is misbehaving without adding new code. Like the dashboard and warning lights in a car: you can tell what is wrong while still driving, instead of pulling the engine apart. For a serving stack it is the difference between knowing "p99 [latency](/shared/glossary/#latency) tripled at 9 a.m." and finding out only when users complain.
+
+### ODE (Ordinary Differential Equation) {#ode}
+A mathematical equation describing how a system's current state determines its rate of change (its slope). Rather than giving a fixed value as an answer, solving an ODE yields a full continuous function (a path). In diffusion models, the "Probability Flow ODE" acts as the exact navigation route transitioning pure random noise into a structured image. If the current state is a car's position, the ODE defines its exact velocity at that spot.
 
 ### Off-policy {#off-policy}
 The data comes from a different policy than the one being optimized
