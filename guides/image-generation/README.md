@@ -679,12 +679,12 @@ def sample_with_cfg(model, x_t, t, cond, scale=7.5):
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Score matching from scratch | Implement denoising score matching on 2D toy data (8-Gaussians, swiss roll); verify with Langevin sampling | ⭐⭐⭐ |
-| Higher-order sampler | Implement DPM-Solver++ or Heun for an existing DDPM; verify 10–20 steps is enough | ⭐⭐⭐⭐ |
-| Classifier-free guidance | Add label-dropout training (10% null condition); implement CFG at inference; sweep the scale 1.0 → 12.0 | ⭐⭐⭐ |
-| EDM reparameterization | Re-derive your CIFAR-10 model in the Karras σ-space; verify it trains and samples; observe the cleaner hyperparameter surface | ⭐⭐⭐⭐ |
-| Probability flow ODE | Convert your SDE sampler to the deterministic ODE; verify samples and compute exact log-likelihood | ⭐⭐⭐⭐⭐ |
-| VP vs VE comparison | Train the same model under both SDE families; compare FID, training stability, and sampler behavior | ⭐⭐⭐⭐ |
+| [Score matching from scratch](projects/30-score-matching-from-scratch/README.md) | Implement denoising score matching on 2D toy data (8-Gaussians, swiss roll); verify with Langevin sampling | ⭐⭐⭐ |
+| [Higher-order sampler](projects/31-higher-order-sampler/README.md) | Implement DPM-Solver++ or Heun for an existing DDPM; verify 10–20 steps is enough | ⭐⭐⭐⭐ |
+| [Classifier-free guidance](projects/32-classifier-free-guidance/README.md) | Add label-dropout training (10% null condition); implement CFG at inference; sweep the scale 1.0 → 12.0 | ⭐⭐⭐ |
+| [EDM reparameterization](projects/33-edm-reparameterization/README.md) | Re-derive your CIFAR-10 model in the Karras σ-space; verify it trains and samples; observe the cleaner hyperparameter surface | ⭐⭐⭐⭐ |
+| [Probability flow ODE](projects/34-probability-flow-ode/README.md) | Convert your SDE sampler to the deterministic ODE; verify samples and compute exact log-likelihood | ⭐⭐⭐⭐⭐ |
+| [VP vs VE comparison](projects/35-vp-vs-ve-comparison/README.md) | Train the same model under both SDE families; compare FID, training stability, and sampler behavior | ⭐⭐⭐⭐ |
 
 ### Key Insight
 
@@ -780,13 +780,13 @@ once with the null (empty-string) text emb — and linearly combine.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Run SD inference | Generate images with Stable Diffusion 1.5 via `diffusers`; sweep CFG scale, samplers, step counts | ⭐⭐ |
-| img2img and inpainting | Implement both from a vanilla SD inference loop; understand the noise-strength parameter | ⭐⭐⭐ |
-| Train a latent DDPM | Encode CIFAR-10 with an 8× VAE; train a small U-Net in the 4×4 latent; decode and compare to pixel-space | ⭐⭐⭐⭐ |
-| Train a VAE for diffusion | Train a perceptual+adversarial VAE on CelebA; verify it's a good compressor before using it for diffusion | ⭐⭐⭐⭐⭐ |
-| Negative prompts study | Pick 50 prompts; compare quality with and without negative prompts ("ugly, blurry, low quality"); measure FID-CLIP and aesthetics | ⭐⭐ |
-| Long-prompt test | Compare CLIP-L vs T5 conditioning on 200-token prompts; observe adherence differences | ⭐⭐⭐⭐ |
-| Outpainting | Implement outpainting by inpainting an extended canvas around the original image | ⭐⭐⭐ |
+| [Run SD inference](projects/36-run-sd-inference/README.md) | Generate images with Stable Diffusion 1.5 via `diffusers`; sweep CFG scale, samplers, step counts | ⭐⭐ |
+| [img2img and inpainting](projects/37-img2img-and-inpainting/README.md) | Implement both from a vanilla SD inference loop; understand the noise-strength parameter | ⭐⭐⭐ |
+| [Train a latent DDPM](projects/38-train-a-latent-ddpm/README.md) | Encode CIFAR-10 with an 8× VAE; train a small U-Net in the 4×4 latent; decode and compare to pixel-space | ⭐⭐⭐⭐ |
+| [Train a VAE for diffusion](projects/39-train-a-vae-for-diffusion/README.md) | Train a perceptual+adversarial VAE on CelebA; verify it's a good compressor before using it for diffusion | ⭐⭐⭐⭐⭐ |
+| [Negative prompts study](projects/40-negative-prompts-study/README.md) | Pick 50 prompts; compare quality with and without negative prompts ("ugly, blurry, low quality"); measure FID-CLIP and aesthetics | ⭐⭐ |
+| [Long-prompt test](projects/41-long-prompt-test/README.md) | Compare CLIP-L vs T5 conditioning on 200-token prompts; observe adherence differences | ⭐⭐⭐⭐ |
+| [Outpainting](projects/42-outpainting/README.md) | Implement outpainting by inpainting an extended canvas around the original image | ⭐⭐⭐ |
 
 ### Sample Code: A Minimal Latent-Diffusion Training Step
 
@@ -963,12 +963,12 @@ def flow_matching_step(model, x_0, cond=None):
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Implement DiT-S/2 | Small DiT (12 blocks, dim 384), patch size 2; train class-conditional on CIFAR-10; compare to your U-Net baseline | ⭐⭐⭐⭐ |
-| 2D RoPE for DiT | Add 2D rotary positional embeddings; verify quality improves vs learned positions | ⭐⭐⭐ |
-| Rectified flow from scratch | Re-train the above with the flow-matching objective; observe convergence and few-step sampling | ⭐⭐⭐⭐ |
-| MMDiT block | Implement an SD3-style joint text-image attention block; train a tiny version on a captioned dataset | ⭐⭐⭐⭐⭐ |
-| Re-flow | Take a trained rectified-flow model; generate (noise, sample) pairs; train a second model on those straight-line paths | ⭐⭐⭐⭐⭐ |
-| Compare DiT and U-Net scaling | Train DiT-S, DiT-B, DiT-L on the same dataset; plot FID vs compute; observe DiT's slope advantage | ⭐⭐⭐⭐⭐ |
+| [Implement DiT-S/2](projects/43-implement-dit-s-2/README.md) | Small DiT (12 blocks, dim 384), patch size 2; train class-conditional on CIFAR-10; compare to your U-Net baseline | ⭐⭐⭐⭐ |
+| [2D RoPE for DiT](projects/44-2d-rope-for-dit/README.md) | Add 2D rotary positional embeddings; verify quality improves vs learned positions | ⭐⭐⭐ |
+| [Rectified flow from scratch](projects/45-rectified-flow-from-scratch/README.md) | Re-train the above with the flow-matching objective; observe convergence and few-step sampling | ⭐⭐⭐⭐ |
+| [MMDiT block](projects/46-mmdit-block/README.md) | Implement an SD3-style joint text-image attention block; train a tiny version on a captioned dataset | ⭐⭐⭐⭐⭐ |
+| [Re-flow](projects/47-re-flow/README.md) | Take a trained rectified-flow model; generate (noise, sample) pairs; train a second model on those straight-line paths | ⭐⭐⭐⭐⭐ |
+| [Compare DiT and U-Net scaling](projects/48-compare-dit-and-u-net-scaling/README.md) | Train DiT-S, DiT-B, DiT-L on the same dataset; plot FID vs compute; observe DiT's slope advantage | ⭐⭐⭐⭐⭐ |
 
 ### Key Insight
 

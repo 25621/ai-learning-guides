@@ -1,0 +1,5 @@
+# Higher-Order Sampler
+
+## Key Insight
+
+A trained [diffusion model](/shared/glossary/#diffusion-model) defines a smooth [ODE](/shared/glossary/#ode) whose solution carries pure noise to a clean image, so *sampling* is just numerically solving that ODE — and how many steps you need depends entirely on how accurate your solver is. The simplest solver, the [Euler method](/shared/glossary/#euler-method), takes a straight-line step using the slope where it currently sits and accumulates error fast, so it needs many steps. Higher-order solvers cut the error per step: [Heun's method](/shared/glossary/#heuns-method) is a predict-then-correct step that averages the slope at the start and end of each interval, and [DPM-Solver++](/shared/glossary/#dpm-solver) is a multistep method tailored to the exact mathematical shape of the diffusion ODE — so 10–20 steps match what Euler needs 100+ for. This project swaps the slow many-step sampler of an existing [DDPM](/shared/glossary/#ddpm) for these and measures the quality-versus-steps trade-off.

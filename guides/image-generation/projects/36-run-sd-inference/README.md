@@ -1,0 +1,5 @@
+# Run SD Inference
+
+## Key Insight
+
+[Stable Diffusion](/shared/glossary/#stable-diffusion) 1.5 turned text-to-image generation into something you can run on a single consumer GPU, and the `diffusers` library wraps the whole pipeline — text encoder, [U-Net](/shared/glossary/#u-net), and [VAE](/shared/glossary/#vae) decoder — behind a few lines of code. This project builds intuition for the three knobs that matter most at inference: the [classifier-free guidance (CFG)](/shared/glossary/#cfg-classifier-free-guidance) scale (how hard the model is pushed toward your prompt), the sampler (the [ODE/SDE](/shared/glossary/#ode) solver that takes each denoising step, e.g. [DDIM](/shared/glossary/#ddim) or [DPM-Solver++](/shared/glossary/#dpm-solver)), and the number of steps (more steps = slower but usually cleaner). Sweeping each one while holding the others fixed exposes the trade-offs — high CFG sharpens prompt adherence but oversaturates, while a [higher-order sampler](/shared/glossary/#higher-order-sampler) reaches good quality in far fewer steps — all without touching the model weights.

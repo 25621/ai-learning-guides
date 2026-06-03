@@ -26,13 +26,13 @@ A memory-saving trick that throws away the intermediate [activations](/shared/gl
 The intermediate outputs that flow *between* the layers of a network — the numbers each layer hands to the next during the forward pass. If [weights](/shared/glossary/#weights) are the fixed recipe a model learned, activations are the half-finished dish moving down the kitchen line, changing with every new input. Unlike weights, they are not saved after training; they are recomputed fresh each time the model runs on a new input.
 
 ### AdaGN (adaptive group normalization) {#adagn-adaptive-group-normalization}
-The trick diffusion models use to push a condition — like a class label or the current denoising step — into the network through its [normalization](/shared/glossary/#normalization) layers. First *group normalization* wipes a group of [activations](/shared/glossary/#activations) clean to mean 0 and variance 1, erasing their current style; then a tiny layer reads the condition and predicts two numbers, a **scale** and a **shift** ([scale-and-shift](/shared/glossary/#scale-and-shift)), that re-stretch and re-center those activations. Picture resetting a photo to neutral brightness and contrast, then letting the label "cat" turn those two knobs to a setting the model learned for cats. It is the group-norm cousin of [AdaIN](/shared/glossary/#adaptive-instance-normalization-adain) and [AdaLN](/shared/glossary/#adaln), and it is how a single model can be steered to generate one chosen class on demand.
+The trick diffusion models use to push a condition — like a class label or the current denoising step — into the network through its [normalization](/shared/glossary/#normalization) layers. First *group normalization* wipes a group of [activations](/shared/glossary/#activations) clean to mean 0 and variance 1, erasing their current style; then a *tiny layer* — a single small linear layer, just one little matrix of [weights](/shared/glossary/#weights) rather than a deep stack of layers — reads the condition and predicts two numbers, a **scale** and a **shift** ([scale-and-shift](/shared/glossary/#scale-and-shift)), that re-stretch and re-center those activations. The layer can stay this small because its only job is to translate the condition into those two knobs — not to do any heavy image work — so a lightweight layer is plenty, and being tiny means it costs almost nothing even when one is dropped in at every normalization layer. Picture resetting a photo to neutral brightness and contrast, then letting the label "cat" turn those two knobs to a setting the model learned for cats. It is the group-norm cousin of [AdaIN](/shared/glossary/#adaptive-instance-normalization-adain) and [AdaLN](/shared/glossary/#adaln), and it is how a single model can be steered to generate one chosen class on demand.
 
 ### AdaLN {#adaln}
-Adaptive layer normalization; the conditioning mechanism in DiT
+Adaptive layer normalization; the conditioning mechanism in [DiT](/shared/glossary/#dit)
 
 ### AdaLN-Zero {#adaln-zero}
-DiT's conditioning mechanism: layer norm modulated by shift/scale/gate, all initialized to zero
+The conditioning trick that powers [DiT](/shared/glossary/#dit). Start with plain **AdaLN** (*adaptive layer normalization*): a normalization layer first wipes a block's [activations](/shared/glossary/#activations) to a neutral mean-0, variance-1 state, then a *tiny layer* reads the condition — usually the current denoising step plus a class label — and predicts a fresh [scale-and-shift](/shared/glossary/#scale-and-shift) to re-stretch and re-center them, the [layer-normalization](/shared/glossary/#normalization) cousin of [AdaGN](/shared/glossary/#adagn-adaptive-group-normalization) and [AdaIN](/shared/glossary/#adaptive-instance-normalization-adain). The **"-Zero"** part makes two changes. First, the tiny layer predicts a *third* number — a **gate** — that multiplies the whole block's output before it is added back onto the [residual stream](/shared/glossary/#residual-stream) (a [gated](/shared/glossary/#gated) path). Second, it *initializes the layer that produces scale, shift, and gate so they all start at zero*. With the gate at zero, every [transformer](/shared/glossary/#transformer) block contributes *nothing* at the very start of training — the input slides straight through untouched, exactly like the identity shortcut of a [residual connection](/shared/glossary/#residual-connection). As training proceeds the gate gradually lifts off zero, so each block learns to add its effect *gently* instead of jolting a fragile, freshly-initialized network. Picture adding a new musician to a band but starting them on mute: you slowly turn up their volume from zero as they learn the song, rather than letting them blast over everyone on the first beat. That gentle start is a big part of why deep DiTs train stably.
 
 ### Adam {#adam}
 Adaptive Moment Estimation — gradient-descent optimizer that maintains per-parameter running averages of the first (mean) and second (uncentered variance) moments of the gradients to compute individual adaptive learning rates.
@@ -51,6 +51,9 @@ Refusing requests early when capacity is saturated, to protect SLOs for accepted
 
 ### Advantage {#advantage}
 `A(s, a) = Q(s, a) − V(s)` — how much better than the baseline this action is
+
+### Aesthetic score {#aesthetic-score}
+A single number predicting how visually *pleasing* a human would find an image — used to judge generators when realism metrics like [FID](/shared/glossary/#fid) miss the question of "is it beautiful?" You produce it with a small predictor — usually a tiny linear head bolted on top of frozen [CLIP](/shared/glossary/#clip) image [embeddings](/shared/glossary/#embedding) — that has been fit to a dataset of images people rated on a 1–10 scale (the LAION-Aesthetics predictor is the best-known example). To score a new image you embed it with CLIP and pass that embedding through the trained head; the output approximates the average rating a person would give. Think of a film critic who has watched thousands of movies alongside their audience scores and can now glance at a new one and guess its rating. Because it is a learned proxy for taste, it inherits the biases of whoever did the original rating.
 
 ### Agent {#agent}
 An [LLM](/shared/glossary/#llm) placed in a loop so it can plan, choose a tool, act, observe the result, and repeat until a task is finished — turning a one-shot answerer into something that carries out multi-step work, like a worker who keeps taking the next action until the whole job is done.
@@ -239,7 +242,7 @@ Telling a generative model *which* category to produce instead of leaving it to 
 An early technique for steering a [diffusion model](/shared/glossary/#diffusion-model) toward a chosen class or label: you train a separate image classifier that can read *noisy* images, then at each denoising step add a nudge in the direction of its [gradient](/shared/glossary/#gradients) — the direction that makes the target class more likely. Like a critic standing over a painter and pointing "more toward a cat" at every brushstroke, it trades a little sample diversity for much stronger adherence to the condition. Its drawback is the extra cost of training and running that dedicated noisy classifier, which [classifier-free guidance (CFG)](/shared/glossary/#cfg-classifier-free-guidance) later eliminated by getting the same steering from the generator itself.
 
 ### CLIP {#clip}
-Contrastive Language-Image Pretraining — paired text-image dual encoder
+Contrastive Language-Image Pretraining — a model that learns to match pictures with the words that describe them. It has two separate encoders: one reads an image, the other reads text, and both map their input into the same shared space of [embeddings](/shared/glossary/#embedding), so a photo of a dog and the caption "a dog" land near each other while the caption "a bicycle" lands far away. It is trained on hundreds of millions of image–caption pairs scraped from the web with a *contrastive* objective: pull each true image–caption pair together and push every mismatched pair apart. Think of it as teaching two translators — one who only speaks "image" and one who only speaks "text" — to agree on a common language, so any picture and its description end up pointing at the same spot. Once trained you can measure how well a caption fits an image (a *CLIP score*), classify images with no extra training by comparing them to label phrases (*zero-shot*), or feed the text encoder into a generator — it is the text encoder inside early [Stable Diffusion](/shared/glossary/#stable-diffusion).
 
 ### Closed-form {#closed-form}
 A solution you can write down and compute directly with a fixed formula, instead of reaching it through many rounds of trial-and-error. Solving `2x = 10` by writing `x = 5` is closed-form; nudging `x` up and down until both sides match is not. In [DPO](/shared/glossary/#dpo) a closed-form objective lets the model learn straight from preference pairs with one training [loss](/shared/glossary/#loss-function), skipping the slow [reward model](/shared/glossary/#reward-model)-plus-[PPO](/shared/glossary/#ppo) loop of classic [RLHF](/shared/glossary/#rlhf).
@@ -320,7 +323,7 @@ A measure of how two quantities move *together*: when one is above its average, 
 Conservative Q-Learning — offline RL with a pessimistic Q penalty
 
 ### Cross-attention {#cross-attention}
-Attention where queries come from one modality and keys/values from another
+A form of [attention](/shared/glossary/#attention) that lets one stream of data look at and pull in information from a *different* source. In ordinary self-attention a sequence attends to itself; in cross-attention the *queries* come from one place (say, the image being denoised) while the *keys* and *values* come from another (say, the text prompt's [embeddings](/shared/glossary/#embedding)) — often a different [modality](/shared/glossary/#modality) entirely. Picture a painter who keeps glancing at a written description while working: each patch of canvas asks the words "which of you matters to me?" and pulls in the answer to decide what to paint. This is exactly how [diffusion models](/shared/glossary/#diffusion-model) inject a text prompt into the image: inside the [U-Net](/shared/glossary/#u-net) the image patches are the queries and the text tokens are the keys and values, so every region of the picture can attend to the words most relevant to it.
 
 ### Cross-encoder {#cross-encoder}
 A model that reads a query and one candidate document *together* in a single pass and outputs one relevance score — far more accurate than comparing their separate [embeddings](/shared/glossary/#embedding), but too slow to run over a whole corpus, so it is used to [rerank](/shared/glossary/#reranker) a short candidate list.
@@ -379,6 +382,9 @@ A training technique where two effects that are mathematically equivalent in sta
 ### Deduplication {#deduplication}
 Removing repeated or near-repeated documents from a training corpus; one of the highest-return cleaning steps in [pretraining](/shared/glossary/#pretraining).
 
+### Deep network {#deep-network}
+A neural network with *many* layers stacked one after another, so the input passes through a long chain of transformations before reaching the output — "deep" literally refers to that depth (the number of stacked layers), in contrast to a "shallow" network of just one or two. Each layer builds on the features the previous one produced: in an image model the early layers might pick out edges, the middle layers shapes, and the later layers whole objects — like an assembly line where every station adds a little more refinement. Depth is what lets these models learn rich, abstract patterns, but it also makes them hard to train, because the learning signal ([gradients](/shared/glossary/#gradients)) has to travel back through every layer and tends to fade or blow up along the way — which is precisely the problem [residual connections](/shared/glossary/#residual-connection) and [normalization](/shared/glossary/#normalization) were invented to tame.
+
 ### DeepSpeed {#deepspeed}
 Microsoft's open-source library for training very large models efficiently. It is best known for [ZeRO](/shared/glossary/#zero), which shards a model's [parameters](/shared/glossary/#parameters), [gradients](/shared/glossary/#gradients), and [optimizer state](/shared/glossary/#optimizer-state) across GPUs so no single GPU has to hold the whole model — the same idea as PyTorch's [FSDP](/shared/glossary/#fsdp). Think of it as a moving company that splits one giant load across several trucks instead of trying to cram everything into one.
 
@@ -398,7 +404,8 @@ Turning a sequence of token IDs back into a UTF-8 string — the reverse of what
 Denavit-Hartenberg parameters — textbook arm-geometry description
 
 ### Diffusion model {#diffusion-model}
-A generative model that learns to *un-noise* an image (or video, or audio) — training starts from clean data, gradually adds Gaussian noise until it looks like static, and teaches the network to reverse one small step of that corruption. At inference time you start from pure static and call the network many times (often 4–50), each call removing a bit of noise until a coherent picture emerges. Like sculpting in reverse: the marble starts as a featureless block of noise and the model chips away until the shape appears. [Stable Diffusion](/shared/glossary/#stable-diffusion) is the best-known example.
+A generative model that learns to *un-noise* an image (or video, or audio). 
+**The Key Intuition:** The model *only* learns the reverse process. The forward process (adding noise) is a fixed, mathematical destruction (like randomly shuffling a puzzle) that requires no learning. The reverse process is the actual learning phase: the network is handed a scrambled image along with a strict label of *how much* noise is currently present (often measured by a timestep `t` or standard deviation `σ`). This noise level acts as a critical condition, physically injected into the network via mechanisms like [AdaGN](/shared/glossary/#adagn-adaptive-group-normalization) so the model knows whether to focus on forming broad outlines (high noise) or tweaking fine details (low noise).
 
 ### Disaggregated serving {#disaggregated-serving}
 Running prefill and decode on separate GPU pools with KV cache transfer between them
@@ -416,7 +423,7 @@ Training a smaller "student" model to copy the output of a larger, more capable 
 When the kind of data a model sees in production slowly changes away from the data it was tuned on — like a store whose regular customers gradually change their tastes, so last year's best-selling stock starts to sit on the shelf. For a [quantized](/shared/glossary/#quantization) model it matters because [calibration](/shared/glossary/#calibration) was fitted to the old traffic, so quality can quietly slip as the new traffic drifts further away.
 
 ### DiT {#dit}
-Diffusion Transformer — Peebles & Xie's transformer-based diffusion backbone
+Diffusion Transformer — Peebles & Xie's diffusion backbone that replaces the [U-Net](/shared/glossary/#u-net) with a pure [transformer](/shared/glossary/#transformer). It chops the noisy image (really its [VAE](/shared/glossary/#vae) [latent](/shared/glossary/#latent-space)) into a grid of small [patches](/shared/glossary/#patchification), turns each patch into a token, and lets [attention](/shared/glossary/#attention) mix them — the same recipe that took over language modeling, now pointed at denoising. The name simply joins "diffusion" (the denoising task) with "transformer" (the architecture). Its big draw is [scaling](/shared/glossary/#scaling-laws): make it wider or deeper and quality improves along a predictable curve, the way a bigger language model reliably gets better. Like swapping a custom-built, image-shaped machine (the U-Net) for a general-purpose assembly line you can just make longer to produce more. Sizes are named DiT-S (small), DiT-B (base), DiT-L (large), and a suffix like "/2" gives the [patch](/shared/glossary/#patchification) size — DiT-S/2 is the small model with 2×2 patches.
 
 ### Dot product {#dot-product}
 A way to boil two equal-length lists of numbers (two *vectors*) down to a single number: multiply them position by position, then add up all the products. For `[1, 2, 3] · [4, 5, 6]` you compute `1·4 + 2·5 + 3·6 = 4 + 10 + 18 = 32`.
@@ -430,6 +437,10 @@ Computing the gradient of a gradient by tracking the backward pass operations in
 
 ### Downstream {#downstream}
 The later, real-world tasks a model is eventually judged on — such as question answering or coding — as opposed to the [pretraining](/shared/glossary/#pretraining) objective it was trained on. "Downstream scores" measure how much a change (cleaner data, a better [learning rate](/shared/glossary/#learning-rate)) actually pays off on those end tasks, the way a river's health downstream reflects what happened upstream at the source.
+
+### DPM-Solver {#dpm-solver}
+Short for **Diffusion Probabilistic Model Solver** — a fast sampler for [diffusion models](/shared/glossary/#diffusion-model). While the baseline [Euler method](/shared/glossary/#euler-method) blindly takes small straight-line steps based on the immediate slope (requiring hundreds of tiny steps to avoid wandering off-path), DPM-Solver exploits the *known* mathematical curvature of the ODE. By calculating the exact linear parts ahead of time, it can take large, confident strides, effectively reaching the same quality in just 10–20 steps.
+**DPM-Solver++:** An upgraded version optimized for high-[CFG](/shared/glossary/#cfg-classifier-free-guidance) environments. High CFG makes the predicted noise direction (ε) oscillate wildly, which confuses the standard DPM-Solver. DPM-Solver++ fixes this by mathematically pivoting the equation to predict the stable *final clean image* (x₀) instead of the wavering noise direction. By anchoring its steps to this unmoving final destination, it safely prevents *image burn and artifacts* — the oversaturated, blown-out colors and blotchy fake textures that show up when too-high guidance pushes pixel values past their valid range, like overexposing a photo until the bright spots turn into harsh white patches — even under aggressive guidance.
 
 ### DPO {#dpo}
 Direct Preference Optimization — [closed-form](/shared/glossary/#closed-form) RLHF without a reward model or [PPO](/shared/glossary/#ppo)
@@ -465,7 +476,7 @@ A way to measure how far apart two distributions are by the smallest amount of "
 Running a model directly on the device in front of the user — a phone, laptop, car, or small embedded board — instead of sending the request to a data-center GPU. Like cooking at home rather than ordering delivery: it is private and works without a network, but you are limited to the small "kitchen" the device has, so models are kept small (1–8B), heavily [quantized](/shared/glossary/#quantization), and tuned to sip battery and fit in shared memory.
 
 ### EDM {#edm}
-Karras et al. 2022 — a reformulation of diffusion in σ-space with clean preconditioning
+A cleaned-up reformulation of [diffusion](/shared/glossary/#diffusion-model) from the paper *Elucidating the Design Space of Diffusion-Based Generative Models* (Karras et al. 2022) that strips away historical baggage and makes training and sampling much easier to tune. Two ideas carry it: index noise by its standard deviation σ rather than a discrete timestep (the [σ-schedule](/shared/glossary/#σ-schedule-karras)), and *precondition* the network — rescale its input, output, and per-σ loss weight so it always sees roughly unit-variance signals no matter how much noise is present. The result is a flat, forgiving hyperparameter surface. A useful rule of thumb: if a 2020-era diffusion paper feels obscure, restate it in EDM's language and it usually becomes obvious.
 
 ### EKF {#ekf}
 Extended Kalman Filter — Kalman filter linearized about the current estimate
@@ -493,6 +504,9 @@ Describes a model like a [Mixture-of-Experts (MoE)](/shared/glossary/#moe) that 
 
 ### Error budget {#error-budget}
 The small amount of failure an [SLO](/shared/glossary/#slo) allows. If your target is 99.9% success, the remaining 0.1% — about 43 minutes a month — is your error budget. Like a monthly data allowance on a phone plan: you can "spend" it on risky deploys and experiments, but once it runs out you stop taking risks until it resets. It turns reliability from a vague goal into a balance you can watch.
+
+### Euler method {#euler-method}
+The simplest way to numerically solve a differential equation: look at the slope where you currently are, take one straight-line step in that direction, then repeat. It is easy to implement but accumulates error quickly because it ignores how the slope changes *during* the step, so diffusion samplers built on it need many steps to stay accurate. Like steering a car by only ever looking at the road directly under the bumper. Contrast with [Heun's method](/shared/glossary/#heuns-method) and [DPM-Solver](/shared/glossary/#dpm-solver), which correct for the changing slope and so need far fewer steps.
 
 ### ExecuTorch {#executorch}
 PyTorch's lightweight runtime for running models on mobile and edge devices, built on the graph captured by [`torch.export`](/shared/glossary/#torchexport).
@@ -540,7 +554,10 @@ A version of [FlashAttention](/shared/glossary/#flashattention) tuned for the [d
 Floating-Point Operations — a measure of computational complexity representing the number of individual arithmetic operations (additions or multiplications) performed.
 
 ### Flow matching {#flow-matching}
-Training a velocity field that transports noise to data via an ODE; modern alternative to DDPM
+Training a *velocity field* — a model that, given a half-noisy image and a time, predicts which direction and how fast to move it toward a clean image — so that following those arrows turns pure noise into data. Concretely, you draw a straight line between a real image `x_0` and random noise `ε`, pick a random point on that line, and train the model to output the line's direction `ε - x_0`; at generation time you start at noise and repeatedly step along the predicted arrows (solving an [ODE](/shared/glossary/#ode)) until you arrive at a clean image. It is a simpler, more modern alternative to [DDPM](/shared/glossary/#ddpm): there is no [noise schedule](/shared/glossary/#noise-schedule) to tune, just one clean regression target. Like learning the wind currents over a map so that, dropped anywhere in the fog, you always know which way blows toward home.
+
+### Flux {#flux}
+A family of state-of-the-art open-weight text-to-image models released in 2024 by Black Forest Labs (a team that included original [Stable Diffusion](/shared/glossary/#stable-diffusion) researchers). Flux is built on a large [MMDiT](/shared/glossary/#mmdit) backbone trained with [rectified flow](/shared/glossary/#rectified-flow), so text and image tokens share the same [attention](/shared/glossary/#attention) layers and the model denoises along nearly straight paths — which is why it follows detailed prompts and renders legible text unusually well. It ships in a few flavors: a top-quality "pro" version, an open "dev" version for tinkering, and a distilled "schnell" (German for *fast*) version that trades a little quality for very few sampling steps. Think of it as the generation of image models that arrived just after SD3 and pushed open-weight quality a notch higher.
 
 ### Forensics {#forensics}
 Working backward from a training failure to the operation that first caused it, instead of chasing the visible symptom. In PyTorch this means turning on [autograd](/shared/glossary/#autograd) [anomaly detection](/shared/glossary/#anomaly-detection) to halt at the first [NaN](/shared/glossary/#nan) or bad [gradient](/shared/glossary/#gradients).
@@ -591,7 +608,7 @@ Running a [GAN](/shared/glossary/#gans) backwards: given a real photo, find the 
 A class of generative models that trains two networks in a contest. A [generator](/shared/glossary/#generator) turns random noise into fake images, and a [discriminator](/shared/glossary/#discriminator) tries to tell those fakes from real ones; each one makes the other better, like a counterfeiter and a detective locked in an arms race. At the end you keep the generator, which by then makes images realistic enough to fool a well-trained critic. GANs produce sharp samples but are famously unstable to train — see [mode collapse](/shared/glossary/#mode-collapse).
 
 ### Gated {#gated}
-An operation where one path of a neural network modulates the information flow in another path via element-wise multiplication (e.g. in a [SwiGLU](/shared/glossary/#swiglu) block).
+An operation where one path of a neural network controls how much of another path gets through, by multiplying the two together value-by-value (*element-wise multiplication*). Picture a row of dimmer switches — or the valves on a bank of faucets. The main path carries the information; the second path produces a "gate" number for each value, and that number turns the corresponding value up or down. A gate near **0** shuts a value off (nothing passes), a gate near **1** lets it through untouched, and anything in between is a partial dribble. Because the multiply happens one number at a time, *every* feature gets its own private valve, so the network can wave some details through while damping others — all decided on the fly from the input. This is the trick behind LSTM "forget/input gates" (deciding what to keep vs. drop from memory) and modern [MLP](/shared/glossary/#mlp) blocks like [SwiGLU](/shared/glossary/#swiglu), where one half of the layer gates the other. It is closely related to [scale-and-shift](/shared/glossary/#scale-and-shift) conditioning, except a pure gate only *scales* (multiplies) rather than also adding an offset.
 
 ### GCG {#gcg}
 Short for **Greedy Coordinate Gradient** — a gradient-based attack that finds an adversarial suffix (a short string of seemingly random tokens) which, when appended to a harmful question, causes an aligned [LLM](/shared/glossary/#llm) to comply anyway. It works by swapping one suffix token at a time for whatever the gradient says raises the probability of an unsafe answer most. Like picking a combination lock by feeling each dial until the click; once one model is unlocked the same suffix often opens other models, which is why GCG is the standard benchmark attack in [jailbreak](/shared/glossary/#jailbreak) research.
@@ -693,8 +710,14 @@ The independent, parallel [attention](/shared/glossary/#attention) sub-computati
 ### Hessian {#hessian}
 The matrix of all second partial derivatives of a function — it captures the *curvature* of a loss landscape, not just its slope. Where the [gradient](/shared/glossary/#gradients) tells you "which way is downhill," the Hessian tells you "and how sharply does it bend." Like the difference between knowing a road slopes down and knowing whether it banks into a tight curve or stretches out almost flat. For real LLMs the full Hessian is too big to store (rows × columns each equal to the parameter count), so methods like [GPTQ](/shared/glossary/#gptq) use cheap approximations of it — typically built from a small [batch](/shared/glossary/#batch) of [calibration](/shared/glossary/#calibration) activations — to decide which weights matter most when [quantizing](/shared/glossary/#quantization).
 
+### Heun's method {#heuns-method}
+A second-order ODE solver that improves on the [Euler method](/shared/glossary/#euler-method) with a predict-then-correct step: it takes a tentative Euler step, measures the slope at that new point too, then moves using the *average* of the start and end slopes. Averaging the two slopes cancels much of the error Euler makes, so Heun reaches the same accuracy in far fewer steps — which is why it is the default sampler in [EDM](/shared/glossary/#edm). Like checking the road both where you are and where you're about to be, then steering down the middle. Named after the German mathematician Karl Heun.
+
 ### Hierarchical VAE {#hierarchical-vae}
 A [VAE](/shared/glossary/#vae) with several layers of latent variables stacked at different scales instead of just one. Higher levels capture the big picture (overall layout and shape) while lower levels fill in fine detail (texture and edges), much like an artist who first sketches rough shapes and then adds the small touches. Splitting the work across levels lets the model represent complex images far better than a single flat [latent space](/shared/glossary/#latent-space) can. [NVAE](/shared/glossary/#nvae) and [Very Deep VAE](/shared/glossary/#very-deep-vae) are well-known examples.
+
+### Higher-order sampler {#higher-order-sampler}
+In diffusion sampling, the solver takes a series of discrete steps along an [ODE](/shared/glossary/#ode) path from pure noise toward a finished image. A *higher-order* sampler estimates the shape of that path more accurately at each step by using extra slope measurements, instead of assuming the path is locally a straight line. A first-order method ([Euler](/shared/glossary/#euler-method)) just follows the slope where it currently stands; a second-order method like [Heun's method](/shared/glossary/#heuns-method) or [DPM-Solver++](/shared/glossary/#dpm-solver) also peeks ahead and averages the two slopes, cancelling most of the error. Because each step is more accurate, higher-order samplers reach good image quality in far fewer steps — often 15–25 instead of 50+. Picture driving toward a bend: a first-order driver steers only by where the road points right now and drifts wide, while a higher-order driver also notices how the road is curving ahead and corrects, staying on track with fewer adjustments.
 
 ### Holonomic {#holonomic}
 A vehicle whose instantaneous motion can be any direction (mecanum, omni)
@@ -710,6 +733,9 @@ Image-to-Video
 
 ### Identity function {#identity-function}
 A function that returns its input unchanged: `f(x) = x`. In the context of straight-through estimators, gradients are passed through a non-differentiable operation as if it were the identity function.
+
+### img2img {#img2img}
+Generating a new image that is guided by an existing input image instead of starting from pure noise. You partially noise the input — controlled by a *denoising strength* (0 = keep the original, 1 = ignore it) — then let the [diffusion model](/shared/glossary/#diffusion-model) denoise from there, so the result keeps the rough layout and colors of the input while following the new prompt. Like tracing over a rough sketch: the more you erase first, the more freedom the model has to redraw.
 
 ### Impedance control {#impedance-control}
 Command a virtual spring-damper between end-effector and reference
@@ -731,6 +757,9 @@ High-speed network with RDMA; standard for AI clusters
 
 ### InfoNCE {#infonce}
 The contrastive loss used by CLIP; softmax over a similarity matrix
+
+### Inpainting {#inpainting}
+Filling in a masked-out region of an image so the patch blends seamlessly with the rest. You hand the model the surrounding pixels as fixed context and let it generate only the hole — like a restorer repainting a torn corner of a photo to match the surviving picture. With a [diffusion model](/shared/glossary/#diffusion-model) this is done by re-noising and denoising only inside the mask while pasting the known pixels back on every step.
 
 ### int8 {#int8}
 8-bit integer format; storing [weights](/shared/glossary/#weights) or [activations](/shared/glossary/#activations) as int8 uses a quarter of the memory of [float32](/shared/glossary/#float32) and can run faster, at some cost in precision.
@@ -770,6 +799,9 @@ A [scratchpad](/shared/glossary/#scratchpad) that stores the [attention](/shared
 
 ### L2 regularization {#l2-regularization}
 A regularization technique that adds a penalty proportional to the squared magnitude of model weights to the loss function, encouraging smaller weights and reducing overfitting. In standard adaptive optimizers such as [Adam](/shared/glossary/#adam), this penalty is folded into the gradient and scaled by the adaptive learning rate, which is why [AdamW](/shared/glossary/#adamw) uses [decoupled](/shared/glossary/#decoupled) weight decay instead.
+
+### Langevin dynamics {#langevin-dynamics}
+A way to draw samples from a distribution when you only know its [score](/shared/glossary/#score) — the [gradient](/shared/glossary/#gradients) of its log-density. You start from a random point and repeatedly take a small step in the score direction (uphill toward higher probability) while also adding a little random noise each step so you explore rather than collapse onto a single peak. The uphill pull plus the random shake settles the point into high-probability regions in the right proportions, like a ball jiggling around a bumpy bowl and spending most of its time in the deepest dips. It is the sampling method behind the original [score](/shared/glossary/#score)-based generative models. Named after the physicist Paul Langevin.
 
 ### Latency {#latency}
 The time it takes to complete a single request, from input to output; distinct from [throughput](/shared/glossary/#throughput), which counts how many requests finish per second.
@@ -867,6 +899,9 @@ Markov Decision Process — the tuple `(S, A, P, R, γ)`
 ### Mechanistic interpretability {#mechanistic-interpretability}
 The line of research that tries to reverse-engineer *what individual pieces of a neural network actually do* — which neurons or [attention heads](/shared/glossary/#heads) detect what, where a fact is stored, why a particular output came out. Like opening up a watch to see which gears turn the hands, instead of only timing how fast the watch runs. Main tools: [linear probes](/shared/glossary/#linear-probe), [sparse autoencoders](/shared/glossary/#sae), activation patching, and circuit analysis.
 
+### Medical-image segmentation {#medical-image-segmentation}
+The task of labelling *every pixel* in a medical scan (MRI, CT, X-ray, microscopy) as belonging to a particular structure — outlining a tumour, an organ, or a cell boundary — rather than just classifying the whole image with one label. The output is a per-pixel mask, like a precise coloring-book page where each region is filled with its own color. It demands very fine spatial accuracy, since a few pixels can be the difference between the edge of a tumour and healthy tissue, which is exactly why the [U-Net](/shared/glossary/#u-net)'s skip connections — carrying fine detail straight across the network — were originally designed for it. Think of tracing the exact outline of each country on a map instead of just saying "this is a map of Europe."
+
 ### Meta-learning {#meta-learning}
 "Learning to learn" — training a model to adapt quickly to new tasks with few examples. Many meta-learning algorithms, such as MAML, rely on higher-order gradients to optimize across tasks.
 
@@ -900,13 +935,16 @@ Multi-Layer Perceptron — the simplest kind of neural network (also called a [f
 Attention comes *before* the MLP because a token should gather context from the others first and only then think for itself — you read the room, then form your own thought. The two are built differently: **attention** has each token build a weighted blend of every token's values (that blend is how they "look at each other"), while the **MLP** runs a plain feed-forward on each token's vector alone, with the same weights at every position (that is "on its own"). The bend inside that MLP has grown more capable over time: plain [ReLU](/shared/glossary/#relu) just clips negatives to 0; a [GLU](/shared/glossary/#glu) instead multiplies the content by a learned 0-to-1 "gate" so the network can dial parts of it down; and [SwiGLU](/shared/glossary/#swiglu) is a GLU whose gate uses the smooth [Swish](/shared/glossary/#swish) curve — the modern default.
 
 ### MMDiT {#mmdit}
-Multi-Modal Diffusion Transformer — joint text+image attention layers, used in SD3 and Flux
+Multi-Modal Diffusion [Transformer](/shared/glossary/#transformer) — the [DiT](/shared/glossary/#dit) variant used in [SD3](/shared/glossary/#sd3) and [Flux](/shared/glossary/#flux) where text tokens and image tokens flow through the *same* [attention](/shared/glossary/#attention) layers ("joint attention") instead of having the image attend to the text through a separate [cross-attention](/shared/glossary/#cross-attention) step. Each [modality](/shared/glossary/#modality) (text vs image) keeps its own normalization and [MLP](/shared/glossary/#mlp) weights, but they see and influence each other inside one shared attention operation, which helps the model get compositional prompts ("a red cube on a blue sphere") right. Like seating writers and illustrators at one table where everyone hears the whole conversation, instead of passing notes between two separate rooms.
 
 ### MMLU {#mmlu}
 Massive Multitask Language Understanding — a 57-subject multiple-choice [benchmark](/shared/glossary/#benchmark) (history, law, medicine, math, and more) that became the standard quick test of how much general knowledge a model has, like a giant trivia exam spanning many school subjects at once.
 
 ### MNIST {#mnist}
 A classic dataset of 70,000 small 28×28 grayscale images of handwritten digits 0–9. It is the most common "hello world" for image models — tiny, clean, and quick to train on — so a brand-new idea is almost always tried on MNIST first, before anyone risks it on harder, fuller-color data like [CIFAR-10](/shared/glossary/#cifar-10).
+
+### Modality {#modality}
+One type or format of data — text, images, audio, video, a depth map, and so on. Each modality has its own structure (text is a sequence of tokens, an image is a grid of pixels, audio is a waveform), so a model usually needs a dedicated encoder for each one before their information can be combined. A model that handles more than one is called *multimodal*. Think of modalities as the different human senses — sight, hearing, touch — each carrying information about the same world but in a different form, which the brain then has to fuse into one understanding. [Cross-attention](/shared/glossary/#cross-attention) is one common way to let two modalities exchange information.
 
 ### Modality gap {#modality-gap}
 Empirical finding that different-modality embeddings stay in separable regions
@@ -961,6 +999,9 @@ A chat where the user and the AI take turns talking back and forth, building on 
 
 ### Native multimodal {#native-multimodal}
 A model trained from scratch on all modalities with a unified vocabulary
+
+### Negative prompt {#negative-prompt}
+A second text prompt describing what you do *not* want in the image (e.g. "blurry, extra fingers, watermark"). It works through [classifier-free guidance](/shared/glossary/#cfg-classifier-free-guidance): instead of pushing away from a blank unconditional prediction, the model pushes away from the negative prompt's prediction and toward your real prompt — so naming a flaw steers the result away from it. Like telling an artist "paint a beach, and whatever you do, no people."
 
 ### Network in Network {#network-in-network}
 A design idea where a tiny neural network is tucked *inside* a single layer of a bigger one, so that layer can do more thinking than a plain filter could. A normal [convolution layer](/shared/glossary/#convolution-layers) slides a simple filter that just takes a weighted sum of each [patch](/shared/glossary/#patch); a network-in-network slides a small multi-step mini-network over each patch instead, letting it recognize more complicated local patterns on the spot. Picture a factory line where, instead of one worker stamping each part, every station hides a little expert team that inspects and shapes the part before passing it on. The idea (from the 2013 *Network In Network* paper) inspired the [Inception network](/shared/glossary/#inception-network)'s building blocks — which is why Inception was nicknamed after the movie about a dream inside a dream.
@@ -1019,6 +1060,9 @@ NVLink switch chip; full-bandwidth all-to-all within a node
 ### Observability {#observability}
 The practice of making a running system's inner state visible from the outside — through metrics, logs, and traces — so you can ask new questions about *why* it is misbehaving without adding new code. Like the dashboard and warning lights in a car: you can tell what is wrong while still driving, instead of pulling the engine apart. For a serving stack it is the difference between knowing "p99 [latency](/shared/glossary/#latency) tripled at 9 a.m." and finding out only when users complain.
 
+### ODE (Ordinary Differential Equation) {#ode}
+A mathematical equation describing how a system's current state determines its rate of change (its slope). Rather than giving a fixed value as an answer, solving an ODE yields a full continuous function (a path). In diffusion models, the "Probability Flow ODE" acts as the exact navigation route transitioning pure random noise into a structured image. If the current state is a car's position, the ODE defines its exact velocity at that spot.
+
 ### Off-policy {#off-policy}
 The data comes from a different policy than the one being optimized
 
@@ -1058,6 +1102,9 @@ A scorer that judges only a solution's final answer as right or wrong, ignoring 
 ### Outlines {#outlines}
 An open-source Python library for [constrained generation](/shared/glossary/#constrained-generation): you hand it a regular expression, a JSON schema, or a [Pydantic](/shared/glossary/#pydantic) model and it patches the [LLM](/shared/glossary/#llm)'s decoder to mask out any next-token choices that would break the structure. Like putting guardrails on a road so the car physically cannot drive off the edge no matter how the driver steers, it makes the model's output structurally valid by construction rather than by hope.
 
+### Outpainting {#outpainting}
+[Inpainting](/shared/glossary/#inpainting) applied to the *outside* of an image: you place the original on a larger blank canvas, mark the new border area as the region to fill, and let the model extend the scene outward so it continues naturally past the original frame. Like a painter adding more landscape beyond the edges of an existing painting.
+
 ### Padding {#padding}
 Filling shorter sequences with a placeholder value so that every [sample](/shared/glossary/#sample) in a batch has the same length.
 
@@ -1074,7 +1121,7 @@ A way of storing the [KV cache](/shared/glossary/#kv-cache) for many concurrent 
 A small rectangular section of an image. Instead of looking at an entire image at once, models often break it down into a grid of these smaller blocks to process them one by one. Like cutting a jigsaw puzzle into individual pieces and examining each piece separately before seeing how they fit together.
 
 ### Patchification {#patchification}
-Splitting a (latent) tensor into a sequence of patch tokens for a transformer
+Splitting a (latent) tensor into a sequence of small square [patches](/shared/glossary/#patch) and turning each one into a single token, so a [transformer](/shared/glossary/#transformer) can treat an image like a sentence of words. For example, a 32×32 latent cut into 2×2 patches becomes a sequence of 256 tokens (a 16×16 grid), each a little block projected to the model's hidden width. The patch size is the key knob: smaller patches make more tokens (finer detail but more compute), bigger patches make fewer tokens (cheaper but coarser) — a suffix like "/2" in [DiT](/shared/glossary/#dit)-S/2 means patch size 2. Like slicing a photo into postage-stamp squares and reading them left-to-right, top-to-bottom.
 
 ### PCA (principal component analysis) {#pca-principal-component-analysis}
 A technique that finds the few directions along which data varies the most and uses them to compress many numbers down to a handful, so high-dimensional data can be drawn on a 2D plot. Imagine photographing a 3D object from the angle that reveals its shape best — PCA picks that most-informative "camera angle" automatically. It is a quick, standard first step for *seeing* the structure in data, such as checking whether real images cluster together while random noise scatters apart.
@@ -1152,7 +1199,7 @@ A public dataset of about 800,000 human labels that mark each step of a math sol
 A function that says how *likely* each possible value is — high where real data points pile up, low in the empty regions where they rarely fall. For a 2D dataset you can picture it as a heatmap: bright ridges over the crowded spots, dark valleys over the bare ones. It must stay non-negative everywhere, and all of it added up (the total volume under the surface) equals exactly 1, since *some* value always occurs. Most generative models can only *draw* new samples; a [normalizing flow](/shared/glossary/#normalizing-flow) is special because it can also report the exact probability density of any point you hand it.
 
 ### Probability flow ODE {#probability-flow-ode}
-The deterministic ODE equivalent of the reverse-time diffusion SDE
+The deterministic twin of a diffusion model's reverse-time [SDE](/shared/glossary/#sde-stochastic-differential-equation): an [ODE](/shared/glossary/#ode) with no injected randomness that produces the *same* distribution of images at every noise level. Determinism buys two things the stochastic sampler can't: the same starting noise always maps to the same image (so you can interpolate between samples and invert a real image back to its noise), and the model's exact log-likelihood of any image — how probable it thinks that image is — becomes computable via the ODE's change-of-variables. It is the basis of fast deterministic samplers like [DDIM](/shared/glossary/#ddim).
 
 ### Process reward model {#process-reward-model}
 A scorer that grades each individual step of a model's reasoning rather than just the final answer — like a teacher marking every line of a proof, not only the last one — so a mistake can be caught at the exact step it happens. Contrast with an [outcome reward model](/shared/glossary/#outcome-reward-model).
@@ -1218,7 +1265,7 @@ A simple [agent](/shared/glossary/#agent) pattern that interleaves **Rea**soning
 A simple, robust way to merge several ranked lists into one: each item scores the sum of `1 / (rank + constant)` across the lists, so items ranked highly by more than one retriever rise to the top. Common for combining dense and sparse search in [hybrid retrieval](/shared/glossary/#hybrid-retrieval).
 
 ### Rectified flow {#rectified-flow}
-A flow-matching parameterization with straight-line trajectories; popular in 2024+ models
+A [flow-matching](/shared/glossary/#flow-matching) parameterization whose training paths are *straight lines* from noise to data, popular in 2024+ models like [SD3](/shared/glossary/#sd3) and [Flux](/shared/glossary/#flux). Straight trajectories are easy to follow in a few big steps, so sampling needs fewer steps than the curvy paths of older diffusion. You can also "re-flow": after training once, use the model to generate (noise, image) pairs and retrain on those straight pairs, which straightens the paths even further and lets you sample in as few as one or two steps. Like replacing a winding mountain road between two towns with a straight highway — same destination, far fewer turns to take.
 
 ### Reference model {#reference-model}
 A frozen copy of the starting model that [RLHF](/shared/glossary/#rlhf) and [DPO](/shared/glossary/#dpo) measure against (through a [KL](/shared/glossary/#kl-divergence) term) so the model being trained does not drift too far from sensible behavior — a "before" photo to compare every change against.
@@ -1243,7 +1290,12 @@ A second-stage model that re-scores the top candidates from a fast first-stage r
 Returns a tensor with a new shape, copying only when a no-copy view isn't possible
 
 ### Residual connection {#residual-connection}
-A shortcut that adds a block's input to its output (`x + f(x)`), letting [gradients](/shared/glossary/#gradients) flow directly and making deep networks trainable
+A shortcut that adds a block's *input* straight onto its *output* — written `output = x + f(x)`, where `x` is what went in and `f(x)` is what the block computed. Instead of each block having to rebuild the whole signal from scratch, the original `x` flows past it on an express lane and the block only contributes a small `f(x)` correction on top. Think of editing a draft: rather than rewriting the entire essay at every pass, each editor keeps the existing text and just marks up the few changes that improve it.
+
+What does "adds a block's input to its output" actually buy you? Two big things:
+
+- **An easy "do nothing" default.** If a block has nothing useful to add, it can simply output near-zero, and `x + 0 = x` passes the input through unchanged. So adding more layers can never make things *worse* than the layers already learned — a new block starts from "leave it alone" and only departs from that when it finds something helpful. (This is exactly why [AdaLN-Zero](/shared/glossary/#adaln-zero) zero-initializes its gate: each block begins as a clean pass-through.)
+- **A gradient highway.** On the [backward pass](/shared/glossary/#backward-pass), the `+ x` term hands every layer a direct path back to the earlier layers, so [gradients](/shared/glossary/#gradients) don't shrink toward zero as they travel through many layers (the [vanishing-gradients](/shared/glossary/#vanishing-gradients) problem). That direct path is what makes very [deep networks](/shared/glossary/#deep-network) trainable at all — before residual connections, stacking 50+ layers usually trained *worse*, not better. It is the same [skip-and-add logic](/shared/glossary/#skip-and-add-logic) found in convolutional nets, and it is what carries the [residual stream](/shared/glossary/#residual-stream) through a [transformer](/shared/glossary/#transformer).
 
 ### Residual parameterization {#residual-parameterization}
 A modeling trick used in deep [hierarchical VAEs](/shared/glossary/#hierarchical-vae) where each layer of latent variables is expressed as a small *correction* to what the previous layer already predicted, rather than as a full absolute value. Like a GPS giving "turn left in 200 m" instead of stating exact coordinates — each step describes only the gap from where you already are, so no single step has to carry the whole story. Because each latent group only needs to represent a tiny residual change, gradients flow smoothly through many stacked layers and very deep hierarchies become trainable. The idea borrows from [residual connections](/shared/glossary/#residual-connection) in standard networks, applying the same [skip-and-add logic](/shared/glossary/#skip-and-add-logic) to the latent variable structure itself.
@@ -1291,7 +1343,7 @@ The spread of responses a model is currently generating when it produces [rollou
 Performance model bounding throughput as min(peak FLOPs, memory bandwidth × arithmetic intensity)
 
 ### RoPE {#rope}
-Rotary Position [Embedding](/shared/glossary/#embedding) — encodes position by rotating Q, K vectors
+Rotary Position [Embedding](/shared/glossary/#embedding) — a way to tell a [transformer](/shared/glossary/#transformer) *where* each token sits by physically rotating its query and key vectors by an angle proportional to the position, so the [attention](/shared/glossary/#attention) [dot product](/shared/glossary/#dot-product) between two tokens depends only on how far apart they are. Because the encoding lives in the rotation rather than an added vector, it extrapolates to longer sequences than the model trained on. **2D RoPE** extends the trick to images: a [patch](/shared/glossary/#patch) token is rotated by its row *and* its column, encoding 2D spatial position. Like giving every seat in a theater a precise angle on a dial, so the model can always work out the spacing between any two seats.
 
 ### ROS / ROS 2 {#ros--ros-2}
 Robot Operating System — robotics middleware (ROS 2 is the modern version)
@@ -1332,8 +1384,17 @@ The part of an inference server that decides, at every step, which requests to s
 ### Score {#score}
 The [gradient](/shared/glossary/#gradients) of the log-probability of the data with respect to the input, written `∇_x log p(x)`. It points in the direction that makes an image *more likely* under the data distribution — in plain terms, "which way should I nudge these pixels to make this look more like a real image?" Diffusion models implicitly learn this at every noise level, so generation becomes a matter of repeatedly stepping in the score's direction, from noise toward a realistic sample.
 
+### Score matching {#score-matching}
+A way to train a generative model by teaching it the [score](/shared/glossary/#score) — the gradient of log-density, "which way makes this more likely" — instead of the density itself, which avoids ever computing an intractable normalizing constant. The practical version, *denoising score matching*, sidesteps needing the true score: add a known amount of Gaussian noise to each training example and have the network predict the direction back to the clean point, which provably equals the score of the noised data. (A relative, *sliced* score matching, estimates it instead by checking random one-dimensional projections.) Once the score is learned, you generate by following it with [Langevin dynamics](/shared/glossary/#langevin-dynamics). This is the lens that reveals [diffusion models](/shared/glossary/#diffusion-model) as score estimators trained at many noise levels.
+
 ### Scratchpad {#scratchpad}
 A temporary, fast-access workspace where intermediate results are stashed so they don't have to be recomputed later. Like a math student's scratch paper next to an exam: jot the partial sums, look them up later, move on much faster than redoing each calculation. In serving, the [KV cache](/shared/glossary/#kv-cache) is the model's scratchpad — every key and value it has already computed sits there ready to be reused on the next decode step.
+
+### SD3 {#sd3}
+Stable Diffusion 3 — the 2024 release of [Stable Diffusion](/shared/glossary/#stable-diffusion) from Stability AI that switched the architecture to an [MMDiT](/shared/glossary/#mmdit) [transformer](/shared/glossary/#transformer) and trained it with [rectified flow](/shared/glossary/#rectified-flow) instead of the older U-Net-plus-[DDPM](/shared/glossary/#ddpm) recipe of earlier versions. Letting text and image tokens share the same [attention](/shared/glossary/#attention) layers, and feeding prompts through both [CLIP](/shared/glossary/#clip) and a large [T5](/shared/glossary/#t5) text encoder, gave it noticeably better prompt-following and spelling than SD1.x/SDXL. Think of it as the bridge release that moved Stable Diffusion from the U-Net era into the modern transformer-and-flow era that [Flux](/shared/glossary/#flux) then built on.
+
+### SDE (stochastic differential equation) {#sde-stochastic-differential-equation}
+An equation describing how something evolves over time under both a predictable push (the "drift") and continuous random jitter (the "diffusion") — like the path of a pollen grain carried by a current while being constantly buffeted by water molecules. A [diffusion model](/shared/glossary/#diffusion-model) can be written as an SDE that gradually turns an image into noise; reversing that SDE turns noise back into an image. The reverse SDE has a deterministic twin with identical statistics, the [probability flow ODE](/shared/glossary/#probability-flow-ode), and the two standard noising conventions are the [VP and VE SDE](/shared/glossary/#vp--ve-sde) families.
 
 ### SDF {#sdf}
 Signed Distance Field — scalar field giving distance to nearest obstacle (negative inside)
@@ -1455,6 +1516,9 @@ Data-flow matmul fabric used in TPUs
 ### T2V {#t2v}
 Text-to-Video
 
+### T5 {#t5}
+A text [transformer](/shared/glossary/#transformer) (Google's "Text-to-Text Transfer Transformer") that reads a sentence and produces rich embeddings of its meaning. Unlike [CLIP](/shared/glossary/#clip)'s text encoder, which was trained only to match images to short captions, T5 was trained on general language tasks, so it captures long, detailed prompts and word order more faithfully — which is why models like Imagen, SD3, and Flux feed it (often the large "T5-XXL" variant) into [cross-attention](/shared/glossary/#cross-attention) for better prompt adherence.
+
 ### Tail latency {#tail-latency}
 The [latency](/shared/glossary/#latency) of the slowest requests (for example the p95 or p99 percentiles) rather than the median (p50); it is what users notice most.
 
@@ -1567,7 +1631,7 @@ NVIDIA's production server for hosting models behind an HTTP/gRPC API, with [bat
 Time to *produce* the first token — the elapsed time from when a request arrives at the server until the model returns its first output token, dominated by [prefill](/shared/glossary/#prefill) plus any queue wait. Like a restaurant's "time until your drink arrives" — felt separately from the rest of the meal, and the first thing the user actually notices.
 
 ### U-Net {#u-net}
-An encoder-decoder network whose name comes from its U shape: the left arm shrinks the image down to a small, abstract summary while the right arm builds it back up to full size, with *skip connections* that hand each down-sampling layer's detail straight across to its matching up-sampling layer. Those skips are what let it keep fine pixel detail while still reasoning about the whole image, which is why it became the standard backbone for [diffusion models](/shared/glossary/#diffusion-model) (before [DiT](/shared/glossary/#dit) brought in transformers). It was originally invented for medical-image segmentation.
+An encoder-decoder network whose name comes from its U shape: the left arm shrinks the image down to a small, abstract summary while the right arm builds it back up to full size, with *skip connections* that hand each down-sampling layer's detail straight across to its matching up-sampling layer. Those skips are what let it keep fine pixel detail while still reasoning about the whole image, which is why it became the standard backbone for [diffusion models](/shared/glossary/#diffusion-model) (before [DiT](/shared/glossary/#dit) brought in transformers). It was originally invented for [medical-image segmentation](/shared/glossary/#medical-image-segmentation).
 
 ### Underflow {#underflow}
 Condition where a floating-point value is too small to be represented and rounds to zero; common with `float16` when accumulating very small gradients
@@ -1630,7 +1694,7 @@ The fixed set of tokens a [tokenizer](/shared/glossary/#tokenizer) can produce, 
 NVIDIA's 2017 GPU architecture (V100) and the first generation to ship [Tensor Cores](/shared/glossary/#tensor-core), the dedicated matmul units that made deep-learning training dramatically faster. Subsequent generations — Turing, Ampere, [Hopper](/shared/glossary/#hopper), [Blackwell](/shared/glossary/#blackwell) — kept Tensor Cores and added support for ever-lower-precision formats. Named after the Italian physicist Alessandro Volta.
 
 ### VP / VE SDE {#vp--ve-sde}
-Variance-Preserving / Variance-Exploding — the two SDE families for diffusion
+The two standard ways to define the forward noising process of a [diffusion model](/shared/glossary/#diffusion-model), each written as an [SDE](/shared/glossary/#sde-stochastic-differential-equation). Variance-Preserving (VP) — the family [DDPM](/shared/glossary/#ddpm) uses — shrinks the original signal as it adds noise so the total variance stays around 1 the whole way. Variance-Exploding (VE) — used by the early [score](/shared/glossary/#score)-based models — leaves the signal untouched and simply piles on ever-larger noise, so the variance grows without bound. They are mathematically interconvertible and reach similar quality, but differ in numerical conditioning and in which samplers behave well.
 
 ### VQ-GAN {#vq-gan}
 A [VQ-VAE](/shared/glossary/#vq-vae) trained with two extra signals so its reconstructions look sharp instead of blurry: a [perceptual loss](/shared/glossary/#perceptual-loss-lpips) that compares images by their high-level features rather than exact pixels, and a patch discriminator — a small critic from the [GAN](/shared/glossary/#gans) world that scores whether each local region of an image looks real. The combination pushes the decoder to commit to crisp, specific details. This is the recipe [Stable Diffusion](/shared/glossary/#stable-diffusion)'s [VAE](/shared/glossary/#vae) descends from.
@@ -1698,7 +1762,7 @@ Zero-Moment Point — classical biped balance criterion
 A [VAE](/shared/glossary/#vae) variant that multiplies the [KL divergence](/shared/glossary/#kl-divergence) part of the [ELBO](/shared/glossary/#elbo) by an adjustable knob called β. Turning β up past 1 pressures the model to use its [latent space](/shared/glossary/#latent-space) more tidily, often making individual latent dimensions line up with meaningful features (like rotation or thickness) — but push it too far and the model stops reconstructing the input well. It is the simplest way to trade reconstruction quality against a cleaner, more interpretable latent.
 
 ### σ-schedule (Karras) {#σ-schedule-karras}
-The EDM reformulation: parameterize diffusion by noise standard deviation σ rather than discrete timestep
+The [EDM](/shared/glossary/#edm) convention of describing each noise level by its standard deviation σ (a real number) rather than by a discrete timestep `t` (an index from 0 to ~1000). Because σ directly measures "how much noise is on the image right now," the math for training and sampling becomes cleaner and sampler step sizes are easier to choose. Like labeling oven settings by their actual temperature instead of an arbitrary dial number from 1 to 10.
 
 ---
 
