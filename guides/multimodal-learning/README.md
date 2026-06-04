@@ -203,11 +203,11 @@ Add positional embedding (learned or sinusoidal)
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Implement ViT from scratch | Patchify, linear-project, transformer blocks, CLS pooling — train on CIFAR-10 | ⭐⭐⭐ |
-| Compare encoders | Take ResNet-50, ViT-B/16, SigLIP, and DINOv2 — extract features for 1k ImageNet images, compare via linear probe | ⭐⭐ |
-| Mel spectrogram pipeline | Take a 10-second `.wav` file, produce a mel spectrogram, feed through a small CNN | ⭐⭐ |
-| Whisper encoder reuse | Use just the encoder of Whisper to get audio embeddings; build a simple audio classifier on top | ⭐⭐⭐ |
-| Patch-size study | Train ViT with patches of 8, 16, 32 — measure accuracy and FLOPs | ⭐⭐⭐ |
+| [Implement ViT from scratch](projects/04-implement-vit-from-scratch/README.md) | Patchify, linear-project, transformer blocks, CLS pooling — train on CIFAR-10 | ⭐⭐⭐ |
+| [Compare encoders](projects/05-compare-encoders/README.md) | Take ResNet-50, ViT-B/16, SigLIP, and DINOv2 — extract features for 1k ImageNet images, compare via linear probe | ⭐⭐ |
+| [Mel spectrogram pipeline](projects/06-mel-spectrogram-pipeline/README.md) | Take a 10-second `.wav` file, produce a mel spectrogram, feed through a small CNN | ⭐⭐ |
+| [Whisper encoder reuse](projects/07-whisper-encoder-reuse/README.md) | Use just the encoder of Whisper to get audio embeddings; build a simple audio classifier on top | ⭐⭐⭐ |
+| [Patch-size study](projects/08-patch-size-study/README.md) | Train ViT with patches of 8, 16, 32 — measure accuracy and FLOPs | ⭐⭐⭐ |
 
 ### Sample Code: A Minimal ViT Patch Embedding
 

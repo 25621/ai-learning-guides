@@ -422,6 +422,17 @@ const sidebars = {
                 {type: 'doc', id: 'guides/multimodal-learning/projects/toy-retrieval/README', label: 'Toy retrieval'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 2: Encoders for Each Modality',
+              items: [
+                {type: 'doc', id: 'guides/multimodal-learning/projects/implement-vit-from-scratch/README', label: 'Implement ViT from scratch'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/compare-encoders/README', label: 'Compare encoders'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/mel-spectrogram-pipeline/README', label: 'Mel spectrogram pipeline'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/whisper-encoder-reuse/README', label: 'Whisper encoder reuse'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/patch-size-study/README', label: 'Patch-size study'},
+              ],
+            },
           ],
         },
         {

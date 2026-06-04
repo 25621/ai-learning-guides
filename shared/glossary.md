@@ -256,6 +256,9 @@ Contrastive Language-Image Pretraining — a model that learns to match pictures
 ### Closed-form {#closed-form}
 A solution you can write down and compute directly with a fixed formula, instead of reaching it through many rounds of trial-and-error. Solving `2x = 10` by writing `x = 5` is closed-form; nudging `x` up and down until both sides match is not. In [DPO](/shared/glossary/#dpo) a closed-form objective lets the model learn straight from preference pairs with one training [loss](/shared/glossary/#loss-function), skipping the slow [reward model](/shared/glossary/#reward-model)-plus-[PPO](/shared/glossary/#ppo) loop of classic [RLHF](/shared/glossary/#rlhf).
 
+### CLS token {#cls-token}
+A special extra "summary" token (short for *classification*) glued to the front of a [transformer](/shared/glossary/#transformer)'s input sequence whose only job is to soak up information from all the real tokens, so its final output vector can stand in for the whole input. In a [ViT](/shared/glossary/#vit) it has no [patch](/shared/glossary/#patch) of its own — it starts as a learned placeholder and, through [attention](/shared/glossary/#attention), gathers a single image-wide description you then hand to a classifier. Like a meeting secretary who owns none of the agenda items but listens to every speaker and writes the one-line summary everyone refers to afterward. (Many models instead average all token outputs — *mean pooling* — which often works just as well.)
+
 ### CNN {#cnn}
 Convolutional Neural Network — a neural network built mainly from [convolution layers](/shared/glossary/#convolution-layers); the standard architecture for image tasks. Instead of staring at the whole picture at once, a CNN slides a small magnifying glass across the image, checking one little patch at a time for simple features — an edge here, a splash of color there. Early layers spot these tiny patterns; deeper layers stitch them into bigger ideas (edges become a whisker, whiskers become a cat). Because the *same* magnifying glass is reused over every patch, a CNN needs far fewer [parameters](/shared/glossary/#parameters) than a network that wired up every pixel separately — and it can recognize a cat whether it sits in the corner or the center of the photo.
 
@@ -431,6 +434,9 @@ Denavit-Hartenberg parameters — textbook arm-geometry description
 A generative model that learns to *un-noise* an image (or video, or audio). 
 **The Key Intuition:** The model *only* learns the reverse process. The forward process (adding noise) is a fixed, mathematical destruction (like randomly shuffling a puzzle) that requires no learning. The reverse process is the actual learning phase: the network is handed a scrambled image along with a strict label of *how much* noise is currently present (often measured by a timestep `t` or standard deviation `σ`). This noise level acts as a critical condition, physically injected into the network via mechanisms like [AdaGN](/shared/glossary/#adagn-adaptive-group-normalization) so the model knows whether to focus on forming broad outlines (high noise) or tweaking fine details (low noise).
 
+### DINOv2 {#dinov2}
+A strong, off-the-shelf image encoder from Meta trained in a [self-supervised](/shared/glossary/#self-supervised) way — it learns purely from images, with no human labels, by teaching the network to give two different crops of the same photo matching internal descriptions. The result is a general-purpose [ViT](/shared/glossary/#vit) backbone whose [features](/shared/glossary/#embedding) work well for many tasks (classification, segmentation, depth) right out of the box, often beating label-trained encoders on a [linear probe](/shared/glossary/#linear-probe). Like a student who learns to recognize objects just by looking at millions of pictures and noticing what stays the same when an object is moved or cropped, never being told any object's name. The "v2" marks the second, larger and cleaner-data version; the name comes from *self-**di**stillation with **no** labels*.
+
 ### Disaggregated serving {#disaggregated-serving}
 Running prefill and decode on separate GPU pools with KV cache transfer between them
 
@@ -581,7 +587,7 @@ A version of [FlashAttention](/shared/glossary/#flashattention) tuned for the [d
 32-bit floating-point format (`fp32`); the standard default precision for PyTorch tensors — wide enough range and enough precision for most training and inference tasks
 
 ### FLOPs {#flops}
-Floating-Point Operations — a measure of computational complexity representing the number of individual arithmetic operations (additions or multiplications) performed.
+Floating-Point Operations — a count of the individual arithmetic steps (additions and multiplications on decimal numbers) a model performs, used as a hardware-independent measure of how much compute one forward pass costs. You estimate it by adding up the work in each layer: a [matrix multiply](/shared/glossary/#matmul) of an M×K matrix by a K×N one, for instance, takes about 2·M·K·N FLOPs (each of the M·N outputs needs K multiplies and K adds). Like counting the total pencil strokes a calculation requires, regardless of how fast the person writing them is. More FLOPs means a slower, costlier model — exactly the price you pay when a [ViT](/shared/glossary/#vit) uses smaller [patches](/shared/glossary/#patch). (Note: "FLOPs" = operations; "FLOP/s" with a slash = operations *per second*, a speed.)
 
 ### Flow matching {#flow-matching}
 Training a *velocity field* — a model that, given a half-noisy image and a time, predicts which direction and how fast to move it toward a clean image — so that following those arrows turns pure noise into data. Concretely, you draw a straight line between a real image `x_0` and random noise `ε`, pick a random point on that line, and train the model to output the line's direction `ε - x_0`; at generation time you start at noise and repeatedly step along the predicted arrows (solving an [ODE](/shared/glossary/#ode)) until you arrive at a clean image. It is a simpler, more modern alternative to [DDPM](/shared/glossary/#ddpm): there is no [noise schedule](/shared/glossary/#noise-schedule) to tune, just one clean regression target. Like learning the wind currents over a map so that, dropped anywhere in the fog, you always know which way blows toward home.
@@ -776,6 +782,9 @@ A [text-to-image](/shared/glossary/#text-to-image) model (and product) built by 
 ### Imagen 3 {#imagen-3}
 Google's [text-to-image](/shared/glossary/#text-to-image) model, known for photorealistic detail and unusually good [text rendering](/shared/glossary/#text-rendering) — it can spell words inside the picture correctly, long a weak spot for generators. It leans on a strong [text encoder](/shared/glossary/#text-encoder) and carefully curated training data to follow prompts faithfully. Like a meticulous illustrator who not only paints the scene you describe but gets the lettering on the signs right. It is Google's competitor to [DALL·E 3](/shared/glossary/#dalle-3) and [Stable Diffusion](/shared/glossary/#stable-diffusion).
 
+### ImageNet {#imagenet}
+A large benchmark dataset of about 1.2 million photos hand-labeled into 1,000 everyday categories (breeds of dog, kinds of mushroom, vehicles, and so on). For over a decade it has been the standard yardstick for "how well does this model see," so a new image encoder is almost always reported by its ImageNet accuracy. Think of it as the standardized entrance exam of computer vision — not perfect, but common enough that everyone's scores can be compared on one scale. A larger, even more finely labeled version is called ImageNet-21k (≈21,000 categories); see also its much smaller cousin [CIFAR-10](/shared/glossary/#cifar-10).
+
 ### img2img {#img2img}
 Generating a new image that is guided by an existing input image instead of starting from pure noise. You partially noise the input — controlled by a *denoising strength* (0 = keep the original, 1 = ignore it) — then let the [diffusion model](/shared/glossary/#diffusion-model) denoise from there, so the result keeps the rough layout and colors of the input while following the new prompt. Like tracing over a rough sketch: the more you erase first, the more freedom the model has to redraw.
 
@@ -949,6 +958,9 @@ The line of research that tries to reverse-engineer *what individual pieces of a
 
 ### Medical-image segmentation {#medical-image-segmentation}
 The task of labelling *every pixel* in a medical scan (MRI, CT, X-ray, microscopy) as belonging to a particular structure — outlining a tumour, an organ, or a cell boundary — rather than just classifying the whole image with one label. The output is a per-pixel mask, like a precise coloring-book page where each region is filled with its own color. It demands very fine spatial accuracy, since a few pixels can be the difference between the edge of a tumour and healthy tissue, which is exactly why the [U-Net](/shared/glossary/#u-net)'s skip connections — carrying fine detail straight across the network — were originally designed for it. Think of tracing the exact outline of each country on a map instead of just saying "this is a map of Europe."
+
+### Mel spectrogram {#mel-spectrogram}
+A picture of sound: a 2D map with time along one axis and pitch along the other, where brightness shows how much of each pitch is present at each moment. It is built by sliding a short window across the audio waveform and measuring its frequencies (a [Short-Time Fourier Transform](/shared/glossary/#stft)), then squashing the frequency axis onto the *mel scale* — a perceptual spacing that, like human hearing, gives lots of resolution to low pitches and lumps high ones together (the jump from 100 to 200 Hz sounds bigger than the jump from 5,000 to 5,100 Hz). The payoff is that audio becomes an image with, say, 80 frequency rows, so the same [CNN](/shared/glossary/#cnn) or [transformer](/shared/glossary/#transformer) machinery built for vision can process it. Like turning a song into sheet music — a flat diagram you can read at a glance instead of a wiggling waveform.
 
 ### Meta-learning {#meta-learning}
 "Learning to learn" — training a model to adapt quickly to new tasks with few examples. Many meta-learning algorithms, such as MAML, rely on higher-order gradients to optimize across tasks.
@@ -1360,6 +1372,9 @@ A modeling trick used in deep [hierarchical VAEs](/shared/glossary/#hierarchical
 ### Residual stream {#residual-stream}
 In a [transformer](/shared/glossary/#transformer), the running activation vector that flows through every layer via [residual connections](/shared/glossary/#residual-connection) — each [attention](/shared/glossary/#attention) block and [MLP](/shared/glossary/#mlp) block reads from this stream and adds its update back to it, without erasing what came before. Like a shared bulletin board that every department reads and pins notes to as it passes through the office: by the end of the building, the board carries the combined contribution of every team. Because every layer reads and writes the same vector space, the residual stream is the most natural place to look for interpretable features, which is why [sparse autoencoders (SAEs)](/shared/glossary/#sae) are usually trained on residual-stream [activations](/shared/glossary/#activations).
 
+### ResNet {#resnet}
+Residual Network — a deep [CNN](/shared/glossary/#cnn) whose layers each learn a small *change* to add to their input rather than a brand-new output, thanks to [residual (skip) connections](/shared/glossary/#residual-connection) that route the input straight past each block. The name is short for "residual," the leftover the layer adds on top. Before ResNet, stacking many layers made networks *harder* to train because the signal degraded on its way through; letting each block default to "pass the input through unchanged, plus a tweak" means adding depth can only help. Like a relay of editors who each suggest small edits to a draft instead of rewriting it from scratch — the original text is never lost. ResNet-50 (50 layers) is still a common, sturdy baseline image encoder.
+
 ### reverse-mode {#reverse-mode}
 The order [autograd](/shared/glossary/#autograd) walks the computation graph when differentiating: the forward pass first, then a single [backward pass](/shared/glossary/#backward-pass) that propagates [gradients](/shared/glossary/#gradients) from the scalar output back to every input. It is the efficient choice when a model has many parameters but only one [loss value](/shared/glossary/#loss-value).
 
@@ -1474,6 +1489,9 @@ A single dense vector that captures the meaning of an entire sentence (or short 
 ### Self-consistency {#self-consistency}
 Sampling many independent [chain-of-thought](/shared/glossary/#cot) solutions to the same problem and taking a majority vote on the final answer — like asking several people to solve a puzzle on their own and trusting the answer most of them land on.
 
+### Self-supervised {#self-supervised}
+Learning from raw, unlabeled data by inventing the labels from the data itself — for example hiding part of an input and asking the model to predict the missing piece, or asking whether two altered views came from the same original. No human annotation is needed, so the model can train on billions of images or sentences nobody had to tag. Like learning a language by covering up words in books you already own and guessing them, instead of paying a tutor to quiz you. This is how [DINOv2](/shared/glossary/#dinov2) learns vision features and how the masked- and next-token objectives behind most [LLMs](/shared/glossary/#llm) work; contrast it with supervised training, which needs an answer key.
+
 ### SFT {#sft}
 Supervised Fine-Tuning — train on demonstration data with [cross-entropy](/shared/glossary/#cross-entropy)
 
@@ -1490,7 +1508,7 @@ The size of a tensor along each dimension; the tuple returned by `.shape`
 Splitting a dataset (or model) into many smaller pieces so they can be stored, loaded, or processed in parallel.
 
 ### SigLIP {#siglip}
-Sigmoid-loss CLIP variant; scales better and works at smaller batch sizes
+Sigmoid-loss CLIP — a [CLIP](/shared/glossary/#clip) variant that replaces CLIP's loss (which forces each image's caption to win a softmax competition against *every other* caption in the [batch](/shared/glossary/#batch)) with a simpler yes/no decision made independently on each image–text pair: "do these two match, yes or no?" Because each pair is scored on its own rather than against the whole batch, it trains well even with small batches, where CLIP needs very large ones to gather enough negatives to compare against. Like grading each exam answer true/false on its own merits instead of ranking every student against all the others in the room. SigLIP 2 (2025) extends it with better data and multilingual training.
 
 ### SiLU {#silu}
 Sigmoid Linear Unit — just another name for [Swish](/shared/glossary/#swish), the activation `x · σ(x)`. The two words mean the exact same function: you will see "SiLU" in code (PyTorch's `nn.SiLU`) and "Swish" in papers.
@@ -1530,6 +1548,9 @@ A Python `OrderedDict` that maps every parameter and buffer name to its tensor v
 
 ### Static quantization (PTQ) {#static-quantization-ptq}
 A [quantization](/shared/glossary/#quantization) method that converts both [weights](/shared/glossary/#weights) and [activations](/shared/glossary/#activations) to [int8](/shared/glossary/#int8) before serving, using a [calibration](/shared/glossary/#calibration) pass to fix the activation scales in advance.
+
+### STFT {#stft}
+Short-Time Fourier Transform — a way to find *which frequencies are present and when* in a signal by chopping it into many short, overlapping windows (say 25 ms each) and running a Fourier transform on each one separately. A plain Fourier transform tells you the frequencies in a whole clip but loses all sense of *when* they happened; the STFT trades a little frequency precision for time precision by asking the question over and over on tiny slices. The output is a grid of (time × frequency) magnitudes — the raw material a [mel spectrogram](/shared/glossary/#mel-spectrogram) then refines. Like tapping out a song's rhythm window by window instead of blending the whole piece into one average chord.
 
 ### Stop-string {#stop-string}
 A user-supplied substring that tells the server "as soon as the generated text contains this, stop." Matched on the *decoded* text, not the raw token IDs, because the same letters can land in different [BPE](/shared/glossary/#bpe) tokens depending on what came before — so the matcher has to keep a small rolling window of recent output and check for the string at every step.
@@ -1759,6 +1780,9 @@ A no-copy alias that shares storage with its source; requires a contiguous-compa
 ### VIO {#vio}
 Visual-Inertial Odometry — fuse camera and IMU for high-rate ego-motion
 
+### ViT {#vit}
+Vision Transformer — a [transformer](/shared/glossary/#transformer) that classifies or encodes images by first chopping them into a grid of small square [patches](/shared/glossary/#patch) ([patchification](/shared/glossary/#patchification)), turning each patch into one token, and then treating the picture exactly like a sentence of words. Because a plain transformer has no built-in notion of "next to" the way a [CNN](/shared/glossary/#cnn) does, a ViT adds a learned *positional embedding* to each patch (a small vector that says "I am the patch at row 3, column 5") and usually prepends a [CLS token](/shared/glossary/#cls-token) whose output becomes the whole-image summary. Like reading a mosaic tile by tile, left to right, instead of taking in the whole wall at once — and, given enough data, this beats CNNs because the model can relate any tile to any other from the very first layer instead of only neighboring pixels. The "B/16" in a name like ViT-B/16 means a Base-size model with 16×16-pixel patches.
+
 ### VLA {#vla}
 Vision-Language-Action model — transformer mapping image + instruction → action
 
@@ -1814,6 +1838,9 @@ The main, larger group of learned [parameters](/shared/glossary/#parameters) in 
 
 ### WGAN-GP {#wgan-gp}
 Short for **Wasserstein GAN with Gradient Penalty** — the most popular and reliable recipe for training a [Wasserstein GAN](/shared/glossary/#wasserstein-gan-wgan). A Wasserstein GAN only works if its critic obeys a [Lipschitz constraint](/shared/glossary/#lipschitz-constraint) (its output can't change too fast). The original WGAN enforced that bluntly, by clipping every critic [weight](/shared/glossary/#weights) back into a fixed range after each step — a heavy-handed move that often crippled the model's quality. WGAN-GP replaces the clipping with a gentle [gradient penalty](/shared/glossary/#gradient-penalty) that simply nudges the size of the critic's [gradient](/shared/glossary/#gradients) toward 1, which keeps training far more stable. Like keeping a car at the speed limit with a smooth governor that eases off the gas, instead of a hard rev-cut that jerks the whole engine every time you nudge past it.
+
+### Whisper {#whisper}
+OpenAI's open speech-recognition model — an encoder-decoder [transformer](/shared/glossary/#transformer) that turns a [mel spectrogram](/shared/glossary/#mel-spectrogram) of speech into text, trained on 680,000 hours of multilingual audio scraped from the web. Its encoder digests the audio into rich [embeddings](/shared/glossary/#embedding) and its decoder writes out the words, so one model handles transcription, translation, and language identification. Because that encoder learned such general audio representations, people often reuse just the encoder — freezing it and training a small head on top — as a ready-made audio feature extractor (much like a vision [linear probe](/shared/glossary/#linear-probe)). The name evokes catching even quiet, whispered speech.
 
 ### Worker processes {#worker-processes}
 Background subprocesses that a [DataLoader](/shared/glossary/#dataloader) spawns to load and preprocess data in parallel with GPU computation.
