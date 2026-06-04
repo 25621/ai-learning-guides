@@ -1,8 +1,32 @@
 # Multimodal Learning: From Beginner to Advanced
 
-A comprehensive guide to understanding and building systems that learn from and generate across **multiple modalities** — text, images, audio, video, and beyond — from contrastive pretraining to modern vision-language models and unified any-to-any architectures.
+A comprehensive guide to understanding and building systems that learn from and reason across **multiple modalities** — text, images, audio, video, and beyond — from contrastive pretraining to modern vision-language models and unified any-to-any architectures.
 
-> **"Multimodal learning"** is the slice of machine learning that operates on more than one input/output type. A model that reads an image and writes a caption is multimodal. A model that listens to audio and produces text is multimodal. A model that takes a text prompt and a reference image and produces a video is *very* multimodal. This guide is about how those systems work, how to train them, and where the field is going.
+> **"Multimodal learning"** is the slice of machine learning that operates on more than one input/output type. A model that reads an image and writes a caption is multimodal. A model that listens to audio and produces text is multimodal. A model that takes a text prompt and a reference image and produces a video is *very* multimodal. This guide is about how those systems learn a **shared representation** across modalities, how to train them, and where the field is going.
+
+### Scope and boundaries
+
+This guide owns the problem of **getting two or more modalities to share one representation** — aligning them, fusing them, and reasoning jointly over them. To keep the AI Learning Guides mutually exclusive and collectively exhaustive (MECE), it deliberately stops at a few borders and links forward to the guide that owns each one.
+
+**In scope — this guide owns these topics:**
+- **Contrastive / aligned pretraining** (CLIP, SigLIP, ImageBind) — making separate modality spaces comparable
+- **Fusion architectures** — cross-attention, Q-Former, projectors, gated attention, interleaved/early fusion
+- **Vision-language models (VLMs)** — image(+text)→text understanding, VQA, grounding, OCR-heavy models
+- **Audio and speech as modalities** — encoders, ASR/TTS, audio LMs, neural audio codecs (no dedicated audio guide exists, so multimodal is the home for them)
+- **Video, audio, and image *understanding*** — encoding non-text modalities for joint reasoning
+- **Unified / any-to-any models** — the "one transformer for every modality" framing (Chameleon, GPT-4o, Gemini, Janus, Transfusion)
+- **Multimodal-specific training, data, alignment, and evaluation** — the parts that differ from the single-modality recipes
+
+**Out of scope — deferred to the owning guide:**
+- *Transformer/LLM architecture, tokenization, pretraining, post-training, and text-only agents* → [LLM](../llm/). This guide *uses* a pretrained LLM as a frozen (or fine-tuned) backbone but does not re-teach how to build one.
+- *Generative modeling of images* (VAEs, GANs, diffusion, latent diffusion, DiT, flow matching) and *image tokenizers* (VQ-VAE, VQ-GAN, FSQ) → [Image Generation](../image-generation/). When a multimodal model needs to *produce* pixels, the generation machinery lives there; here we care about the cross-modal modeling.
+- *Generative modeling of video* (video diffusion, 3D VAEs, world models) → [Video Generation](../video-generation/). This guide owns video *understanding*; video *synthesis* is theirs.
+- *Vision-Language-Action models as a robot policy class, imitation learning, sim-to-real* → [Robotics Phase 8](../robotics/#phase-8-learning-for-robotics). We cover the multimodal-modeling side of VLAs and link out for the control side.
+- *RLHF / DPO / GRPO algorithm internals* → [RL Phase 9](../reinforcement-learning/#phase-9-rl-for-language-models--rlhf-dpo-grpo-rlvr) and [LLM Phase 5](../llm/#phase-5-post-training--sft-rlhf-dpo-grpo-rlvr). We cover what is *different* about preference data with image/audio inputs.
+- *Serving, batching, KV-cache, and inference latency* for deployed multimodal models → [Inference Systems](../inference-systems/). *Kernel-level performance and quantization* → [AI Hardware](../ai-hardware/).
+- *Tensor, autograd, mixed-precision, distributed-training, and training-loop fundamentals* → [PyTorch Deep Dive](../pytorch-deep-dive/).
+
+When this guide touches an out-of-scope topic, it does so only to the depth needed to make a multimodal modeling decision, and it links to the owning guide.
 
 ---
 
@@ -21,8 +45,9 @@ A comprehensive guide to understanding and building systems that learn from and 
 11. [Phase 10: Frontier Topics](#phase-10-frontier-topics)
 12. [Suggested Timeline](#suggested-timeline)
 13. [Key Advice](#key-advice)
-14. [Additional Resources](#additional-resources)
-15. [Glossary](/shared/glossary/)
+14. [Common Pitfalls to Avoid](#common-pitfalls-to-avoid)
+15. [Additional Resources](#additional-resources)
+16. [Glossary](/shared/glossary/)
 
 ---
 
@@ -32,12 +57,14 @@ Multimodal learning sits on top of two stacks (NLP and vision) and borrows from 
 
 ### Concepts to Know
 
-- **Transformers**: self-attention, cross-attention, positional embeddings, layer norm, residual connections
+- **Transformers**: self-attention, cross-attention, positional embeddings, layer norm, residual connections — from the [LLM guide Phase 2](../llm/#phase-2-the-transformer-architecture)
 - **Vision basics**: convolution, ViT (Vision Transformer), how an image becomes a sequence of tokens
-- **Text basics**: tokenization (BPE, SentencePiece), language modeling, the next-token-prediction objective
-- **PyTorch fluency**: `nn.Module`, autograd, mixed precision, basic training loops
+- **Text basics**: tokenization (BPE, SentencePiece), language modeling, the next-token-prediction objective — see [LLM Phase 1](../llm/#phase-1-tokenization-and-embeddings)
+- **PyTorch fluency**: `nn.Module`, autograd, mixed precision, basic training loops — see [PyTorch Deep Dive](../pytorch-deep-dive/)
 - **Embedding spaces**: what an L2-normalized vector looks like, cosine similarity, the geometry of high-dimensional spaces
 - **Contrastive intuition** (helpful but not required yet): pulling similar things together, pushing different things apart
+
+> **What you do *not* need yet.** You don't need diffusion or GAN internals to start — those are the [Image Generation guide](../image-generation/)'s territory, and you only need them once you want a model that *outputs* pixels (Phases 7 and 10 here). You also don't need RLHF internals; Phase 8 covers only what's *different* about multimodal preference data.
 
 ### The One Equation Everything Comes Back To
 
@@ -71,7 +98,7 @@ Before architectures, get the conceptual map right. "Multimodal" is a fuzzy umbr
 
 - **The four canonical tasks**:
   - **Cross-modal retrieval** — given an image, find the matching caption (or vice versa)
-  - **Cross-modal generation** — given text, produce an image (or audio, or video)
+  - **Cross-modal generation** — given text, produce an image (or audio, or video). *The generative half lives in [Image Generation](../image-generation/) / [Video Generation](../video-generation/); here we care about the conditioning and the cross-modal interface.*
   - **Multimodal understanding** — given image + text, answer a question (VQA, captioning)
   - **Joint/any-to-any** — flexibly map any subset of modalities to any other
 - **Modality gap** — even well-trained models keep text and image embeddings in noticeably different regions of the shared space
@@ -93,8 +120,8 @@ Before architectures, get the conceptual map right. "Multimodal" is a fuzzy umbr
    (alignment)            (understanding)         (any-to-any)
         │                        │                        │
    CLIP, SigLIP,           Flamingo, BLIP-2,         Chameleon,
-   ImageBind               LLaVA, Qwen2-VL,           Gemini,
-                           PaliGemma                  GPT-4o
+   ImageBind               LLaVA, Qwen2.5-VL,         Gemini, GPT-4o,
+                           PaliGemma                  Janus, Transfusion
         │                        │                        │
    Best at:                Best at:                  Best at:
    - retrieval             - VQA                     - everything
@@ -118,6 +145,7 @@ The choice of fusion strategy determines what your model can do. Dual encoders (
 ### Resources
 
 - [On the Opportunities and Risks of Foundation Models (Stanford CRFM)](https://arxiv.org/abs/2108.07258) — long but the multimodal sections are excellent context
+- [A Survey on Multimodal Large Language Models (Yin et al., 2024)](https://arxiv.org/abs/2306.13549)
 - [A Survey on Vision-Language Models (Zhang et al., 2024)](https://arxiv.org/abs/2304.00685)
 - [Hugging Face — Vision Language Models Explained](https://huggingface.co/blog/vlms)
 
@@ -125,7 +153,9 @@ The choice of fusion strategy determines what your model can do. Dual encoders (
 
 ## Phase 2: Encoders for Each Modality
 
-Before you can fuse modalities, you have to encode each one. This phase is about the building blocks.
+Before you can fuse modalities, you have to encode each one into vectors. This phase is about the **representation** building blocks — the encoders that turn pixels, waveforms, and frames into sequences a transformer can align.
+
+> **MECE note.** This phase teaches encoders *as feature extractors for alignment and understanding*. The *generative* backbones that turn latents back into pixels (U-Nets, DiTs) belong to [Image Generation](../image-generation/) and [Video Generation](../video-generation/). The *discrete tokenizers* (VQ-VAE, VQ-GAN, FSQ, MagViT-v2) are taught in [Image Generation Phase 3](../image-generation/#phase-3-discrete-latents--vq-vae-vq-gan-and-modern-tokenizers); here we *use* them (Phase 7) and only summarize.
 
 ### Concepts to Learn
 
@@ -133,7 +163,7 @@ Before you can fuse modalities, you have to encode each one. This phase is about
   - CNNs (ResNet, EfficientNet) — still useful, especially for small models
   - Vision Transformers (ViT) — the modern default; how patchification works
   - **Patch size and resolution tradeoffs** — smaller patches = more tokens = better detail = quadratically more compute
-  - **SigLIP / DFN / EVA-CLIP** — modern improvements over the original CLIP vision tower
+  - **SigLIP / SigLIP 2 / DFN / EVA-CLIP / DINOv2** — modern improvements over the original CLIP vision tower; DINOv2 is the dominant *self-supervised* (non-contrastive) choice
 - **Text encoders**:
   - BERT-style bidirectional encoders (for dual-encoder models)
   - Decoder-only LLMs as encoders (just take hidden states)
@@ -142,7 +172,7 @@ Before you can fuse modalities, you have to encode each one. This phase is about
   - Mel spectrograms — the standard input representation
   - Whisper-style encoders for speech
   - HuBERT, wav2vec 2.0 for general audio
-  - Neural audio codecs (EnCodec, SoundStream) for discrete audio tokens
+  - Neural audio codecs (EnCodec, SoundStream, DAC, Mimi) for discrete audio tokens
 - **Video encoders**:
   - Frame-by-frame ViT (cheap but loses motion)
   - 3D convolutions or 3D-ViT for spatiotemporal patches
@@ -152,21 +182,21 @@ Before you can fuse modalities, you have to encode each one. This phase is about
 
 ```
 Input image: 224×224×3
-                                                            
-Split into 16×16 patches:    14 × 14 = 196 patches            
-                                                            
-Each patch: 16×16×3 = 768 numbers                            
-                                                            
-Linear projection → embedding of dim D (e.g., 768)            
-                                                            
-Add positional embedding (learned or sinusoidal)              
-                                                            
-+ [CLS] token at position 0                                  
-                                                            
-→ sequence of 197 tokens, each D-dim                          
-→ feed to a stack of transformer blocks                       
-→ output is 197 contextualized vectors                        
-→ pool (CLS token, mean, attention pool) → single image vec  
+
+Split into 16×16 patches:    14 × 14 = 196 patches
+
+Each patch: 16×16×3 = 768 numbers
+
+Linear projection → embedding of dim D (e.g., 768)
+
+Add positional embedding (learned or sinusoidal)
+
++ [CLS] token at position 0
+
+→ sequence of 197 tokens, each D-dim
+→ feed to a stack of transformer blocks
+→ output is 197 contextualized vectors
+→ pool (CLS token, mean, attention pool) → single image vec
 ```
 
 ### Projects
@@ -174,7 +204,7 @@ Add positional embedding (learned or sinusoidal)
 | Project | Description | Difficulty |
 |---------|-------------|------------|
 | Implement ViT from scratch | Patchify, linear-project, transformer blocks, CLS pooling — train on CIFAR-10 | ⭐⭐⭐ |
-| Compare encoders | Take ResNet-50, ViT-B/16, and SigLIP — extract features for 1k ImageNet images, compare via linear probe | ⭐⭐ |
+| Compare encoders | Take ResNet-50, ViT-B/16, SigLIP, and DINOv2 — extract features for 1k ImageNet images, compare via linear probe | ⭐⭐ |
 | Mel spectrogram pipeline | Take a 10-second `.wav` file, produce a mel spectrogram, feed through a small CNN | ⭐⭐ |
 | Whisper encoder reuse | Use just the encoder of Whisper to get audio embeddings; build a simple audio classifier on top | ⭐⭐⭐ |
 | Patch-size study | Train ViT with patches of 8, 16, 32 — measure accuracy and FLOPs | ⭐⭐⭐ |
@@ -206,12 +236,13 @@ class PatchEmbed(nn.Module):
 
 ### Key Insight
 
-The patchification trick — using a single strided convolution to both split the image into patches *and* project them to the embedding dimension — is one of those "obvious in hindsight" moves that made ViT practical. It's mathematically identical to the unfold-then-linear approach but is dramatically faster.
+The patchification trick — using a single strided convolution to both split the image into patches *and* project them to the embedding dimension — is one of those "obvious in hindsight" moves that made ViT practical. It's mathematically identical to the unfold-then-linear approach but is dramatically faster. The deeper lesson: every modality reduces to "turn it into a sequence of D-dimensional vectors," after which a transformer doesn't care whether those vectors came from pixels, waveforms, or words.
 
 ### Resources
 
 - [ViT paper](https://arxiv.org/abs/2010.11929)
 - [SigLIP paper](https://arxiv.org/abs/2303.15343) — sigmoid loss replaces softmax, scales better
+- [DINOv2 paper](https://arxiv.org/abs/2304.07193) — strong self-supervised vision features
 - [Whisper paper](https://arxiv.org/abs/2212.04356) — best read on a modern speech encoder
 - [EnCodec paper](https://arxiv.org/abs/2210.13438) — for discrete audio tokens
 - [VideoMAE paper](https://arxiv.org/abs/2203.12602) — masked autoencoding for video
@@ -220,7 +251,7 @@ The patchification trick — using a single strided convolution to both split th
 
 ## Phase 3: Contrastive Learning — CLIP and Friends
 
-CLIP is the model that made modern multimodal learning take off. Understanding it cold pays compound interest.
+CLIP is the model that made modern multimodal learning take off, and **contrastive alignment is this guide's home turf** — the [Image Generation guide explicitly defers CLIP/contrastive pretraining here](../image-generation/). Understanding it cold pays compound interest.
 
 ### Concepts to Learn
 
@@ -230,12 +261,12 @@ CLIP is the model that made modern multimodal learning take off. Understanding i
 - **Batch size in contrastive learning** — why bigger is dramatically better, and the tricks (memory bank, MoCo, distributed gathering) to fake it cheaply
 - **Hard negatives** — easy negatives don't teach the model anything; mining hard ones helps
 - **CLIP variants**:
-  - **SigLIP** — sigmoid (per-pair) loss instead of softmax (over-batch) loss; works at smaller batch sizes
+  - **SigLIP / SigLIP 2** — sigmoid (per-pair) loss instead of softmax (over-batch) loss; works at smaller batch sizes
   - **ALIGN** — Google's CLIP-equivalent, trained on noisier web data
-  - **OpenCLIP, EVA-CLIP, DFN** — community and Meta scaling efforts
+  - **OpenCLIP, EVA-CLIP, DFN, MetaCLIP** — community and Meta scaling efforts
   - **ImageBind** — extends contrastive learning to 6 modalities (text, image, audio, depth, thermal, IMU)
 - **Zero-shot classification** — how CLIP does classification without ever seeing labels
-- **CLIP as a filter** — using CLIP scores to clean web-scale training data (e.g., LAION)
+- **CLIP as a filter** — using CLIP scores to clean web-scale training data (e.g., LAION); the same trick reappears for data curation in [Image Generation Phase 10](../image-generation/) and [Video Generation Phase 10](../video-generation/)
 
 ### The CLIP Training Step
 
@@ -303,7 +334,7 @@ CLIP's most important contribution was not the architecture; it was the realizat
 ### Resources
 
 - [CLIP paper (Radford et al., 2021)](https://arxiv.org/abs/2103.00020)
-- [SigLIP paper (Zhai et al., 2023)](https://arxiv.org/abs/2303.15343)
+- [SigLIP paper (Zhai et al., 2023)](https://arxiv.org/abs/2303.15343) and [SigLIP 2 (2025)](https://arxiv.org/abs/2502.14786)
 - [OpenCLIP](https://github.com/mlfoundations/open_clip) — reproducible CLIP training in the open
 - [ImageBind](https://arxiv.org/abs/2305.05665) — contrastive across 6 modalities
 - [Lucas Beyer — Lecture on CLIP and SigLIP](https://www.youtube.com/watch?v=eb6L_ikm5p4)
@@ -413,21 +444,24 @@ The current workhorse class. A VLM takes images (+ text) in and produces text. M
 
 ### Concepts to Learn
 
-- **The standard recipe**: pretrained vision encoder + projector + pretrained LLM → train projector first, then jointly fine-tune
+- **The standard recipe**: pretrained vision encoder + projector + pretrained LLM → train projector first, then jointly fine-tune. (The vision encoder comes from Phase 2/3; the LLM comes from the [LLM guide](../llm/) — a VLM is mostly *glue and data*.)
 - **Image preprocessing for VLMs**:
   - Fixed resolution vs **dynamic resolution / AnyRes** (Qwen2-VL, InternVL2): tile the image to handle any aspect ratio
+  - **Native-resolution ViT** (Qwen2-VL's NaViT-style approach) — process the image at its true resolution instead of a fixed grid
   - Token budget per image — typically 256 to a few thousand image tokens
 - **Instruction tuning for VLMs** — the "LLaVA-Instruct" recipe: GPT-4-generated multimodal instructions
 - **Visual question answering (VQA)** — classic benchmark task
 - **OCR-heavy VLMs** — Donut, Nougat, GOT — for documents
-- **Grounding** — output bounding boxes or pixel coordinates; teaching the LLM to "point"
-- **Modern frontier VLMs**:
-  - **Qwen2-VL / Qwen2.5-VL** — Alibaba, strong open VLM
-  - **InternVL2 / InternVL2.5** — Shanghai AI Lab
-  - **PaliGemma / PaliGemma 2** — Google's small, strong VLM family
+- **Grounding** — output bounding boxes or pixel coordinates; teaching the LLM to "point" (Molmo's *pointing* supervision is a clean recent example)
+- **Modern frontier VLMs** (2025–2026):
+  - **Qwen2.5-VL / Qwen3-VL** — Alibaba, strong open VLM family
+  - **InternVL2.5 / InternVL3** — Shanghai AI Lab
+  - **PaliGemma 2** — Google's small, strong VLM family
+  - **Molmo** — Allen AI, open weights *and* open data, strong grounding/pointing
   - **Pixtral** — Mistral's VLM
-  - **Llama 3.2 Vision** — Meta's official VLM line
-  - **Closed**: GPT-4o, Claude (with vision), Gemini
+  - **Llama 3.2 Vision / Llama 4** — Meta's official VLM line (Llama 4 is natively multimodal, MoE, early-fusion)
+  - **DeepSeek-VL2** — MoE VLM
+  - **Closed**: GPT-4o, Claude (with vision), Gemini 2.0/2.5
 
 ### The Standard VLM Training Pipeline
 
@@ -453,7 +487,7 @@ Result: LLM "speaks image"  Result: VLM that follows visual instructions
 | Dynamic resolution | Implement AnyRes tiling; verify it improves OCR-heavy benchmarks | ⭐⭐⭐⭐ |
 | Grounding head | Add bounding-box outputs to a VLM via a special `<box>` token vocabulary | ⭐⭐⭐⭐ |
 | Compare projectors | Linear vs 2-layer MLP vs Q-Former on the same downstream task; report quality and speed | ⭐⭐⭐ |
-| Inference optimization | Take an open VLM, serve it with vLLM or SGLang; measure tokens/sec at different image counts | ⭐⭐⭐ |
+| Inference optimization | Take an open VLM, serve it with vLLM or SGLang; measure tokens/sec at different image counts (deep dive: [Inference Systems](../inference-systems/)) | ⭐⭐⭐ |
 
 ### Sample Code: A LLaVA-Style Forward Pass
 
@@ -491,21 +525,22 @@ class TinyVLM(nn.Module):
 
 ### Key Insight
 
-The biggest difference between a "good" and "great" VLM is rarely the architecture — it's the data. The projector is trivial. The vision encoder and LLM are both pretrained. What separates Qwen2-VL from LLaVA-1.5 is *millions of carefully curated visual instructions* and high-quality OCR data. If you want to build a competitive VLM, budget 70% of your effort for data, not modeling.
+The biggest difference between a "good" and "great" VLM is rarely the architecture — it's the data. The projector is trivial. The vision encoder and LLM are both pretrained. What separates Qwen2.5-VL from LLaVA-1.5 is *millions of carefully curated visual instructions* and high-quality OCR data. If you want to build a competitive VLM, budget 70% of your effort for data, not modeling.
 
 ### Resources
 
 - [LLaVA paper](https://arxiv.org/abs/2304.08485) and [LLaVA-1.5](https://arxiv.org/abs/2310.03744)
-- [Qwen2-VL paper](https://arxiv.org/abs/2409.12191)
+- [Qwen2-VL paper](https://arxiv.org/abs/2409.12191) and [Qwen2.5-VL](https://arxiv.org/abs/2502.13923)
 - [PaliGemma paper](https://arxiv.org/abs/2407.07726)
-- [InternVL2 blog](https://internvl.github.io/blog/2024-07-02-InternVL-2.0/)
+- [Molmo paper (Allen AI, 2024)](https://arxiv.org/abs/2409.17146) — open weights and open data
+- [InternVL2.5 / InternVL3](https://internvl.github.io/blog/)
 - [The Cauldron dataset (HF)](https://huggingface.co/datasets/HuggingFaceM4/the_cauldron) — 50 VLM instruction datasets unified
 
 ---
 
 ## Phase 6: Audio, Speech, and Video
 
-Vision is the most popular non-text modality, but audio and video are catching up fast.
+Vision is the most popular non-text modality, but audio and video are catching up fast. **There is no dedicated audio guide in this collection, so this phase is the home for audio and speech.** For *video*, this phase owns *understanding* (encoding video for reasoning); video *synthesis* belongs to [Video Generation](../video-generation/).
 
 ### Concepts to Learn
 
@@ -515,13 +550,13 @@ Vision is the most popular non-text modality, but audio and video are catching u
   - **Discrete audio tokens** (EnCodec, SoundStream, DAC, Mimi) — the audio analog of BPE; enables LM-style modeling of audio
 - **Speech recognition (ASR)** — Whisper, Conformer; encoder-decoder transformers on mel spectrograms
 - **Text-to-speech (TTS)** — non-autoregressive (FastSpeech), autoregressive (Tortoise, VALL-E), and modern hybrid neural codec approaches
-- **Music and general audio generation** — MusicGen, AudioGen, AudioLDM (the audio analog of diffusion image models)
-- **Speech LLMs** — taking the LLM-with-projector recipe and replacing the vision encoder with an audio encoder (Qwen2-Audio, GPT-4o's voice mode)
+- **Music and general audio generation** — MusicGen, AudioGen, AudioLDM, Stable Audio (the audio analog of diffusion image models)
+- **Speech LLMs and full-duplex voice** — taking the LLM-with-projector recipe and replacing the vision encoder with an audio encoder (Qwen2-Audio); real-time, full-duplex speech (Moshi, GPT-4o voice mode, Gemini Live)
 - **Video as a modality**:
   - Frame-by-frame ViT encoding — cheap but discards motion
   - Spatiotemporal transformers — 3D attention over (frame, height, width)
-  - **Video tokenization** (MagViT-v2, OmniTokenizer) — compress video into discrete tokens
-- **Video-language models**: Video-LLaVA, VideoChat, VideoLLaMA, Qwen2-VL (handles video natively)
+  - **Video tokenization** (MagViT-v2, OmniTokenizer) — compress video into discrete tokens (the same tokenizers used for [video *generation*](../video-generation/#phase-5-latent-video-diffusion-and-video-tokenizers))
+- **Video-language models**: Video-LLaVA, VideoChat, VideoLLaMA, LLaVA-Video, Qwen2.5-VL (handles video natively)
 
 ### The Audio Spectrogram Pipeline
 
@@ -578,7 +613,7 @@ log_mel = torch.log(mel + 1e-6)
 
 ### Key Insight
 
-Once you tokenize a modality — turn it into a discrete sequence with a fixed vocabulary — it becomes "just another language" for a transformer. This is why neural audio codecs are such a big deal: they let you do language-model-style generation on audio. The same applies to images (VQ-VAE → discrete image tokens), video (MagViT-v2), and even actions (in robotics, action tokenizers). The unified-token view is the path to true any-to-any models.
+Once you tokenize a modality — turn it into a discrete sequence with a fixed vocabulary — it becomes "just another language" for a transformer. This is why neural audio codecs are such a big deal: they let you do language-model-style generation on audio. The same applies to images (VQ-VAE → discrete image tokens, [Image Generation Phase 3](../image-generation/#phase-3-discrete-latents--vq-vae-vq-gan-and-modern-tokenizers)), video (MagViT-v2, [Video Generation Phase 5](../video-generation/#phase-5-latent-video-diffusion-and-video-tokenizers)), and even actions (in [Robotics](../robotics/), action tokenizers). The unified-token view is the path to true any-to-any models — the subject of Phase 7.
 
 ### Resources
 
@@ -586,6 +621,7 @@ Once you tokenize a modality — turn it into a discrete sequence with a fixed v
 - [EnCodec paper](https://arxiv.org/abs/2210.13438)
 - [MusicGen paper](https://arxiv.org/abs/2306.05284)
 - [VALL-E paper](https://arxiv.org/abs/2301.02111) — neural codec language model for TTS
+- [Moshi paper (Kyutai, 2024)](https://arxiv.org/abs/2410.00037) — full-duplex speech LM with the Mimi codec
 - [MagViT-v2 paper](https://arxiv.org/abs/2310.05737) — best video tokenizer
 - [Video-LLaVA paper](https://arxiv.org/abs/2311.10122)
 
@@ -593,22 +629,23 @@ Once you tokenize a modality — turn it into a discrete sequence with a fixed v
 
 ## Phase 7: Unified and Any-to-Any Models
 
-The frontier. A single model that takes any combination of modalities in and produces any combination out.
+The frontier, and **this guide's signature territory** — both [Image Generation](../image-generation/#phase-3-discrete-latents--vq-vae-vq-gan-and-modern-tokenizers) and [Video Generation](../video-generation/) defer the "one transformer for every modality" framing to here. A single model that takes any combination of modalities in and produces any combination out.
 
 ### Concepts to Learn
 
-- **The unified-token hypothesis** — if you can tokenize every modality, you can train one model on the union
-- **Native multimodal models** (Chameleon, GPT-4o, Gemini): trained from scratch on all modalities, no separate "vision tower"
-- **Mixture-of-Experts (MoE)** — a common scaling tool for unified models; experts can specialize by modality
+- **The unified-token hypothesis** — if you can tokenize every modality, you can train one model on the union. (The tokenizers themselves are built in [Image Generation Phase 3](../image-generation/#phase-3-discrete-latents--vq-vae-vq-gan-and-modern-tokenizers); here we assemble them into a joint model.)
+- **Native multimodal models** (Chameleon, GPT-4o, Gemini, Llama 4): trained from scratch on all modalities, no separate "vision tower"
+- **Mixture-of-Experts (MoE)** — a common scaling tool for unified models; experts can specialize by modality (Llama 4, DeepSeek-VL2)
 - **Generation across modalities**: a unified model can in principle output `<image_token>` sequences as easily as text tokens, then a decoder turns them into pixels
+- **AR + diffusion hybrids** — **Transfusion** (one transformer, next-token loss on text + diffusion loss on image patches) and **Janus / Janus-Pro** (decoupled visual encoders for understanding vs generation) are the 2024–2025 designs that close the gap with diffusion image quality while keeping a single backbone
+- **Omni models** — single model, single inference path, all modalities in *and* out (GPT-4o for text/audio/vision; **Qwen2.5-Omni**, **MiniCPM-o** on the open side)
 - **Late-stage vs early-stage fusion at scale** — the empirical evidence is increasingly that *earlier* fusion wins when you have enough compute
-- **The "omni" pattern** — single model, single inference path, all modalities (GPT-4o was the first widely-deployed example for text/audio/vision)
 - **Trade-offs**: unified models lose some specialist quality; the question is whether the joint flexibility makes up for it
 
 ### Two Architectural Stances
 
 ```
-Stance A: "Bolt-on" multimodality (LLaVA, Qwen2-VL)
+Stance A: "Bolt-on" multimodality (LLaVA, Qwen2.5-VL)
 ─────────────────────────────────────────────────────
 [image] → [vision encoder] → [projector] → fed as tokens to a pretrained LLM
 [audio] → [audio encoder]  → [projector] → fed as tokens to the same LLM
@@ -618,7 +655,7 @@ Pros: efficient; reuses huge pretrained LLMs; modular
 Cons: can't generate non-text modalities; bottleneck at the projector
 
 
-Stance B: "Native" multimodality (Chameleon, GPT-4o)
+Stance B: "Native" multimodality (Chameleon, GPT-4o, Llama 4)
 ─────────────────────────────────────────────────────
 Tokenize every modality into one shared discrete vocabulary:
    text tokens     [50000 entries]
@@ -627,17 +664,20 @@ Tokenize every modality into one shared discrete vocabulary:
 
 One sequence: [text][image][text][audio][image]...
 One transformer with one next-token prediction loss over the union.
+(Variant — Transfusion: keep image patches continuous and apply a
+ diffusion loss on them inside the same transformer.)
 
 Pros: any-to-any natively; one model, one loss
 Cons: enormous compute; harder to leverage existing LLMs;
-      image-token decoder quality lags continuous diffusion
+      discrete-image-token decoder quality historically lagged diffusion
+      (the gap Transfusion/Janus are closing)
 ```
 
 ### Projects
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Discrete image tokens | Train a small VQ-VAE on a face dataset; verify reconstruction quality at 1024 tokens per image | ⭐⭐⭐⭐ |
+| Discrete image tokens | Train a small VQ-VAE on a face dataset; verify reconstruction at 1024 tokens/image (the tokenizer recipe is [Image Gen Phase 3](../image-generation/#phase-3-discrete-latents--vq-vae-vq-gan-and-modern-tokenizers)) | ⭐⭐⭐⭐ |
 | Tiny Chameleon | Tokenize images with the above VQ-VAE, interleave with text from COCO captions, train one transformer over the unified sequence | ⭐⭐⭐⭐⭐ |
 | Modality balancing | Train a unified model on text+image+audio; observe and fix one modality dominating loss | ⭐⭐⭐⭐ |
 | MoE for multimodal | Add a small MoE layer to a multimodal model; observe whether experts naturally specialize | ⭐⭐⭐⭐⭐ |
@@ -645,21 +685,24 @@ Cons: enormous compute; harder to leverage existing LLMs;
 
 ### Key Insight
 
-The bet behind native multimodal models is that *the same scaling laws that gave us GPT-4 from text will give us GPT-4o from text+vision+audio together* — if you have enough data and compute, the model will figure out the cross-modal structure on its own. The bet behind bolt-on multimodal models is that you can get 90% of the benefit at 10% of the cost. Both bets are still being played out; for now, the bolt-on architecture is winning on cost/quality, and the native architecture is winning on capability ceiling.
+The bet behind native multimodal models is that *the same scaling laws that gave us GPT-4 from text will give us GPT-4o from text+vision+audio together* — if you have enough data and compute, the model will figure out the cross-modal structure on its own. The bet behind bolt-on multimodal models is that you can get 90% of the benefit at 10% of the cost. Both bets are still being played out; as of 2026 the bolt-on architecture still wins on cost/quality for most *understanding* tasks, while native + AR/diffusion-hybrid architectures (GPT-4o image generation, Janus-Pro, Transfusion) are pulling ahead on the *generation* side and on the capability ceiling.
 
 ### Resources
 
 - [Chameleon paper (Meta, 2024)](https://arxiv.org/abs/2405.09818)
+- [Transfusion paper (Meta, 2024)](https://arxiv.org/abs/2408.11039) — one transformer, next-token + diffusion losses
+- [Janus-Pro paper (DeepSeek, 2025)](https://arxiv.org/abs/2501.17811) — decoupled understanding/generation encoders
 - [Unified-IO 2 paper](https://arxiv.org/abs/2312.17172)
+- [Emu3 paper (BAAI, 2024)](https://arxiv.org/abs/2409.18869) — next-token prediction, all modalities
+- [Qwen2.5-Omni paper (2025)](https://arxiv.org/abs/2503.20215) — open any-to-any omni model
 - [Gemini technical report](https://arxiv.org/abs/2312.11805)
 - [GPT-4o announcement and analyses](https://openai.com/index/hello-gpt-4o/)
-- [Mixture-of-Experts: a brief survey](https://arxiv.org/abs/2407.06204)
 
 ---
 
 ## Phase 8: Training at Scale — Data, Compute, and Alignment
 
-Multimodal models are dataset-bound long before they are compute-bound. This phase is about everything that surrounds the model itself.
+Multimodal models are dataset-bound long before they are compute-bound. This phase is about everything that surrounds the model itself — the parts that are *specific to multimodality*. (The generic distributed-training machinery is [PyTorch Deep Dive Phase 7](../pytorch-deep-dive/#phase-7-distributed-training--ddp-fsdp-and-beyond); the RLHF/DPO *algorithms* are [RL Phase 9](../reinforcement-learning/#phase-9-rl-for-language-models--rlhf-dpo-grpo-rlvr).)
 
 ### Concepts to Learn
 
@@ -668,11 +711,11 @@ Multimodal models are dataset-bound long before they are compute-bound. This pha
   - **DataComp, COYO-700M** — alternatives and successors
   - **OBELICS** — interleaved image-text web documents
   - **WebLI** — Google's large internal alternative
-- **Data filtering** — most of LAION is unusable; CLIP-score filtering, NSFW filtering, dedup, OCR filtering, aesthetic filtering
-- **Synthetic captions** — recaptioning web images with a strong VLM dramatically improves downstream training (the trick behind DALL-E 3, ShareGPT4V)
+- **Data filtering** — most of LAION is unusable; CLIP-score filtering, NSFW filtering, dedup, OCR filtering, aesthetic filtering (the CLIP-score filter is the Phase 3 trick reused at scale)
+- **Synthetic captions** — recaptioning web images with a strong VLM dramatically improves downstream training (the trick behind DALL-E 3, ShareGPT4V); this is shared lore with [Image Gen Phase 10](../image-generation/) and [Video Gen Phase 10](../video-generation/)
 - **Curriculum and staged training** — start with clean alignment data, then noisier scale data, then instruction data
 - **Modality balancing** — in a unified model, if 99% of your tokens are text, the image loss will be ignored; need to upsample or reweight
-- **Multimodal alignment / RLHF** — preference data with image inputs; sycophancy and hallucination are harder to fix when the model has multiple modalities to "hallucinate from"
+- **Multimodal alignment / RLHF** — preference data with image inputs; sycophancy and hallucination are harder to fix when the model has multiple modalities to "hallucinate from." *The algorithms (PPO, DPO, GRPO) are owned by [RL Phase 9](../reinforcement-learning/#phase-9-rl-for-language-models--rlhf-dpo-grpo-rlvr); what's multimodal-specific is the preference-data collection and the visual grounding of the reward.*
 - **Safety**: NSFW filtering, CSAM detection (mandatory), bias evaluation across demographics, hallucination benchmarks
 - **Compute budgets** — typical pretraining for an open VLM is 10⁸–10⁹ image-text pairs; native multimodal is 10× more
 
@@ -713,7 +756,7 @@ Training-ready: ~10–20% of the original crawl, dramatically higher quality
 | Mini LAION pipeline | Take 1M LAION URLs, download, filter with CLIP, dedup, recaption with a small VLM — produce a clean shard | ⭐⭐⭐⭐ |
 | Caption ablation | Train two small VLMs: one on original alt-text, one on recaptioned text; compare downstream | ⭐⭐⭐⭐ |
 | Modality balance | In a unified model run, deliberately under/oversample one modality; measure per-modality loss | ⭐⭐⭐⭐ |
-| Multimodal DPO | Collect a small set of preference pairs over VLM outputs; fine-tune with DPO | ⭐⭐⭐⭐ |
+| Multimodal DPO | Collect a small set of preference pairs over VLM outputs; fine-tune with DPO ([algorithm reference](../reinforcement-learning/#phase-9-rl-for-language-models--rlhf-dpo-grpo-rlvr)) | ⭐⭐⭐⭐ |
 | Hallucination eval | Build a small benchmark of trick questions ("is there a dog in this image?" when there is none); evaluate several open VLMs | ⭐⭐⭐ |
 
 ### Key Insight
@@ -731,24 +774,24 @@ Two facts that dominate multimodal training at scale: (1) web alt-text is *terri
 
 ## Phase 9: Evaluation and Benchmarks
 
-Multimodal evaluation is notoriously broken. Knowing which benchmarks to trust (and how they fail) is its own skill.
+Multimodal evaluation is notoriously broken. Knowing which benchmarks to trust (and how they fail) is its own skill. (This is the *multimodal* evaluation playbook; text-only LM evaluation is [LLM Phase 8](../llm/#phase-8-evaluation).)
 
 ### Concepts to Learn
 
 - **The benchmark landscape**:
-  - **MMMU** — multidiscipline multimodal understanding, hardest open VQA benchmark
+  - **MMMU / MMMU-Pro** — multidiscipline multimodal understanding, hardest open VQA benchmark
   - **MMBench, MME** — general multimodal capability
   - **DocVQA, OCRBench** — OCR-heavy document understanding
-  - **MathVista** — math + diagrams
+  - **MathVista, MathVision** — math + diagrams
   - **ChartQA, AI2D** — charts and diagrams
-  - **POPE** — object hallucination
+  - **POPE, HallusionBench** — object/visual hallucination
   - **RefCOCO** — referring expressions / grounding
-  - **VideoMME, MLVU** — video understanding
+  - **VideoMME, MLVU, LongVideoBench** — video understanding
 - **The captioning benchmarks** (CIDEr, BLEU, METEOR on COCO, NoCaps): largely solved and increasingly meaningless
 - **LLM-as-judge** — using a strong model (often GPT-4 or Claude) to grade open-ended outputs; introduces its own biases
 - **Hallucination measurement** — counting "things in the caption that aren't in the image"
 - **Robustness probes** — adversarial images, distribution shifts, demographic balance
-- **Reasoning benchmarks** — multimodal CoT, M³CoT, ScienceQA
+- **Reasoning benchmarks** — multimodal CoT, M³CoT, ScienceQA; the rise of multimodal *reasoning* models (QVQ, Gemini/o-series thinking with vision)
 - **The leakage problem** — many benchmarks are now in pretraining corpora; suspect any too-good result
 
 ### A Sane Evaluation Suite for a New VLM
@@ -792,32 +835,31 @@ There is no single number that captures "VLM quality." MMMU measures different t
 
 ## Phase 10: Frontier Topics
 
-Where the field is going. Pick one or two threads and go deep.
+Where the field is going. Pick one or two threads and go deep. Several of these threads live on a border with another guide — the cross-links below tell you who owns the rest of the story.
 
 ### Vision-Language-Action (VLA) Models for Robotics
-The biggest application of multimodal models beyond chatbots. A VLA takes (image, instruction) → action. Foundational works: RT-2, OpenVLA, π0, Helix, Gemini Robotics.
-- **Connection to physical RL guide**: VLAs are increasingly *the* policy class; what was once "RL on robots" is becoming "VLM fine-tuned to output actions."
+A VLA takes (image, instruction) → action. From the multimodal angle, a VLA is "a VLM whose output head emits action tokens instead of text" — the foundational works are RT-2, OpenVLA, π0, Gemini Robotics. **The robot policy, imitation-learning, and sim-to-real side is owned by [Robotics Phase 8](../robotics/#phase-8-learning-for-robotics)** (which reads better after this guide's Phase 5); here we care only about the multimodal-modeling interface.
 
 ### Long-Context Multimodal
-A 1-hour video has tens of thousands of frames. How do you fit that into a context window? Streaming attention, hierarchical encoding, learned memory.
+A 1-hour video has tens of thousands of frames. How do you fit that into a context window? Streaming attention, hierarchical encoding, learned memory, image-token compression. (The *serving* of long multimodal contexts — KV-cache sizing, prefix caching — is [Inference Systems](../inference-systems/).)
 
 ### Generative Unified Models
-Models that produce images, audio, and video natively from one transformer. Chameleon's image-generation half, Show-o, Janus, Emu3, the open frontier of "one model to generate them all."
+Models that produce images, audio, and video natively from one transformer: Chameleon's image-generation half, Show-o, Janus-Pro, Emu3, Transfusion. The cross-modal modeling is this guide's Phase 7; the underlying *image/video generation* machinery they decode through is [Image Generation](../image-generation/) / [Video Generation](../video-generation/).
 
 ### Multimodal Reasoning
-Multimodal chain-of-thought, visual program synthesis (ViperGPT, VisProg), self-consistency over visual problems. Comparatively under-studied vs text reasoning.
+Multimodal chain-of-thought, visual program synthesis (ViperGPT, VisProg), self-consistency over visual problems, and the new wave of multimodal *thinking* models (QVQ, Gemini/o-series with vision). The text-reasoning core is [LLM Phase 6](../llm/#phase-6-reasoning-and-inference-time-compute); what's new here is reasoning *grounded in pixels*.
 
 ### Embodied and Agentic Multimodal
-Web agents that see screenshots (SeeClick, ShowUI, OS-Atlas), GUI agents (Claude Computer Use, Gemini's GUI mode), mobile agents. The screen is just another modality.
+Web/GUI agents that see screenshots (SeeClick, ShowUI, OS-Atlas, UI-TARS), computer use (Claude Computer Use, Gemini's GUI mode), mobile agents. The screen is just another modality. (Tool-use and agent *orchestration* is [LLM Phase 7](../llm/#phase-7-retrieval-tools-and-agents); the embodied-control side is [Robotics](../robotics/).)
 
 ### Multimodal Interpretability
-What does the projector actually do? Where do image features live inside the LLM? Mechanistic interpretability for VLMs is largely virgin territory.
+What does the projector actually do? Where do image features live inside the LLM? Mechanistic interpretability for VLMs is largely virgin territory (text-side interpretability is [LLM Phase 10](../llm/#phase-10-safety-interpretability-and-frontier-topics)).
 
 ### Efficient Multimodal Inference
-Token merging, pruning, image-token compression, KV-cache sharing across modalities. Multimodal models are expensive at inference; this matters commercially.
+Token merging, pruning, image-token compression, KV-cache sharing across modalities — the *model-side* techniques. The *serving-stack* side (batching, paged KV cache, multi-LoRA, throughput) is owned by [Inference Systems](../inference-systems/); kernel-level work and quantization are [AI Hardware](../ai-hardware/).
 
 ### Safety in Multimodal Models
-Visual jailbreaks (typographic attacks, adversarial images), CSAM detection, deepfake detection, watermarking for generative outputs. New attack surfaces and new defenses.
+Visual jailbreaks (typographic attacks, adversarial images), CSAM detection, deepfake detection, watermarking for generative outputs (SynthID). New attack surfaces and new defenses.
 
 ### Resources for the Frontier
 
@@ -825,7 +867,7 @@ Visual jailbreaks (typographic attacks, adversarial images), CSAM detection, dee
 - [OpenVLA paper](https://arxiv.org/abs/2406.09246)
 - [π0 paper (Physical Intelligence)](https://www.physicalintelligence.company/blog/pi0)
 - [Show-o paper](https://arxiv.org/abs/2408.12528)
-- [Emu3 paper (BAAI, 2024)](https://arxiv.org/abs/2409.18869)
+- [UI-TARS paper (ByteDance, 2025)](https://arxiv.org/abs/2501.12326) — native GUI agent
 - [Anthropic — Computer Use blog](https://www.anthropic.com/news/3-5-models-and-computer-use)
 
 ---
@@ -857,8 +899,8 @@ Visual jailbreaks (typographic attacks, adversarial images), CSAM detection, dee
 3. **Data is the model.** Spend at least as much time on data filtering and recaptioning as on architecture. The papers don't emphasize this enough.
 4. **Beware the modality gap.** Even well-aligned dual encoders keep text and image embeddings in separable regions. This affects retrieval, generation, and downstream fine-tuning.
 5. **Don't trust a single benchmark.** Especially captioning metrics. Always evaluate on a suite, including LLM-as-judge for open-ended outputs.
-6. **Image tokens are expensive.** A single image is often 256–2000 tokens. Multi-image and video contexts blow up fast. Know your token budget.
-7. **Reuse pretrained components.** Almost no one trains a vision encoder from scratch in 2026; you start from SigLIP, DINOv2, or similar.
+6. **Image tokens are expensive.** A single image is often 256–2000 tokens. Multi-image and video contexts blow up fast. Know your token budget — and see [Inference Systems](../inference-systems/) when you deploy.
+7. **Reuse pretrained components.** Almost no one trains a vision encoder from scratch in 2026; you start from SigLIP, DINOv2, or similar, and from a pretrained LLM from the [LLM guide](../llm/).
 8. **Synthetic captions are a superpower.** Recaptioning with a strong VLM is the highest-leverage data trick in the field.
 9. **`bf16` everywhere.** The same advice as for LLMs and PyTorch; multimodal training is no different.
 10. **Visualize your model's attention.** Especially the cross-attention in VLMs. It tells you whether the model is actually looking at the right region.
@@ -877,6 +919,7 @@ Visual jailbreaks (typographic attacks, adversarial images), CSAM detection, dee
 - ❌ Building a unified model with 1M tokens of text and 10k tokens of image and wondering why image quality is bad
 - ❌ Skipping the alignment stage and going straight to instruction tuning
 - ❌ Evaluating on a benchmark that's already in your pretraining corpus
+- ❌ Re-deriving diffusion/VQ-VAE internals here instead of reading [Image Generation](../image-generation/) — this guide *uses* them, it doesn't re-teach them
 
 ---
 
@@ -900,16 +943,19 @@ Visual jailbreaks (typographic attacks, adversarial images), CSAM detection, dee
 | 2023 | [BLIP-2](https://arxiv.org/abs/2301.12597) | Q-Former, modular fusion |
 | 2023 | [LLaVA](https://arxiv.org/abs/2304.08485) | Linear projector + instruction tuning |
 | 2023 | [SigLIP](https://arxiv.org/abs/2303.15343) | Sigmoid contrastive, scales better |
-| 2024 | [Qwen2-VL](https://arxiv.org/abs/2409.12191) | Dynamic resolution, strong open VLM |
+| 2024 | [Qwen2-VL](https://arxiv.org/abs/2409.12191) | Dynamic / native resolution, strong open VLM |
 | 2024 | [Chameleon](https://arxiv.org/abs/2405.09818) | Native any-to-any with discrete tokens |
 | 2024 | [OpenVLA](https://arxiv.org/abs/2406.09246) | VLA for robotics, open-source |
 | 2024 | [Emu3](https://arxiv.org/abs/2409.18869) | Next-token prediction, all modalities |
+| 2024 | [Transfusion](https://arxiv.org/abs/2408.11039) | AR text + diffusion image in one transformer |
+| 2025 | [Janus-Pro](https://arxiv.org/abs/2501.17811) | Decoupled understanding/generation |
+| 2025 | [Qwen2.5-Omni](https://arxiv.org/abs/2503.20215) | Open any-to-any omni model |
 
 ### Tools You Should Know
 - **`transformers`** (Hugging Face) — VLMs, multimodal pipelines
 - **`open_clip`** — reproducible CLIP training
 - **`lmms-eval` / `VLMEvalKit`** — evaluation harnesses
-- **`vLLM` / `SGLang`** — multimodal inference serving
+- **`vLLM` / `SGLang`** — multimodal inference serving (see [Inference Systems](../inference-systems/))
 - **`torchaudio`** — audio loading and transforms
 - **`decord` / `pyav`** — fast video frame loading
 - **`webdataset`** — streaming multimodal data
@@ -924,3 +970,4 @@ Visual jailbreaks (typographic attacks, adversarial images), CSAM detection, dee
 ## License
 
 MIT License. See the [LICENSE](https://github.com/25621/ai-learning-guides/blob/main/LICENSE) file for details.
+</content>
