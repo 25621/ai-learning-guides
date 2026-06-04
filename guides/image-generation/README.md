@@ -1062,16 +1062,17 @@ class ControlBranch(nn.Module):
 
 ### Projects
 
+> **img2img and inpainting** — the foundational image-conditioning techniques for this phase — are built as a hands-on project back in [Phase 7: Latent Diffusion and Stable Diffusion](#phase-7-latent-diffusion-and-stable-diffusion), since they fall directly out of the latent-diffusion inference loop. Revisit that project here as the entry point to the conditioning and control methods below.
+
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| img2img and inpainting | Implement both from a vanilla SD inference loop; tune noise strength | ⭐⭐⭐ |
-| LoRA fine-tune | Take a pretrained SD checkpoint; fine-tune a LoRA on 20 images of a custom subject; verify it works | ⭐⭐⭐ |
-| DreamBooth | Full fine-tune on a small subject set; compare quality and parameter count to LoRA | ⭐⭐⭐⭐ |
-| Textual Inversion | Train just a new token embedding for the same subject; compare to LoRA | ⭐⭐⭐ |
-| ControlNet from scratch | Implement the ControlNet "zero-conv" branch; condition on Canny edges; train on a small dataset | ⭐⭐⭐⭐⭐ |
-| InstructPix2Pix-style data | Generate a synthetic instruction-edit dataset using a pretrained T2I + GPT; fine-tune a small editor | ⭐⭐⭐⭐⭐ |
-| DDIM inversion + edit | Invert a real photo into latent noise; modify the prompt; denoise; observe structure preservation | ⭐⭐⭐⭐ |
-| Style LoRA | Train a LoRA on 30 images in a coherent style; verify the style transfers to unseen prompts | ⭐⭐⭐ |
+| [LoRA fine-tune](projects/50-lora-fine-tune/README.md) | Take a pretrained SD checkpoint; fine-tune a LoRA on 20 images of a custom subject; verify it works | ⭐⭐⭐ |
+| [DreamBooth](projects/51-dreambooth/README.md) | Full fine-tune on a small subject set; compare quality and parameter count to LoRA | ⭐⭐⭐⭐ |
+| [Textual Inversion](projects/52-textual-inversion/README.md) | Train just a new token embedding for the same subject; compare to LoRA | ⭐⭐⭐ |
+| [ControlNet from scratch](projects/53-controlnet-from-scratch/README.md) | Implement the ControlNet "zero-conv" branch; condition on Canny edges; train on a small dataset | ⭐⭐⭐⭐⭐ |
+| [InstructPix2Pix-style data](projects/54-instructpix2pix-style-data/README.md) | Generate a synthetic instruction-edit dataset using a pretrained T2I + GPT; fine-tune a small editor | ⭐⭐⭐⭐⭐ |
+| [DDIM inversion + edit](projects/55-ddim-inversion-edit/README.md) | Invert a real photo into latent noise; modify the prompt; denoise; observe structure preservation | ⭐⭐⭐⭐ |
+| [Style LoRA](projects/56-style-lora/README.md) | Train a LoRA on 30 images in a coherent style; verify the style transfers to unseen prompts | ⭐⭐⭐ |
 
 ### Key Insight
 
@@ -1158,15 +1159,15 @@ The evaluation problem in image generation is bad, and people keep papering over
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Mini LAION pipeline | Take 1M LAION URLs, download, filter with CLIP, dedup, recaption with a small VLM — produce a clean shard | ⭐⭐⭐⭐ |
-| Caption ablation | Train two small T2I models: one on original alt-text, one on recaptioned text; compare downstream | ⭐⭐⭐⭐⭐ |
-| Aspect-ratio bucketing | Implement bucketed batching for variable aspect ratios; observe quality improvement on portrait/wide test sets | ⭐⭐⭐ |
-| Consistency distillation | Distill a 50-step SD model into a 4-step LCM student; measure quality loss | ⭐⭐⭐⭐⭐ |
-| Adversarial Diffusion Distillation | Implement ADD (SDXL Turbo's recipe); compare to LCM | ⭐⭐⭐⭐⭐ |
-| Watermarking | Add invisible watermarking to your model's outputs; verify with a detector | ⭐⭐⭐⭐ |
-| GenEval run | Evaluate an open T2I model on GenEval; document failure modes | ⭐⭐ |
-| Human-correlated eval | For 100 outputs, get 3 human ratings and 3 LLM-as-judge ratings; measure agreement | ⭐⭐⭐ |
-| Text-rendering probe | Construct 200 prompts that include rendered text ("a sign that says '...'"); evaluate open models | ⭐⭐ |
+| [Mini LAION pipeline](projects/57-mini-laion-pipeline/README.md) | Take 1M LAION URLs, download, filter with CLIP, dedup, recaption with a small VLM — produce a clean shard | ⭐⭐⭐⭐ |
+| [Caption ablation](projects/58-caption-ablation/README.md) | Train two small T2I models: one on original alt-text, one on recaptioned text; compare downstream | ⭐⭐⭐⭐⭐ |
+| [Aspect-ratio bucketing](projects/59-aspect-ratio-bucketing/README.md) | Implement bucketed batching for variable aspect ratios; observe quality improvement on portrait/wide test sets | ⭐⭐⭐ |
+| [Consistency distillation](projects/60-consistency-distillation/README.md) | Distill a 50-step SD model into a 4-step LCM student; measure quality loss | ⭐⭐⭐⭐⭐ |
+| [Adversarial Diffusion Distillation](projects/61-adversarial-diffusion-distillation/README.md) | Implement ADD (SDXL Turbo's recipe); compare to LCM | ⭐⭐⭐⭐⭐ |
+| [Watermarking](projects/62-watermarking/README.md) | Add invisible watermarking to your model's outputs; verify with a detector | ⭐⭐⭐⭐ |
+| [GenEval run](projects/63-geneval-run/README.md) | Evaluate an open T2I model on GenEval; document failure modes | ⭐⭐ |
+| [Human-correlated eval](projects/64-human-correlated-eval/README.md) | For 100 outputs, get 3 human ratings and 3 LLM-as-judge ratings; measure agreement | ⭐⭐⭐ |
+| [Text-rendering probe](projects/65-text-rendering-probe/README.md) | Construct 200 prompts that include rendered text ("a sign that says '...'"); evaluate open models | ⭐⭐ |
 
 ### Key Insight
 
