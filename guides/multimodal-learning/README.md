@@ -134,9 +134,9 @@ Before architectures, get the conceptual map right. "Multimodal" is a fuzzy umbr
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Modality survey | Pick 5 multimodal papers, classify each by fusion type and objective; write a one-paragraph summary of each | ⭐ |
-| Visualize the modality gap | Encode 1k images and 1k captions with a pretrained CLIP; PCA them; observe the separation | ⭐⭐ |
-| Toy retrieval | Build a tiny retrieval system: encode a few hundred images and captions with CLIP, retrieve top-5 for each query | ⭐⭐ |
+| [Modality survey](projects/01-modality-survey/README.md) | Pick 5 multimodal papers, classify each by fusion type and objective; write a one-paragraph summary of each | ⭐ |
+| [Visualize the modality gap](projects/02-visualize-the-modality-gap/README.md) | Encode 1k images and 1k captions with a pretrained CLIP; PCA them; observe the separation | ⭐⭐ |
+| [Toy retrieval](projects/03-toy-retrieval/README.md) | Build a tiny retrieval system: encode a few hundred images and captions with CLIP, retrieve top-5 for each query | ⭐⭐ |
 
 ### Key Insight
 

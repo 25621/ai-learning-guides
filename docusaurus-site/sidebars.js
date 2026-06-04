@@ -408,7 +408,22 @@ const sidebars = {
         {type: 'doc', id: 'guides/reinforcement-learning/README', label: 'Reinforcement Learning'},
         {type: 'doc', id: 'guides/video-generation/README', label: 'Video Generation'},
         {type: 'doc', id: 'guides/robotics/README', label: 'Robotics'},
-        {type: 'doc', id: 'guides/multimodal-learning/README', label: 'Multimodal Learning'},
+        {
+          type: 'category',
+          label: 'Multimodal Learning',
+          link: {type: 'doc', id: 'guides/multimodal-learning/README'},
+          items: [
+            {
+              type: 'category',
+              label: 'Phase 1: Foundations — What "Multimodal" Actually Means',
+              items: [
+                {type: 'doc', id: 'guides/multimodal-learning/projects/modality-survey/README', label: 'Modality survey'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/visualize-the-modality-gap/README', label: 'Visualize the modality gap'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/toy-retrieval/README', label: 'Toy retrieval'},
+              ],
+            },
+          ],
+        },
         {
           type: 'category',
           label: 'Inference Systems',
