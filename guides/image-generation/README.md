@@ -1159,15 +1159,15 @@ The evaluation problem in image generation is bad, and people keep papering over
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Mini LAION pipeline | Take 1M LAION URLs, download, filter with CLIP, dedup, recaption with a small VLM — produce a clean shard | ⭐⭐⭐⭐ |
-| Caption ablation | Train two small T2I models: one on original alt-text, one on recaptioned text; compare downstream | ⭐⭐⭐⭐⭐ |
-| Aspect-ratio bucketing | Implement bucketed batching for variable aspect ratios; observe quality improvement on portrait/wide test sets | ⭐⭐⭐ |
-| Consistency distillation | Distill a 50-step SD model into a 4-step LCM student; measure quality loss | ⭐⭐⭐⭐⭐ |
-| Adversarial Diffusion Distillation | Implement ADD (SDXL Turbo's recipe); compare to LCM | ⭐⭐⭐⭐⭐ |
-| Watermarking | Add invisible watermarking to your model's outputs; verify with a detector | ⭐⭐⭐⭐ |
-| GenEval run | Evaluate an open T2I model on GenEval; document failure modes | ⭐⭐ |
-| Human-correlated eval | For 100 outputs, get 3 human ratings and 3 LLM-as-judge ratings; measure agreement | ⭐⭐⭐ |
-| Text-rendering probe | Construct 200 prompts that include rendered text ("a sign that says '...'"); evaluate open models | ⭐⭐ |
+| [Mini LAION pipeline](projects/57-mini-laion-pipeline/README.md) | Take 1M LAION URLs, download, filter with CLIP, dedup, recaption with a small VLM — produce a clean shard | ⭐⭐⭐⭐ |
+| [Caption ablation](projects/58-caption-ablation/README.md) | Train two small T2I models: one on original alt-text, one on recaptioned text; compare downstream | ⭐⭐⭐⭐⭐ |
+| [Aspect-ratio bucketing](projects/59-aspect-ratio-bucketing/README.md) | Implement bucketed batching for variable aspect ratios; observe quality improvement on portrait/wide test sets | ⭐⭐⭐ |
+| [Consistency distillation](projects/60-consistency-distillation/README.md) | Distill a 50-step SD model into a 4-step LCM student; measure quality loss | ⭐⭐⭐⭐⭐ |
+| [Adversarial Diffusion Distillation](projects/61-adversarial-diffusion-distillation/README.md) | Implement ADD (SDXL Turbo's recipe); compare to LCM | ⭐⭐⭐⭐⭐ |
+| [Watermarking](projects/62-watermarking/README.md) | Add invisible watermarking to your model's outputs; verify with a detector | ⭐⭐⭐⭐ |
+| [GenEval run](projects/63-geneval-run/README.md) | Evaluate an open T2I model on GenEval; document failure modes | ⭐⭐ |
+| [Human-correlated eval](projects/64-human-correlated-eval/README.md) | For 100 outputs, get 3 human ratings and 3 LLM-as-judge ratings; measure agreement | ⭐⭐⭐ |
+| [Text-rendering probe](projects/65-text-rendering-probe/README.md) | Construct 200 prompts that include rendered text ("a sign that says '...'"); evaluate open models | ⭐⭐ |
 
 ### Key Insight
 
