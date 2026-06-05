@@ -1,0 +1,5 @@
+# Zero-Shot ImageNet
+
+## Key Insight
+
+[Zero-shot](/shared/glossary/#zero-shot) classification is [CLIP](/shared/glossary/#clip)'s most surprising trick: without ever training on [ImageNet](/shared/glossary/#imagenet)'s labels, you turn each of the 1,000 class names into a sentence like *"a photo of a golden retriever"*, encode all of them with the [text encoder](/shared/glossary/#text-encoder), and label each image with whichever class sentence has the highest [cosine similarity](/shared/glossary/#cosine-similarity) to the [image embedding](/shared/glossary/#embedding). The wording of that sentence — the [prompt template](/shared/glossary/#zero-shot) — matters more than feels reasonable: *"a photo of a {label}"* routinely beats the bare label because it matches the caption style CLIP saw on the web, and averaging the embeddings of several templates (*prompt ensembling*) squeezes out a few more points. The lesson is that with a model trained on enough image–text pairs, classification becomes [retrieval](/shared/glossary/#cross-modal-retrieval) — you are simply searching for the label whose description best fits the picture.

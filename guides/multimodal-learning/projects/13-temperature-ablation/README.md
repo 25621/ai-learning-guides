@@ -1,0 +1,5 @@
+# Temperature Ablation
+
+## Key Insight
+
+The [temperature](/shared/glossary/#temperature) τ divides the [cosine-similarity](/shared/glossary/#cosine-similarity) scores before the [softmax](/shared/glossary/#softmax) in [InfoNCE](/shared/glossary/#infonce), and it controls how harshly the loss punishes near-misses: a small τ (say 0.01) blows the scores up so the softmax becomes razor-sharp and the model obsesses over its hardest [negatives](/shared/glossary/#hard-negatives), while a large τ (near 1.0) flattens everything so even the true pair is barely favored. Sweeping τ from 0.01 to 1.0 and watching both accuracy and the [geometry of the embedding space](/shared/glossary/#embedding) — how tightly true pairs cluster on the unit sphere — makes visible why [CLIP](/shared/glossary/#clip) makes τ a *learned* parameter (initialized around 0.07) instead of guessing it. Set it too low and training is unstable and overconfident; too high and the model never commits — which is why this one scalar punches far above its weight.

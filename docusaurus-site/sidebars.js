@@ -433,6 +433,18 @@ const sidebars = {
                 {type: 'doc', id: 'guides/multimodal-learning/projects/patch-size-study/README', label: 'Patch-size study'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 3: Contrastive Learning — CLIP and Friends',
+              items: [
+                {type: 'doc', id: 'guides/multimodal-learning/projects/implement-infonce/README', label: 'Implement InfoNCE'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/tiny-clip/README', label: 'Tiny CLIP'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/zero-shot-imagenet/README', label: 'Zero-shot ImageNet'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/hard-negative-mining/README', label: 'Hard-negative mining'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/temperature-ablation/README', label: 'Temperature ablation'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/data-filtering-with-clip/README', label: 'Data filtering with CLIP'},
+              ],
+            },
           ],
         },
         {

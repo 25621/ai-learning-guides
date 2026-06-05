@@ -294,12 +294,12 @@ out of all N captions in the batch — and vice versa.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Implement InfoNCE | Write the symmetric contrastive loss from scratch; verify gradients | ⭐⭐ |
-| Tiny CLIP | Train a small CLIP on Flickr30k or COCO captions; image encoder = small ViT, text encoder = small transformer | ⭐⭐⭐⭐ |
-| Zero-shot ImageNet | Use a pretrained CLIP to classify ImageNet without ever training on its labels; tune the prompt template | ⭐⭐ |
-| Hard-negative mining | Train CLIP with mined hard negatives vs random; measure retrieval improvement | ⭐⭐⭐⭐ |
-| Temperature ablation | Vary τ from 0.01 to 1.0; observe accuracy and the geometry of the embedding space | ⭐⭐⭐ |
-| Data filtering with CLIP | Filter a noisy image-text dataset by CLIP similarity score; train a downstream model on filtered vs unfiltered | ⭐⭐⭐ |
+| [Implement InfoNCE](projects/09-implement-infonce/README.md) | Write the symmetric contrastive loss from scratch; verify gradients | ⭐⭐ |
+| [Tiny CLIP](projects/10-tiny-clip/README.md) | Train a small CLIP on Flickr30k or COCO captions; image encoder = small ViT, text encoder = small transformer | ⭐⭐⭐⭐ |
+| [Zero-shot ImageNet](projects/11-zero-shot-imagenet/README.md) | Use a pretrained CLIP to classify ImageNet without ever training on its labels; tune the prompt template | ⭐⭐ |
+| [Hard-negative mining](projects/12-hard-negative-mining/README.md) | Train CLIP with mined hard negatives vs random; measure retrieval improvement | ⭐⭐⭐⭐ |
+| [Temperature ablation](projects/13-temperature-ablation/README.md) | Vary τ from 0.01 to 1.0; observe accuracy and the geometry of the embedding space | ⭐⭐⭐ |
+| [Data filtering with CLIP](projects/14-data-filtering-with-clip/README.md) | Filter a noisy image-text dataset by CLIP similarity score; train a downstream model on filtered vs unfiltered | ⭐⭐⭐ |
 
 ### Sample Code: CLIP-Style Contrastive Loss
 

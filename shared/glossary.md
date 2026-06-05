@@ -743,6 +743,9 @@ An efficient way to apply [RoPE](/shared/glossary/#rope): rather than rotating e
 ### Hallucination {#hallucination}
 When an [LLM](/shared/glossary/#llm) states something false with the same confident tone it uses for true things — invented citations, made-up people, fabricated facts. Like a student who didn't read the book but answers the essay question anyway in confident prose; the grammar is fine, the facts are not. Hallucination is built in to the [next-token prediction](/shared/glossary/#next-token-prediction) objective, which rewards fluent continuation rather than truth, and is mitigated (not solved) by [RAG](/shared/glossary/#rag), [verifiers](/shared/glossary/#verifier), and abstention training.
 
+### Hard negatives {#hard-negatives}
+In [contrastive](/shared/glossary/#infonce) training, the *wrong* candidates the model finds hard to reject because they look almost right — as opposed to *easy* negatives so obviously wrong they teach it nothing. For a photo of a husky, the caption "a wolf in deep snow" is a hard negative (close, but wrong), while "a slice of pizza" is an easy one. Training learns fastest from hard negatives because they sit right on the boundary the model is still getting wrong, so each one delivers a large, informative [gradient](/shared/glossary/#gradients); *mining* them means actively searching the data for these near-misses (e.g. the highest-[cosine-similarity](/shared/glossary/#cosine-similarity) mismatch) instead of hoping a random [batch](/shared/glossary/#batch) happens to contain some. Like a chess student who improves quickest by drilling against opponents just above their level, not by beating beginners over and over. Example: to mine hard negatives for a caption, retrieve the images it scores highly against but does *not* actually describe, and add those as negatives for the next training step.
+
 ### HBM {#hbm}
 High-Bandwidth Memory — stacked DRAM on a modern GPU; usually the bandwidth bottleneck
 
@@ -1634,7 +1637,7 @@ Tool Center Point — the configurable point on a tool whose pose tracking contr
 Twin Delayed DDPG — DDPG plus three stability fixes
 
 ### Temperature {#temperature}
-A [sampling](/shared/glossary/#sampling) knob that scales the model's scores before [softmax](/shared/glossary/#softmax): low temperature (e.g. 0.2) sharpens the distribution so the model plays it safe and repeats the likeliest words, while high temperature (e.g. 1.5) flattens it so rarer, more surprising words can win. Think of it as a creativity dial — turn it down for factual answers, up for brainstorming.
+A [sampling](/shared/glossary/#sampling) knob that scales the model's scores before [softmax](/shared/glossary/#softmax): low temperature (e.g. 0.2) sharpens the distribution so the model plays it safe and repeats the likeliest words, while high temperature (e.g. 1.5) flattens it so rarer, more surprising words can win. Think of it as a creativity dial — turn it down for factual answers, up for brainstorming. The same knob appears in [contrastive learning](/shared/glossary/#infonce) (written τ): there the similarity scores are *divided* by τ before the softmax, so a small τ (CLIP learns one starting around 0.07) sharpens the contest and forces the model to focus on its [hardest negatives](/shared/glossary/#hard-negatives), while a large τ softens it — too small destabilizes training, too large and even the true pair is barely preferred.
 
 ### Temporal inflation {#temporal-inflation}
 Adding time-axis layers to a pretrained 2D model
@@ -1874,6 +1877,9 @@ Yet another [RoPE](/shared/glossary/#rope) extensioN method — a context-extens
 
 ### Zero-conv {#zero-conv}
 A 1×1 [convolution](/shared/glossary/#convolution-layers) whose weights and bias all start at exactly zero, used by [ControlNet](/shared/glossary/#controlnet) to bolt a new branch onto a pretrained model without disturbing it. At initialization a zero-conv outputs nothing, so the new branch adds *zero* to the original network and the model behaves exactly as before — yet because the layer still receives [gradients](/shared/glossary/#gradients), it can gradually learn how much signal to pass through. Like wiring in a new tap that is turned fully off at first, then opened slowly as training discovers how much to let flow. This is what lets ControlNet train a fresh control signal without damaging the base model's existing quality.
+
+### Zero-shot {#zero-shot}
+Doing a task the model was never explicitly trained for, with zero task-specific examples shown at test time. The classic case is [CLIP](/shared/glossary/#clip) zero-shot image classification: instead of training a classifier head on labelled images, you write each candidate label as a short sentence — a *prompt template* such as "a photo of a {label}" — encode every sentence with the [text encoder](/shared/glossary/#text-encoder), and assign the image whichever label sentence has the highest [cosine similarity](/shared/glossary/#cosine-similarity) to its [image embedding](/shared/glossary/#embedding). The prompt wording matters: phrasing the label as a natural caption matches the style CLIP saw during training, and averaging several templates (*prompt ensembling*) lifts accuracy a little more. Like a quiz contestant who never studied your specific exam but has read so widely that, handed the answer choices written out in full, they can pick the best match anyway. Example: deciding whether a photo is a cat or a dog by checking whether "a photo of a cat" or "a photo of a dog" sits closer to the image in CLIP's shared space.
 
 ### ZMP {#zmp}
 Zero-Moment Point — classical biped balance criterion
