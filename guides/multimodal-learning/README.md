@@ -347,14 +347,14 @@ Once each modality is encoded, you have to combine them. There are more options 
 
 ### Concepts to Learn
 
-- **Concatenation** — the trivial baseline; works surprisingly well sometimes
-- **Cross-attention** — one modality's tokens attend to another's; the most common fusion in modern VLMs
-- **Q-Former (BLIP-2)** — learnable queries that distill an image into a fixed number of tokens for an LLM
-- **Perceiver / Perceiver IO** — cross-attention with a small latent set, modality-agnostic
-- **Adapter modules** — small layers inserted into a frozen backbone, trained to adapt to a new modality
-- **Gated cross-attention (Flamingo)** — adds new cross-attention layers between LLM layers, gated so the pretrained behavior isn't broken at init
-- **Projector-only fusion (LLaVA)** — just a linear or MLP projection from image features to LLM token space; surprisingly effective
-- **Interleaved sequences** — treat image tokens and text tokens as one sequence (early fusion)
+- **[Concatenation](/shared/glossary/#concatenation)** — the trivial baseline; works surprisingly well sometimes
+- **[Cross-attention](/shared/glossary/#cross-attention)** — one modality's tokens attend to another's; the most common fusion in modern VLMs
+- **[Q-Former](/shared/glossary/#q-former) (BLIP-2)** — learnable queries that distill an image into a fixed number of tokens for an LLM
+- **[Perceiver IO](/shared/glossary/#perceiver-io)** — cross-attention with a small latent set, modality-agnostic
+- **[Adapter](/shared/glossary/#adapter) modules** — small layers inserted into a frozen backbone, trained to adapt to a new modality
+- **[Gated](/shared/glossary/#gated) cross-attention ([Flamingo](/shared/glossary/#flamingo))** — adds new cross-attention layers between LLM layers, gated so the pretrained behavior isn't broken at init
+- **[Projector](/shared/glossary/#projector)-only fusion ([LLaVA](/shared/glossary/#llava))** — just a linear or MLP projection from image features to LLM token space; surprisingly effective
+- **Interleaved sequences** — treat image tokens and text tokens as one sequence ([early fusion](/shared/glossary/#fusion-earlymiddlelate))
 
 ### Five Fusion Patterns Side by Side
 
