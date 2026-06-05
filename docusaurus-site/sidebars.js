@@ -456,6 +456,18 @@ const sidebars = {
                 {type: 'doc', id: 'guides/multimodal-learning/projects/gated-cross-attention/README', label: 'Gated cross-attention'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 5: Vision-Language Models (VLMs)',
+              items: [
+                {type: 'doc', id: 'guides/multimodal-learning/projects/llava-from-scratch/README', label: 'LLaVA from scratch'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/visual-instruction-tuning/README', label: 'Visual instruction tuning'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/dynamic-resolution/README', label: 'Dynamic resolution'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/grounding-head/README', label: 'Grounding head'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/compare-projectors/README', label: 'Compare projectors'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/inference-optimization/README', label: 'Inference optimization'},
+              ],
+            },
           ],
         },
         {

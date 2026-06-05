@@ -1,0 +1,5 @@
+# Grounding Head
+
+## Key Insight
+
+[Grounding](/shared/glossary/#grounding) means making a [VLM](/shared/glossary/#vlm) point at *where* something is, not just say *that* it is there; this project adds it the simplest possible way — extend the model's [vocabulary](/shared/glossary/#vocabulary) with [special tokens](/shared/glossary/#special-tokens) like `<box>` plus a small set of tokens that stand for quantized coordinates, so a bounding box becomes just a few extra tokens the model emits inside its normal text stream. The elegance is that no new architecture or loss is needed: predicting "the cat is at `<box>` 0.1 0.2 0.4 0.6" is the very same [next-token prediction](/shared/glossary/#next-token-prediction) the [LLM](/shared/glossary/#llm) already performs, so it learns spatial output for free with the objective it was built around. Coordinates are quantized into a fixed grid of bins (rather than predicting raw floats) precisely so each one collapses to a single discrete token the existing vocabulary can hold.

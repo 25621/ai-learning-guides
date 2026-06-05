@@ -1,0 +1,5 @@
+# LLaVA from Scratch
+
+## Key Insight
+
+This project rebuilds the [LLaVA](/shared/glossary/#llava) recipe by hand: bolt a [frozen](/shared/glossary/#frozen) [CLIP](/shared/glossary/#clip)-[ViT](/shared/glossary/#vit) image encoder onto a frozen 1–3B-parameter [LLM](/shared/glossary/#llm) using nothing but a small [projector](/shared/glossary/#projector) — a single linear layer or two-layer [MLP](/shared/glossary/#mlp) — that rewrites each image patch's feature vector into the LLM's word-[embedding](/shared/glossary/#embedding) space. A small 1–3B LLM is the deliberate pick over a larger one: it is fluent enough to caption yet light enough to train on a single GPU, and because both big networks stay frozen, the *only* weights learning are that thin bridge. That is why [stage-1 alignment](/shared/glossary/#alignment-multimodal) on [COCO](/shared/glossary/#coco) captions is cheap and stable — you are just teaching the projector to aim image features at the right words, not retraining a [VLM](/shared/glossary/#vlm) end to end.

@@ -482,12 +482,12 @@ Result: LLM "speaks image"  Result: VLM that follows visual instructions
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| LLaVA from scratch | Connect a CLIP-ViT-L/14 to a 1–3B LLM with an MLP projector; do stage-1 alignment on COCO captions | ⭐⭐⭐⭐ |
-| Visual instruction tuning | Fine-tune the above on the LLaVA-Instruct dataset; evaluate on a few VQA benchmarks | ⭐⭐⭐⭐⭐ |
-| Dynamic resolution | Implement AnyRes tiling; verify it improves OCR-heavy benchmarks | ⭐⭐⭐⭐ |
-| Grounding head | Add bounding-box outputs to a VLM via a special `<box>` token vocabulary | ⭐⭐⭐⭐ |
-| Compare projectors | Linear vs 2-layer MLP vs Q-Former on the same downstream task; report quality and speed | ⭐⭐⭐ |
-| Inference optimization | Take an open VLM, serve it with vLLM or SGLang; measure tokens/sec at different image counts (deep dive: [Inference Systems](../inference-systems/)) | ⭐⭐⭐ |
+| [LLaVA from scratch](projects/20-llava-from-scratch/README.md) | Connect a CLIP-ViT-L/14 to a 1–3B LLM with an MLP projector; do stage-1 alignment on COCO captions | ⭐⭐⭐⭐ |
+| [Visual instruction tuning](projects/21-visual-instruction-tuning/README.md) | Fine-tune the above on the LLaVA-Instruct dataset; evaluate on a few VQA benchmarks | ⭐⭐⭐⭐⭐ |
+| [Dynamic resolution](projects/22-dynamic-resolution/README.md) | Implement AnyRes tiling; verify it improves OCR-heavy benchmarks | ⭐⭐⭐⭐ |
+| [Grounding head](projects/23-grounding-head/README.md) | Add bounding-box outputs to a VLM via a special `<box>` token vocabulary | ⭐⭐⭐⭐ |
+| [Compare projectors](projects/24-compare-projectors/README.md) | Linear vs 2-layer MLP vs Q-Former on the same downstream task; report quality and speed | ⭐⭐⭐ |
+| [Inference optimization](projects/25-inference-optimization/README.md) | Take an open VLM, serve it with vLLM or SGLang; measure tokens/sec at different image counts (deep dive: [Inference Systems](../inference-systems/)) | ⭐⭐⭐ |
 
 ### Sample Code: A LLaVA-Style Forward Pass
 
