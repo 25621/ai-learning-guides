@@ -394,11 +394,11 @@ Once each modality is encoded, you have to combine them. There are more options 
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Concat vs cross-attn | On a small VQA task, compare concatenation, cross-attention, and projector fusion; report accuracy and parameter counts | ⭐⭐⭐ |
-| Implement Q-Former | A small Q-Former with 16 learned queries; train on COCO captions | ⭐⭐⭐⭐ |
-| Adapter for a new modality | Add a depth-image input to a frozen CLIP image encoder via an adapter layer | ⭐⭐⭐ |
-| Perceiver IO | Implement the Perceiver IO architecture on a small toy task | ⭐⭐⭐⭐ |
-| Gated cross-attention | Implement Flamingo's gated mechanism; verify that at init, output equals the unimodal LLM | ⭐⭐⭐⭐ |
+| [Concat vs cross-attn](projects/15-concat-vs-cross-attn/README.md) | On a small VQA task, compare concatenation, cross-attention, and projector fusion; report accuracy and parameter counts | ⭐⭐⭐ |
+| [Implement Q-Former](projects/16-implement-q-former/README.md) | A small Q-Former with 16 learned queries; train on COCO captions | ⭐⭐⭐⭐ |
+| [Adapter for a new modality](projects/17-adapter-for-a-new-modality/README.md) | Add a depth-image input to a frozen CLIP image encoder via an adapter layer | ⭐⭐⭐ |
+| [Perceiver IO](projects/18-perceiver-io/README.md) | Implement the Perceiver IO architecture on a small toy task | ⭐⭐⭐⭐ |
+| [Gated cross-attention](projects/19-gated-cross-attention/README.md) | Implement Flamingo's gated mechanism; verify that at init, output equals the unimodal LLM | ⭐⭐⭐⭐ |
 
 ### Sample Code: A Cross-Attention Block
 

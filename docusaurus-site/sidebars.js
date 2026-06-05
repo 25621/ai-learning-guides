@@ -445,6 +445,17 @@ const sidebars = {
                 {type: 'doc', id: 'guides/multimodal-learning/projects/data-filtering-with-clip/README', label: 'Data filtering with CLIP'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 4: Fusion Architectures — How Modalities Talk to Each Other',
+              items: [
+                {type: 'doc', id: 'guides/multimodal-learning/projects/concat-vs-cross-attn/README', label: 'Concat vs cross-attn'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/implement-q-former/README', label: 'Implement Q-Former'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/adapter-for-a-new-modality/README', label: 'Adapter for a new modality'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/perceiver-io/README', label: 'Perceiver IO'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/gated-cross-attention/README', label: 'Gated cross-attention'},
+              ],
+            },
           ],
         },
         {

@@ -1,0 +1,5 @@
+# Perceiver IO
+
+## Key Insight
+
+Implementing [Perceiver IO](/shared/glossary/#perceiver-io) on a small toy task makes its core trick concrete: instead of letting every input element attend to every other — which would explode for a large image or long audio clip — you keep a *small fixed set* of learned latent vectors and let only those [cross-attend](/shared/glossary/#cross-attention) to the giant input, squeezing it into the small set once and then doing all the heavy work among just the latents. The "IO" half adds a matching read-out step: a set of learned *query* vectors cross-attends to the processed latents to produce an output of whatever shape the task needs. The payoff you can feel in code is that the compute now scales with the size of your *latent committee*, not with how big the input was — and because nothing assumes a grid or a sequence, the very same architecture works across [modalities](/shared/glossary/#modality), which is exactly the idea the [Q-Former](/shared/glossary/#q-former) borrows to distill an image for a language model.
