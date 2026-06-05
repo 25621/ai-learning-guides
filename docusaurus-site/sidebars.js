@@ -408,7 +408,68 @@ const sidebars = {
         {type: 'doc', id: 'guides/reinforcement-learning/README', label: 'Reinforcement Learning'},
         {type: 'doc', id: 'guides/video-generation/README', label: 'Video Generation'},
         {type: 'doc', id: 'guides/robotics/README', label: 'Robotics'},
-        {type: 'doc', id: 'guides/multimodal-learning/README', label: 'Multimodal Learning'},
+        {
+          type: 'category',
+          label: 'Multimodal Learning',
+          link: {type: 'doc', id: 'guides/multimodal-learning/README'},
+          items: [
+            {
+              type: 'category',
+              label: 'Phase 1: Foundations — What "Multimodal" Actually Means',
+              items: [
+                {type: 'doc', id: 'guides/multimodal-learning/projects/modality-survey/README', label: 'Modality survey'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/visualize-the-modality-gap/README', label: 'Visualize the modality gap'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/toy-retrieval/README', label: 'Toy retrieval'},
+              ],
+            },
+            {
+              type: 'category',
+              label: 'Phase 2: Encoders for Each Modality',
+              items: [
+                {type: 'doc', id: 'guides/multimodal-learning/projects/implement-vit-from-scratch/README', label: 'Implement ViT from scratch'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/compare-encoders/README', label: 'Compare encoders'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/mel-spectrogram-pipeline/README', label: 'Mel spectrogram pipeline'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/whisper-encoder-reuse/README', label: 'Whisper encoder reuse'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/patch-size-study/README', label: 'Patch-size study'},
+              ],
+            },
+            {
+              type: 'category',
+              label: 'Phase 3: Contrastive Learning — CLIP and Friends',
+              items: [
+                {type: 'doc', id: 'guides/multimodal-learning/projects/implement-infonce/README', label: 'Implement InfoNCE'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/tiny-clip/README', label: 'Tiny CLIP'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/zero-shot-imagenet/README', label: 'Zero-shot ImageNet'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/hard-negative-mining/README', label: 'Hard-negative mining'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/temperature-ablation/README', label: 'Temperature ablation'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/data-filtering-with-clip/README', label: 'Data filtering with CLIP'},
+              ],
+            },
+            {
+              type: 'category',
+              label: 'Phase 4: Fusion Architectures — How Modalities Talk to Each Other',
+              items: [
+                {type: 'doc', id: 'guides/multimodal-learning/projects/concat-vs-cross-attn/README', label: 'Concat vs cross-attn'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/implement-q-former/README', label: 'Implement Q-Former'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/adapter-for-a-new-modality/README', label: 'Adapter for a new modality'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/perceiver-io/README', label: 'Perceiver IO'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/gated-cross-attention/README', label: 'Gated cross-attention'},
+              ],
+            },
+            {
+              type: 'category',
+              label: 'Phase 5: Vision-Language Models (VLMs)',
+              items: [
+                {type: 'doc', id: 'guides/multimodal-learning/projects/llava-from-scratch/README', label: 'LLaVA from scratch'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/visual-instruction-tuning/README', label: 'Visual instruction tuning'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/dynamic-resolution/README', label: 'Dynamic resolution'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/grounding-head/README', label: 'Grounding head'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/compare-projectors/README', label: 'Compare projectors'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/inference-optimization/README', label: 'Inference optimization'},
+              ],
+            },
+          ],
+        },
         {
           type: 'category',
           label: 'Inference Systems',

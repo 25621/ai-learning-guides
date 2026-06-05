@@ -1,0 +1,5 @@
+# Concat vs Cross-Attention
+
+## Key Insight
+
+This project pits the three cheapest ways to fuse an image and a question against each other on one small [VQA (Visual Question Answering)](/shared/glossary/#vqa-visual-question-answering) task, so the trade-offs stop being abstract. [Concatenation](/shared/glossary/#concatenation) glues the two feature vectors end to end and adds almost no [parameters](/shared/glossary/#parameters); a [projector](/shared/glossary/#projector) reshapes the image features into the language model's space and is nearly as cheap; [cross-attention](/shared/glossary/#cross-attention) lets the text actively query the image and usually scores higher — but only by adding whole new attention layers, so you pay for it in parameter count. Reporting accuracy *and* parameter counts side by side makes the real lesson land: more interaction between [modalities](/shared/glossary/#modality) costs more weights, and the right pick depends on whether your task actually needs the two streams to look at each other or just to sit next to each other.

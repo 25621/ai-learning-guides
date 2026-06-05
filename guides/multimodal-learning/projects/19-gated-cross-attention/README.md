@@ -1,0 +1,5 @@
+# Gated Cross-Attention
+
+## Key Insight
+
+This project rebuilds [Flamingo](/shared/glossary/#flamingo)'s key mechanism: new [cross-attention](/shared/glossary/#cross-attention) layers inserted between the [frozen](/shared/glossary/#frozen) [LLM](/shared/glossary/#llm)'s blocks, each one [gated](/shared/glossary/#gated) by a learned multiplier that starts at exactly zero. The verification step is the whole lesson — at initialization the gate contributes *nothing*, so the model's output must be bit-for-bit identical to the original text-only LLM; only as training opens the gate does image information begin to flow in. That "start as the unmodified model, then blend the new capability in gradually" design is why you can add a [modality](/shared/glossary/#modality) to a strong pretrained network without breaking the behavior it already has, and confirming the identity at init is the cheapest way to catch a wiring bug before a long training run.

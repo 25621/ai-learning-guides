@@ -1,0 +1,5 @@
+# Visual Instruction Tuning
+
+## Key Insight
+
+After [stage-1 alignment](/shared/glossary/#alignment-multimodal) teaches the [projector](/shared/glossary/#projector) to feed images into the [LLM](/shared/glossary/#llm), this stage does the second half of the [LLaVA](/shared/glossary/#llava) recipe: [instruction tuning](/shared/glossary/#instruction-tuning) on the LLaVA-Instruct dataset, whose conversational (image, question, answer) triples were themselves written by a strong language model prompted with image annotations. The lesson is that the jump in capability comes from *data, not architecture* — the exact same frozen-encoder, tiny-projector model suddenly follows open-ended visual instructions purely because it now trains on dialogues instead of short captions. Evaluating on a few [VQA (Visual Question Answering)](/shared/glossary/#vqa-visual-question-answering) benchmarks closes the loop: a question pins the model to one specific detail it must actually read off the image, so it measures whether instruction tuning produced real [grounding](/shared/glossary/#grounding) or just chattier guessing.
