@@ -468,6 +468,18 @@ const sidebars = {
                 {type: 'doc', id: 'guides/multimodal-learning/projects/inference-optimization/README', label: 'Inference optimization'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 6: Audio, Speech, and Video',
+              items: [
+                {type: 'doc', id: 'guides/multimodal-learning/projects/mel-spectrogram-from-scratch/README', label: 'Mel spectrogram from scratch'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/whisper-fine-tune/README', label: 'Whisper fine-tune'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/encodec-tour/README', label: 'EnCodec tour'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/speech-llm/README', label: 'Speech LLM'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/video-frame-vlm/README', label: 'Video frame VLM'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/native-video-model/README', label: 'Native video model'},
+              ],
+            },
           ],
         },
         {

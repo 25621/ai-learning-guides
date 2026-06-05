@@ -582,12 +582,12 @@ Result shape: (T, 80)   ← T is the number of time frames
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Mel spectrogram from scratch | Implement STFT and a mel filterbank; visualize a 10-second clip | ⭐⭐ |
-| Whisper fine-tune | Fine-tune Whisper-small on a low-resource language or custom domain | ⭐⭐⭐ |
-| EnCodec tour | Use EnCodec to encode/decode audio at multiple bandwidths; listen to the reconstructions | ⭐⭐ |
-| Speech LLM | Glue an audio encoder to a small LLM with a projector; train on AudioSet captions | ⭐⭐⭐⭐⭐ |
-| Video frame VLM | Sample 8 frames from a video, treat them as 8 images for a VLM, do video QA | ⭐⭐⭐ |
-| Native video model | Use spatiotemporal patches (TubeViT-style) and train a small video classifier | ⭐⭐⭐⭐ |
+| [Mel spectrogram from scratch](projects/26-mel-spectrogram-from-scratch/README.md) | Implement STFT and a mel filterbank; visualize a 10-second clip | ⭐⭐ |
+| [Whisper fine-tune](projects/27-whisper-fine-tune/README.md) | Fine-tune Whisper-small on a low-resource language or custom domain | ⭐⭐⭐ |
+| [EnCodec tour](projects/28-encodec-tour/README.md) | Use EnCodec to encode/decode audio at multiple bandwidths; listen to the reconstructions | ⭐⭐ |
+| [Speech LLM](projects/29-speech-llm/README.md) | Glue an audio encoder to a small LLM with a projector; train on AudioSet captions | ⭐⭐⭐⭐⭐ |
+| [Video frame VLM](projects/30-video-frame-vlm/README.md) | Sample 8 frames from a video, treat them as 8 images for a VLM, do video QA | ⭐⭐⭐ |
+| [Native video model](projects/31-native-video-model/README.md) | Use spatiotemporal patches (TubeViT-style) and train a small video classifier | ⭐⭐⭐⭐ |
 
 ### Sample Code: Mel Spectrogram with `torchaudio`
 
