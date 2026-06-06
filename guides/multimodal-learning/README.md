@@ -755,7 +755,7 @@ Training-ready: ~10–20% of the original crawl, dramatically higher quality
 |---------|-------------|------------|
 | [Mini LAION pipeline](projects/37-mini-laion-pipeline/README.md) | Take 1M LAION URLs, download, filter with CLIP, dedup, recaption with a small VLM — produce a clean shard | ⭐⭐⭐⭐ |
 | [Caption ablation](projects/38-caption-ablation/README.md) | Train two small VLMs: one on original alt-text, one on recaptioned text; compare downstream | ⭐⭐⭐⭐ |
-| [Modality balance](projects/39-modality-balance/README.md) | In a unified model run, deliberately under/oversample one modality; measure per-modality loss | ⭐⭐⭐⭐ |
+| [Modality ratio sweep](projects/39-modality-ratio-sweep/README.md) | In a unified model run, deliberately under/oversample one modality; sweep the sampling ratio and measure each modality's loss curve as a diagnostic | ⭐⭐⭐⭐ |
 | [Multimodal DPO](projects/40-multimodal-dpo/README.md) | Collect a small set of preference pairs over VLM outputs; fine-tune with DPO ([algorithm reference](../reinforcement-learning/#phase-9-rl-for-language-models--rlhf-dpo-grpo-rlvr)) | ⭐⭐⭐⭐ |
 | [Hallucination eval](projects/41-hallucination-eval/README.md) | Build a small benchmark of trick questions ("is there a dog in this image?" when there is none); evaluate several open VLMs | ⭐⭐⭐ |
 

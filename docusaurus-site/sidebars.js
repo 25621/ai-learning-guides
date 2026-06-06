@@ -497,7 +497,7 @@ const sidebars = {
               items: [
                 {type: 'doc', id: 'guides/multimodal-learning/projects/mini-laion-pipeline/README', label: 'Mini LAION pipeline'},
                 {type: 'doc', id: 'guides/multimodal-learning/projects/caption-ablation/README', label: 'Caption ablation'},
-                {type: 'doc', id: 'guides/multimodal-learning/projects/modality-balance/README', label: 'Modality balance'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/modality-ratio-sweep/README', label: 'Modality ratio sweep'},
                 {type: 'doc', id: 'guides/multimodal-learning/projects/multimodal-dpo/README', label: 'Multimodal DPO'},
                 {type: 'doc', id: 'guides/multimodal-learning/projects/hallucination-eval/README', label: 'Hallucination eval'},
               ],
