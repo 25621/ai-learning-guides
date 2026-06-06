@@ -406,7 +406,24 @@ const sidebars = {
           ],
         },
         {type: 'doc', id: 'guides/reinforcement-learning/README', label: 'Reinforcement Learning'},
-        {type: 'doc', id: 'guides/video-generation/README', label: 'Video Generation'},
+        {
+          type: 'category',
+          label: 'Video Generation',
+          link: {type: 'doc', id: 'guides/video-generation/README'},
+          items: [
+            {
+              type: 'category',
+              label: 'Phase 1: Foundations — Video as a Tensor',
+              items: [
+                {type: 'doc', id: 'guides/video-generation/projects/video-loader-benchmark/README', label: 'Video loader benchmark'},
+                {type: 'doc', id: 'guides/video-generation/projects/frame-extractor/README', label: 'Frame extractor'},
+                {type: 'doc', id: 'guides/video-generation/projects/optical-flow-visualizer/README', label: 'Optical flow visualizer'},
+                {type: 'doc', id: 'guides/video-generation/projects/scene-cut-detector/README', label: 'Scene-cut detector'},
+                {type: 'doc', id: 'guides/video-generation/projects/storage-study/README', label: 'Storage study'},
+              ],
+            },
+          ],
+        },
         {type: 'doc', id: 'guides/robotics/README', label: 'Robotics'},
         {
           type: 'category',

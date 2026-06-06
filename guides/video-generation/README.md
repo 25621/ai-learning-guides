@@ -131,11 +131,11 @@ Resolution × fps × duration → raw tensor size
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Video loader benchmark | Compare `torchvision.io`, `decord`, `pyav`, and `ffmpeg-python` on a folder of `.mp4`s; report decode time per clip | ⭐⭐ |
-| Frame extractor | Sample N frames evenly from a clip; sample N frames at uniform fps; observe the difference for fast vs slow scenes | ⭐⭐ |
-| Optical flow visualizer | Compute dense optical flow (RAFT, Farnebäck) between adjacent frames; color-visualize | ⭐⭐ |
-| Scene-cut detector | Detect scene boundaries via histogram or feature distance; split a movie into clips | ⭐⭐ |
-| Storage study | Take 100 clips, store as raw `.npy`, H.264 `.mp4`, and AV1 `.webm`; compare disk and decode speed | ⭐⭐ |
+| [Video loader benchmark](projects/01-video-loader-benchmark/README.md) | Compare `torchvision.io`, `decord`, `pyav`, and `ffmpeg-python` on a folder of `.mp4`s; report decode time per clip | ⭐⭐ |
+| [Frame extractor](projects/02-frame-extractor/README.md) | Sample N frames evenly from a clip; sample N frames at uniform fps; observe the difference for fast vs slow scenes | ⭐⭐ |
+| [Optical flow visualizer](projects/03-optical-flow-visualizer/README.md) | Compute dense optical flow (RAFT, Farnebäck) between adjacent frames; color-visualize | ⭐⭐ |
+| [Scene-cut detector](projects/04-scene-cut-detector/README.md) | Detect scene boundaries via histogram or feature distance; split a movie into clips | ⭐⭐ |
+| [Storage study](projects/05-storage-study/README.md) | Take 100 clips, store as raw `.npy`, H.264 `.mp4`, and AV1 `.webm`; compare disk and decode speed | ⭐⭐ |
 
 ### Sample Code: Loading a Video Clip with `decord`
 

@@ -139,6 +139,9 @@ A model that generates a sequence one piece at a time, where each new piece is p
 ### AWQ {#awq}
 Activation-aware Weight Quantization — preserve weights important to large activations
 
+### AV1 {#av1}
+A modern, royalty-free [video codec](/shared/glossary/#video-codec) — the rules for squeezing video into a small file. AV1 compresses noticeably better than older codecs like [H.264](/shared/glossary/#h264) — often 30–50% smaller files at the same quality — but it is much slower to decode, so reading AV1 video back into frames costs more CPU time. Analogy: it is like a denser ZIP format that saves disk space but takes longer to unzip. Example: storing 100 clips as AV1 `.webm` files might use a third of the disk of the same clips as H.264 `.mp4`, but take several times longer to decode each clip during training.
+
 ### Backend {#backend}
 A device- or library-specific implementation that actually executes an operation's [kernel](/shared/glossary/#kernel) — for example the CPU, [CUDA](/shared/glossary/#cuda), or [MPS](/shared/glossary/#mps) backend. The [dispatcher](/shared/glossary/#dispatcher) routes each call to the correct backend based on the tensor's device and [dtype](/shared/glossary/#dtype).
 
@@ -427,6 +430,9 @@ Function approximation + bootstrapping + off-policy data → instability
 ### Decode {#decode}
 The token-by-token half of LLM inference: after [prefill](/shared/glossary/#prefill) digests the prompt, the model generates one new token per [forward pass](/shared/glossary/#forward-pass), each step reading the whole [KV cache](/shared/glossary/#kv-cache) before producing the next [logits](/shared/glossary/#logits). Like writing a sentence one word at a time while glancing back over every word already written — fast per step, but the constant re-reading of the page is what bounds speed. Decode is [memory-bandwidth-bound](/shared/glossary/#roofline) on a GPU, the opposite of [prefill](/shared/glossary/#prefill), and is what most serving optimizations target.
 
+### decord {#decord}
+A fast video-reading library that decodes frames straight into [tensors](/shared/glossary/#tensor), built for deep-learning data loaders. Its key trick is efficient random access: you can ask for "frames 0, 30, and 90" and it jumps to them without decoding everything in between, which is exactly what frame sampling needs. Analogy: a regular video player reads a movie front to back like a cassette tape, while decord works like a book with an index — it flips straight to the page you want. Example: `vr.get_batch([0, 30, 90])` returns just those three frames as a single tensor, ready for the model.
+
 ### Decoupled {#decoupled}
 A training technique where two effects that are mathematically equivalent in standard SGD are separated into independent operations. In AdamW, weight decay is decoupled from the gradient update so that the regularization strength is not scaled by the adaptive learning rate.
 
@@ -595,6 +601,9 @@ Feed-Forward Network — the small [MLP](/shared/glossary/#mlp) inside each [tra
 ### F/T sensor {#ft-sensor}
 Force/Torque sensor — six-axis force and moment at a wrist or fingertip
 
+### Farnebäck optical flow {#farnebäck-optical-flow}
+A classical (non-neural) algorithm for computing dense [optical flow](/shared/glossary/#optical-flow), named after its inventor Gunnar Farnebäck. It estimates motion by approximating the brightness around each pixel with a small quadratic (a smooth curved surface) in both frames and solving for the shift that lines them up. Analogy: it slides a tiny transparent patch of the first frame around the second until it clicks into place, and records how far it had to move. It is fast and needs no training, but it is less accurate on large or blurry motion than a learned model like [RAFT](/shared/glossary/#raft). Example: OpenCV's `cv2.calcOpticalFlowFarneback` returns a `(H, W, 2)` array giving each pixel's left–right and up–down movement.
+
 ### FID {#fid}
 Fréchet Inception Distance — the standard sample-quality metric for image generation. ("Fréchet," after the mathematician Maurice Fréchet, names the *Fréchet distance*: a way to measure how far apart two probability distributions sit.) It runs both real and generated images through a pretrained [Inception network](/shared/glossary/#inception-network) to turn each image into a feature vector, then measures how far apart the two [clouds](/shared/glossary/#point-cloud) of features sit by comparing their means and [covariances](/shared/glossary/#covariance) (their centers and spreads). A lower FID means the generated images look statistically more like the real ones — picture two overlapping clouds of dots: the more they overlap, the smaller the distance. The real images here are only a *yardstick*, not an ingredient: your model invents brand-new images from random noise and never copies the real ones — FID simply needs a pile of real photos to compare those inventions against so it can score how convincing they are.
 
@@ -654,6 +663,9 @@ A math tool that takes a signal that changes over *time* — like a sound wave �
 
 ### Fragmentation {#fragmentation}
 Memory wasted in gaps too small to reuse, left behind when each request is given its own contiguous chunk — like a parking lot full of single empty spaces where no bus can fit even though there is plenty of total room. Paged schemes such as [PagedAttention](/shared/glossary/#pagedattention) avoid it by handing out small fixed-size pages instead of one big block per request.
+
+### Frame rate (fps) {#frame-rate-fps}
+How many still frames a video shows per second — "fps" stands for *frames per second* (e.g. 24, 30, 60). It sets how much real-world time sits between two neighboring frames, so the *same* motion looks bigger and choppier at low fps and smoother at high fps. Analogy: a flipbook drawn with 12 pages per second looks jerky; the same drawings at 60 pages per second look fluid. Example: sampling 16 frames evenly from a 2-second clip at 8 fps covers the whole clip, but grabbing 16 *consecutive* frames from a 60-fps clip covers only a quarter-second — so a model must be told which fps it is seeing.
 
 ### Frontier run {#frontier-run}
 A training run for one of the largest, most capable models at the leading edge of what is currently possible — the kind that ties up thousands of GPUs for weeks and costs millions of dollars. Because the stakes are so high, a [loss spike](/shared/glossary/#loss-spike) that cannot be recovered cleanly can throw away days of that compute, which is why teams rehearse [checkpoint](/shared/glossary/#checkpoint) recovery on small models first.
@@ -775,6 +787,9 @@ A benchmark of about 8,000 grade-school math word problems, widely used to test 
 
 ### GTSAM {#gtsam}
 Factor-graph SLAM library; the standard back-end for many modern systems
+
+### H.264 {#h264}
+The most common [video codec](/shared/glossary/#video-codec) on the internet, also called AVC (Advanced Video Coding) — the rules used to compress almost every `.mp4` you have ever streamed. It compresses well and decodes fast on nearly all hardware, which is why it is the safe default, though newer codecs like [AV1](/shared/glossary/#av1) shrink files further. Analogy: it is the JPEG of video — not the smallest or newest, but supported everywhere. Example: a 5-second 720p clip that is 333 MB as raw frames might be only a few megabytes as an H.264 `.mp4`.
 
 ### H2O {#h2o}
 Short for *Heavy-Hitter Oracle*, a [KV cache](/shared/glossary/#kv-cache) eviction method that keeps only the handful of past tokens that have been getting most of the [attention](/shared/glossary/#attention) — the "heavy hitters" — and throws the rest away. Like skimming a long book and keeping only the few sentences you keep flipping back to: you save shelf space while barely losing the plot, which lets a model serve much longer sequences in the same memory. It always keeps the very first tokens too (the [attention sink](/shared/glossary/#attention-sink)), since those anchor the model no matter what they say.
@@ -1028,6 +1043,9 @@ Markov Decision Process — the tuple `(S, A, P, R, γ)`
 ### Mechanistic interpretability {#mechanistic-interpretability}
 The line of research that tries to reverse-engineer *what individual pieces of a neural network actually do* — which neurons or [attention heads](/shared/glossary/#heads) detect what, where a fact is stored, why a particular output came out. Like opening up a watch to see which gears turn the hands, instead of only timing how fast the watch runs. Main tools: [linear probes](/shared/glossary/#linear-probe), [sparse autoencoders](/shared/glossary/#sae), activation patching, and circuit analysis.
 
+### Media container {#media-container}
+The file format that *wraps* compressed video (plus audio, subtitles, and metadata) into one file — `.mp4`, `.mov`, `.webm`, and `.mkv` are containers. The container is the box; the [video codec](/shared/glossary/#video-codec) is how the picture inside was compressed, and the two are independent — the same H.264 video can sit in an `.mp4` or a `.mov`. Analogy: a container is like a shipping box labeled on the outside, while the codec is the packing method used for the fragile thing inside. Example: a `.webm` file is a container that usually holds [AV1](/shared/glossary/#av1)- or [VP9](/shared/glossary/#video-codec)-compressed video, whereas `.mp4` most often holds [H.264](/shared/glossary/#h264).
+
 ### Medical-image segmentation {#medical-image-segmentation}
 The task of labelling *every pixel* in a medical scan (MRI, CT, X-ray, microscopy) as belonging to a particular structure — outlining a tumour, an organ, or a cell boundary — rather than just classifying the whole image with one label. The output is a per-pixel mask, like a precise coloring-book page where each region is filled with its own color. It demands very fine spatial accuracy, since a few pixels can be the difference between the edge of a tumour and healthy tissue, which is exactly why the [U-Net](/shared/glossary/#u-net)'s skip connections — carrying fine detail straight across the network — were originally designed for it. Think of tracing the exact outline of each country on a map instead of just saying "this is a map of Europe."
 
@@ -1237,6 +1255,9 @@ A task where many different answers can all be reasonable and there is no single
 ### Open model {#open-model}
 A model whose [weights](/shared/glossary/#weights) you can download and run yourself — Meta's Llama, Mistral, Qwen, DeepSeek — as opposed to a *closed* model like GPT-4 or Claude where the weights stay on the provider's servers and you can only call them through an API. Like the difference between buying a recipe book (you have the actual instructions, can modify them, can bake offline) and ordering at a restaurant (you only see the finished dish). Open models are essential for any white-box research that needs the model's internals: methods like [GCG](/shared/glossary/#gcg) optimize against the model's own [gradients](/shared/glossary/#gradients), and interpretability tools like [SAEs](/shared/glossary/#sae) read its hidden [activations](/shared/glossary/#activations) — neither is possible through a closed API.
 
+### Optical flow {#optical-flow}
+A per-pixel map of motion between two frames: for every pixel it gives an arrow saying which direction and how far that bit of the image moved. "Dense" optical flow computes an arrow for *every* pixel, versus "sparse" flow, which tracks only a few chosen points. It is the rawest form of the "motion signal" in video and shows up everywhere — data filtering, frame interpolation, and motion conditioning. Analogy: imagine laying tracing paper over two snapshots and drawing a tiny arrow from where each speck was to where it went. Example: between two frames of a car driving right, every pixel on the car gets a rightward arrow while the still background gets near-zero arrows. Common ways to compute it are the classical [Farnebäck](/shared/glossary/#farnebäck-optical-flow) algorithm and the neural [RAFT](/shared/glossary/#raft) model.
+
 ### Optimizer {#optimizer}
 An algorithm that updates model parameters using computed gradients; in PyTorch, a subclass of `torch.optim.Optimizer` that holds parameter groups and per-parameter state
 
@@ -1402,6 +1423,9 @@ Reducing weight / activation precision (FP16, BF16, FP8, INT8, INT4) to save mem
 ### RadixAttention {#radixattention}
 sglang's KV cache organized as a radix tree keyed on prompt prefixes for automatic sharing
 
+### RAFT {#raft}
+RAFT (Recurrent All-Pairs Field Transforms) is a neural network for computing dense [optical flow](/shared/glossary/#optical-flow), and on release one of the most accurate. Its core idea is to compare *all pairs* of pixels between the two frames to build a similarity volume, then iteratively refine a flow estimate with a recurrent update — repeatedly nudging the guess until it stops improving (which is the "recurrent" in its name). Analogy: it is a careful editor who, instead of guessing the motion once, keeps revising the answer over many small passes. Example: feeding RAFT two adjacent video frames returns a `(H, W, 2)` flow field that is far cleaner on fast motion than the classical [Farnebäck](/shared/glossary/#farnebäck-optical-flow) method.
+
 ### RAG {#rag}
 Retrieval-Augmented Generation — give the model an "open-book exam" instead of asking it to answer from memory alone. First a search step fetches the documents most relevant to the question (from a company wiki, a manual, the web), then those documents are pasted into the prompt, and only then does the model write its answer using them as notes. This lets it use fresh or private facts it was never trained on, and makes it easy to check where an answer came from.
 
@@ -1542,6 +1566,9 @@ A two-step tweak applied to a layer's [activations](/shared/glossary/#activation
 
 ### Scaling laws {#scaling-laws}
 The empirical finding that a model's [loss](/shared/glossary/#loss-function) drops in a smooth, predictable curve as you add [parameters](/shared/glossary/#parameters), training data, and compute — like a growth chart that lets you forecast a bigger model's quality from smaller ones before you ever build it.
+
+### Scene detection {#scene-detection}
+Automatically finding the "cuts" in a video — the hard jumps where the footage switches from one shot to another — so a long video can be split into clean single-shot clips. It works by watching for a sudden, large change between two adjacent frames, measured by something like the difference in their color histograms (a tally of how many pixels fall into each color bucket) or in deep features. Analogy: flipping through a photo album and starting a new pile every time the picture suddenly looks completely different. Example: a 90-minute movie might be split into roughly 1,500 single-shot clips, each safe to use as a training example because the motion inside it is continuous rather than spanning an editing splice.
 
 ### Scheduler {#scheduler}
 The part of an inference server that decides, at every step, which requests to start, which to keep generating, and which to pause when memory runs low — like an air-traffic controller choosing which planes take off, keep flying, or circle, so the runway (the GPU) is always busy but never overloaded. A good scheduler is often worth more real-world [throughput](/shared/glossary/#throughput) than any single clever kernel.
@@ -1878,6 +1905,9 @@ A program that automatically checks whether an answer is correct — running uni
 
 ### Very Deep VAE {#very-deep-vae}
 A [hierarchical VAE](/shared/glossary/#hierarchical-vae) (Child, 2021) that scales to dozens of stacked latent variable groups — far more layers than earlier models. Each group only handles a thin slice of the work, with [residual-like parameterizations](/shared/glossary/#residual-parameterization) keeping gradients flowing through the depth. Like adding so many floors to a building that no single floor needs to bear much weight, it achieved strong image generation quality, showing that deeper hierarchies can capture richer structure than shallow ones.
+
+### Video codec {#video-codec}
+The set of rules for compressing video into a small file and decompressing it back into frames — "codec" is short for **co**der–**dec**oder, which is literally what it does. Raw video is enormous (a few seconds can be hundreds of megabytes), so almost all real video is stored compressed; codecs exploit the fact that neighboring frames barely change. Analogy: a codec is like shorthand for a movie — instead of writing every frame in full, it writes "same as the last frame, but this corner moved." Examples include [H.264](/shared/glossary/#h264) (the universal default) and [AV1](/shared/glossary/#av1) (smaller files, slower to decode); the codec lives *inside* a [media container](/shared/glossary/#media-container) like `.mp4`.
 
 ### view {#view}
 A no-copy alias that shares storage with its source; requires a contiguous-compatible layout
