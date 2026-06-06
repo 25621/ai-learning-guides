@@ -1,0 +1,5 @@
+# Compare Attention Patterns
+
+## Key Insight
+
+The single biggest design choice in a video model is *how attention crosses the time axis*, and this project pits the three main patterns against each other on the same data, measuring both [FLOPs](/shared/glossary/#flops) (a hardware-independent count of the arithmetic each one costs) and output quality. [(2+1)D](/shared/glossary/#21d) is cheapest — each frame attends within itself, then each position attends across time in a separate step — but space and time never interact inside one layer. Full [spatiotemporal attention](/shared/glossary/#spatiotemporal-attention) lets every token attend to every other token across all frames at once, which is the most expressive but grows quadratically with `T×H×W` and gets expensive fast. [Windowed attention](/shared/glossary/#windowed-attention) is the compromise — full joint space-time attention, but only inside small local 3D windows — trading away long-range reach for far less compute. Running all three side by side turns the abstract "expressiveness vs cost" trade-off into concrete numbers you can plot.

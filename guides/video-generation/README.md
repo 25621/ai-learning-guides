@@ -340,11 +340,11 @@ Modern variant: replace all "conv" with "transformer block" → DiT (Phase 6).
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Inflate SD to a video model | Take a Stable Diffusion 1.5 U-Net, inflate to 3D (insert temporal conv + temporal attention), train on a small video dataset | ⭐⭐⭐⭐⭐ |
-| Joint image-video training | Co-train your inflated model on 90% images, 10% video; compare to video-only training on quality and motion | ⭐⭐⭐⭐ |
-| Temporal CFG study | Vary CFG strength independently for text and for image conditioning; observe trade-offs | ⭐⭐⭐ |
-| Cascaded super-resolution | Build a small "low-res video → high-res video" diffusion super-resolution model | ⭐⭐⭐⭐ |
-| Compare attention patterns | (2+1)D vs full spatiotemporal vs windowed spatiotemporal; measure FLOPs and quality | ⭐⭐⭐⭐ |
+| [Inflate SD to a video model](projects/15-inflate-sd-to-a-video-model/README.md) | Take a Stable Diffusion 1.5 U-Net, inflate to 3D (insert temporal conv + temporal attention), train on a small video dataset | ⭐⭐⭐⭐⭐ |
+| [Joint image-video training](projects/16-joint-image-video-training/README.md) | Co-train your inflated model on 90% images, 10% video; compare to video-only training on quality and motion | ⭐⭐⭐⭐ |
+| [Temporal CFG study](projects/17-temporal-cfg-study/README.md) | Vary CFG strength independently for text and for image conditioning; observe trade-offs | ⭐⭐⭐ |
+| [Cascaded super-resolution](projects/18-cascaded-super-resolution/README.md) | Build a small "low-res video → high-res video" diffusion super-resolution model | ⭐⭐⭐⭐ |
+| [Compare attention patterns](projects/19-compare-attention-patterns/README.md) | (2+1)D vs full spatiotemporal vs windowed spatiotemporal; measure FLOPs and quality | ⭐⭐⭐⭐ |
 
 ### Sample Code: A (2+1)D Transformer Block for Video
 

@@ -1,0 +1,5 @@
+# Cascaded Super-Resolution
+
+## Key Insight
+
+Generating high-resolution video in one shot is brutally expensive, so an older but instructive approach splits the job: one [diffusion model](/shared/glossary/#diffusion-model) makes a small, coarse clip, and a second model — a [super-resolution](/shared/glossary/#super-resolution) model — upscales it into a sharp one. Chaining models so each cleans up and enriches the previous one's output is [cascaded diffusion](/shared/glossary/#cascaded-diffusion); Imagen Video and Make-A-Video both used it. This project builds that second stage — a "low-res video → high-res video" diffusion model conditioned on the upsampled coarse clip — so you feel why splitting resolution across stages was the dominant pre-Sora recipe, and why modern [latent](/shared/glossary/#latent-space) models, which compress aggressively up front, mostly dropped it. The key idea is that layout and fine detail can be learned by different models at different scales, so neither has to do the whole job at full resolution.

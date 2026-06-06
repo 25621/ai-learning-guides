@@ -443,6 +443,17 @@ const sidebars = {
                 {type: 'doc', id: 'guides/video-generation/projects/camera-trajectory/README', label: 'Camera trajectory'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 4: Video Diffusion — The Modern Foundation',
+              items: [
+                {type: 'doc', id: 'guides/video-generation/projects/inflate-sd-to-a-video-model/README', label: 'Inflate SD to a video model'},
+                {type: 'doc', id: 'guides/video-generation/projects/joint-image-video-training/README', label: 'Joint image-video training'},
+                {type: 'doc', id: 'guides/video-generation/projects/temporal-cfg-study/README', label: 'Temporal CFG study'},
+                {type: 'doc', id: 'guides/video-generation/projects/cascaded-super-resolution/README', label: 'Cascaded super-resolution'},
+                {type: 'doc', id: 'guides/video-generation/projects/compare-attention-patterns/README', label: 'Compare attention patterns'},
+              ],
+            },
           ],
         },
         {type: 'doc', id: 'guides/robotics/README', label: 'Robotics'},
