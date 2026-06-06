@@ -329,7 +329,7 @@ def clip_loss(image_features, text_features, logit_scale):
 
 ### Key Insight
 
-CLIP's most important contribution was not the architecture; it was the realization that the *internet* is a labeled dataset. Every image with an alt-text or surrounding caption is a free supervised example. The contrastive objective turned this firehose of noisy data into a useful signal. The architecture (two transformers + cosine similarity) is almost an afterthought.
+CLIP's most important contribution was not the architecture; it was the realization that the *internet* is a labeled dataset. Every image with an [alt-text](/shared/glossary/#alt-text) or surrounding caption is a free supervised example. The contrastive objective turned this firehose of noisy data into a useful signal. The architecture (two transformers + cosine similarity) is almost an afterthought.
 
 ### Resources
 
@@ -753,15 +753,15 @@ Training-ready: ~10–20% of the original crawl, dramatically higher quality
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Mini LAION pipeline | Take 1M LAION URLs, download, filter with CLIP, dedup, recaption with a small VLM — produce a clean shard | ⭐⭐⭐⭐ |
-| Caption ablation | Train two small VLMs: one on original alt-text, one on recaptioned text; compare downstream | ⭐⭐⭐⭐ |
-| Modality balance | In a unified model run, deliberately under/oversample one modality; measure per-modality loss | ⭐⭐⭐⭐ |
-| Multimodal DPO | Collect a small set of preference pairs over VLM outputs; fine-tune with DPO ([algorithm reference](../reinforcement-learning/#phase-9-rl-for-language-models--rlhf-dpo-grpo-rlvr)) | ⭐⭐⭐⭐ |
-| Hallucination eval | Build a small benchmark of trick questions ("is there a dog in this image?" when there is none); evaluate several open VLMs | ⭐⭐⭐ |
+| [Mini LAION pipeline](projects/37-mini-laion-pipeline/README.md) | Take 1M LAION URLs, download, filter with CLIP, dedup, recaption with a small VLM — produce a clean shard | ⭐⭐⭐⭐ |
+| [Caption ablation](projects/38-caption-ablation/README.md) | Train two small VLMs: one on original alt-text, one on recaptioned text; compare downstream | ⭐⭐⭐⭐ |
+| [Modality balance](projects/39-modality-balance/README.md) | In a unified model run, deliberately under/oversample one modality; measure per-modality loss | ⭐⭐⭐⭐ |
+| [Multimodal DPO](projects/40-multimodal-dpo/README.md) | Collect a small set of preference pairs over VLM outputs; fine-tune with DPO ([algorithm reference](../reinforcement-learning/#phase-9-rl-for-language-models--rlhf-dpo-grpo-rlvr)) | ⭐⭐⭐⭐ |
+| [Hallucination eval](projects/41-hallucination-eval/README.md) | Build a small benchmark of trick questions ("is there a dog in this image?" when there is none); evaluate several open VLMs | ⭐⭐⭐ |
 
 ### Key Insight
 
-Two facts that dominate multimodal training at scale: (1) web alt-text is *terrible* — short, generic, often wrong; and (2) synthetic captions from a strong VLM are *much* better than human-written captions on average. The implication: data quality is itself a model-output problem. Better models make better captions, which make better models. This recursive improvement is one of the unexplained engines of recent progress.
+Two facts that dominate multimodal training at scale: (1) web [alt-text](/shared/glossary/#alt-text) is *terrible* — short, generic, often wrong; and (2) synthetic captions from a strong VLM are *much* better than human-written captions on average. The implication: data quality is itself a model-output problem. Better models make better captions, which make better models. This recursive improvement is one of the unexplained engines of recent progress.
 
 ### Resources
 
