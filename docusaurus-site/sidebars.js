@@ -480,6 +480,17 @@ const sidebars = {
                 {type: 'doc', id: 'guides/multimodal-learning/projects/native-video-model/README', label: 'Native video model'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 7: Unified and Any-to-Any Models',
+              items: [
+                {type: 'doc', id: 'guides/multimodal-learning/projects/discrete-image-tokens/README', label: 'Discrete image tokens'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/tiny-chameleon/README', label: 'Tiny Chameleon'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/modality-balancing/README', label: 'Modality balancing'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/moe-for-multimodal/README', label: 'MoE for multimodal'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/reverse-direction/README', label: 'Reverse direction'},
+              ],
+            },
           ],
         },
         {

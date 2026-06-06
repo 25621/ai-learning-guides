@@ -677,11 +677,11 @@ Cons: enormous compute; harder to leverage existing LLMs;
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Discrete image tokens | Train a small VQ-VAE on a face dataset; verify reconstruction at 1024 tokens/image (the tokenizer recipe is [Image Gen Phase 3](../image-generation/#phase-3-discrete-latents--vq-vae-vq-gan-and-modern-tokenizers)) | ⭐⭐⭐⭐ |
-| Tiny Chameleon | Tokenize images with the above VQ-VAE, interleave with text from COCO captions, train one transformer over the unified sequence | ⭐⭐⭐⭐⭐ |
-| Modality balancing | Train a unified model on text+image+audio; observe and fix one modality dominating loss | ⭐⭐⭐⭐ |
-| MoE for multimodal | Add a small MoE layer to a multimodal model; observe whether experts naturally specialize | ⭐⭐⭐⭐⭐ |
-| Reverse direction | Take a VLM (image-in → text-out) and add image generation by training an image-token output head | ⭐⭐⭐⭐⭐ |
+| [Discrete image tokens](projects/32-discrete-image-tokens/README.md) | Train a small VQ-VAE on a face dataset; verify reconstruction at 1024 tokens/image (the tokenizer recipe is [Image Gen Phase 3](../image-generation/#phase-3-discrete-latents--vq-vae-vq-gan-and-modern-tokenizers)) | ⭐⭐⭐⭐ |
+| [Tiny Chameleon](projects/33-tiny-chameleon/README.md) | Tokenize images with the above VQ-VAE, interleave with text from COCO captions, train one transformer over the unified sequence | ⭐⭐⭐⭐⭐ |
+| [Modality balancing](projects/34-modality-balancing/README.md) | Train a unified model on text+image+audio; observe and fix one modality dominating loss | ⭐⭐⭐⭐ |
+| [MoE for multimodal](projects/35-moe-for-multimodal/README.md) | Add a small MoE layer to a multimodal model; observe whether experts naturally specialize | ⭐⭐⭐⭐⭐ |
+| [Reverse direction](projects/36-reverse-direction/README.md) | Take a VLM (image-in → text-out) and add image generation by training an image-token output head | ⭐⭐⭐⭐⭐ |
 
 ### Key Insight
 
@@ -714,7 +714,7 @@ Multimodal models are dataset-bound long before they are compute-bound. This pha
 - **Data filtering** — most of LAION is unusable; CLIP-score filtering, NSFW filtering, dedup, OCR filtering, aesthetic filtering (the CLIP-score filter is the Phase 3 trick reused at scale)
 - **Synthetic captions** — recaptioning web images with a strong VLM dramatically improves downstream training (the trick behind DALL-E 3, ShareGPT4V); this is shared lore with [Image Gen Phase 10](../image-generation/) and [Video Gen Phase 10](../video-generation/)
 - **Curriculum and staged training** — start with clean alignment data, then noisier scale data, then instruction data
-- **Modality balancing** — in a unified model, if 99% of your tokens are text, the image loss will be ignored; need to upsample or reweight
+- **[Modality balancing](/shared/glossary/#modality-balancing)** — in a unified model, if 99% of your tokens are text, the image loss will be ignored; need to upsample or reweight
 - **Multimodal alignment / RLHF** — preference data with image inputs; sycophancy and hallucination are harder to fix when the model has multiple modalities to "hallucinate from." *The algorithms (PPO, DPO, GRPO) are owned by [RL Phase 9](../reinforcement-learning/#phase-9-rl-for-language-models--rlhf-dpo-grpo-rlvr); what's multimodal-specific is the preference-data collection and the visual grounding of the reward.*
 - **Safety**: NSFW filtering, CSAM detection (mandatory), bias evaluation across demographics, hallucination benchmarks
 - **Compute budgets** — typical pretraining for an open VLM is 10⁸–10⁹ image-text pairs; native multimodal is 10× more

@@ -1,0 +1,5 @@
+# Discrete Image Tokens
+
+## Key Insight
+
+A [VQ-VAE](/shared/glossary/#vq-vae) turns a picture into a small grid of whole-number codes — [discrete image tokens](/shared/glossary/#token-visualaudio) — by forcing every patch to pick the nearest entry from a fixed [codebook](/shared/glossary/#codebook), the way a paint-by-numbers kit makes you choose from a numbered palette instead of mixing any color you like. That single move is what lets a [transformer](/shared/glossary/#transformer) model images with the very same [next-token-prediction](/shared/glossary/#next-token-prediction) machinery it uses for text, which is the whole foundation of the any-to-any models in this phase. The "1024 tokens/image" target comes from laying the codes out as a 32×32 grid (32 × 32 = 1024): more tokens buy a sharper [reconstruction](/shared/glossary/#autoencoder) but a longer sequence for any downstream model to read, and along the way you must watch for [codebook collapse](/shared/glossary/#codebook-collapse), where the model leans on only a handful of codes and leaves most of the palette unused.
