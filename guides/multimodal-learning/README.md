@@ -813,11 +813,11 @@ Open-ended (LLM-judge)        MM-Vet, LLaVA-Wild user-style queries
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Run a VLM evaluation harness | Use `lmms-eval` or `VLMEvalKit` to score an open VLM across 6+ benchmarks | ⭐⭐ |
-| Build a hallucination probe | Construct 200 "is X in this image" questions; half true, half false; measure precision/recall | ⭐⭐⭐ |
-| Reproduce a leaderboard result | Pick a paper's MMBench number; reproduce; document the gap | ⭐⭐⭐ |
-| Benchmark contamination check | Search for a benchmark's test questions in a pretraining corpus shard | ⭐⭐⭐ |
-| Human-correlated eval | For 100 outputs, get 3 human ratings and 3 LLM-as-judge ratings; measure agreement | ⭐⭐⭐ |
+| [Run a VLM evaluation harness](projects/42-run-a-vlm-evaluation-harness/README.md) | Use `lmms-eval` or `VLMEvalKit` to score an open VLM across 6+ benchmarks | ⭐⭐ |
+| [Build a hallucination probe](projects/41-hallucination-eval/README.md) | Construct 200 "is X in this image" questions; half true, half false; measure precision/recall | ⭐⭐⭐ |
+| [Reproduce a leaderboard result](projects/43-reproduce-a-leaderboard-result/README.md) | Pick a paper's MMBench number; reproduce; document the gap | ⭐⭐⭐ |
+| [Benchmark contamination check](projects/44-benchmark-contamination-check/README.md) | Search for a benchmark's test questions in a pretraining corpus shard | ⭐⭐⭐ |
+| [Human-correlated eval](projects/45-human-correlated-eval/README.md) | For 100 outputs, get 3 human ratings and 3 LLM-as-judge ratings; measure agreement | ⭐⭐⭐ |
 
 ### Key Insight
 

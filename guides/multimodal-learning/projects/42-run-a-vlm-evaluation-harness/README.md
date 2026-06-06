@@ -1,0 +1,5 @@
+# Run a VLM Evaluation Harness
+
+## Key Insight
+
+Scoring a [VLM](/shared/glossary/#vlm) by hand is hopeless: there are dozens of [benchmarks](/shared/glossary/#benchmark), each with its own answer format, prompt wording, and scoring script. An [evaluation harness](/shared/glossary/#evaluation-harness) like `lmms-eval` or `VLMEvalKit` packages all of that so a single command runs your model across many benchmarks ([MMBench](/shared/glossary/#mmbench), [MMMU](/shared/glossary/#mmmu), DocVQA, and more) under identical, version-pinned conditions. This project's real lesson is that comparisons are only fair when every model sees the same prompt and is graded by the same parser — a small change in how a multiple-choice letter is extracted can swing a score by several points, so a shared harness is what makes one paper's numbers actually comparable to another's. Running it on an [open VLM](/shared/glossary/#open-model) across 6+ benchmarks turns "is this model good?" into a concrete, reproducible score table you can defend.

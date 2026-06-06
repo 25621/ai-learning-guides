@@ -571,6 +571,9 @@ The small amount of failure an [SLO](/shared/glossary/#slo) allows. If your targ
 ### Euler method {#euler-method}
 The simplest way to numerically solve a differential equation: look at the slope where you currently are, take one straight-line step in that direction, then repeat. It is easy to implement but accumulates error quickly because it ignores how the slope changes *during* the step, so diffusion samplers built on it need many steps to stay accurate. Like steering a car by only ever looking at the road directly under the bumper. Contrast with [Heun's method](/shared/glossary/#heuns-method) and [DPM-Solver](/shared/glossary/#dpm-solver), which correct for the changing slope and so need far fewer steps.
 
+### Evaluation harness {#evaluation-harness}
+A ready-made framework that runs a model through many [benchmarks](/shared/glossary/#benchmark) automatically, with the prompts, answer parsing, and scoring all fixed so every model is tested the exact same way. Like a standardized testing center that hands every candidate the same paper and grades it with the same answer key, instead of each examiner writing their own quiz. For [VLMs](/shared/glossary/#vlm) the two common ones are *lmms-eval* and *VLMEvalKit*: you point them at a model and a list of benchmarks ([MMBench](/shared/glossary/#mmbench), [MMMU](/shared/glossary/#mmmu), DocVQA, …) and they return one comparable table of scores. This matters because tiny differences in prompt wording or in how a multiple-choice letter is pulled out of the answer can swing a score by several points, so sharing one harness is what makes two papers' numbers actually comparable. Example: a single command like `python -m lmms_eval --model llava --tasks mmbench,mmmu` evaluates the model on both and prints an accuracy for each.
+
 ### ExecuTorch {#executorch}
 PyTorch's lightweight runtime for running models on mobile and edge devices, built on the graph captured by [`torch.export`](/shared/glossary/#torchexport).
 
@@ -869,6 +872,9 @@ An image-editing model that takes a photo and a plain-English instruction ("make
 ### int8 {#int8}
 8-bit integer format; storing [weights](/shared/glossary/#weights) or [activations](/shared/glossary/#activations) as int8 uses a quarter of the memory of [float32](/shared/glossary/#float32) and can run faster, at some cost in precision.
 
+### Inter-rater agreement {#inter-rater-agreement}
+A measure of how often two or more graders give the *same* scores to the same items — the check you run before trusting one grader to stand in for another. If a cheap [LLM-as-judge](/shared/glossary/#llm-as-judge) and a human reviewer rate the same 100 answers and their scores line up, the automatic judge can replace expensive human review; if they disagree a lot, it cannot. It is computed with a statistic such as a *correlation* (how well two lists of numbers rise and fall together, on a −1-to-+1 scale) or *Cohen's kappa* (the fraction of agreement beyond what random guessing alone would produce, on a roughly 0-to-1 scale, named after the psychologist Jacob Cohen). Analogy: two teachers marking the same stack of essays — if their grades nearly match you can trust either one alone next time, but if they wildly differ then the rubric (or one of the teachers) is unreliable.
+
 ### IQL {#iql}
 Implicit Q-Learning — offline RL that never queries `Q` at OOD actions
 
@@ -928,6 +934,9 @@ Latent Consistency Model — a [consistency model](/shared/glossary/#consistency
 
 ### LDM {#ldm}
 Latent Diffusion Model — diffusion in the latent space of a VAE (i.e., Stable Diffusion)
+
+### Leaderboard {#leaderboard}
+A public ranking that lists models by their score on one or more [benchmarks](/shared/glossary/#benchmark), best at the top — like a sports league table for AI models. It makes progress easy to see at a glance, but a single number hides many hidden choices (prompt wording, answer parsing, image resolution), so two groups can report different scores for the *same* model; a high rank is also suspect if the test questions leaked into training (see [contamination](/shared/glossary/#contamination)). Example: the [MMMU](/shared/glossary/#mmmu) leaderboard ranks [VLMs](/shared/glossary/#vlm) by their accuracy on the MMMU exam, and a new model's headline claim is usually "we moved up this board."
 
 ### Learnable {#learnable}
 Refers to parts of an AI model (like weights or parameters) that are not set in stone by the programmer, but are instead adjusted automatically during training to improve performance. Like the knobs on a radio that tune themselves until the station comes in perfectly clear, rather than being glued in place.
@@ -1063,11 +1072,17 @@ Attention comes *before* the MLP because a token should gather context from the 
 ### MMDiT {#mmdit}
 Multi-Modal Diffusion [Transformer](/shared/glossary/#transformer) — the [DiT](/shared/glossary/#dit) variant used in [SD3](/shared/glossary/#sd3) and [Flux](/shared/glossary/#flux) where text tokens and image tokens flow through the *same* [attention](/shared/glossary/#attention) layers ("joint attention") instead of having the image attend to the text through a separate [cross-attention](/shared/glossary/#cross-attention) step. Each [modality](/shared/glossary/#modality) (text vs image) keeps its own normalization and [MLP](/shared/glossary/#mlp) weights, but they see and influence each other inside one shared attention operation, which helps the model get compositional prompts ("a red cube on a blue sphere") right. Like seating writers and illustrators at one table where everyone hears the whole conversation, instead of passing notes between two separate rooms.
 
+### MMBench {#mmbench}
+A multiple-choice [benchmark](/shared/glossary/#benchmark) for [VLMs](/shared/glossary/#vlm) that probes many separate abilities — object recognition, spatial relationships, attribute comparison, and more — with each question offering a few labeled answer choices. To stop a model from scoring well by luck or by always favoring one letter, it asks the same question several times with the choices shuffled and counts it correct only if the model picks the right answer *every* time (a trick its authors call *CircularEval*). Like re-asking a quiz question with the options reordered to be sure the student actually knows the answer rather than having memorized "it's always C." It is one of the standard general-capability scores reported for any new VLM.
+
 ### MMLU {#mmlu}
 Massive Multitask Language Understanding — a 57-subject multiple-choice [benchmark](/shared/glossary/#benchmark) (history, law, medicine, math, and more) that became the standard quick test of how much general knowledge a model has, like a giant trivia exam spanning many school subjects at once.
 
 ### MNIST {#mnist}
 A classic dataset of 70,000 small 28×28 grayscale images of handwritten digits 0–9. It is the most common "hello world" for image models — tiny, clean, and quick to train on — so a brand-new idea is almost always tried on MNIST first, before anyone risks it on harder, fuller-color data like [CIFAR-10](/shared/glossary/#cifar-10).
+
+### MMMU {#mmmu}
+Massive Multi-discipline Multimodal Understanding — a hard [benchmark](/shared/glossary/#benchmark) of college-exam questions across many fields (medicine, engineering, art, business), where each question mixes text with an image such as a diagram, chart, or chemical structure. It is built to require real subject reasoning rather than just reading the picture, which is why even strong [VLMs](/shared/glossary/#vlm) still score far below human experts on it. Like a university final that hands you a figure and expects you to apply the course material to it, not merely describe what you see. It is the most-cited measure of frontier multimodal reasoning, and the harder *MMMU-Pro* variant adds more answer choices and trickier distractors to fight [contamination](/shared/glossary/#contamination).
 
 ### Modality {#modality}
 One type or format of data — text, images, audio, video, a depth map, and so on. Each modality has its own structure (text is a sequence of tokens, an image is a grid of pixels, audio is a waveform), so a model usually needs a dedicated encoder for each one before their information can be combined. A model that handles more than one is called *multimodal*. Think of modalities as the different human senses — sight, hearing, touch — each carrying information about the same world but in a different form, which the brain then has to fuse into one understanding. [Cross-attention](/shared/glossary/#cross-attention) is one common way to let two modalities exchange information.
@@ -1317,6 +1332,9 @@ A written review done after an incident — an outage, a slowdown — that lays 
 
 ### PPO {#ppo}
 Proximal Policy Optimization — the [workhorse](/shared/glossary/#workhorse) [on-policy](/shared/glossary/#on-policy) RL algorithm, used in classic RLHF
+
+### Precision and recall {#precision-and-recall}
+Two numbers that, used together, describe how a yes/no detector is doing — far more honest than a single accuracy figure. *Precision* asks "when the model says yes, how often is it right?" — of all the times it shouted "dog!", what fraction really had a dog. *Recall* asks "of all the real yes-cases, how many did it catch?" — of all the images that truly had a dog, how many it found. You compute each as a simple fraction: precision = true positives / (true positives + false positives); recall = true positives / (true positives + false negatives). They trade off against each other — a model that says "yes" to everything has perfect recall but terrible precision — which is exactly why a [hallucination](/shared/glossary/#hallucination) probe must report both, not just accuracy. Analogy: a fisherman's net — precision is how much of the catch is the fish you actually wanted (not boots and weeds), and recall is how many of the lake's fish you managed to net at all.
 
 ### Prefill {#prefill}
 The first stage of LLM inference: reading the *entire* prompt at once to fill the [KV cache](/shared/glossary/#kv-cache), before any new tokens are generated. Because all the prompt's tokens can be processed together in a single [forward pass](/shared/glossary/#forward-pass), prefill is compute-heavy and fast per token — like a reader skimming a whole page at a glance to grasp it before starting to write a reply. It is the opposite of [decode](/shared/glossary/#decode), which then produces the answer one token at a time, and prefill time is what sets the [time to first token](/shared/glossary/#ttft).

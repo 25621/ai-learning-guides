@@ -502,6 +502,16 @@ const sidebars = {
                 {type: 'doc', id: 'guides/multimodal-learning/projects/hallucination-eval/README', label: 'Hallucination eval'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 9: Evaluation and Benchmarks',
+              items: [
+                {type: 'doc', id: 'guides/multimodal-learning/projects/run-a-vlm-evaluation-harness/README', label: 'Run a VLM evaluation harness'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/reproduce-a-leaderboard-result/README', label: 'Reproduce a leaderboard result'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/benchmark-contamination-check/README', label: 'Benchmark contamination check'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/human-correlated-eval/README', label: 'Human-correlated eval'},
+              ],
+            },
           ],
         },
         {
