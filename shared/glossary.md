@@ -700,7 +700,7 @@ The half of a [GAN](/shared/glossary/#gans) that actually makes images: it takes
 ### GenEval {#geneval}
 A [benchmark](/shared/glossary/#benchmark) that measures how faithfully a [text-to-image](/shared/glossary/#stable-diffusion) model obeys the *structured content* of a prompt — the right number of objects, the right colors, the right spatial arrangement ("a red cube to the left of a blue sphere"). Instead of asking a person, it runs an object detector on each generated image and checks automatically whether every requested object, count, color, and position is present; the score is the fraction of prompts whose requirements were *all* satisfied. Like an exam graded against a fixed answer key rather than on handwriting: "two cats? — yes; one is orange? — no, fail." It targets compositional skills (counting, positioning, attribute binding) that beauty metrics like [FID](/shared/glossary/#fid) completely ignore.
 
-### Generator {#generator}
+### GGUF {#gguf}
 A single-file format for storing a [quantized](/shared/glossary/#quantization) model — weights plus all the metadata needed to run it — popularized by [`llama.cpp`](https://github.com/ggerganov/llama.cpp). Like a self-contained zip that a laptop or phone can open and run without extra setup, it is the format of choice for [edge and on-device inference](/shared/glossary/#edge-inference).
 
 ### Glow {#glow}
