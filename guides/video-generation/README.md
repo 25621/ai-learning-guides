@@ -255,11 +255,11 @@ No paired text needed.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Run SVD inference | Generate 14-frame and 25-frame clips with Stable Video Diffusion from arbitrary images | ⭐⭐ |
-| AnimateDiff tour | Plug AnimateDiff's motion module into a community SD 1.5 checkpoint; generate animated stills | ⭐⭐⭐ |
-| Tiny I2V model | Add 3D temporal conv layers to a frozen SD 1.5 U-Net; fine-tune on 100k clips with the first frame as condition | ⭐⭐⭐⭐⭐ |
-| Motion control | Train the above with a motion-score input; verify that low scores produce subtle motion | ⭐⭐⭐⭐ |
-| Camera trajectory | Add Plücker-coordinate camera embeddings to an I2V model; verify pan/zoom controllability | ⭐⭐⭐⭐⭐ |
+| [Run SVD inference](projects/10-run-svd-inference/README.md) | Generate 14-frame and 25-frame clips with Stable Video Diffusion from arbitrary images | ⭐⭐ |
+| [AnimateDiff tour](projects/11-animatediff-tour/README.md) | Plug AnimateDiff's motion module into a community SD 1.5 checkpoint; generate animated stills | ⭐⭐⭐ |
+| [Tiny I2V model](projects/12-tiny-i2v-model/README.md) | Add 3D temporal conv layers to a frozen SD 1.5 U-Net; fine-tune on 100k clips with the first frame as condition | ⭐⭐⭐⭐⭐ |
+| [Motion control](projects/13-motion-control/README.md) | Train the above with a motion-score input; verify that low scores produce subtle motion | ⭐⭐⭐⭐ |
+| [Camera trajectory](projects/14-camera-trajectory/README.md) | Add Plücker-coordinate camera embeddings to an I2V model; verify pan/zoom controllability | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: Inflating a 2D Conv to a (2+1)D Conv
 

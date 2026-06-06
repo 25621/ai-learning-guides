@@ -432,6 +432,17 @@ const sidebars = {
                 {type: 'doc', id: 'guides/video-generation/projects/read-mocogan/README', label: 'Read MoCoGAN'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 3: Image-to-Video as a Stepping Stone',
+              items: [
+                {type: 'doc', id: 'guides/video-generation/projects/run-svd-inference/README', label: 'Run SVD inference'},
+                {type: 'doc', id: 'guides/video-generation/projects/animatediff-tour/README', label: 'AnimateDiff tour'},
+                {type: 'doc', id: 'guides/video-generation/projects/tiny-i2v-model/README', label: 'Tiny I2V model'},
+                {type: 'doc', id: 'guides/video-generation/projects/motion-control/README', label: 'Motion control'},
+                {type: 'doc', id: 'guides/video-generation/projects/camera-trajectory/README', label: 'Camera trajectory'},
+              ],
+            },
           ],
         },
         {type: 'doc', id: 'guides/robotics/README', label: 'Robotics'},

@@ -1,0 +1,5 @@
+# Run SVD Inference
+
+## Key Insight
+
+[Stable Video Diffusion (SVD)](/shared/glossary/#stable-video-diffusion-svd) is the canonical open-weights [image-to-video (I2V)](/shared/glossary/#i2v) model: hand it a single still image and it produces a short clip that begins from that frame and invents plausible motion, with no text prompt required. This project runs SVD's two released [checkpoints](/shared/glossary/#checkpoint) — one tuned to emit 14 frames, one for 25 — on arbitrary images, so you feel both the model's range and its limits (a few seconds of motion, no real story) before building anything yourself. The reason it works at all is [temporal inflation](/shared/glossary/#temporal-inflation): SVD takes a [frozen](/shared/glossary/#frozen) [Stable Diffusion](/shared/glossary/#stable-diffusion) image model and adds new time-aware layers on top, so it inherits a strong sense of *what things look like* and only has to learn *how they move*. Running inference first — before any training — is the cheapest way to build intuition for what an I2V model can and cannot do.

@@ -5,7 +5,7 @@ Terms from all guides in this repository, sorted alphabetically. Each guide's ow
 ---
 
 ### (2+1)D {#21d}
-Factorized spatiotemporal architecture: separate spatial and temporal layers
+A way to build a video network cheaply by *factorizing* a full 3D convolution (which mixes space and time at once) into two smaller steps: first a 2D spatial layer that processes each frame on its own, then a separate 1D temporal layer that mixes information across time at each pixel location. The name reads "2 plus 1": two spatial dimensions handled together, plus one time dimension handled separately. Splitting them this way costs far less compute than a true 3D layer and — crucially — lets you initialize the spatial half from a pretrained image model and add the temporal half fresh (see [temporal inflation](/shared/glossary/#temporal-inflation)). The trade-off is that space and time never interact *within* a single layer, which can miss fast, complex motion that a full spatiotemporal layer would catch.
 
 ### 3D VAE {#3d-vae}
 Variational autoencoder that compresses video in time as well as space
@@ -84,6 +84,9 @@ The short text description attached to an image in a web page's HTML so screen r
 
 ### AMP {#amp}
 Automatic Mixed Precision — running operations in 16-bit floats ([float16](/shared/glossary/#float16) or [bfloat16](/shared/glossary/#bfloat16)) where it is safe, to save memory and speed up training while keeping a [float32](/shared/glossary/#float32) copy of the weights.
+
+### AnimateDiff {#animatediff}
+A 2023 technique that adds motion to an existing [Stable Diffusion](/shared/glossary/#stable-diffusion) image model *without retraining it*. The trick is a separately trained [motion module](/shared/glossary/#motion-module) — a small stack of time-aware ([temporal](/shared/glossary/#temporal-inflation)) layers — that you slide in between the [frozen](/shared/glossary/#frozen) image model's blocks: the image model still draws each frame, and the motion module makes consecutive frames move together coherently. Because the module is trained once on generic video and then frozen, you can drop it into almost any community [checkpoint](/shared/glossary/#checkpoint) (a custom-art-style fine-tune, say) and animate that style for free. It is the most popular concrete instance of [temporal inflation](/shared/glossary/#temporal-inflation) packaged as a reusable add-on rather than a full model.
 
 ### Anomaly detection {#anomaly-detection}
 A debugging mode (`torch.autograd.set_detect_anomaly(True)`) that makes [autograd](/shared/glossary/#autograd) check each operation and raise an error at the exact line that first produces a [NaN](/shared/glossary/#nan) or infinite [gradient](/shared/glossary/#gradients).
@@ -219,6 +222,9 @@ PyTorch's core C++ library (the "core ten[sor]" library)
 
 ### Calibration {#calibration}
 Running a few representative batches of data through a model to learn how big its [activations](/shared/glossary/#activations) typically get — their usual smallest and largest values — before [quantizing](/shared/glossary/#quantization) it. Knowing that range lets static quantization choose one fixed [int8](/shared/glossary/#int8) "scale": the conversion factor that maps the real numbers onto the 256 slots an int8 can hold. It is like measuring the tallest guest you expect before setting a doorframe height — check the real range once, then size the fixed scale so almost nothing gets clipped.
+
+### Camera control {#camera-control}
+Steering not just *what moves* in a generated video but where the virtual camera goes — pan, zoom, orbit, dolly — by feeding the model an explicit camera path. The dominant method represents each frame's camera as [Plücker coordinates](/shared/glossary/#plücker-coordinates) (a six-number description of the ray every pixel looks along) and adds those as an extra input, so the model can keep objects placed consistently as the viewpoint moves. Named systems that do this include **CameraCtrl** and **MotionCtrl**. It is one of the control surfaces — alongside the [motion score](/shared/glossary/#motion-score) and depth- or pose-conditioning — that turn a raw video generator into a directable tool.
 
 ### Canny edge detector {#canny-edge-detector}
 A classic (non-neural) algorithm that reduces a photo to a clean black-and-white map of its outlines — the lines where brightness changes sharply, such as the border between a face and the background. It works by measuring the *gradient* (how fast pixel brightness changes) at every point, keeping only the local peaks so the edges come out one pixel thin, and then linking those peaks into continuous contours. Picture tracing all the hard boundaries of a photo with a fine pen and throwing away the shading in between. [ControlNet](/shared/glossary/#controlnet) uses such an edge map as a conditioning signal: the outline says *where* shapes must go while the prompt decides *what* fills them. Named after its inventor, John Canny.
@@ -849,7 +855,7 @@ The "color name" part of a color — red, orange, green, blue, and so on — sep
 Retrieving with both dense [embedding](/shared/glossary/#embedding) search (matches meaning) and sparse keyword search ([BM25](/shared/glossary/#bm25)) (matches exact words) and merging the two result lists, so each method covers the other's weaknesses.
 
 ### I2V {#i2v}
-Image-to-Video
+Image-to-Video: the task of generating a short video clip *starting from a single still image*, where the model invents plausible motion while keeping the first frame's appearance fixed. It is easier than [text-to-video (T2V)](/shared/glossary/#t2v) because the image already settles *what the scene looks like*, leaving the model to handle only *how it moves* — and its training data is essentially free, since any video clip can be split into "first frame = input, the rest = target" with no text caption needed. [Stable Video Diffusion](/shared/glossary/#stable-video-diffusion-svd) is the canonical open I2V model.
 
 ### Identity function {#identity-function}
 A function that returns its input unchanged: `f(x) = x`. In the context of straight-through estimators, gradients are passed through a non-differentiable operation as if it were the identity function.
@@ -957,7 +963,7 @@ The time it takes to complete a single request, from input to output; distinct f
 The compressed set of numbers a model uses to represent its data internally, after stripping away the raw detail. Each point in this space stands for one possible output, and nearby points usually mean similar outputs — so you can smoothly "walk" from one to another and watch the result morph. Think of it as the model's private map of its world: instead of a full 28×28-pixel image, an [autoencoder](/shared/glossary/#autoencoder) might describe each digit with just 32 numbers, and that 32-number space is the latent space.
 
 ### Latent video {#latent-video}
-Compressed (T', H', W', C) tensor produced by a 3D VAE
+The compressed form of a video that a [3D VAE](/shared/glossary/#3d-vae) produces: instead of the raw `(T, H, W, C)` pixel [tensor](/shared/glossary/#tensor), you get a much smaller `(T', H', W', C)` grid where time, height, and width have all been shrunk (often ~100× fewer numbers overall). Modern video diffusion runs in this [latent space](/shared/glossary/#latent-space) rather than on pixels, because denoising a 100×-smaller tensor is what makes high-resolution video generation affordable at all.
 
 ### LCM {#lcm}
 Latent Consistency Model — a [consistency model](/shared/glossary/#consistency-model) distilled in the [latent space](/shared/glossary/#latent-space) of a [VAE](/shared/glossary/#vae), giving 1–4-step [Stable Diffusion](/shared/glossary/#stable-diffusion)-style sampling. It is the most practical few-step recipe for SD-style stacks, which is what makes near-interactive image generation possible.
@@ -1140,6 +1146,12 @@ A technique that accumulates a moving average of past gradients to dampen oscill
 
 ### Monosemantic {#monosemantic}
 A feature inside a neural network that fires for exactly *one* concept — for example, a direction in [activation](/shared/glossary/#activations) space that lights up only for "Golden Gate Bridge," or only for "negation in a clause." The opposite is *polysemantic*: one neuron that activates for several unrelated concepts at once. Like a single word that means just one thing versus a homonym that means several. Recovering monosemantic features is the main goal of [SAE](/shared/glossary/#sae)-based interpretability.
+
+### Motion module {#motion-module}
+The plug-in component at the heart of [AnimateDiff](/shared/glossary/#animatediff): a stack of time-aware ([temporal](/shared/glossary/#temporal-inflation)) layers — mostly [attention](/shared/glossary/#attention) along the time axis — inserted between the blocks of a [frozen](/shared/glossary/#frozen) image [U-Net](/shared/glossary/#u-net). The frozen image model still produces each frame's appearance; the motion module's only job is to look across frames and nudge them so the sequence moves smoothly instead of flickering independently. Think of it as a "motion adapter" you clip onto a still-image model — trained once on video, then reused unchanged across many image [checkpoints](/shared/glossary/#checkpoint).
+
+### Motion score {#motion-score}
+A single number handed to a video model that says *how much motion* a clip should contain — low for a near-still "animated photo", high for vigorous movement. During training it is measured from each real clip (commonly from the average [optical-flow](/shared/glossary/#optical-flow) magnitude between frames — how far pixels travel), so the model learns to associate the number with an amount of movement; at inference you set it by hand to dial motion up or down. [Stable Video Diffusion](/shared/glossary/#stable-video-diffusion-svd) calls its version the *motion bucket id*, sorting clips into discrete buckets of increasing motion rather than using a continuous value. It is the simplest control surface for video: one knob that separates *how much it moves* from *what is in it*.
 
 ### MoveIt {#moveit}
 ROS 2 manipulation-planning framework
@@ -1349,7 +1361,7 @@ Fast rigid-body dynamics library (CRBA, RNEA, ABA)
 An [autoregressive](/shared/glossary/#autoregressive-model) image model — a [CNN (Convolutional Neural Network)](/shared/glossary/#cnn) repurposed for generation — that draws a picture one pixel at a time, predicting each pixel from the pixels already drawn above it and to its left — like filling in a coloring grid square by square, always glancing back at what you have already colored to decide the next color. The image quality is strong and it can report an exact [probability](/shared/glossary/#probability-density) for any picture, but generating one is slow because the pixels must come out strictly in order, each waiting on the one before it.
 
 ### Plücker coordinates {#plücker-coordinates}
-6D representation of a camera ray; standard for camera-conditioning
+A way to describe a single straight line (here, the ray of sight through one pixel) using six numbers instead of a point-plus-direction. The six split into the ray's direction and its *moment* (a cross-product that pins down which parallel line it is), so a line floating anywhere in 3D space gets one compact, position-independent code. Video models use them for [camera control](/shared/glossary/#camera-control): give every pixel of every frame its Plücker ray and the model knows exactly which way the camera is looking, which lets learned camera moves generalize to angles never seen in training — far better than feeding raw camera-position numbers. Named after the 19th-century mathematician Julius Plücker, who introduced this line geometry.
 
 ### PoC {#poc}
 Proof of Concept — a small, rough build whose only job is to show that an idea *can* work, before anyone invests in a polished version. Like frying one test pancake to check the batter before making the whole stack: you are not trying to serve it, just to learn whether the approach is sound.
@@ -1693,6 +1705,9 @@ A trick to make [decode](/shared/glossary/#decode) faster for free: a small, fas
 ### Stable Diffusion {#stable-diffusion}
 The best-known open-source [diffusion model](/shared/glossary/#diffusion-model) for turning a text prompt into an image (first released by Stability AI in 2022). Its key trick is to do the slow denoising work in a small compressed space (the [latent](/shared/glossary/#ldm) space of a [VAE](/shared/glossary/#vae)) rather than on full-size pixels — like sketching a scene as a rough thumbnail first and only blowing it up to full resolution at the very end — which makes it light enough to run on a single consumer GPU. Because the weights were released publicly, it sparked a huge ecosystem of fine-tunes and add-ons such as [LoRA](/shared/glossary/#lora), [ControlNet](/shared/glossary/#controlnet), and [DreamBooth](/shared/glossary/#dreambooth).
 
+### Stable Video Diffusion (SVD) {#stable-video-diffusion-svd}
+Stability AI's open-weights [image-to-video (I2V)](/shared/glossary/#i2v) model (2023), the canonical baseline for turning a single still image into a short clip. It is built by [temporal inflation](/shared/glossary/#temporal-inflation): it [freezes](/shared/glossary/#frozen) a pretrained [Stable Diffusion](/shared/glossary/#stable-diffusion) image model and adds new time-aware layers that learn motion, so it keeps Stable Diffusion's strong sense of appearance and only has to learn how things move. Released in two variants — one tuned to generate 14 frames, one for 25 — it conditions on the input image (not text), which makes it the easiest strong model to run for hands-on I2V experiments. It also exposes a [motion score](/shared/glossary/#motion-score) input to control how much movement the clip contains.
+
 ### State dict {#state-dict}
 A Python `OrderedDict` that maps every parameter and buffer name to its tensor value; the standard format for saving, loading, and transplanting PyTorch model weights
 
@@ -1754,7 +1769,7 @@ A message placed at the very start of a chat conversation that tells the model h
 Data-flow matmul fabric used in TPUs
 
 ### T2V {#t2v}
-Text-to-Video
+Text-to-Video: generating a video clip from a text prompt alone, with no image to start from — the model must invent both *what the scene contains* and *how it moves*. This makes it harder than [image-to-video (I2V)](/shared/glossary/#i2v), where the first frame is given, and it needs paired text–video training data, which is scarce. Sora, Veo, and Kling are well-known T2V systems.
 
 ### T5 {#t5}
 A text [transformer](/shared/glossary/#transformer) (Google's "Text-to-Text Transfer Transformer") that reads a sentence and produces rich embeddings of its meaning. Unlike [CLIP](/shared/glossary/#clip)'s text encoder, which was trained only to match images to short captions, T5 was trained on general language tasks, so it captures long, detailed prompts and word order more faithfully — which is why models like Imagen, SD3, and Flux feed it (often the large "T5-XXL" variant) into [cross-attention](/shared/glossary/#cross-attention) for better prompt adherence.
@@ -1778,7 +1793,7 @@ Twin Delayed DDPG — DDPG plus three stability fixes
 A [sampling](/shared/glossary/#sampling) knob that scales the model's scores before [softmax](/shared/glossary/#softmax): low temperature (e.g. 0.2) sharpens the distribution so the model plays it safe and repeats the likeliest words, while high temperature (e.g. 1.5) flattens it so rarer, more surprising words can win. Think of it as a creativity dial — turn it down for factual answers, up for brainstorming. The same knob appears in [contrastive learning](/shared/glossary/#infonce) (written τ): there the similarity scores are *divided* by τ before the softmax, so a small τ (CLIP learns one starting around 0.07) sharpens the contest and forces the model to focus on its [hardest negatives](/shared/glossary/#hard-negatives), while a large τ softens it — too small destabilizes training, too large and even the true pair is barely preferred.
 
 ### Temporal inflation {#temporal-inflation}
-Adding time-axis layers to a pretrained 2D model
+The dominant trick for making a video model out of an existing *image* model: take a pretrained 2D network, insert new layers that operate along the time axis (temporal convolutions or temporal [attention](/shared/glossary/#attention)), and usually initialize them as an *identity* (pass-through) so that, at the start of training, the inflated model behaves exactly like the original image model run frame by frame. You then [fine-tune](/shared/glossary/#fine-tuning) so the new layers gradually learn motion while the spatial layers keep everything they already knew about appearance. "Inflation" captures the picture of taking a flat 2D model and puffing it out into the third (time) dimension. [Stable Video Diffusion](/shared/glossary/#stable-video-diffusion-svd), [AnimateDiff](/shared/glossary/#animatediff), and Make-A-Video all use variants of this; the 2024+ frontier (Sora-class models) instead trains spatiotemporal models from scratch.
 
 ### Tensor {#tensor}
 A grid of numbers — the basic container deep learning uses for almost everything. A single number is a 0-D tensor, a list of numbers is 1-D (a *vector*), a table is 2-D (a *matrix*), and you can keep stacking into 3-D and beyond — for example a color image is a 3-D tensor of height × width × 3 color channels. Under the hood it is a (storage, shape, stride, offset, dtype, device, requires_grad) tuple viewing a 1-D [storage](/shared/glossary/#storage) buffer, but the everyday idea is simply "an N-dimensional array of numbers the GPU can crunch in parallel."
@@ -1901,7 +1916,7 @@ Robot description formats (ROS, MuJoCo, NVIDIA respectively)
 One message a user sends in a chat conversation, paired with the model's reply (the *assistant turn*). A back-and-forth between user and assistant is a sequence of alternating turns, all under the same opening [system prompt](/shared/glossary/#system-prompt). In typical traffic, the system prompt is long and fixed while each user turn is short and varies — which is exactly the pattern a [prefix cache](/shared/glossary/#prefix-cache) exploits.
 
 ### V2V {#v2v}
-Video-to-Video
+Video-to-Video: transforming an existing video into a new one while keeping its motion and timing — for example restyling it into a cartoon, or re-rendering it conditioned on per-frame depth or pose. The hard part is *temporal consistency*: editing each frame independently makes the result flicker, so V2V methods share information across frames. Contrast with [image-to-video](/shared/glossary/#i2v) (one image in) and [text-to-video](/shared/glossary/#t2v) (text only).
 
 ### Vanishing gradients {#vanishing-gradients}
 A problem during training where [gradients](/shared/glossary/#gradients) become extremely small, effectively preventing the weights from changing their value and stalling the learning process.
