@@ -1,0 +1,5 @@
+# Mini LAION Pipeline
+
+## Key Insight
+
+For a multimodal model the data matters more than the architecture, and raw web data like [LAION](/shared/glossary/#laion) is mostly unusable straight out of the crawl — full of duplicates, [alt-text](/shared/glossary/#alt-text) that has nothing to do with the picture, and tiny or broken images. A practical pipeline chains cheap filters in a fixed order so each one shrinks the work for the next: drop repeated images ([deduplication](/shared/glossary/#deduplication)), keep only image–caption pairs that a [CLIP](/shared/glossary/#clip) model scores as a good match (the *CLIP-score* filter — the [Phase 3 data-filtering trick](../14-data-filtering-with-clip/README.md) reused at web scale), then rewrite the weak captions into rich descriptions with a [VLM](/shared/glossary/#vlm) ([synthetic captions](/shared/glossary/#synthetic-captions)), and finally pack the survivors into streaming [WebDataset](/shared/glossary/#webdataset) shards. The lesson you feel by building it: you throw away 80–90% of a web crawl, and the clean 10–20% that remains trains a far better model than the whole noisy pile ever could.

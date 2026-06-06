@@ -1,0 +1,5 @@
+# Multimodal DPO
+
+## Key Insight
+
+[DPO (Direct Preference Optimization)](/shared/glossary/#dpo) teaches a model to prefer better answers by training directly on pairs of (chosen, rejected) responses, with no separate [reward model](/shared/glossary/#reward-model) and no [reinforcement-learning loop](/shared/glossary/#rlhf) to babysit — which is exactly what makes it cheap enough to run on a small project. The multimodal twist is *where the preference pairs come from*: each pair is two [VLM](/shared/glossary/#vlm) answers to the same image-and-question, and a common reason one answer is "rejected" is [hallucination](/shared/glossary/#hallucination) — confidently describing an object that isn't actually in the picture. Collecting even a few hundred such image-grounded preference pairs and [fine-tuning](/shared/glossary/#fine-tuning) with DPO measurably cuts that hallucination, showing that alignment for multimodal models is less about new algorithms than about preference data anchored to what the image really contains.

@@ -329,7 +329,7 @@ def clip_loss(image_features, text_features, logit_scale):
 
 ### Key Insight
 
-CLIP's most important contribution was not the architecture; it was the realization that the *internet* is a labeled dataset. Every image with an alt-text or surrounding caption is a free supervised example. The contrastive objective turned this firehose of noisy data into a useful signal. The architecture (two transformers + cosine similarity) is almost an afterthought.
+CLIP's most important contribution was not the architecture; it was the realization that the *internet* is a labeled dataset. Every image with an [alt-text](/shared/glossary/#alt-text) or surrounding caption is a free supervised example. The contrastive objective turned this firehose of noisy data into a useful signal. The architecture (two transformers + cosine similarity) is almost an afterthought.
 
 ### Resources
 
@@ -582,12 +582,12 @@ Result shape: (T, 80)   ← T is the number of time frames
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Mel spectrogram from scratch | Implement STFT and a mel filterbank; visualize a 10-second clip | ⭐⭐ |
-| Whisper fine-tune | Fine-tune Whisper-small on a low-resource language or custom domain | ⭐⭐⭐ |
-| EnCodec tour | Use EnCodec to encode/decode audio at multiple bandwidths; listen to the reconstructions | ⭐⭐ |
-| Speech LLM | Glue an audio encoder to a small LLM with a projector; train on AudioSet captions | ⭐⭐⭐⭐⭐ |
-| Video frame VLM | Sample 8 frames from a video, treat them as 8 images for a VLM, do video QA | ⭐⭐⭐ |
-| Native video model | Use spatiotemporal patches (TubeViT-style) and train a small video classifier | ⭐⭐⭐⭐ |
+| [Mel spectrogram from scratch](projects/26-mel-spectrogram-from-scratch/README.md) | Implement STFT and a mel filterbank; visualize a 10-second clip | ⭐⭐ |
+| [Whisper fine-tune](projects/27-whisper-fine-tune/README.md) | Fine-tune Whisper-small on a low-resource language or custom domain | ⭐⭐⭐ |
+| [EnCodec tour](projects/28-encodec-tour/README.md) | Use EnCodec to encode/decode audio at multiple bandwidths; listen to the reconstructions | ⭐⭐ |
+| [Speech LLM](projects/29-speech-llm/README.md) | Glue an audio encoder to a small LLM with a projector; train on AudioSet captions | ⭐⭐⭐⭐⭐ |
+| [Video frame VLM](projects/30-video-frame-vlm/README.md) | Sample 8 frames from a video, treat them as 8 images for a VLM, do video QA | ⭐⭐⭐ |
+| [Native video model](projects/31-native-video-model/README.md) | Use spatiotemporal patches (TubeViT-style) and train a small video classifier | ⭐⭐⭐⭐ |
 
 ### Sample Code: Mel Spectrogram with `torchaudio`
 
@@ -677,11 +677,11 @@ Cons: enormous compute; harder to leverage existing LLMs;
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Discrete image tokens | Train a small VQ-VAE on a face dataset; verify reconstruction at 1024 tokens/image (the tokenizer recipe is [Image Gen Phase 3](../image-generation/#phase-3-discrete-latents--vq-vae-vq-gan-and-modern-tokenizers)) | ⭐⭐⭐⭐ |
-| Tiny Chameleon | Tokenize images with the above VQ-VAE, interleave with text from COCO captions, train one transformer over the unified sequence | ⭐⭐⭐⭐⭐ |
-| Modality balancing | Train a unified model on text+image+audio; observe and fix one modality dominating loss | ⭐⭐⭐⭐ |
-| MoE for multimodal | Add a small MoE layer to a multimodal model; observe whether experts naturally specialize | ⭐⭐⭐⭐⭐ |
-| Reverse direction | Take a VLM (image-in → text-out) and add image generation by training an image-token output head | ⭐⭐⭐⭐⭐ |
+| [Discrete image tokens](projects/32-discrete-image-tokens/README.md) | Train a small VQ-VAE on a face dataset; verify reconstruction at 1024 tokens/image (the tokenizer recipe is [Image Gen Phase 3](../image-generation/#phase-3-discrete-latents--vq-vae-vq-gan-and-modern-tokenizers)) | ⭐⭐⭐⭐ |
+| [Tiny Chameleon](projects/33-tiny-chameleon/README.md) | Tokenize images with the above VQ-VAE, interleave with text from COCO captions, train one transformer over the unified sequence | ⭐⭐⭐⭐⭐ |
+| [Modality balancing](projects/34-modality-balancing/README.md) | Train a unified model on text+image+audio; observe and fix one modality dominating loss | ⭐⭐⭐⭐ |
+| [MoE for multimodal](projects/35-moe-for-multimodal/README.md) | Add a small MoE layer to a multimodal model; observe whether experts naturally specialize | ⭐⭐⭐⭐⭐ |
+| [Reverse direction](projects/36-reverse-direction/README.md) | Take a VLM (image-in → text-out) and add image generation by training an image-token output head | ⭐⭐⭐⭐⭐ |
 
 ### Key Insight
 
@@ -714,7 +714,7 @@ Multimodal models are dataset-bound long before they are compute-bound. This pha
 - **Data filtering** — most of LAION is unusable; CLIP-score filtering, NSFW filtering, dedup, OCR filtering, aesthetic filtering (the CLIP-score filter is the Phase 3 trick reused at scale)
 - **Synthetic captions** — recaptioning web images with a strong VLM dramatically improves downstream training (the trick behind DALL-E 3, ShareGPT4V); this is shared lore with [Image Gen Phase 10](../image-generation/) and [Video Gen Phase 10](../video-generation/)
 - **Curriculum and staged training** — start with clean alignment data, then noisier scale data, then instruction data
-- **Modality balancing** — in a unified model, if 99% of your tokens are text, the image loss will be ignored; need to upsample or reweight
+- **[Modality balancing](/shared/glossary/#modality-balancing)** — in a unified model, if 99% of your tokens are text, the image loss will be ignored; need to upsample or reweight
 - **Multimodal alignment / RLHF** — preference data with image inputs; sycophancy and hallucination are harder to fix when the model has multiple modalities to "hallucinate from." *The algorithms (PPO, DPO, GRPO) are owned by [RL Phase 9](../reinforcement-learning/#phase-9-rl-for-language-models--rlhf-dpo-grpo-rlvr); what's multimodal-specific is the preference-data collection and the visual grounding of the reward.*
 - **Safety**: NSFW filtering, CSAM detection (mandatory), bias evaluation across demographics, hallucination benchmarks
 - **Compute budgets** — typical pretraining for an open VLM is 10⁸–10⁹ image-text pairs; native multimodal is 10× more
@@ -753,15 +753,15 @@ Training-ready: ~10–20% of the original crawl, dramatically higher quality
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Mini LAION pipeline | Take 1M LAION URLs, download, filter with CLIP, dedup, recaption with a small VLM — produce a clean shard | ⭐⭐⭐⭐ |
-| Caption ablation | Train two small VLMs: one on original alt-text, one on recaptioned text; compare downstream | ⭐⭐⭐⭐ |
-| Modality balance | In a unified model run, deliberately under/oversample one modality; measure per-modality loss | ⭐⭐⭐⭐ |
-| Multimodal DPO | Collect a small set of preference pairs over VLM outputs; fine-tune with DPO ([algorithm reference](../reinforcement-learning/#phase-9-rl-for-language-models--rlhf-dpo-grpo-rlvr)) | ⭐⭐⭐⭐ |
-| Hallucination eval | Build a small benchmark of trick questions ("is there a dog in this image?" when there is none); evaluate several open VLMs | ⭐⭐⭐ |
+| [Mini LAION pipeline](projects/37-mini-laion-pipeline/README.md) | Take 1M LAION URLs, download, filter with CLIP, dedup, recaption with a small VLM — produce a clean shard | ⭐⭐⭐⭐ |
+| [Caption ablation](projects/38-caption-ablation/README.md) | Train two small VLMs: one on original alt-text, one on recaptioned text; compare downstream | ⭐⭐⭐⭐ |
+| [Modality ratio sweep](projects/39-modality-ratio-sweep/README.md) | In a unified model run, deliberately under/oversample one modality; sweep the sampling ratio and measure each modality's loss curve as a diagnostic | ⭐⭐⭐⭐ |
+| [Multimodal DPO](projects/40-multimodal-dpo/README.md) | Collect a small set of preference pairs over VLM outputs; fine-tune with DPO ([algorithm reference](../reinforcement-learning/#phase-9-rl-for-language-models--rlhf-dpo-grpo-rlvr)) | ⭐⭐⭐⭐ |
+| [Hallucination eval](projects/41-hallucination-eval/README.md) | Build a small benchmark of trick questions ("is there a dog in this image?" when there is none); evaluate several open VLMs | ⭐⭐⭐ |
 
 ### Key Insight
 
-Two facts that dominate multimodal training at scale: (1) web alt-text is *terrible* — short, generic, often wrong; and (2) synthetic captions from a strong VLM are *much* better than human-written captions on average. The implication: data quality is itself a model-output problem. Better models make better captions, which make better models. This recursive improvement is one of the unexplained engines of recent progress.
+Two facts that dominate multimodal training at scale: (1) web [alt-text](/shared/glossary/#alt-text) is *terrible* — short, generic, often wrong; and (2) synthetic captions from a strong VLM are *much* better than human-written captions on average. The implication: data quality is itself a model-output problem. Better models make better captions, which make better models. This recursive improvement is one of the unexplained engines of recent progress.
 
 ### Resources
 
@@ -813,11 +813,11 @@ Open-ended (LLM-judge)        MM-Vet, LLaVA-Wild user-style queries
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Run a VLM evaluation harness | Use `lmms-eval` or `VLMEvalKit` to score an open VLM across 6+ benchmarks | ⭐⭐ |
-| Build a hallucination probe | Construct 200 "is X in this image" questions; half true, half false; measure precision/recall | ⭐⭐⭐ |
-| Reproduce a leaderboard result | Pick a paper's MMBench number; reproduce; document the gap | ⭐⭐⭐ |
-| Benchmark contamination check | Search for a benchmark's test questions in a pretraining corpus shard | ⭐⭐⭐ |
-| Human-correlated eval | For 100 outputs, get 3 human ratings and 3 LLM-as-judge ratings; measure agreement | ⭐⭐⭐ |
+| [Run a VLM evaluation harness](projects/42-run-a-vlm-evaluation-harness/README.md) | Use `lmms-eval` or `VLMEvalKit` to score an open VLM across 6+ benchmarks | ⭐⭐ |
+| [Build a hallucination probe](projects/41-hallucination-eval/README.md) | Construct 200 "is X in this image" questions; half true, half false; measure precision/recall | ⭐⭐⭐ |
+| [Reproduce a leaderboard result](projects/43-reproduce-a-leaderboard-result/README.md) | Pick a paper's MMBench number; reproduce; document the gap | ⭐⭐⭐ |
+| [Benchmark contamination check](projects/44-benchmark-contamination-check/README.md) | Search for a benchmark's test questions in a pretraining corpus shard | ⭐⭐⭐ |
+| [Human-correlated eval](projects/45-human-correlated-eval/README.md) | For 100 outputs, get 3 human ratings and 3 LLM-as-judge ratings; measure agreement | ⭐⭐⭐ |
 
 ### Key Insight
 

@@ -468,6 +468,50 @@ const sidebars = {
                 {type: 'doc', id: 'guides/multimodal-learning/projects/inference-optimization/README', label: 'Inference optimization'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 6: Audio, Speech, and Video',
+              items: [
+                {type: 'doc', id: 'guides/multimodal-learning/projects/mel-spectrogram-from-scratch/README', label: 'Mel spectrogram from scratch'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/whisper-fine-tune/README', label: 'Whisper fine-tune'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/encodec-tour/README', label: 'EnCodec tour'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/speech-llm/README', label: 'Speech LLM'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/video-frame-vlm/README', label: 'Video frame VLM'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/native-video-model/README', label: 'Native video model'},
+              ],
+            },
+            {
+              type: 'category',
+              label: 'Phase 7: Unified and Any-to-Any Models',
+              items: [
+                {type: 'doc', id: 'guides/multimodal-learning/projects/discrete-image-tokens/README', label: 'Discrete image tokens'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/tiny-chameleon/README', label: 'Tiny Chameleon'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/modality-balancing/README', label: 'Modality balancing'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/moe-for-multimodal/README', label: 'MoE for multimodal'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/reverse-direction/README', label: 'Reverse direction'},
+              ],
+            },
+            {
+              type: 'category',
+              label: 'Phase 8: Training at Scale — Data, Compute, and Alignment',
+              items: [
+                {type: 'doc', id: 'guides/multimodal-learning/projects/mini-laion-pipeline/README', label: 'Mini LAION pipeline'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/caption-ablation/README', label: 'Caption ablation'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/modality-ratio-sweep/README', label: 'Modality ratio sweep'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/multimodal-dpo/README', label: 'Multimodal DPO'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/hallucination-eval/README', label: 'Hallucination eval'},
+              ],
+            },
+            {
+              type: 'category',
+              label: 'Phase 9: Evaluation and Benchmarks',
+              items: [
+                {type: 'doc', id: 'guides/multimodal-learning/projects/run-a-vlm-evaluation-harness/README', label: 'Run a VLM evaluation harness'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/reproduce-a-leaderboard-result/README', label: 'Reproduce a leaderboard result'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/benchmark-contamination-check/README', label: 'Benchmark contamination check'},
+                {type: 'doc', id: 'guides/multimodal-learning/projects/human-correlated-eval/README', label: 'Human-correlated eval'},
+              ],
+            },
           ],
         },
         {
