@@ -206,10 +206,10 @@ have not seriously competed with diffusion since ~2023.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Moving MNIST predictor | Train a ConvLSTM to predict the next 10 frames given 10; classic baseline | ⭐⭐⭐ |
-| FILM frame interpolation | Use a pretrained FILM to interpolate between two real frames; observe motion artifacts | ⭐⭐ |
-| Tiny video GAN | Train a small video GAN on UCF-101 face crops — observe mode collapse firsthand | ⭐⭐⭐⭐ |
-| Read MoCoGAN | Implement just the latent-disentanglement idea (content + motion latents) in a small VAE | ⭐⭐⭐ |
+| [Moving MNIST predictor](projects/06-moving-mnist-predictor/README.md) | Train a ConvLSTM to predict the next 10 frames given 10; classic baseline | ⭐⭐⭐ |
+| [FILM frame interpolation](projects/07-film-frame-interpolation/README.md) | Use a pretrained FILM to interpolate between two real frames; observe motion artifacts | ⭐⭐ |
+| [Tiny video GAN](projects/08-tiny-video-gan/README.md) | Train a small video GAN on UCF-101 face crops — observe mode collapse firsthand | ⭐⭐⭐⭐ |
+| [Read MoCoGAN](projects/09-read-mocogan/README.md) | Implement just the latent-disentanglement idea (content + motion latents) in a small VAE | ⭐⭐⭐ |
 
 ### Key Insight
 

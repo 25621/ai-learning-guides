@@ -422,6 +422,16 @@ const sidebars = {
                 {type: 'doc', id: 'guides/video-generation/projects/storage-study/README', label: 'Storage study'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 2: Classical and Early Neural Video Generation',
+              items: [
+                {type: 'doc', id: 'guides/video-generation/projects/moving-mnist-predictor/README', label: 'Moving MNIST predictor'},
+                {type: 'doc', id: 'guides/video-generation/projects/film-frame-interpolation/README', label: 'FILM frame interpolation'},
+                {type: 'doc', id: 'guides/video-generation/projects/tiny-video-gan/README', label: 'Tiny video GAN'},
+                {type: 'doc', id: 'guides/video-generation/projects/read-mocogan/README', label: 'Read MoCoGAN'},
+              ],
+            },
           ],
         },
         {type: 'doc', id: 'guides/robotics/README', label: 'Robotics'},
