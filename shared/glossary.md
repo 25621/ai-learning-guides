@@ -355,8 +355,19 @@ An add-on that gives a frozen [diffusion model](/shared/glossary/#diffusion-mode
 ### ConvLSTM {#convlstm}
 An [LSTM](/shared/glossary/#lstm) that swaps its internal matrix multiplications for [convolutions](/shared/glossary/#convolution-layers), so it can carry memory across time *and* keep the 2D spatial layout of each frame instead of flattening it into a single vector. A plain LSTM treats its input as a flat list of numbers, which throws away which pixel sat next to which; a ConvLSTM keeps the grid intact, so a local fact like "this corner is getting brighter" stays local. That makes it a natural fit for [future frame prediction](/shared/glossary/#future-frame-prediction), where both *what* changes and *where* it changes matter. It was the standard baseline for video prediction before transformers and diffusion took over, and later recurrent variants such as PredRNN refined the same idea with extra memory paths between layers.
 
-### Convolution layers {#convolution-layers}
-The building-block layers of a [CNN](/shared/glossary/#cnn). Each one slides a small grid of learned numbers — a *filter* (also called a *kernel*) — step by step across the image, and at every stop it multiplies the filter against the patch underneath, adds up the result, and writes that single number into a new grid. Sweep the whole image and those numbers form a "feature map" that lights up wherever the filter's pattern appears. Picture a stencil cut in the shape of a vertical edge: drag it over a photo and it leaves a bright mark everywhere there *is* a vertical edge and stays dark elsewhere. One filter might hunt for edges, another for a patch of red, another for a curve; stacking many convolution layers lets the network build up from simple textures to whole objects. Reusing the same small filter everywhere is what keeps convolutions cheap and lets them spot a pattern no matter where it sits in the picture.
+### Convolution Layers
+These are the foundational building blocks of a [Convolutional Neural Network (CNN)](/shared/glossary/#cnn). Their job is to scan an image and hunt for specific patterns.
+
+Each layer uses a small grid of numbers—called a *filter* or *kernel*—that acts like a tiny pattern detector. The network slides this filter systematically, step by step, across the entire image. At every pause, the filter looks exclusively at the small patch of the image directly *underneath* it, checks how well that patch matches the pattern it is hunting for, and spits out a single "match score." As the filter sweeps over the whole image, it records these scores onto a new, blank grid called a **feature map**.
+
+Picture a small, transparent stencil painted with red-and-white stripes. You drag this stencil step by step over a crowded "Where's Waldo?" poster:
+
+* When the stencil is *underneath* a patch of blue sky or a green tree, the patterns don't match, so it leaves a "0" (a dark mark) on your feature map.
+* But when you slide the stencil directly over Waldo's shirt, the stripes align perfectly, leaving a high score (a bright mark) on your feature map.
+
+By the end of the sweep, your feature map acts as a glowing treasure map, lighting up exactly where Waldo's shirt is located.
+
+In a real network, one filter might hunt for stripes, another for glasses, and another for the curve of a beanie cap. By stacking many of these convolution layers together, the network pieces together simple clues to eventually recognize a complex object like Waldo himself. Because the network reuses the same tiny filter across the entire poster, the process stays incredibly efficient—and ensures that the pattern is found no matter where it is hiding in the picture.
 
 ### copy {#copy}
 A tensor that owns its own storage, independent of any source tensor; created by `.clone()`, or automatically by operations like `.contiguous()` and `reshape` when a view is not possible
