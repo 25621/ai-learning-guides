@@ -454,6 +454,17 @@ const sidebars = {
                 {type: 'doc', id: 'guides/video-generation/projects/compare-attention-patterns/README', label: 'Compare attention patterns'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 5: Latent Video Diffusion and Video Tokenizers',
+              items: [
+                {type: 'doc', id: 'guides/video-generation/projects/frame-by-frame-2d-vae/README', label: 'Frame-by-frame 2D VAE'},
+                {type: 'doc', id: 'guides/video-generation/projects/train-a-small-3d-vae/README', label: 'Train a small 3D VAE'},
+                {type: 'doc', id: 'guides/video-generation/projects/causal-3d-vae/README', label: 'Causal 3D VAE'},
+                {type: 'doc', id: 'guides/video-generation/projects/magvit-v2-style-tokenizer/README', label: 'MagViT-v2-style tokenizer'},
+                {type: 'doc', id: 'guides/video-generation/projects/diffusion-on-latents/README', label: 'Diffusion on latents'},
+              ],
+            },
           ],
         },
         {type: 'doc', id: 'guides/robotics/README', label: 'Robotics'},

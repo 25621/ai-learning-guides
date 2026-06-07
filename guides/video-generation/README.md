@@ -430,11 +430,11 @@ That's 16× less data — and crucially, diffusion now runs over 30 latent
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Frame-by-frame 2D VAE | Use Stable Diffusion's VAE on video frames independently; observe temporal flicker in reconstructions | ⭐⭐ |
-| Train a small 3D VAE | (B, 3, T, H, W) → (B, C, T', H', W'); compress 4× in time, 8× in space; train on UCF-101 | ⭐⭐⭐⭐⭐ |
-| Causal 3D VAE | Modify the above to causal in time so it handles single images correctly (T=1 → T'=1) | ⭐⭐⭐⭐ |
-| MagViT-v2-style tokenizer | Train a discrete video tokenizer using FSQ or LFQ quantization; measure reconstruction FID | ⭐⭐⭐⭐⭐ |
-| Diffusion on latents | Plug the 3D VAE in front of a small diffusion model from Phase 4; compare training speed and quality to pixel-space | ⭐⭐⭐⭐ |
+| [Frame-by-frame 2D VAE](projects/20-frame-by-frame-2d-vae/README.md) | Use Stable Diffusion's VAE on video frames independently; observe temporal flicker in reconstructions | ⭐⭐ |
+| [Train a small 3D VAE](projects/21-train-a-small-3d-vae/README.md) | (B, 3, T, H, W) → (B, C, T', H', W'); compress 4× in time, 8× in space; train on UCF-101 | ⭐⭐⭐⭐⭐ |
+| [Causal 3D VAE](projects/22-causal-3d-vae/README.md) | Modify the above to causal in time so it handles single images correctly (T=1 → T'=1) | ⭐⭐⭐⭐ |
+| [MagViT-v2-style tokenizer](projects/23-magvit-v2-style-tokenizer/README.md) | Train a discrete video tokenizer using FSQ or LFQ quantization; measure reconstruction FID | ⭐⭐⭐⭐⭐ |
+| [Diffusion on latents](projects/24-diffusion-on-latents/README.md) | Plug the 3D VAE in front of a small diffusion model from Phase 4; compare training speed and quality to pixel-space | ⭐⭐⭐⭐ |
 
 ### Key Insight
 
