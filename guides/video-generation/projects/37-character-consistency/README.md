@@ -1,0 +1,5 @@
+# Character Consistency
+
+## Key Insight
+
+The hardest part of stitching many shots into one story is keeping the *same* character looking like themselves across cuts — a failure called [drift](/shared/glossary/#character-consistency), where a face or outfit morphs from shot to shot. This project fights drift two ways and measures which works better: an [IP-Adapter](/shared/glossary/#ip-adapter), which injects a reference image's appearance into the model through extra [cross-attention](/shared/glossary/#cross-attention) layers, and a character [LoRA](/shared/glossary/#lora), a tiny adapter fine-tuned on a few images of that character. Both pin the identity without retraining the whole [text-to-video](/shared/glossary/#t2v) model, but they trade off differently: the IP-Adapter needs no training and accepts any new reference on the fly, while the LoRA must be trained per character but usually reproduces it more faithfully. You quantify the leftover drift by turning each generated face into an [embedding](/shared/glossary/#embedding) and watching how far it moves shot to shot.

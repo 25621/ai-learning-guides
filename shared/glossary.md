@@ -241,6 +241,9 @@ A [3D VAE](/shared/glossary/#3d-vae) built so that each frame is encoded using o
 ### Causal mask {#causal-mask}
 A mask applied to [attention](/shared/glossary/#attention) scores that hides future positions, so each token can attend only to itself and the tokens before it. In machine learning, "causal" means "respecting the flow of time" — just as an effect cannot precede its cause, a causal model cannot look into the future to process the present.
 
+### CausVid {#causvid}
+A method for fast, [streaming](/shared/glossary/#streaming-video-generation) video generation that [distills](/shared/glossary/#distillation) a slow, high-quality diffusion "teacher" — which denoises a whole clip at once and needs dozens of steps — into a *causal* [autoregressive](/shared/glossary/#autoregressive-model) "student" that emits frames in time order using only a few steps each. "Caus" is short for *causal*: like the [causal mask](/shared/glossary/#causal-mask) in a language model, each frame may look only at frames already generated, never future ones, which is what lets the model run indefinitely and start showing output immediately. It is one of the current recipes (alongside [Self-Forcing](/shared/glossary/#self-forcing)) for real-time and infinite-length video.
+
 ### CBF {#cbf}
 Control Barrier Function — runtime safety filter via a constraint on `ḣ`
 
@@ -261,6 +264,9 @@ A calculus principle used to compute the derivative of a composite function by m
 
 ### Chameleon {#chameleon}
 Meta's family of [native multimodal](/shared/glossary/#native-multimodal) models that treat text and images as one single stream of [tokens](/shared/glossary/#token-visualaudio): pictures are turned into image tokens by a [VQ-VAE](/shared/glossary/#vq-vae), mixed in with ordinary text tokens, and a single [transformer](/shared/glossary/#transformer) is trained from scratch over the combined sequence with one plain [next-token-prediction](/shared/glossary/#next-token-prediction) objective. This is the [early-fusion](/shared/glossary/#fusion-earlymiddlelate) recipe taken to its extreme — there is no separate vision encoder bolted on, so the model can read and write any interleaving of words and image patches. Analogy: instead of a writer and an illustrator passing a notebook back and forth, one person who was taught from the start to "write" in both words and pictures sketches and types along the same flowing line. Example: handed a recipe that is half text and half photos, Chameleon continues it by emitting the next word *or* the next patch of an image, whichever comes next; the name nods to the lizard that blends seamlessly into any surroundings — here, any mix of modalities.
+
+### Character consistency {#character-consistency}
+Keeping the *same* person or object looking like themselves across the many separate shots that make up a long video — the same face, hairstyle, and clothing in shot 5 as in shot 1. The failure mode is called **drift**: because each shot is generated somewhat independently, small differences pile up until the character slowly morphs into someone else. Fixes pin the identity to a fixed reference — an [IP-Adapter](/shared/glossary/#ip-adapter) that feeds a reference image's appearance into every shot, or a character [LoRA](/shared/glossary/#lora) fine-tuned on a few pictures of that character. You measure the leftover drift by turning each generated face into an [embedding](/shared/glossary/#embedding) and checking how far it travels from shot to shot. Like a film's continuity supervisor making sure an actor's costume and haircut match between takes shot weeks apart. Related named systems include DreamBooth-Video and ID-Animator.
 
 ### Chat template {#chat-template}
 The structured format (system/user/assistant) the model is fine-tuned on
@@ -503,6 +509,9 @@ Denavit-Hartenberg parameters — textbook arm-geometry description
 
 ### Dial {#dial}
 Used throughout these guides as a verb: *to dial* a value up or down means to adjust it smoothly anywhere along a continuous range — the way you turn a knob — instead of flipping a switch that is only ever fully on or fully off (the same idea as a [soft gate](/shared/glossary/#soft-gate)). The word borrows from a physical dial: a round gauge you rotate, so its setting *is* an angle. That rotating-angle picture is also why a dial is an apt image for [RoPE](/shared/glossary/#rope), which marks a token's position by rotating its vectors through an angle. Examples elsewhere in this glossary: a [temperature](/shared/glossary/#temperature) dial that trades safe answers for creative ones, or a [motion score](/shared/glossary/#motion-score) that dials how much a generated video moves.
+
+### Diffusion Forcing {#diffusion-forcing}
+A training trick that gives *each frame its own independent noise level* instead of noising the whole clip to the same amount. Because the model learns to denoise a sequence whose frames sit at different stages of cleanup, at generation time it can hold earlier frames clean while denoising later ones — letting one model both denoise a full clip at once *and* roll out frame-by-frame like an [autoregressive model](/shared/glossary/#autoregressive-model). It is the bridge between full-sequence [diffusion](/shared/glossary/#diffusion-model) and next-frame prediction, and underlies several long-form and [streaming](/shared/glossary/#streaming-video-generation) video methods. The name captures the idea that each frame is independently "forced" to a chosen noise level.
 
 ### Diffusion model {#diffusion-model}
 A generative model that learns to *un-noise* an image (or video, or audio). 
@@ -880,6 +889,9 @@ The matrix of all second partial derivatives of a function — it captures the *
 ### Heun's method {#heuns-method}
 A second-order ODE solver that improves on the [Euler method](/shared/glossary/#euler-method) with a predict-then-correct step: it takes a tentative Euler step, measures the slope at that new point too, then moves using the *average* of the start and end slopes. Averaging the two slopes cancels much of the error Euler makes, so Heun reaches the same accuracy in far fewer steps — which is why it is the default sampler in [EDM](/shared/glossary/#edm). Like checking the road both where you are and where you're about to be, then steering down the middle. Named after the German mathematician Karl Heun.
 
+### Hierarchical generation {#hierarchical-generation}
+Building a long or complex video in *stages from coarse to fine* rather than all at once: first decide the big structure — a [shot list](/shared/glossary/#shot-list) or a handful of [keyframes](/shared/glossary/#keyframe) spread across the timeline — then fill in the detailed frames between them. Working top-down keeps a long video coherent, because the overall plan is fixed before any single moment is rendered, the same way a director storyboards a film before shooting it. Contrast it with generating a clip straight through frame by frame, where the story has no plan to hold it together and tends to wander. It is one of the main strategies (alongside [sliding-window generation](/shared/glossary/#sliding-window-generation) and [streaming](/shared/glossary/#streaming-video-generation)) for getting past the few-second limit of a single model.
+
 ### Hierarchical VAE {#hierarchical-vae}
 A [VAE](/shared/glossary/#vae) with several layers of latent variables stacked at different scales instead of just one. Higher levels capture the big picture (overall layout and shape) while lower levels fill in fine detail (texture and edges), much like an artist who first sketches rough shapes and then adds the small touches. Splitting the work across levels lets the model represent complex images far better than a single flat [latent space](/shared/glossary/#latent-space) can. [NVAE](/shared/glossary/#nvae) and [Very Deep VAE](/shared/glossary/#very-deep-vae) are well-known examples.
 
@@ -955,6 +967,9 @@ An image-editing model that takes a photo and a plain-English instruction ("make
 ### Inter-rater agreement {#inter-rater-agreement}
 A measure of how often two or more graders give the *same* scores to the same items — the check you run before trusting one grader to stand in for another. If a cheap [LLM-as-judge](/shared/glossary/#llm-as-judge) and a human reviewer rate the same 100 answers and their scores line up, the automatic judge can replace expensive human review; if they disagree a lot, it cannot. It is computed with a statistic such as a *correlation* (how well two lists of numbers rise and fall together, on a −1-to-+1 scale) or *Cohen's kappa* (the fraction of agreement beyond what random guessing alone would produce, on a roughly 0-to-1 scale, named after the psychologist Jacob Cohen). Analogy: two teachers marking the same stack of essays — if their grades nearly match you can trust either one alone next time, but if they wildly differ then the rubric (or one of the teachers) is unreliable.
 
+### IP-Adapter {#ip-adapter}
+A lightweight add-on that lets a [diffusion model](/shared/glossary/#diffusion-model) take an *image* as a prompt alongside (or instead of) text — you hand it a reference picture and it copies that subject's appearance or style into what it generates. It works by encoding the reference image and feeding it through a small set of *extra* [cross-attention](/shared/glossary/#cross-attention) layers added next to the existing text ones (the "IP" stands for *image prompt*), so the base model's own [weights](/shared/glossary/#weights) stay frozen and untouched. Because it needs no per-subject training and accepts any new reference on the fly, it is a popular way to hold a character or style steady across shots (see [character consistency](/shared/glossary/#character-consistency)). Like handing an artist a photo and saying "draw new scenes, but keep this person looking exactly like this."
+
 ### IQL {#iql}
 Implicit Q-Learning — offline RL that never queries `Q` at OOD actions
 
@@ -981,6 +996,9 @@ A single function that runs on the GPU (or CPU) to carry out one operation, such
 
 ### Kernel fusion {#kernel-fusion}
 Combining several small operations into one [kernel](/shared/glossary/#kernel) so the hardware reads and writes memory fewer times and pays fewer launch costs.
+
+### Keyframe {#keyframe}
+A frame chosen to anchor a specific moment in a video — the picture you fix in place first and then build motion around. The term comes from hand-drawn animation, where a lead artist draws the important "key" poses and assistants fill in the frames between them. In long-form generation you create a few keyframes spread seconds apart to lock down how the scene looks at those points, then use an [image-to-video](/shared/glossary/#i2v) or [frame-interpolation](/shared/glossary/#frame-interpolation) model to invent the frames in between — a form of [hierarchical generation](/shared/glossary/#hierarchical-generation). Choosing keyframes well matters: two that are too different cannot be smoothly bridged.
 
 ### KF {#kf}
 Kalman Filter — optimal linear-Gaussian Bayes filter
@@ -1709,6 +1727,9 @@ Sampling many independent [chain-of-thought](/shared/glossary/#cot) solutions to
 ### Self-distillation {#self-distillation}
 A twist on [distillation](/shared/glossary/#distillation) where the "teacher" and the "student" are the *same* model instead of a big teacher and a smaller student — the network learns by trying to match its *own* output on a slightly different view of the same input. Like checking your work by solving a problem a second way and forcing the two answers to agree: there is no answer key and no smarter tutor, so the network teaches itself just by staying consistent. Concrete example: in [DINOv2](/shared/glossary/#dinov2), a "teacher" copy (which is just a slowly-updated running average of the "student") looks at one crop of a photo while the student looks at a *different* crop, and the student is trained to reproduce the description the teacher gave — so the model learns [features](/shared/glossary/#embedding) that stay the same when an object is moved or cropped, all with no human labels. Because the teacher is only a smoothed copy of the student, this is a form of [self-supervised](/shared/glossary/#self-supervised) learning, and the slow averaging is what stops the network from cheating by collapsing to one constant answer for every image.
 
+### Self-Forcing {#self-forcing}
+A training method for [autoregressive](/shared/glossary/#autoregressive-model) video models that closes the gap between how they are trained and how they actually run. Normally such a model is trained to predict the next frame given *real* past frames, but at generation time it must feed on its *own* earlier outputs, whose small errors compound into drift — a mismatch called *exposure bias*. Self-Forcing fixes this by making the model generate from its own predictions *during training* too ("forcing" it to rely on itself), so it learns to cope with its own mistakes. Combined with [distillation](/shared/glossary/#distillation), it is a current recipe (alongside [CausVid](/shared/glossary/#causvid)) for real-time, long, [streaming](/shared/glossary/#streaming-video-generation) video.
+
 ### Self-supervised {#self-supervised}
 Learning from raw, unlabeled data by inventing the labels from the data itself — for example hiding part of an input and asking the model to predict the missing piece, or asking whether two altered views came from the same original. No human annotation is needed, so the model can train on billions of images or sentences nobody had to tag. Like learning a language by covering up words in books you already own and guessing them, instead of paying a tutor to quiz you. This is how [DINOv2](/shared/glossary/#dinov2) learns vision features and how the masked- and next-token objectives behind most [LLMs](/shared/glossary/#llm) work; contrast it with supervised training, which needs an answer key.
 
@@ -1726,6 +1747,9 @@ The size of a tensor along each dimension; the tuple returned by `.shape`
 
 ### Sharding {#sharding}
 Splitting a dataset (or model) into many smaller pieces so they can be stored, loaded, or processed in parallel.
+
+### Shot list {#shot-list}
+A structured plan that breaks a story into an ordered sequence of individual shots, each with its own short description of what happens in it — exactly the storyboard a film director writes before shooting. In video generation a [large language model](/shared/glossary/#llm) can act as the "director," expanding a one-line prompt into such a list (often as JSON), after which each shot is generated separately and the clips are stitched together. This is the planning step of [hierarchical generation](/shared/glossary/#hierarchical-generation): deciding *what happens in what order* before any frames are made is what lets a long video follow a sensible narrative instead of drifting aimlessly. Systems like VideoTetris and MovieDreamer build on this idea.
 
 ### SigLIP {#siglip}
 [Sigmoid-loss](/shared/glossary/#sigmoid-loss) CLIP — a [CLIP](/shared/glossary/#clip) variant that swaps CLIP's batch-wide [softmax](/shared/glossary/#softmax) [contrastive loss](/shared/glossary/#infonce) for a [sigmoid loss](/shared/glossary/#sigmoid-loss), which scores each image–text pair on its own as an independent yes/no match. Judging pairs one at a time means it trains well even with small [batches](/shared/glossary/#batch), where CLIP needs very large ones to gather enough negatives to compare against. SigLIP 2 (2025) extends it with better data and multilingual training.
@@ -1747,6 +1771,9 @@ Simultaneous Localization and Mapping
 
 ### SLI {#sli}
 Service Level Indicator — the actual measured number for how well a service is doing, such as the real percentage of requests that succeeded or answered within 500 ms. The [SLO](/shared/glossary/#slo) is the *target*; the SLI is the *measurement* you compare against it — like the speedometer reading (SLI) versus the posted speed limit (SLO).
+
+### Sliding-window generation {#sliding-window-generation}
+A way to make a video longer than a model's trained clip length without retraining it: generate a series of short clips that *overlap* by a few frames, then blend the overlapping frames so the joins are seamless. Sliding a fixed-size window forward a little at a time is where the name comes from. Its weakness is long-range coherence — the only information tying distant parts together is whatever the small overlap can carry forward, so the scene slowly *drifts*, with colors and details creeping away from the opening. It is the cheapest long-form trick because it wraps any existing [text-to-video](/shared/glossary/#t2v) model; **FreeNoise** and **Gen-L-Video** are named methods that refine how the overlaps are blended (for example, reusing a shared noise pattern so neighboring windows stay consistent).
 
 ### SLO {#slo}
 Service Level Objective — a specific, measurable promise about how a service should perform, such as "p95 [TTFT](/shared/glossary/#ttft) under 500 ms" or "99.9% of requests succeed." It is the target you design toward and get alerted on, like a delivery company promising most parcels arrive within two days. The measured reality you check it against is the [SLI](/shared/glossary/#sli), and the slack it allows for failure is the [error budget](/shared/glossary/#error-budget).
@@ -1801,6 +1828,9 @@ A trick for training through a step that has no usable gradient — such as the 
 
 ### Streaming {#streaming}
 Sending the model's reply to the client one piece at a time as it is generated, instead of waiting for the whole answer and then returning it in a single response. Over HTTP this is usually done with Server-Sent Events (SSE) or chunked transfer encoding; the connection stays open and the server flushes each new token as soon as it is sampled. Like a waiter who brings each course out as it leaves the kitchen rather than holding the whole meal until dessert is ready — the user sees [TTFT](/shared/glossary/#ttft) drop dramatically even though total generation time is the same.
+
+### Streaming video generation {#streaming-video-generation}
+Producing a video frame-by-frame (or chunk-by-chunk) and emitting each piece *as soon as it is ready*, conditioning every new chunk on the ones already made — instead of computing the whole clip before showing anything. This is what makes real-time and open-ended (potentially infinite) video possible: you see frames immediately and generation can run as long as you keep asking. It typically reuses a [KV cache](/shared/glossary/#kv-cache) so each new chunk does not recompute the [attention](/shared/glossary/#attention) over all earlier frames, and pairs with [distillation](/shared/glossary/#distillation) into few-step models for speed. [CausVid](/shared/glossary/#causvid), [Self-Forcing](/shared/glossary/#self-forcing), and StreamingT2V are examples. It is the video analog of how a chatbot [streams](/shared/glossary/#streaming) words out one at a time rather than waiting for the full answer.
 
 ### Stride {#stride}
 The number of storage elements to step over for each dimension of a tensor

@@ -487,6 +487,17 @@ const sidebars = {
                 {type: 'doc', id: 'guides/video-generation/projects/lora-for-video/README', label: 'LoRA for video'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 8: Long-Form and Consistent Video',
+              items: [
+                {type: 'doc', id: 'guides/video-generation/projects/sliding-window-t2v/README', label: 'Sliding-window T2V'},
+                {type: 'doc', id: 'guides/video-generation/projects/keyframe-interpolation/README', label: 'Keyframe interpolation'},
+                {type: 'doc', id: 'guides/video-generation/projects/character-consistency/README', label: 'Character consistency'},
+                {type: 'doc', id: 'guides/video-generation/projects/llm-shot-planner/README', label: 'LLM shot planner'},
+                {type: 'doc', id: 'guides/video-generation/projects/streaming-t2v/README', label: 'Streaming T2V'},
+              ],
+            },
           ],
         },
         {type: 'doc', id: 'guides/robotics/README', label: 'Robotics'},

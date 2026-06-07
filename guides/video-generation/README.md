@@ -639,11 +639,11 @@ B. Hierarchical (designed-in):
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Sliding-window T2V | Take an open T2V model; generate 30 seconds by overlapping 5-sec clips; blend in latent space | ⭐⭐⭐⭐ |
-| Keyframe interpolation | Generate 4 keyframes 5 sec apart, then use an I2V or interpolation model to fill in | ⭐⭐⭐⭐ |
-| Character consistency | Use a reference-image encoder (IP-Adapter / character LoRA) across multiple shots; measure drift | ⭐⭐⭐⭐⭐ |
-| LLM shot planner | Use a small LLM to expand "a knight rescues a princess" into a JSON shot list; generate each shot; evaluate coherence | ⭐⭐⭐⭐⭐ |
-| Streaming T2V | Implement chunk-by-chunk generation with a cached KV state across chunks; measure latency vs quality | ⭐⭐⭐⭐⭐ |
+| [Sliding-window T2V](projects/35-sliding-window-t2v/README.md) | Take an open T2V model; generate 30 seconds by overlapping 5-sec clips; blend in latent space | ⭐⭐⭐⭐ |
+| [Keyframe interpolation](projects/36-keyframe-interpolation/README.md) | Generate 4 keyframes 5 sec apart, then use an I2V or interpolation model to fill in | ⭐⭐⭐⭐ |
+| [Character consistency](projects/37-character-consistency/README.md) | Use a reference-image encoder (IP-Adapter / character LoRA) across multiple shots; measure drift | ⭐⭐⭐⭐⭐ |
+| [LLM shot planner](projects/38-llm-shot-planner/README.md) | Use a small LLM to expand "a knight rescues a princess" into a JSON shot list; generate each shot; evaluate coherence | ⭐⭐⭐⭐⭐ |
+| [Streaming T2V](projects/39-streaming-t2v/README.md) | Implement chunk-by-chunk generation with a cached KV state across chunks; measure latency vs quality | ⭐⭐⭐⭐⭐ |
 
 ### Key Insight
 
