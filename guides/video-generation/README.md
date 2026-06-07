@@ -568,12 +568,12 @@ text + object trajectory  →  trajectory-controlled   Boximator, DragAnything
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Long-prompt handling | Train or fine-tune with T5-XXL prompts (up to 256 tokens); compare against CLIP-L conditioning on adherence | ⭐⭐⭐⭐ |
-| ControlNet-Video | Adapt ControlNet to a video diffusion model; condition on depth maps across all frames | ⭐⭐⭐⭐ |
-| Camera control | Add Plücker-coordinate camera embeddings; verify pan / zoom / orbit work | ⭐⭐⭐⭐ |
-| Talking head | Run EMO or Hallo on a portrait + audio clip; fine-tune for a specific speaker | ⭐⭐⭐⭐ |
-| Video inversion + edit | Invert a real clip into latent noise; replace an object via prompt edit | ⭐⭐⭐⭐⭐ |
-| LoRA for video | Train a video LoRA on ~50 clips of a specific style or character | ⭐⭐⭐⭐ |
+| [Long-prompt handling](projects/30-long-prompt-handling/README.md) | Train or fine-tune with T5-XXL prompts (up to 256 tokens); compare against CLIP-L conditioning on adherence | ⭐⭐⭐⭐ |
+| [ControlNet-Video](projects/31-controlnet-video/README.md) | Adapt ControlNet to a video diffusion model; condition on depth maps across all frames | ⭐⭐⭐⭐ |
+| [Camera control](projects/14-camera-trajectory/README.md) | Add Plücker-coordinate camera embeddings; verify pan / zoom / orbit work | ⭐⭐⭐⭐ |
+| [Talking head](projects/32-talking-head/README.md) | Run EMO or Hallo on a portrait + audio clip; fine-tune for a specific speaker | ⭐⭐⭐⭐ |
+| [Video inversion + edit](projects/33-video-inversion-edit/README.md) | Invert a real clip into latent noise; replace an object via prompt edit | ⭐⭐⭐⭐⭐ |
+| [LoRA for video](projects/34-lora-for-video/README.md) | Train a video LoRA on ~50 clips of a specific style or character | ⭐⭐⭐⭐ |
 
 ### Key Insight
 

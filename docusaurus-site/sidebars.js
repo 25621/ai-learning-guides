@@ -476,6 +476,17 @@ const sidebars = {
                 {type: 'doc', id: 'guides/video-generation/projects/variable-resolution/README', label: 'Variable resolution'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 7: Conditioning, Control, and Editing',
+              items: [
+                {type: 'doc', id: 'guides/video-generation/projects/long-prompt-handling/README', label: 'Long-prompt handling'},
+                {type: 'doc', id: 'guides/video-generation/projects/controlnet-video/README', label: 'ControlNet-Video'},
+                {type: 'doc', id: 'guides/video-generation/projects/talking-head/README', label: 'Talking head'},
+                {type: 'doc', id: 'guides/video-generation/projects/video-inversion-edit/README', label: 'Video inversion + edit'},
+                {type: 'doc', id: 'guides/video-generation/projects/lora-for-video/README', label: 'LoRA for video'},
+              ],
+            },
           ],
         },
         {type: 'doc', id: 'guides/robotics/README', label: 'Robotics'},
