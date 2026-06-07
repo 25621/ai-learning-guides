@@ -465,6 +465,17 @@ const sidebars = {
                 {type: 'doc', id: 'guides/video-generation/projects/diffusion-on-latents/README', label: 'Diffusion on latents'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 6: Diffusion Transformers (DiT) and Sora-Class Models',
+              items: [
+                {type: 'doc', id: 'guides/video-generation/projects/implement-dit-for-video/README', label: 'Implement DiT for video'},
+                {type: 'doc', id: 'guides/video-generation/projects/flow-matching-from-scratch/README', label: 'Flow matching from scratch'},
+                {type: 'doc', id: 'guides/video-generation/projects/read-and-reproduce-opensora/README', label: 'Read and reproduce OpenSora'},
+                {type: 'doc', id: 'guides/video-generation/projects/mmdit-for-video/README', label: 'MMDiT for video'},
+                {type: 'doc', id: 'guides/video-generation/projects/variable-resolution/README', label: 'Variable resolution'},
+              ],
+            },
           ],
         },
         {type: 'doc', id: 'guides/robotics/README', label: 'Robotics'},

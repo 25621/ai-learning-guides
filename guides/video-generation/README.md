@@ -505,11 +505,11 @@ At inference:
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Implement DiT for video | Take a published DiT image implementation; extend to (T, H, W) patches and 3D RoPE; train on a small video dataset | ⭐⭐⭐⭐⭐ |
-| Flow matching from scratch | Replace DDPM with rectified flow / flow matching in a small video DiT; compare convergence | ⭐⭐⭐⭐ |
-| Read and reproduce OpenSora | Run inference on a pretrained OpenSora checkpoint; modify one component (e.g., the VAE), retrain | ⭐⭐⭐⭐⭐ |
-| MMDiT for video | Implement the SD3-style joint text-video attention; verify text adherence improves | ⭐⭐⭐⭐⭐ |
-| Variable resolution | Modify your DiT to handle arbitrary `(T, H, W)` at inference (Sora's claim); test on aspect ratios it didn't see at training | ⭐⭐⭐⭐⭐ |
+| [Implement DiT for video](projects/25-implement-dit-for-video/README.md) | Take a published DiT image implementation; extend to (T, H, W) patches and 3D RoPE; train on a small video dataset | ⭐⭐⭐⭐⭐ |
+| [Flow matching from scratch](projects/26-flow-matching-from-scratch/README.md) | Replace DDPM with rectified flow / flow matching in a small video DiT; compare convergence | ⭐⭐⭐⭐ |
+| [Read and reproduce OpenSora](projects/27-read-and-reproduce-opensora/README.md) | Run inference on a pretrained OpenSora checkpoint; modify one component (e.g., the VAE), retrain | ⭐⭐⭐⭐⭐ |
+| [MMDiT for video](projects/28-mmdit-for-video/README.md) | Implement the SD3-style joint text-video attention; verify text adherence improves | ⭐⭐⭐⭐⭐ |
+| [Variable resolution](projects/29-variable-resolution/README.md) | Modify your DiT to handle arbitrary `(T, H, W)` at inference (Sora's claim); test on aspect ratios it didn't see at training | ⭐⭐⭐⭐⭐ |
 
 ### Key Insight
 
