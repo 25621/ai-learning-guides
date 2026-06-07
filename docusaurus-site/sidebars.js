@@ -406,7 +406,67 @@ const sidebars = {
           ],
         },
         {type: 'doc', id: 'guides/reinforcement-learning/README', label: 'Reinforcement Learning'},
-        {type: 'doc', id: 'guides/video-generation/README', label: 'Video Generation'},
+        {
+          type: 'category',
+          label: 'Video Generation',
+          link: {type: 'doc', id: 'guides/video-generation/README'},
+          items: [
+            {
+              type: 'category',
+              label: 'Phase 1: Foundations — Video as a Tensor',
+              items: [
+                {type: 'doc', id: 'guides/video-generation/projects/video-loader-benchmark/README', label: 'Video loader benchmark'},
+                {type: 'doc', id: 'guides/video-generation/projects/frame-extractor/README', label: 'Frame extractor'},
+                {type: 'doc', id: 'guides/video-generation/projects/optical-flow-visualizer/README', label: 'Optical flow visualizer'},
+                {type: 'doc', id: 'guides/video-generation/projects/scene-cut-detector/README', label: 'Scene-cut detector'},
+                {type: 'doc', id: 'guides/video-generation/projects/storage-study/README', label: 'Storage study'},
+              ],
+            },
+            {
+              type: 'category',
+              label: 'Phase 2: Classical and Early Neural Video Generation',
+              items: [
+                {type: 'doc', id: 'guides/video-generation/projects/moving-mnist-predictor/README', label: 'Moving MNIST predictor'},
+                {type: 'doc', id: 'guides/video-generation/projects/film-frame-interpolation/README', label: 'FILM frame interpolation'},
+                {type: 'doc', id: 'guides/video-generation/projects/tiny-video-gan/README', label: 'Tiny video GAN'},
+                {type: 'doc', id: 'guides/video-generation/projects/read-mocogan/README', label: 'Read MoCoGAN'},
+              ],
+            },
+            {
+              type: 'category',
+              label: 'Phase 3: Image-to-Video as a Stepping Stone',
+              items: [
+                {type: 'doc', id: 'guides/video-generation/projects/run-svd-inference/README', label: 'Run SVD inference'},
+                {type: 'doc', id: 'guides/video-generation/projects/animatediff-tour/README', label: 'AnimateDiff tour'},
+                {type: 'doc', id: 'guides/video-generation/projects/tiny-i2v-model/README', label: 'Tiny I2V model'},
+                {type: 'doc', id: 'guides/video-generation/projects/motion-control/README', label: 'Motion control'},
+                {type: 'doc', id: 'guides/video-generation/projects/camera-trajectory/README', label: 'Camera trajectory'},
+              ],
+            },
+            {
+              type: 'category',
+              label: 'Phase 4: Video Diffusion — The Modern Foundation',
+              items: [
+                {type: 'doc', id: 'guides/video-generation/projects/inflate-sd-to-a-video-model/README', label: 'Inflate SD to a video model'},
+                {type: 'doc', id: 'guides/video-generation/projects/joint-image-video-training/README', label: 'Joint image-video training'},
+                {type: 'doc', id: 'guides/video-generation/projects/temporal-cfg-study/README', label: 'Temporal CFG study'},
+                {type: 'doc', id: 'guides/video-generation/projects/cascaded-super-resolution/README', label: 'Cascaded super-resolution'},
+                {type: 'doc', id: 'guides/video-generation/projects/compare-attention-patterns/README', label: 'Compare attention patterns'},
+              ],
+            },
+            {
+              type: 'category',
+              label: 'Phase 5: Latent Video Diffusion and Video Tokenizers',
+              items: [
+                {type: 'doc', id: 'guides/video-generation/projects/frame-by-frame-2d-vae/README', label: 'Frame-by-frame 2D VAE'},
+                {type: 'doc', id: 'guides/video-generation/projects/train-a-small-3d-vae/README', label: 'Train a small 3D VAE'},
+                {type: 'doc', id: 'guides/video-generation/projects/causal-3d-vae/README', label: 'Causal 3D VAE'},
+                {type: 'doc', id: 'guides/video-generation/projects/magvit-v2-style-tokenizer/README', label: 'MagViT-v2-style tokenizer'},
+                {type: 'doc', id: 'guides/video-generation/projects/diffusion-on-latents/README', label: 'Diffusion on latents'},
+              ],
+            },
+          ],
+        },
         {type: 'doc', id: 'guides/robotics/README', label: 'Robotics'},
         {
           type: 'category',

@@ -4,6 +4,30 @@ A comprehensive guide to understanding and building video generation systems —
 
 > **Video generation = image generation + time.** That one sentence is both true and dangerously misleading. The "+ time" introduces problems that have no image-gen analog: temporal consistency, motion priors, enormous compute (a 5-second 720p clip is ~150 images), and the brutal scarcity of high-quality paired video-text data. This guide is about how the field solved (and is still solving) those problems.
 
+### Scope and boundaries
+
+This guide owns the **generative modeling of video** — the moment you add a time axis to image generation and have to model motion, temporal consistency, and the compute explosion that comes with both. To keep the AI Learning Guides mutually exclusive and collectively exhaustive (MECE), it deliberately stops at a few borders and links forward to the guide that owns each one.
+
+**In scope — this guide owns these topics:**
+- **Video as a spatiotemporal signal** — shapes, frame rate, codecs, the cost model, and why latent compression is non-negotiable
+- **The time axis on top of diffusion** — temporal layers, (2+1)D vs full spatiotemporal attention, temporal inflation of pretrained image models
+- **3D / causal video VAEs and discrete video tokenizers** — the compressors that make video diffusion tractable
+- **Video DiTs and Sora-class models** — patchified latent video, 3D RoPE, flow matching applied to video
+- **Image-to-video, video-to-video, and video-specific control** — first-frame/keyframe conditioning, camera and motion control, talking heads, video editing
+- **Long-form and consistent video** — sliding-window, hierarchical, autoregressive, and streaming generation
+- **Generative world models and interactive/playable video** — action-conditioned video as a simulator (Genie, GameNGen, driving/embodied world models), from the *generation* side
+- **Native audio-video joint generation, video-data engineering, and video evaluation** — the parts that differ from the image recipe
+
+**Out of scope — deferred to the owning guide:**
+- *Diffusion/VAE/GAN/flow fundamentals, U-Net and DiT mechanics, score/EDM theory, image tokenizers (VQ-VAE, FSQ, LFQ)* → [Image Generation](../image-generation/). This guide assumes all of it and only adds the time axis. If DDPM, latent diffusion, classifier-free guidance, or flow matching feel fuzzy, fix that there first.
+- *CLIP/T5 text-encoder training, VLMs, any-to-any models, and video **understanding*** → [Multimodal Learning](../multimodal-learning/). We *use* a frozen text encoder and *recaption* with a VLM, but training those, and encoding video for joint reasoning, lives there. We own video *synthesis*; they own video *understanding*.
+- *Model-based RL, the Dreamer policy-learning loop, planning/MPC in a learned model, and training a policy "in the dream"* → [RL Phase 6](../reinforcement-learning/#phase-6-model-based-rl) and [RL Phase 10](../reinforcement-learning/#phase-10-frontier-topics). We build the action-conditioned video *generator*; using it as an environment for control is theirs.
+- *Vision-Language-Action robot policies, sim-to-real, and embodied control* → [Robotics Phase 8](../robotics/#phase-8-learning-for-robotics) and [Robotics Phase 9](../robotics/#phase-9-simulation-sim-to-real-and-robot-systems-engineering).
+- *Serving, batching, and inference-latency engineering* for deployed video models → [Inference Systems](../inference-systems/); *kernel-level performance and quantization* → [AI Hardware](../ai-hardware/). We discuss step-distillation and real-time generation as *modeling* problems and link out for the systems side.
+- *Tensor, autograd, mixed-precision, distributed-training, and training-loop fundamentals* → [PyTorch Deep Dive](../pytorch-deep-dive/).
+
+When this guide touches an out-of-scope topic, it does so only to the depth needed to make a video-generation modeling decision, and it links to the owning guide.
+
 ---
 
 ## Table of Contents
@@ -21,24 +45,28 @@ A comprehensive guide to understanding and building video generation systems —
 11. [Phase 10: Training at Scale, Evaluation, and Frontier Topics](#phase-10-training-at-scale-evaluation-and-frontier-topics)
 12. [Suggested Timeline](#suggested-timeline)
 13. [Key Advice](#key-advice)
-14. [Additional Resources](#additional-resources)
-15. [Glossary](/shared/glossary/)
+14. [Common Pitfalls to Avoid](#common-pitfalls-to-avoid)
+15. [Additional Resources](#additional-resources)
+16. [Glossary](/shared/glossary/)
 
 ---
 
 ## Phase 0: Prerequisites
 
-Video generation is one of the most demanding topics in modern ML. The prerequisites are non-negotiable.
+Video generation is one of the most demanding topics in modern ML. The prerequisites are non-negotiable — and unusually, they are almost entirely owned by *other* guides in this collection. This guide adds the time axis; it assumes the rest.
 
 ### Concepts to Know
 
-- **Diffusion models**: forward/reverse process, DDPM, DDIM, classifier-free guidance, noise schedules
-- **Latent diffusion**: VAE encoder/decoder, training a diffusion model in latent space (i.e., Stable Diffusion)
+The single most important prerequisite is **image diffusion**. Work through [Image Generation](../image-generation/) Phases 5–8 before starting here; nearly everything below is "that, with a time axis." Specifically you should be fluent in:
+
+- **Diffusion models** ([Image Gen Phase 5](../image-generation/#phase-5-diffusion-models--foundations-ddpm)): forward/reverse process, DDPM, DDIM, classifier-free guidance, noise schedules
+- **Score/EDM and flow matching** ([Image Gen Phase 6](../image-generation/#phase-6-score-based-edm-and-modern-diffusion-theory) and [Phase 8](../image-generation/#phase-8-diffusion-transformers-and-flow-matching)): the σ-parameterization, rectified flow — most 2024+ video models train this way
+- **Latent diffusion** ([Image Gen Phase 7](../image-generation/#phase-7-latent-diffusion-and-stable-diffusion)): VAE encoder/decoder, training a diffusion model in latent space (i.e., Stable Diffusion)
+- **DiT and image tokenizers** ([Image Gen Phase 3](../image-generation/#phase-3-discrete-latents--vq-vae-vq-gan-and-modern-tokenizers) and [Phase 8](../image-generation/#phase-8-diffusion-transformers-and-flow-matching)): patchification, AdaLN-Zero, VQ-VAE / FSQ / LFQ
 - **U-Net architecture**: down/up blocks, skip connections, attention blocks
-- **Transformers**: self-attention, cross-attention, positional embeddings, transformer blocks
-- **Vision Transformers (ViT)**: patchification, 1D-sequence treatment of images
-- **Text conditioning**: CLIP text encoders, T5, cross-attention for text→image
-- **PyTorch fluency**: mixed precision, distributed training (DDP/FSDP), memory profiling
+- **Transformers and ViT**: self-attention, cross-attention, positional embeddings, patchification, 1D-sequence treatment of images
+- **Text conditioning** (a *frozen* CLIP/T5 encoder here; training one is [Multimodal Learning](../multimodal-learning/)'s job): cross-attention for text→image
+- **PyTorch fluency** ([PyTorch Deep Dive](../pytorch-deep-dive/)): mixed precision, distributed training (DDP/FSDP), memory profiling
 - **Optical flow** (helpful): what it is and why it shows up everywhere in video
 
 ### The One Equation Everything Comes Back To
@@ -61,7 +89,7 @@ big enough to be useful without compute exploding cubically.
 
 ### Resources
 
-- [Image Generation guide](../image-generation/) — strongly recommended prerequisite
+- [Image Generation guide](../image-generation/) — the hard prerequisite; do Phases 5–8 first
 - [Lilian Weng — What are Diffusion Models?](https://lilianweng.github.io/posts/2021-07-11-diffusion-models/) — the canonical primer
 - [Sora Technical Report (OpenAI, 2024)](https://openai.com/index/video-generation-models-as-world-simulators/) — read once now, again at the end of Phase 6
 - [Stable Video Diffusion paper](https://arxiv.org/abs/2311.15127) — practical entry point
@@ -103,11 +131,11 @@ Resolution × fps × duration → raw tensor size
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Video loader benchmark | Compare `torchvision.io`, `decord`, `pyav`, and `ffmpeg-python` on a folder of `.mp4`s; report decode time per clip | ⭐⭐ |
-| Frame extractor | Sample N frames evenly from a clip; sample N frames at uniform fps; observe the difference for fast vs slow scenes | ⭐⭐ |
-| Optical flow visualizer | Compute dense optical flow (RAFT, Farnebäck) between adjacent frames; color-visualize | ⭐⭐ |
-| Scene-cut detector | Detect scene boundaries via histogram or feature distance; split a movie into clips | ⭐⭐ |
-| Storage study | Take 100 clips, store as raw `.npy`, H.264 `.mp4`, and AV1 `.webm`; compare disk and decode speed | ⭐⭐ |
+| [Video loader benchmark](projects/01-video-loader-benchmark/README.md) | Compare `torchvision.io`, `decord`, `pyav`, and `ffmpeg-python` on a folder of `.mp4`s; report decode time per clip | ⭐⭐ |
+| [Frame extractor](projects/02-frame-extractor/README.md) | Sample N frames evenly from a clip; sample N frames at uniform fps; observe the difference for fast vs slow scenes | ⭐⭐ |
+| [Optical flow visualizer](projects/03-optical-flow-visualizer/README.md) | Compute dense optical flow (RAFT, Farnebäck) between adjacent frames; color-visualize | ⭐⭐ |
+| [Scene-cut detector](projects/04-scene-cut-detector/README.md) | Detect scene boundaries via histogram or feature distance; split a movie into clips | ⭐⭐ |
+| [Storage study](projects/05-storage-study/README.md) | Take 100 clips, store as raw `.npy`, H.264 `.mp4`, and AV1 `.webm`; compare disk and decode speed | ⭐⭐ |
 
 ### Sample Code: Loading a Video Clip with `decord`
 
@@ -178,10 +206,10 @@ have not seriously competed with diffusion since ~2023.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Moving MNIST predictor | Train a ConvLSTM to predict the next 10 frames given 10; classic baseline | ⭐⭐⭐ |
-| FILM frame interpolation | Use a pretrained FILM to interpolate between two real frames; observe motion artifacts | ⭐⭐ |
-| Tiny video GAN | Train a small video GAN on UCF-101 face crops — observe mode collapse firsthand | ⭐⭐⭐⭐ |
-| Read MoCoGAN | Implement just the latent-disentanglement idea (content + motion latents) in a small VAE | ⭐⭐⭐ |
+| [Moving MNIST predictor](projects/06-moving-mnist-predictor/README.md) | Train a ConvLSTM to predict the next 10 frames given 10; classic baseline | ⭐⭐⭐ |
+| [FILM frame interpolation](projects/07-film-frame-interpolation/README.md) | Use a pretrained FILM to interpolate between two real frames; observe motion artifacts | ⭐⭐ |
+| [Tiny video GAN](projects/08-tiny-video-gan/README.md) | Train a small video GAN on UCF-101 face crops — observe mode collapse firsthand | ⭐⭐⭐⭐ |
+| [Read MoCoGAN](projects/09-read-mocogan/README.md) | Implement just the latent-disentanglement idea (content + motion latents) in a small VAE | ⭐⭐⭐ |
 
 ### Key Insight
 
@@ -227,11 +255,11 @@ No paired text needed.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Run SVD inference | Generate 14-frame and 25-frame clips with Stable Video Diffusion from arbitrary images | ⭐⭐ |
-| AnimateDiff tour | Plug AnimateDiff's motion module into a community SD 1.5 checkpoint; generate animated stills | ⭐⭐⭐ |
-| Tiny I2V model | Add 3D temporal conv layers to a frozen SD 1.5 U-Net; fine-tune on 100k clips with the first frame as condition | ⭐⭐⭐⭐⭐ |
-| Motion control | Train the above with a motion-score input; verify that low scores produce subtle motion | ⭐⭐⭐⭐ |
-| Camera trajectory | Add Plücker-coordinate camera embeddings to an I2V model; verify pan/zoom controllability | ⭐⭐⭐⭐⭐ |
+| [Run SVD inference](projects/10-run-svd-inference/README.md) | Generate 14-frame and 25-frame clips with Stable Video Diffusion from arbitrary images | ⭐⭐ |
+| [AnimateDiff tour](projects/11-animatediff-tour/README.md) | Plug AnimateDiff's motion module into a community SD 1.5 checkpoint; generate animated stills | ⭐⭐⭐ |
+| [Tiny I2V model](projects/12-tiny-i2v-model/README.md) | Add 3D temporal conv layers to a frozen SD 1.5 U-Net; fine-tune on 100k clips with the first frame as condition | ⭐⭐⭐⭐⭐ |
+| [Motion control](projects/13-motion-control/README.md) | Train the above with a motion-score input; verify that low scores produce subtle motion | ⭐⭐⭐⭐ |
+| [Camera trajectory](projects/14-camera-trajectory/README.md) | Add Plücker-coordinate camera embeddings to an I2V model; verify pan/zoom controllability | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: Inflating a 2D Conv to a (2+1)D Conv
 
@@ -312,11 +340,11 @@ Modern variant: replace all "conv" with "transformer block" → DiT (Phase 6).
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Inflate SD to a video model | Take a Stable Diffusion 1.5 U-Net, inflate to 3D (insert temporal conv + temporal attention), train on a small video dataset | ⭐⭐⭐⭐⭐ |
-| Joint image-video training | Co-train your inflated model on 90% images, 10% video; compare to video-only training on quality and motion | ⭐⭐⭐⭐ |
-| Temporal CFG study | Vary CFG strength independently for text and for image conditioning; observe trade-offs | ⭐⭐⭐ |
-| Cascaded super-resolution | Build a small "low-res video → high-res video" diffusion super-resolution model | ⭐⭐⭐⭐ |
-| Compare attention patterns | (2+1)D vs full spatiotemporal vs windowed spatiotemporal; measure FLOPs and quality | ⭐⭐⭐⭐ |
+| [Inflate SD to a video model](projects/15-inflate-sd-to-a-video-model/README.md) | Take a Stable Diffusion 1.5 U-Net, inflate to 3D (insert temporal conv + temporal attention), train on a small video dataset | ⭐⭐⭐⭐⭐ |
+| [Joint image-video training](projects/16-joint-image-video-training/README.md) | Co-train your inflated model on 90% images, 10% video; compare to video-only training on quality and motion | ⭐⭐⭐⭐ |
+| [Temporal CFG study](projects/17-temporal-cfg-study/README.md) | Vary CFG strength independently for text and for image conditioning; observe trade-offs | ⭐⭐⭐ |
+| [Cascaded super-resolution](projects/18-cascaded-super-resolution/README.md) | Build a small "low-res video → high-res video" diffusion super-resolution model | ⭐⭐⭐⭐ |
+| [Compare attention patterns](projects/19-compare-attention-patterns/README.md) | (2+1)D vs full spatiotemporal vs windowed spatiotemporal; measure FLOPs and quality | ⭐⭐⭐⭐ |
 
 ### Sample Code: A (2+1)D Transformer Block for Video
 
@@ -402,11 +430,11 @@ That's 16× less data — and crucially, diffusion now runs over 30 latent
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Frame-by-frame 2D VAE | Use Stable Diffusion's VAE on video frames independently; observe temporal flicker in reconstructions | ⭐⭐ |
-| Train a small 3D VAE | (B, 3, T, H, W) → (B, C, T', H', W'); compress 4× in time, 8× in space; train on UCF-101 | ⭐⭐⭐⭐⭐ |
-| Causal 3D VAE | Modify the above to causal in time so it handles single images correctly (T=1 → T'=1) | ⭐⭐⭐⭐ |
-| MagViT-v2-style tokenizer | Train a discrete video tokenizer using FSQ or LFQ quantization; measure reconstruction FID | ⭐⭐⭐⭐⭐ |
-| Diffusion on latents | Plug the 3D VAE in front of a small diffusion model from Phase 4; compare training speed and quality to pixel-space | ⭐⭐⭐⭐ |
+| [Frame-by-frame 2D VAE](projects/20-frame-by-frame-2d-vae/README.md) | Use Stable Diffusion's VAE on video frames independently; observe temporal flicker in reconstructions | ⭐⭐ |
+| [Train a small 3D VAE](projects/21-train-a-small-3d-vae/README.md) | (B, 3, T, H, W) → (B, C, T', H', W'); compress 4× in time, 8× in space; train on UCF-101 | ⭐⭐⭐⭐⭐ |
+| [Causal 3D VAE](projects/22-causal-3d-vae/README.md) | Modify the above to causal in time so it handles single images correctly (T=1 → T'=1) | ⭐⭐⭐⭐ |
+| [MagViT-v2-style tokenizer](projects/23-magvit-v2-style-tokenizer/README.md) | Train a discrete video tokenizer using FSQ or LFQ quantization; measure reconstruction FID | ⭐⭐⭐⭐⭐ |
+| [Diffusion on latents](projects/24-diffusion-on-latents/README.md) | Plug the 3D VAE in front of a small diffusion model from Phase 4; compare training speed and quality to pixel-space | ⭐⭐⭐⭐ |
 
 ### Key Insight
 
@@ -434,18 +462,18 @@ The current frontier. As of 2026, the strongest video models are all DiT-based, 
 - **Sora's "patches" design** — patches at *variable* size, allowing flexible resolution and aspect ratio at inference
 - **Rectified Flow / Flow Matching** — modern replacement for DDPM training that's better-behaved at scale (used by SD3, Flux, and most 2024+ video models)
 - **MMDiT (Multi-Modal DiT)** — the SD3 architecture: text and image tokens share attention layers; extended to video in Movie Gen and similar
-- **Open-source replication efforts**:
-  - **OpenSora** (HPC-AI Tech) — full open Sora replica
-  - **Open-Sora-Plan** (PKU) — independent replica
-  - **CogVideoX** (THUDM) — Tsinghua's strong open release
-  - **HunyuanVideo** (Tencent) — large-scale open release
-  - **Mochi 1** (Genmo) — high-quality open
-  - **Wan2.1** (Alibaba) — recent strong open release
-- **Closed frontier**:
-  - **Sora / Sora-Turbo** (OpenAI)
-  - **Veo / Veo 2** (Google DeepMind)
-  - **Movie Gen** (Meta)
-  - **Kling, Hailuo, Runway Gen-3, Luma Dream Machine** — commercial offerings
+- **Open-weights frontier** (these move every few months; check before assuming a leader):
+  - **Wan 2.1 / 2.2** (Alibaba) — among the strongest open releases; broad ecosystem of LoRAs and control adapters
+  - **HunyuanVideo** (Tencent) — large-scale open release with a strong VAE
+  - **CogVideoX** (THUDM) — Tsinghua's open DiT + 3D VAE; a clean reference implementation
+  - **Mochi 1** (Genmo) — high-quality open with an aggressive VAE
+  - **LTX-Video** (Lightricks) — designed for near-real-time generation; good for latency experiments
+  - **OpenSora** (HPC-AI Tech) and **Open-Sora-Plan** (PKU) — full open Sora-style replicas, well-documented for learning
+- **Closed frontier** (capabilities and names change fast):
+  - **Sora / Sora 2** (OpenAI) — Sora 2 adds synchronized audio and stronger physical consistency
+  - **Veo 2 / Veo 3** (Google DeepMind) — Veo 3 generates **native synchronized audio** (dialogue, SFX), a notable shift
+  - **Movie Gen** (Meta) — the most detailed open *description* of a frontier-scale recipe, including joint audio
+  - **Kling 2.x, Hailuo / MiniMax, Runway Gen-4, Luma Dream Machine, Pika** — commercial offerings
 
 ### Sora-Style Architecture, Sketched
 
@@ -578,8 +606,10 @@ The hardest open problem in video generation. Today's best models produce 5–10
   - Generate keyframes first, then fill in between
   - Storyboard / shot decomposition (think a director's storyboard, not raw video)
 - **Autoregressive video models** — predict the next chunk of frames conditioned on the previous chunk; long but expensive
+- **Diffusion Forcing** — assign each frame its *own* noise level so a model can denoise and roll out autoregressively at once; the bridge between full-sequence diffusion and next-frame autoregression
+- **Autoregressive distillation for streaming** — distill a bidirectional diffusion teacher into a causal, few-step student that emits frames as it goes (CausVid, Self-Forcing); the current recipe for real-time/infinite-length generation
 - **Anchor frames / scene tokens** — explicit memory of "this character looks like X"
-- **Streaming generation** — emit frames as you generate them (StreamingT2V, MovieDreamer)
+- **Streaming generation** — emit frames as you generate them (StreamingT2V, CausVid, Self-Forcing)
 - **Multi-shot / multi-scene** — VideoTetris, DreamFactory, MovieDreamer; combine LLM-planned shot lists with per-shot generation
 
 ### Two Architectural Approaches to Length
@@ -623,9 +653,11 @@ Long-form video generation has the same shape as the long-context problem in LLM
 
 - [FreeNoise paper](https://arxiv.org/abs/2310.15169)
 - [StreamingT2V paper](https://arxiv.org/abs/2403.14773)
+- [Diffusion Forcing (Chen et al., 2024)](https://arxiv.org/abs/2407.01392) — per-token noise levels for autoregressive rollout
+- [CausVid — Causal video distillation (2024)](https://arxiv.org/abs/2412.07772) — fast autoregressive/streaming generation
+- [Self-Forcing (2025)](https://arxiv.org/abs/2506.08009) — closing the train/inference gap for autoregressive video
 - [VideoTetris paper](https://arxiv.org/abs/2406.04277)
 - [MovieDreamer paper](https://arxiv.org/abs/2407.16655)
-- [Long Video Diffusion (NVIDIA)](https://arxiv.org/abs/2407.13759)
 
 ---
 
@@ -635,16 +667,17 @@ Where video generation stops being "I make pretty clips" and becomes "I simulate
 
 ### Concepts to Learn
 
-- **What a world model is** — a generative model that, given a state and an action, predicts the next state. A video model conditioned on actions is a world model
-- **Dreamer-line of work** — Hafner et al.'s DreamerV1/V2/V3, learning world models from pixels for RL
+- **What a world model is** — a generative model that, given a state and an action, predicts the next state. A video model conditioned on actions is a world model. *This phase owns the generative side*; using the model as an environment to learn a policy is [RL Phase 6 (Model-Based RL)](../reinforcement-learning/#phase-6-model-based-rl)
+- **The Dreamer line, in one sentence** — Hafner et al.'s DreamerV1/V2/V3 learn a latent world model and train a policy by imagining rollouts in it. We borrow the *generative* idea (predict the next latent given an action); the policy-learning loop and the RL objective are [covered in the RL guide](../reinforcement-learning/#phase-6-model-based-rl)
 - **Genie, Genie 2 (DeepMind)** — playable, action-conditioned video models trained on web video
 - **GameNGen (Google)** — a real-time playable Doom simulation, entirely neural
-- **GAIA-1 (Wayve)** — driving world models
+- **GAIA-1 / GAIA-2 (Wayve)** — driving world models
+- **NVIDIA Cosmos** — a world-foundation-model platform aimed at training and evaluating embodied/robot policies; the bridge to [Robotics](../robotics/#phase-9-simulation-sim-to-real-and-robot-systems-engineering)
 - **OASIS / Decart** — open neural Minecraft
 - **Latent action models** — inferring actions from unlabeled video (so you can train world models without paired actions)
-- **Real-time constraints** — < 50 ms/frame for interactivity. Forces distillation, caching, or smaller models
-- **Connection to physical RL** — world models are policy-rollouts-as-video; the same model can serve as a simulator for an RL agent
-- **Connection to multimodal** — a fully general world model is multimodal: text in, video out, with audio, actions, and physics
+- **Real-time constraints** — < 50 ms/frame for interactivity. Forces distillation, caching, or smaller models — the same autoregressive-distillation toolkit as Phase 8
+- **Connection to physical RL and robotics** — world models are policy-rollouts-as-video; the same model can serve as a simulator for an RL agent ([RL Phase 6](../reinforcement-learning/#phase-6-model-based-rl)) or as a learned simulator for an embodied policy ([Robotics Phase 9](../robotics/#phase-9-simulation-sim-to-real-and-robot-systems-engineering))
+- **Connection to multimodal** — a fully general world model is multimodal: text in, video out, with audio, actions, and physics. Joint cross-modal *understanding* is [Multimodal Learning](../multimodal-learning/)'s territory
 
 ### The World Model Loop
 
@@ -679,14 +712,15 @@ is the empty string.
 
 ### Key Insight
 
-World models are the convergence point of three lines of research that are usually taught separately: video generation, model-based RL, and simulation. Each of those communities approaches the same object from a different angle — generation people care about visual fidelity, RL people care about action conditioning and rollouts, simulation people care about physical realism. The 2025–2026 frontier is increasingly the same model used in all three roles. If you've completed the [Reinforcement Learning Guide](../reinforcement-learning/) and now this guide, you're well-positioned to work at that intersection.
+World models are the convergence point of three lines of research that are usually taught separately: video generation, model-based RL, and simulation. Each of those communities approaches the same object from a different angle — generation people care about visual fidelity, RL people care about action conditioning and rollouts, simulation people care about physical realism. The 2025–2026 frontier is increasingly the same model used in all three roles. This guide owns the visual-fidelity, action-conditioning, and rollout-generation side; the control side lives in [RL Phase 6](../reinforcement-learning/#phase-6-model-based-rl) and [Robotics Phase 9](../robotics/#phase-9-simulation-sim-to-real-and-robot-systems-engineering). If you've completed those guides and this one, you're well-positioned to work at the intersection.
 
 ### Resources
 
 - [Genie 2 (DeepMind)](https://deepmind.google/discover/blog/genie-2-a-large-scale-foundation-world-model/) — start here
 - [GameNGen paper (Google, 2024)](https://arxiv.org/abs/2408.14837) — playable Doom
-- [DreamerV3 paper](https://arxiv.org/abs/2301.04104)
-- [GAIA-1 paper](https://arxiv.org/abs/2309.17080)
+- [NVIDIA Cosmos (2025)](https://arxiv.org/abs/2501.03575) — world-foundation-model platform for embodied AI
+- [DreamerV3 paper](https://arxiv.org/abs/2301.04104) — the policy-learning side (see also [RL Phase 6](../reinforcement-learning/#phase-6-model-based-rl))
+- [GAIA-1 paper](https://arxiv.org/abs/2309.17080) — driving world model
 - [OASIS (Decart) blog](https://www.decart.ai/articles/oasis-interactive-ai-video-game-model)
 - [Latent Action Pretraining (Bruce et al.)](https://arxiv.org/abs/2402.15391)
 
@@ -722,8 +756,8 @@ The evaluation problem in video generation is *worse* than in image generation, 
 
 ### Frontier Topics
 
-- **Real-time video generation** — distillation to 1–4 steps, consistency models, autoregressive caching
-- **Audio + video joint generation** — Movie Gen, Veo 2, Lumiere with audio; native AV models instead of post-hoc dubbing
+- **Real-time and streaming video generation** — distillation to 1–4 steps, consistency models, autoregressive caching (CausVid, Self-Forcing); LTX-Video-style architectures built for latency. Increasingly the difference between a demo and a product
+- **Native audio-video joint generation** — as of 2025 this has gone from research to product: Veo 3 generates synchronized dialogue and SFX, Sora 2 adds audio, Movie Gen describes a joint recipe. Native AV models are replacing post-hoc dubbing
 - **Multi-character, multi-scene narratives** — see Phase 8
 - **Physical realism** — making fluid behave like fluid, deformable objects deform correctly
 - **3D-consistent video** — output that's consistent under camera change (videos that can be re-rendered from a new viewpoint); bridges to NeRF / 3D Gaussian Splatting
@@ -827,9 +861,13 @@ Video generation in 2026 is where text generation was around 2021 — extraordin
 | 2024 | [Sora technical report](https://openai.com/index/video-generation-models-as-world-simulators/) | DiT + variable patches |
 | 2024 | [GameNGen](https://arxiv.org/abs/2408.14837) | Real-time neural Doom |
 | 2024 | [CogVideoX](https://arxiv.org/abs/2408.06072) | Strong open DiT + VAE |
-| 2024 | [Movie Gen](https://ai.meta.com/research/movie-gen/) | Frontier-scale recipe, open description |
+| 2024 | [Movie Gen](https://ai.meta.com/research/movie-gen/) | Frontier-scale recipe, open description, joint audio |
 | 2024 | [HunyuanVideo](https://arxiv.org/abs/2412.03603) | Large open release |
 | 2024 | [Genie 2](https://deepmind.google/discover/blog/genie-2-a-large-scale-foundation-world-model/) | Foundation world model |
+| 2024 | [Diffusion Forcing](https://arxiv.org/abs/2407.01392) | Per-token noise levels; AR rollout meets diffusion |
+| 2024 | [CausVid](https://arxiv.org/abs/2412.07772) | Causal distillation for streaming generation |
+| 2025 | [NVIDIA Cosmos](https://arxiv.org/abs/2501.03575) | World-foundation-model platform for embodied AI |
+| 2025 | [Self-Forcing](https://arxiv.org/abs/2506.08009) | Closes the AR train/inference gap; real-time long video |
 
 ### Tools You Should Know
 - **`decord`** — fast video loading

@@ -1,0 +1,5 @@
+# Train a Small 3D VAE
+
+## Key Insight
+
+A [3D VAE](/shared/glossary/#3d-vae) fixes the flicker of per-frame compression by squeezing *time* as well as height and width — it merges small groups of neighboring frames into one [latent](/shared/glossary/#latent-video) slice, exploiting the fact that consecutive frames barely change. This project trains a small one on [UCF-101](/shared/glossary/#ucf-101): map a `(B, 3, T, H, W)` clip down to `(B, C, T', H', W')` at roughly 4× temporal and 8× spatial compression. Because the spatial compression applies to both height and width, it shrinks 4 × 8 × 8 = 256 times in size, but the number of channels usually grows (e.g., from 3 RGB channels to 8 latent channels), so a whole clip shrinks about 100× overall. That single compressor, trained once, is what later lets a [diffusion model](/shared/glossary/#diffusion-model) run on a handful of latent frames instead of the full pixel tensor. The 4×/8× ratio is the usual sweet spot — aggressive enough to make diffusion affordable, gentle enough that the decoder can still rebuild sharp frames.

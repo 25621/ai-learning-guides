@@ -5,10 +5,10 @@ Terms from all guides in this repository, sorted alphabetically. Each guide's ow
 ---
 
 ### (2+1)D {#21d}
-Factorized spatiotemporal architecture: separate spatial and temporal layers
+A way to build a video network cheaply by *factorizing* a full 3D convolution (which mixes space and time at once) into two smaller steps: first a 2D spatial layer that processes each frame on its own, then a separate 1D temporal layer that mixes information across time at each pixel location. The name reads "2 plus 1": two spatial dimensions handled together, plus one time dimension handled separately. Splitting them this way costs far less compute than a true 3D layer and — crucially — lets you initialize the spatial half from a pretrained image model and add the temporal half fresh (see [temporal inflation](/shared/glossary/#temporal-inflation)). The trade-off is that space and time never interact *within* a single layer, which can miss fast, complex motion that a full spatiotemporal layer would catch.
 
 ### 3D VAE {#3d-vae}
-Variational autoencoder that compresses video in time as well as space
+A [VAE](/shared/glossary/#vae) (variational autoencoder — a network that squeezes data into a small code and reconstructs it) built for video, so it compresses along *time* as well as the two spatial dimensions. A plain image VAE shrinks each frame's height and width; a 3D VAE *also* merges groups of nearby frames, exploiting the fact that consecutive frames barely differ. Typical ratios are about 4× in time and 8× in each spatial direction, cutting a clip's data by roughly 100× overall (the spatial compression applies to both height and width, so it shrinks 4 × 8 × 8 = 256 times in size, but the number of channels usually grows, e.g., from 3 RGB channels to 8 latent channels, so the final footprint is about 100× smaller). This is what makes modern video diffusion affordable: the [diffusion model](/shared/glossary/#diffusion-model) runs on the small compressed [latent](/shared/glossary/#latent-space) grid instead of raw pixels, so it sees maybe 30 latent "frames" where the original clip had 120. Because the same compressor is reused for every clip, the heavy work of learning to reconstruct video is paid once while the VAE is trained, not on every generation.
 
 ### ABA {#aba}
 Articulated-Body Algorithm — `O(n)` forward dynamics for rigid-body chains
@@ -85,6 +85,9 @@ The short text description attached to an image in a web page's HTML so screen r
 ### AMP {#amp}
 Automatic Mixed Precision — running operations in 16-bit floats ([float16](/shared/glossary/#float16) or [bfloat16](/shared/glossary/#bfloat16)) where it is safe, to save memory and speed up training while keeping a [float32](/shared/glossary/#float32) copy of the weights.
 
+### AnimateDiff {#animatediff}
+A 2023 technique that adds motion to an existing [Stable Diffusion](/shared/glossary/#stable-diffusion) image model *without retraining it*. The trick is a separately trained [motion module](/shared/glossary/#motion-module) — a small stack of time-aware ([temporal](/shared/glossary/#temporal-inflation)) layers — that you slide in between the [frozen](/shared/glossary/#frozen) image model's blocks: the image model still draws each frame, and the motion module makes consecutive frames move together coherently. Because the module is trained once on generic video and then frozen, you can drop it into almost any community [checkpoint](/shared/glossary/#checkpoint) (a custom-art-style fine-tune, say) and animate that style for free. It is the most popular concrete instance of [temporal inflation](/shared/glossary/#temporal-inflation) packaged as a reusable add-on rather than a full model.
+
 ### Anomaly detection {#anomaly-detection}
 A debugging mode (`torch.autograd.set_detect_anomaly(True)`) that makes [autograd](/shared/glossary/#autograd) check each operation and raise an error at the exact line that first produces a [NaN](/shared/glossary/#nan) or infinite [gradient](/shared/glossary/#gradients).
 
@@ -138,6 +141,9 @@ A model that generates a sequence one piece at a time, where each new piece is p
 
 ### AWQ {#awq}
 Activation-aware Weight Quantization — preserve weights important to large activations
+
+### AV1 {#av1}
+A modern, royalty-free [video codec](/shared/glossary/#video-codec) — the rules for squeezing video into a small file. AV1 compresses noticeably better than older codecs like [H.264](/shared/glossary/#h264) — often 30–50% smaller files at the same quality — but it is much slower to decode, so reading AV1 video back into frames costs more CPU time. Analogy: it is like a denser ZIP format that saves disk space but takes longer to unzip. Example: storing 100 clips as AV1 `.webm` files might use a third of the disk of the same clips as H.264 `.mp4`, but take several times longer to decode each clip during training.
 
 ### Backend {#backend}
 A device- or library-specific implementation that actually executes an operation's [kernel](/shared/glossary/#kernel) — for example the CPU, [CUDA](/shared/glossary/#cuda), or [MPS](/shared/glossary/#mps) backend. The [dispatcher](/shared/glossary/#dispatcher) routes each call to the correct backend based on the tensor's device and [dtype](/shared/glossary/#dtype).
@@ -217,14 +223,23 @@ PyTorch's core C++ library (the "core ten[sor]" library)
 ### Calibration {#calibration}
 Running a few representative batches of data through a model to learn how big its [activations](/shared/glossary/#activations) typically get — their usual smallest and largest values — before [quantizing](/shared/glossary/#quantization) it. Knowing that range lets static quantization choose one fixed [int8](/shared/glossary/#int8) "scale": the conversion factor that maps the real numbers onto the 256 slots an int8 can hold. It is like measuring the tallest guest you expect before setting a doorframe height — check the real range once, then size the fixed scale so almost nothing gets clipped.
 
+### Camera control {#camera-control}
+Steering not just *what moves* in a generated video but where the virtual camera goes — [pan](/shared/glossary/#pan), [zoom](/shared/glossary/#zoom), [orbit](/shared/glossary/#orbit), [dolly](/shared/glossary/#dolly) — by feeding the model an explicit camera path. The dominant method represents each frame's camera as [Plücker coordinates](/shared/glossary/#plücker-coordinates) (a six-number description of the ray every pixel looks along) and adds those as an extra input, so the model can keep objects placed consistently as the viewpoint moves. Named systems that do this include **CameraCtrl** and **MotionCtrl**. It is one of the control surfaces — alongside the [motion score](/shared/glossary/#motion-score) and [depth](/shared/glossary/#depth-map)- or pose-conditioning — that turn a raw video generator into a directable tool.
+
 ### Canny edge detector {#canny-edge-detector}
 A classic (non-neural) algorithm that reduces a photo to a clean black-and-white map of its outlines — the lines where brightness changes sharply, such as the border between a face and the background. It works by measuring the *gradient* (how fast pixel brightness changes) at every point, keeping only the local peaks so the edges come out one pixel thin, and then linking those peaks into continuous contours. Picture tracing all the hard boundaries of a photo with a fine pen and throwing away the shading in between. [ControlNet](/shared/glossary/#controlnet) uses such an edge map as a conditioning signal: the outline says *where* shapes must go while the prompt decides *what* fills them. Named after its inventor, John Canny.
 
 ### Catastrophic forgetting {#catastrophic-forgetting}
 When training a model on new data erases skills it had already learned, because the new [gradients](/shared/glossary/#gradients) overwrite the old [weights](/shared/glossary/#weights).
 
+### Cascaded diffusion {#cascaded-diffusion}
+A way to generate high-resolution images or video by chaining several [diffusion models](/shared/glossary/#diffusion-model) in sequence rather than asking one model to do everything at once: the first model produces a small, coarse result, and each later model takes that output and adds detail or resolution, conditioned on the previous stage's blurry version. "Cascade" is the picture of water falling down a series of steps — each pool feeds the next. Splitting the work this way lets each model specialize (rough layout at low resolution, fine texture at high resolution) and was the dominant recipe for high-resolution video before [latent](/shared/glossary/#latent-space) models; Imagen Video and Make-A-Video both built [super-resolution](/shared/glossary/#super-resolution) cascades. Modern latent-diffusion systems mostly dropped it because compressing into a small latent space up front already makes full-resolution generation affordable inside a single model.
+
+### Causal 3D VAE {#causal-3d-vae}
+A [3D VAE](/shared/glossary/#3d-vae) built so that each frame is encoded using only *itself and earlier frames*, never later ones. In machine learning, "causal" means "respecting the flow of time" — just as an effect cannot precede its cause, a causal model cannot look into the future to process the present. This is the same "look only backward" rule a [causal mask](/shared/glossary/#causal-mask) enforces in language models. A plain 3D VAE merges a fixed block of frames together (e.g., always merging 4 frames into 1), so it has no clean way to handle a lone still image (because it expects a full block, a lone image has no later neighboring frames to merge with). The causal version sidesteps this: because the very first frame depends on nothing after it, a single-image input (`T=1`) compresses to a single latent frame (`T'=1`), and the one model can encode both still images and full video. This is what lets frontier video systems train a single shared compressor on a mix of images and clips (see [joint image-video training](/guides/video-generation/projects/joint-image-video-training/)) instead of maintaining separate image and video encoders.
+
 ### Causal mask {#causal-mask}
-A mask applied to attention scores that hides future positions, so each token can attend only to itself and the tokens before it
+A mask applied to [attention](/shared/glossary/#attention) scores that hides future positions, so each token can attend only to itself and the tokens before it. In machine learning, "causal" means "respecting the flow of time" — just as an effect cannot precede its cause, a causal model cannot look into the future to process the present.
 
 ### CBF {#cbf}
 Control Barrier Function — runtime safety filter via a constraint on `ḣ`
@@ -340,8 +355,22 @@ A serving trick where the GPU adds new requests into the running [batch](/shared
 ### ControlNet {#controlnet}
 An add-on that gives a frozen [diffusion model](/shared/glossary/#diffusion-model) precise *spatial* control. It clones the [U-Net](/shared/glossary/#u-net)'s encoder into a parallel branch that reads an auxiliary conditioning image — a [depth map](/shared/glossary/#depth-map), a pose skeleton, a [Canny edge map](/shared/glossary/#canny-edge-detector), a [segmentation map](/shared/glossary/#segmentation-map) — and feeds that branch's features back into the original network so the output follows the supplied structure. The base model stays untouched (so its quality and prompt-following are preserved) and only the new branch is trained; the connections use [zero-convolutions](/shared/glossary/#zero-conv) so the branch contributes nothing at first and is learned gradually. Like laying tracing paper with an outline over a painter's canvas: the prompt still chooses colors and texture, but every shape must follow the lines you drew.
 
-### Convolution layers {#convolution-layers}
-The building-block layers of a [CNN](/shared/glossary/#cnn). Each one slides a small grid of learned numbers — a *filter* (also called a *kernel*) — step by step across the image, and at every stop it multiplies the filter against the patch underneath, adds up the result, and writes that single number into a new grid. Sweep the whole image and those numbers form a "feature map" that lights up wherever the filter's pattern appears. Picture a stencil cut in the shape of a vertical edge: drag it over a photo and it leaves a bright mark everywhere there *is* a vertical edge and stays dark elsewhere. One filter might hunt for edges, another for a patch of red, another for a curve; stacking many convolution layers lets the network build up from simple textures to whole objects. Reusing the same small filter everywhere is what keeps convolutions cheap and lets them spot a pattern no matter where it sits in the picture.
+### ConvLSTM {#convlstm}
+An [LSTM](/shared/glossary/#lstm) that swaps its internal matrix multiplications for [convolutions](/shared/glossary/#convolution-layers), so it can carry memory across time *and* keep the 2D spatial layout of each frame instead of flattening it into a single vector. A plain LSTM treats its input as a flat list of numbers, which throws away which pixel sat next to which; a ConvLSTM keeps the grid intact, so a local fact like "this corner is getting brighter" stays local. That makes it a natural fit for [future frame prediction](/shared/glossary/#future-frame-prediction), where both *what* changes and *where* it changes matter. It was the standard baseline for video prediction before transformers and diffusion took over, and later recurrent variants such as PredRNN refined the same idea with extra memory paths between layers.
+
+### Convolution Layers
+These are the foundational building blocks of a [Convolutional Neural Network (CNN)](/shared/glossary/#cnn). Their job is to scan an image and hunt for specific patterns.
+
+Each layer uses a small grid of numbers—called a *filter* or *kernel*—that acts like a tiny pattern detector. The network slides this filter systematically, step by step, across the entire image. At every pause, the filter looks exclusively at the small patch of the image directly *underneath* it, checks how well that patch matches the pattern it is hunting for, and spits out a single "match score." As the filter sweeps over the whole image, it records these scores onto a new, blank grid called a **feature map**.
+
+Picture a small, transparent stencil painted with red-and-white stripes. You drag this stencil step by step over a crowded "Where's Waldo?" poster:
+
+* When the stencil is *underneath* a patch of blue sky or a green tree, the patterns don't match, so it leaves a "0" (a dark mark) on your feature map.
+* But when you slide the stencil directly over Waldo's shirt, the stripes align perfectly, leaving a high score (a bright mark) on your feature map.
+
+By the end of the sweep, your feature map acts as a glowing treasure map, lighting up exactly where Waldo's shirt is located.
+
+In a real network, one filter might hunt for stripes, another for glasses, and another for the curve of a beanie cap. By stacking many of these convolution layers together, the network pieces together simple clues to eventually recognize a complex object like Waldo himself. Because the network reuses the same tiny filter across the entire poster, the process stays incredibly efficient—and ensures that the pattern is found no matter where it is hiding in the picture.
 
 ### copy {#copy}
 A tensor that owns its own storage, independent of any source tensor; created by `.clone()`, or automatically by operations like `.contiguous()` and `reshape` when a view is not possible
@@ -375,6 +404,15 @@ A [loss function](/shared/glossary/#loss-function) that scores how surprised a m
 
 ### Cross-modal retrieval {#cross-modal-retrieval}
 Searching with one [modality](/shared/glossary/#modality) to find matches in another — typing a caption to pull up the right photo, or handing in an image to find the text that describes it. It works by mapping both modalities into one shared space (for instance with [CLIP](/shared/glossary/#clip)), so that a query and its true match land near each other; you then keep the few stored items with the highest [cosine similarity](/shared/glossary/#cosine-similarity) to the query (a [top-k](/shared/glossary/#top-k) nearest-neighbor lookup). Because every item is encoded just once, answering a query is only a batch of [dot products](/shared/glossary/#dot-product) — one [matmul](/shared/glossary/#matmul) — which is why it scales to huge collections. Analogy: a library where books and their summaries are shelved by *meaning* instead of by title, so a summary in your hand leads you straight to the shelf holding the matching book. It is the first of the four canonical multimodal tasks and the thing [dual encoders](/shared/glossary/#dual-encoder) are best at.
+
+### Cross product {#cross-product}
+A way to combine two 3D vectors that — unlike the [dot product](/shared/glossary/#dot-product), which boils them down to a single number — returns a *third vector*. That new vector points at a right angle (perpendicular) to both of the originals. For `a = [a₁, a₂, a₃]` and `b = [b₁, b₂, b₃]` it is computed slot by slot as `a × b = [a₂·b₃ − a₃·b₂, a₃·b₁ − a₁·b₃, a₁·b₂ − a₂·b₁]`. For example, `[1, 0, 0] × [0, 1, 0] = [0, 0, 1]`: two arrows lying flat on a table (one pointing "east", one "north") produce one pointing straight *up*, out of the table.
+
+**What it does (the effect).** Where the [dot product](/shared/glossary/#dot-product) measures how *aligned* two vectors are, the cross product hands you the axis they are *not* aligned along. Analogy: Imagine laying two pens flat on a desk so their ends touch, forming a "V" shape. Now, imagine taking a pencil and standing it perfectly upright exactly where the two pens meet, pointing directly at the ceiling. That standing pencil is the cross product. Furthermore, the length of that pencil depends on how wide you open the "V" shape. If you open the pens to a perfect 90-degree corner, the pencil grows to its maximum height. If you close the pens together so they overlap and point the same way, the pencil vanishes entirely (its length shrinks to zero). 
+
+**Why [Plücker coordinates](/shared/glossary/#plücker-coordinates) use it.** If you just say "a line pointing North," you haven't given enough information to pin it down — imagine two parallel train tracks that both point North, but sit in completely different places. You need a way to tell them apart.
+
+This is where the cross product comes in. By taking the cross product of a [position vector](/shared/glossary/#position-vector) (pointing to *any* spot on the track) and the track's *direction*, you create a new vector called the line's **moment**. Think of this moment as a unique fingerprint for the line's exact location in space. The magic of this math is that no matter which spot you pick along that specific track, the cross product always spits out the exact same fingerprint. But if you do the math on the *other* parallel track, you get a completely different fingerprint. So, by keeping just two things — the direction and this fingerprint — you perfectly lock down exactly which line you are talking about.
 
 ### cuBLAS {#cublas}
 NVIDIA's optimized library of dense linear-algebra [kernels](/shared/glossary/#kernel); PyTorch calls it for matrix multiplication on [CUDA](/shared/glossary/#cuda).
@@ -426,6 +464,9 @@ Function approximation + bootstrapping + off-policy data → instability
 
 ### Decode {#decode}
 The token-by-token half of LLM inference: after [prefill](/shared/glossary/#prefill) digests the prompt, the model generates one new token per [forward pass](/shared/glossary/#forward-pass), each step reading the whole [KV cache](/shared/glossary/#kv-cache) before producing the next [logits](/shared/glossary/#logits). Like writing a sentence one word at a time while glancing back over every word already written — fast per step, but the constant re-reading of the page is what bounds speed. Decode is [memory-bandwidth-bound](/shared/glossary/#roofline) on a GPU, the opposite of [prefill](/shared/glossary/#prefill), and is what most serving optimizations target.
+
+### decord {#decord}
+A fast video-reading library that decodes frames straight into [tensors](/shared/glossary/#tensor), built for deep-learning data loaders. Its key trick is efficient random access: you can ask for "frames 0, 30, and 90" and it jumps to them without decoding everything in between, which is exactly what frame sampling needs. Analogy: a regular video player reads a movie front to back like a cassette tape, while decord works like a book with an index — it flips straight to the page you want. Example: `vr.get_batch([0, 30, 90])` returns just those three frames as a single tensor, ready for the model.
 
 ### Decoupled {#decoupled}
 A training technique where two effects that are mathematically equivalent in standard SGD are separated into independent operations. In AdamW, weight decay is decoupled from the gradient update so that the regularization strength is not scaled by the adaptive learning rate.
@@ -481,6 +522,9 @@ When the kind of data a model sees in production slowly changes away from the da
 
 ### DiT {#dit}
 Diffusion Transformer — Peebles & Xie's diffusion backbone that replaces the [U-Net](/shared/glossary/#u-net) with a pure [transformer](/shared/glossary/#transformer). It chops the noisy image (really its [VAE](/shared/glossary/#vae) [latent](/shared/glossary/#latent-space)) into a grid of small [patches](/shared/glossary/#patchification), turns each patch into a token, and lets [attention](/shared/glossary/#attention) mix them — the same recipe that took over language modeling, now pointed at denoising. The name simply joins "diffusion" (the denoising task) with "transformer" (the architecture). Its big draw is [scaling](/shared/glossary/#scaling-laws): make it wider or deeper and quality improves along a predictable curve, the way a bigger language model reliably gets better. Like swapping a custom-built, image-shaped machine (the U-Net) for a general-purpose assembly line you can just make longer to produce more. Sizes are named DiT-S (small), DiT-B (base), DiT-L (large), and a suffix like "/2" gives the [patch](/shared/glossary/#patchification) size — DiT-S/2 is the small model with 2×2 patches.
+
+### Dolly {#dolly}
+A camera move where the whole camera physically travels toward or away from the subject — the name comes from the wheeled cart (a "dolly") that camera operators roll along a track. Unlike a [zoom](/shared/glossary/#zoom), which only magnifies the image from a fixed spot, a dolly actually changes the camera's position, so the background shifts relative to the foreground and you get a real sense of moving through the scene. It is one of the moves a video model can be directed through with [camera control](/shared/glossary/#camera-control).
 
 ### Dot product {#dot-product}
 A way to boil two equal-length lists of numbers (two *vectors*) down to a single number: multiply them position by position, then add up all the products. For `[1, 2, 3] · [4, 5, 6]` you compute `1·4 + 2·5 + 3·6 = 4 + 10 + 18 = 32`.
@@ -595,8 +639,14 @@ Feed-Forward Network — the small [MLP](/shared/glossary/#mlp) inside each [tra
 ### F/T sensor {#ft-sensor}
 Force/Torque sensor — six-axis force and moment at a wrist or fingertip
 
+### Farnebäck optical flow {#farnebäck-optical-flow}
+A classical (non-neural) algorithm for computing dense [optical flow](/shared/glossary/#optical-flow), named after its inventor Gunnar Farnebäck. It estimates motion by approximating the brightness around each pixel with a small quadratic (a smooth curved surface) in both frames and solving for the shift that lines them up. Analogy: it slides a tiny transparent patch of the first frame around the second until it clicks into place, and records how far it had to move. It is fast and needs no training, but it is less accurate on large or blurry motion than a learned model like [RAFT](/shared/glossary/#raft). Example: OpenCV's `cv2.calcOpticalFlowFarneback` returns a `(H, W, 2)` array giving each pixel's left–right and up–down movement.
+
 ### FID {#fid}
 Fréchet Inception Distance — the standard sample-quality metric for image generation. ("Fréchet," after the mathematician Maurice Fréchet, names the *Fréchet distance*: a way to measure how far apart two probability distributions sit.) It runs both real and generated images through a pretrained [Inception network](/shared/glossary/#inception-network) to turn each image into a feature vector, then measures how far apart the two [clouds](/shared/glossary/#point-cloud) of features sit by comparing their means and [covariances](/shared/glossary/#covariance) (their centers and spreads). A lower FID means the generated images look statistically more like the real ones — picture two overlapping clouds of dots: the more they overlap, the smaller the distance. The real images here are only a *yardstick*, not an ingredient: your model invents brand-new images from random noise and never copies the real ones — FID simply needs a pile of real photos to compare those inventions against so it can score how convincing they are.
+
+### FILM {#film}
+FILM (Frame Interpolation for Large Motion) is a neural [frame-interpolation](/shared/glossary/#frame-interpolation) model from Google that, given two real frames, generates the frames in between — and it is specifically built to cope when objects move a *long* way between the two shots, the case where older methods smear or tear. It estimates motion at several scales at once (a coarse pass catches big jumps, finer passes catch small ones) and warps both frames toward the middle before blending them. Think of an animation assistant who can fill in the missing "in-between" drawings between two key poses even when the character has leapt clear across the scene. It is a convenient pretrained model for seeing, firsthand, the artifacts that fast motion produces.
 
 ### Filterbank {#filterbank}
 A stack of band-pass filters that each measure how much energy a signal carries in one narrow frequency range — together they split a sound into a set of frequency "buckets." A *mel filterbank* is the specific set used to build a [mel spectrogram](/shared/glossary/#mel-spectrogram): commonly 80 filters, each shaped by [triangular weights](/shared/glossary/#triangular-weights) and spaced on the perceptual mel scale, all stored as one fixed matrix. Applying it is a single matrix multiply that collapses the [STFT](/shared/glossary/#stft)'s hundreds of evenly spaced frequency rows down to a handful of [mel bands](/shared/glossary/#mel-bands). Like a row of differently tuned wine glasses, each ringing only for the note near its own pitch: play a chord and you can read off how much of each note is present from how loudly each glass hums. Example: a 1024-point FFT produces ~513 frequency values per frame; multiplying by an 80×513 mel filterbank matrix turns each time frame into just 80 numbers.
@@ -655,6 +705,12 @@ A math tool that takes a signal that changes over *time* — like a sound wave �
 ### Fragmentation {#fragmentation}
 Memory wasted in gaps too small to reuse, left behind when each request is given its own contiguous chunk — like a parking lot full of single empty spaces where no bus can fit even though there is plenty of total room. Paged schemes such as [PagedAttention](/shared/glossary/#pagedattention) avoid it by handing out small fixed-size pages instead of one big block per request.
 
+### Frame interpolation {#frame-interpolation}
+Generating new frames *between* two existing ones to make motion smoother or a clip slower — turning, say, 24 frames per second into 60. It is sometimes called "video generation lite" because the model only has to invent the short motion between two anchors it can already see, not a whole scene from nothing. The classic analogy is hand-drawn animation: a lead artist draws the key poses and an assistant fills in the "in-between" frames — the industry literally calls this *inbetweening*. Modern neural versions such as [FILM](/shared/glossary/#film) and Super SloMo estimate how each pixel moves between the two frames (closely related to [optical flow](/shared/glossary/#optical-flow)) and warp the images toward the midpoint.
+
+### Frame rate (fps) {#frame-rate-fps}
+How many still frames a video shows per second — "fps" stands for *frames per second* (e.g. 24, 30, 60). It sets how much real-world time sits between two neighboring frames, so the *same* motion looks bigger and choppier at low fps and smoother at high fps. Analogy: a flipbook drawn with 12 pages per second looks jerky; the same drawings at 60 pages per second look fluid. Example: sampling 16 frames evenly from a 2-second clip at 8 fps covers the whole clip, but grabbing 16 *consecutive* frames from a 60-fps clip covers only a quarter-second — so a model must be told which fps it is seeing.
+
 ### Frontier run {#frontier-run}
 A training run for one of the largest, most capable models at the leading edge of what is currently possible — the kind that ties up thousands of GPUs for weeks and costs millions of dollars. Because the stakes are so high, a [loss spike](/shared/glossary/#loss-spike) that cannot be recovered cleanly can throw away days of that compute, which is why teams rehearse [checkpoint](/shared/glossary/#checkpoint) recovery on small models first.
 
@@ -675,6 +731,9 @@ The mechanism by which a model uses a tool: it emits a structured request (such 
 
 ### Fusion (early/middle/late) {#fusion-earlymiddlelate}
 *Where* in the network the information from different [modalities](/shared/glossary/#modality) is combined. **Late fusion** encodes each modality fully on its own and only compares the two finished [embeddings](/shared/glossary/#embedding) at the very end ([CLIP](/shared/glossary/#clip) matching an image vector to a text vector). **Middle fusion** encodes each separately but then lets one stream attend to the other partway through, usually with [cross-attention](/shared/glossary/#cross-attention) (a [VLM](/shared/glossary/#vlm) feeding image features into a language model). **Early fusion** turns every modality into one shared stream of [tokens](/shared/glossary/#token-visualaudio) from the very start and runs a single model over the mix ([native multimodal](/shared/glossary/#native-multimodal) models like [Chameleon](/shared/glossary/#chameleon)). Think of three ways to combine a recipe's flavors: stir two finished sauces together at the table (late), blend them while each is still simmering (middle), or throw every raw ingredient into one pot from the beginning (early). The earlier the fusion, the more freely the modalities can shape each other — but the more compute and data it takes to train.
+
+### Future frame prediction {#future-frame-prediction}
+The task of, given the first few frames of a video, predicting the frames that come next — an early benchmark for whether a model has learned how things move. It is the video cousin of next-word prediction in language: the model is trained to continue a sequence it has only partly seen. The classic toy benchmark is [Moving MNIST](/shared/glossary/#moving-mnist) and the classic baseline architecture is the [ConvLSTM](/shared/glossary/#convlstm). Because the future is genuinely uncertain, a simple model trained with [mean squared error](/shared/glossary/#mse-mean-squared-error) tends to hedge by *blurring* — averaging all the plausible futures into one fuzzy guess rather than committing to a single sharp one.
 
 ### FVD {#fvd}
 Fréchet Video Distance — the standard (and flawed) automatic eval metric for video generation
@@ -776,6 +835,9 @@ A benchmark of about 8,000 grade-school math word problems, widely used to test 
 ### GTSAM {#gtsam}
 Factor-graph SLAM library; the standard back-end for many modern systems
 
+### H.264 {#h264}
+The most common [video codec](/shared/glossary/#video-codec) on the internet, also called AVC (Advanced Video Coding) — the rules used to compress almost every `.mp4` you have ever streamed. It compresses well and decodes fast on nearly all hardware, which is why it is the safe default, though newer codecs like [AV1](/shared/glossary/#av1) shrink files further. Analogy: it is the JPEG of video — not the smallest or newest, but supported everywhere. Example: a 5-second 720p clip that is 333 MB as raw frames might be only a few megabytes as an H.264 `.mp4`.
+
 ### H2O {#h2o}
 Short for *Heavy-Hitter Oracle*, a [KV cache](/shared/glossary/#kv-cache) eviction method that keeps only the handful of past tokens that have been getting most of the [attention](/shared/glossary/#attention) — the "heavy hitters" — and throws the rest away. Like skimming a long book and keeping only the few sentences you keep flipping back to: you save shelf space while barely losing the plot, which lets a model serve much longer sequences in the same memory. It always keeps the very first tokens too (the [attention sink](/shared/glossary/#attention-sink)), since those anchor the model no matter what they say.
 
@@ -815,11 +877,14 @@ A vehicle whose instantaneous motion can be any direction (mecanum, omni)
 ### Hopper {#hopper}
 NVIDIA's 2022 GPU architecture (H100, H200) and the workhorse of LLM training and serving in 2023–2024. It was the first generation to ship dedicated [FP8](/shared/glossary/#fp8) [Tensor Cores](/shared/glossary/#tensor-core), which is what made FP8 inference a practical option. Named after Grace Hopper, the computer scientist who invented the compiler.
 
+### Hue {#hue}
+The "color name" part of a color — red, orange, green, blue, and so on — separate from how light or dark it is and how vivid it is. It is one axis of the way computers describe color (the *H* in the HSV color model), and it wraps around in a circle, so the two ends meet and both 0° and 360° are red. Analogy: hue is the label on a paint tube ("blue"), brightness is how much white or black you stirred in, and saturation is how strong the color is. In an [optical flow](/shared/glossary/#optical-flow) picture, hue is often used to show the *direction* each pixel moved — each compass direction gets its own color — while brightness shows how *fast* it moved.
+
 ### Hybrid retrieval {#hybrid-retrieval}
 Retrieving with both dense [embedding](/shared/glossary/#embedding) search (matches meaning) and sparse keyword search ([BM25](/shared/glossary/#bm25)) (matches exact words) and merging the two result lists, so each method covers the other's weaknesses.
 
 ### I2V {#i2v}
-Image-to-Video
+Image-to-Video: the task of generating a short video clip *starting from a single still image*, where the model invents plausible motion while keeping the first frame's appearance fixed. It is easier than [text-to-video (T2V)](/shared/glossary/#t2v) because the image already settles *what the scene looks like*, leaving the model to handle only *how it moves* — and its training data is essentially free, since any video clip can be split into "first frame = input, the rest = target" with no text caption needed. [Stable Video Diffusion](/shared/glossary/#stable-video-diffusion-svd) is the canonical open I2V model.
 
 ### Identity function {#identity-function}
 A function that returns its input unchanged: `f(x) = x`. In the context of straight-through estimators, gradients are passed through a non-differentiable operation as if it were the identity function.
@@ -890,6 +955,9 @@ Inter-token latency / time per output token — steady-state per-token decode ti
 ### Jacobian {#jacobian}
 Linear map from joint velocities to end-effector spatial velocity
 
+### Joint image-video training {#joint-image-video-training}
+A training recipe that feeds a video model a mix of still images and video clips in the same run — treating each still image as a one-frame "video" — so the model keeps its sharp single-image skills while it learns motion. The problem it solves: training on video *alone* lets a model's still-image quality decay, because video datasets are smaller and more compressed than image datasets, so the rich appearance knowledge an inflated image model started with drifts away. Mixing in a large fraction of images (often the majority of each batch) keeps that knowledge fresh and makes the model far more data-efficient. It needs no architectural change because a still image is simply the `T=1` special case of a video — the same layers process both.
+
 ### Jailbreak {#jailbreak}
 A prompt — sometimes plain English, sometimes a gradient-found suffix like in [GCG](/shared/glossary/#gcg), sometimes a long role-play setup or a translation into a low-resource language — that gets a safety-trained model to do what its alignment training was supposed to refuse. Like picking a hotel-room door lock instead of asking for the key. Modern defenses assume any single safety layer can be jailbroken and use *defense in depth* — input filtering, output filtering, monitoring, refusal classifiers — instead of trusting the model alone.
 
@@ -927,13 +995,16 @@ The time it takes to complete a single request, from input to output; distinct f
 The compressed set of numbers a model uses to represent its data internally, after stripping away the raw detail. Each point in this space stands for one possible output, and nearby points usually mean similar outputs — so you can smoothly "walk" from one to another and watch the result morph. Think of it as the model's private map of its world: instead of a full 28×28-pixel image, an [autoencoder](/shared/glossary/#autoencoder) might describe each digit with just 32 numbers, and that 32-number space is the latent space.
 
 ### Latent video {#latent-video}
-Compressed (T', H', W', C) tensor produced by a 3D VAE
+The compressed form of a video that a [3D VAE](/shared/glossary/#3d-vae) produces: instead of the raw `(T, H, W, C)` pixel [tensor](/shared/glossary/#tensor), you get a much smaller `(T', H', W', C)` grid where time, height, and width have all been shrunk (often ~100× fewer numbers overall). Modern video diffusion runs in this [latent space](/shared/glossary/#latent-space) rather than on pixels, because denoising a 100×-smaller tensor is what makes high-resolution video generation affordable at all.
 
 ### LCM {#lcm}
 Latent Consistency Model — a [consistency model](/shared/glossary/#consistency-model) distilled in the [latent space](/shared/glossary/#latent-space) of a [VAE](/shared/glossary/#vae), giving 1–4-step [Stable Diffusion](/shared/glossary/#stable-diffusion)-style sampling. It is the most practical few-step recipe for SD-style stacks, which is what makes near-interactive image generation possible.
 
 ### LDM {#ldm}
-Latent Diffusion Model — diffusion in the latent space of a VAE (i.e., Stable Diffusion)
+Latent Diffusion Model — a [diffusion model](/shared/glossary/#diffusion-model) that runs in the [latent space](/shared/glossary/#latent-space) of a [VAE](/shared/glossary/#vae) rather than on raw pixels. A VAE first compresses the image (or video) into a much smaller grid of numbers; the diffusion model learns to denoise *that* small grid, and the VAE decoder turns the finished latent back into pixels. Because the latent is often ~50–100× smaller than the image, every training and sampling step is dramatically cheaper, which is the whole reason high-resolution generation became affordable. [Stable Diffusion](/shared/glossary/#stable-diffusion) is the canonical image LDM; modern video models apply the same idea on top of a [3D VAE](/shared/glossary/#3d-vae).
+
+### LFQ {#lfq}
+Lookup-Free Quantization — a way to turn a continuous latent into a discrete [token](/shared/glossary/#token-visualaudio) *without* a learned [codebook](/shared/glossary/#codebook). Instead of comparing each latent vector against a trained table of code entries and picking the nearest (the [VQ-VAE](/shared/glossary/#vq-vae) way), LFQ squashes each latent dimension to a sign — roughly, "is this number positive or negative?" — so the pattern of signs across the dimensions *is* the integer code. With no table to look up, there is nothing that can go unused, which sidesteps [codebook collapse](/shared/glossary/#codebook-collapse) and lets the effective vocabulary grow huge cheaply. It is the quantizer behind [MagViT-v2](/shared/glossary/#magvit-v2) and a close cousin of [FSQ](/shared/glossary/#fsq), which snaps each dimension to a small grid of levels rather than just a sign.
 
 ### Leaderboard {#leaderboard}
 A public ranking that lists models by their score on one or more [benchmarks](/shared/glossary/#benchmark), best at the top — like a sports league table for AI models. It makes progress easy to see at a glance, but a single number hides many hidden choices (prompt wording, answer parsing, image resolution), so two groups can report different scores for the *same* model; a high rank is also suspect if the test questions leaked into training (see [contamination](/shared/glossary/#contamination)). Example: the [MMMU](/shared/glossary/#mmmu) leaderboard ranks [VLMs](/shared/glossary/#vlm) by their accuracy on the MMMU exam, and a new model's headline claim is usually "we moved up this board."
@@ -1002,7 +1073,7 @@ Linear-Quadratic Regulator — optimal linear feedback for quadratic cost
 Long Short-Term Memory — a type of recurrent neural network (RNN) cell designed to remember things over long sequences without the information fading away. A plain RNN is like whispering a message down a long line of people — by the end, the message is garbled. An LSTM fixes this with three [gates](/shared/glossary/#gated): a **forget gate** that decides what old information to throw out, an **input gate** that decides what new information to store, and an **output gate** that decides what to actually hand to the next step. Together they maintain a "cell state" — a conveyor belt of memory that can carry important facts across hundreds of time steps with minimal loss. LSTMs were the go-to architecture for sequences (language, speech, time series) before [transformers](/shared/glossary/#transformer) took over, and they remain the classic example of gated memory in neural networks.
 
 ### MagViT-v2 {#magvit-v2}
-The strongest open recipe for discrete video tokenization
+The strongest open recipe for *discrete* video tokenization — turning a clip into a grid of integer [tokens](/shared/glossary/#token-visualaudio) that an [autoregressive](/shared/glossary/#autoregressive-model) or transformer model can generate the same way it generates language. It builds on the [VQ-VAE](/shared/glossary/#vq-vae) idea of a discrete latent but replaces the learned [codebook](/shared/glossary/#codebook) with [LFQ](/shared/glossary/#lfq) (lookup-free quantization), which sidesteps [codebook collapse](/shared/glossary/#codebook-collapse) and scales to a very large vocabulary cheaply. A single MagViT-v2 tokenizer handles both still images and video (it shares the [causal](/shared/glossary/#causal-3d-vae) trick of encoding the first frame on its own), and its reconstructions are sharp enough that token-based generators can finally rival [diffusion models](/shared/glossary/#diffusion-model) on quality — its headline claim is that a good enough tokenizer is what makes language-model-style video generation competitive.
 
 ### Manifold {#manifold}
 The thin, curved surface inside a much larger space where real data actually lives. A 32×32 color image is a point in a space of 3,072 numbers, but almost every random point in that space looks like static — only a vanishingly small, smoothly connected sliver of it looks like a real photo, and that sliver is the manifold. A useful analogy: a sheet of paper is a 2D surface, but if you crumple it and drop it into a room it traces out a thin curved shape floating in 3D space; the paper is the manifold and the room is the full space. Learning to generate images is largely learning the shape of this surface so you only ever land on it.
@@ -1027,6 +1098,9 @@ Markov Decision Process — the tuple `(S, A, P, R, γ)`
 
 ### Mechanistic interpretability {#mechanistic-interpretability}
 The line of research that tries to reverse-engineer *what individual pieces of a neural network actually do* — which neurons or [attention heads](/shared/glossary/#heads) detect what, where a fact is stored, why a particular output came out. Like opening up a watch to see which gears turn the hands, instead of only timing how fast the watch runs. Main tools: [linear probes](/shared/glossary/#linear-probe), [sparse autoencoders](/shared/glossary/#sae), activation patching, and circuit analysis.
+
+### Media container {#media-container}
+The file format that *wraps* compressed video (plus audio, subtitles, and metadata) into one file — `.mp4`, `.mov`, `.webm`, and `.mkv` are containers. The container is the box; the [video codec](/shared/glossary/#video-codec) is how the picture inside was compressed, and the two are independent — the same H.264 video can sit in an `.mp4` or a `.mov`. Analogy: a container is like a shipping box labeled on the outside, while the codec is the packing method used for the fragile thing inside. Example: a `.webm` file is a container that usually holds [AV1](/shared/glossary/#av1)- or [VP9](/shared/glossary/#vp9)-compressed video, whereas `.mp4` most often holds [H.264](/shared/glossary/#h264).
 
 ### Medical-image segmentation {#medical-image-segmentation}
 The task of labelling *every pixel* in a medical scan (MRI, CT, X-ray, microscopy) as belonging to a particular structure — outlining a tumour, an organ, or a cell boundary — rather than just classifying the whole image with one label. The output is a per-pixel mask, like a precise coloring-book page where each region is filled with its own color. It demands very fine spatial accuracy, since a few pixels can be the difference between the edge of a tumour and healthy tissue, which is exactly why the [U-Net](/shared/glossary/#u-net)'s skip connections — carrying fine detail straight across the network — were originally designed for it. Think of tracing the exact outline of each country on a map instead of just saying "this is a map of Europe."
@@ -1084,6 +1158,9 @@ A classic dataset of 70,000 small 28×28 grayscale images of handwritten digits 
 ### MMMU {#mmmu}
 Massive Multi-discipline Multimodal Understanding — a hard [benchmark](/shared/glossary/#benchmark) of college-exam questions across many fields (medicine, engineering, art, business), where each question mixes text with an image such as a diagram, chart, or chemical structure. It is built to require real subject reasoning rather than just reading the picture, which is why even strong [VLMs](/shared/glossary/#vlm) still score far below human experts on it. Like a university final that hands you a figure and expects you to apply the course material to it, not merely describe what you see. It is the most-cited measure of frontier multimodal reasoning, and the harder *MMMU-Pro* variant adds more answer choices and trickier distractors to fight [contamination](/shared/glossary/#contamination).
 
+### MoCoGAN {#mocogan}
+MoCoGAN (Motion and Content GAN) is an early video [GAN](/shared/glossary/#gans) whose key idea is to split a video's [latent](/shared/glossary/#latent-space) code into two parts: a single *content* vector that stays fixed for the whole clip (the identity of the person or object) and a sequence of *motion* vectors that change frame to frame (how it moves). Because content is held fixed while motion varies, the same face can be made to perform different expressions, or one motion can be replayed on different faces. This separation — disentangling *what* from *how* — keeps a subject from morphing as it moves; the [generator](/shared/glossary/#generator) reads a new motion vector each frame (produced by a small recurrent network) on top of the one shared content vector. The same content/motion split keeps reappearing inside later diffusion-based systems, which is why the 2017 model is still worth studying.
+
 ### Modality {#modality}
 One type or format of data — text, images, audio, video, a depth map, and so on. Each modality has its own structure (text is a sequence of tokens, an image is a grid of pixels, audio is a waveform), so a model usually needs a dedicated encoder for each one before their information can be combined. A model that handles more than one is called *multimodal*. Think of modalities as the different human senses — sight, hearing, touch — each carrying information about the same world but in a different form, which the brain then has to fuse into one understanding. [Cross-attention](/shared/glossary/#cross-attention) is one common way to let two modalities exchange information.
 
@@ -1105,8 +1182,17 @@ A technique that accumulates a moving average of past gradients to dampen oscill
 ### Monosemantic {#monosemantic}
 A feature inside a neural network that fires for exactly *one* concept — for example, a direction in [activation](/shared/glossary/#activations) space that lights up only for "Golden Gate Bridge," or only for "negation in a clause." The opposite is *polysemantic*: one neuron that activates for several unrelated concepts at once. Like a single word that means just one thing versus a homonym that means several. Recovering monosemantic features is the main goal of [SAE](/shared/glossary/#sae)-based interpretability.
 
+### Motion module {#motion-module}
+The plug-in component at the heart of [AnimateDiff](/shared/glossary/#animatediff): a stack of time-aware ([temporal](/shared/glossary/#temporal-inflation)) layers — mostly [attention](/shared/glossary/#attention) along the time axis — inserted between the blocks of a [frozen](/shared/glossary/#frozen) image [U-Net](/shared/glossary/#u-net). The frozen image model still produces each frame's appearance; the motion module's only job is to look across frames and nudge them so the sequence moves smoothly instead of flickering independently. Think of it as a "motion adapter" you clip onto a still-image model — trained once on video, then reused unchanged across many image [checkpoints](/shared/glossary/#checkpoint).
+
+### Motion score {#motion-score}
+A single number handed to a video model that says *how much motion* a clip should contain — low for a near-still "animated photo", high for vigorous movement. During training it is measured from each real clip (commonly from the average [optical-flow](/shared/glossary/#optical-flow) magnitude between frames — how far pixels travel), so the model learns to associate the number with an amount of movement; at inference you set it by hand to dial motion up or down. [Stable Video Diffusion](/shared/glossary/#stable-video-diffusion-svd) calls its version the *motion bucket id*, sorting clips into discrete buckets of increasing motion rather than using a continuous value. It is the simplest control surface for video: one knob that separates *how much it moves* from *what is in it*.
+
 ### MoveIt {#moveit}
 ROS 2 manipulation-planning framework
+
+### Moving MNIST {#moving-mnist}
+A simple synthetic video dataset built by taking handwritten digits from [MNIST](/shared/glossary/#mnist) and bouncing two of them around inside a black 64×64 frame, where they drift in straight lines and ricochet off the edges. The motion is perfectly predictable (constant velocity plus bounces), but the digits overlap and pass in front of each other, which is just hard enough to test a [future frame prediction](/shared/glossary/#future-frame-prediction) model without the cost and decoding pain of real video. It became the standard first benchmark for video-prediction models such as the [ConvLSTM](/shared/glossary/#convlstm).
 
 ### MPC {#mpc}
 Model Predictive Control — re-solved finite-horizon optimization at each step
@@ -1237,11 +1323,17 @@ A task where many different answers can all be reasonable and there is no single
 ### Open model {#open-model}
 A model whose [weights](/shared/glossary/#weights) you can download and run yourself — Meta's Llama, Mistral, Qwen, DeepSeek — as opposed to a *closed* model like GPT-4 or Claude where the weights stay on the provider's servers and you can only call them through an API. Like the difference between buying a recipe book (you have the actual instructions, can modify them, can bake offline) and ordering at a restaurant (you only see the finished dish). Open models are essential for any white-box research that needs the model's internals: methods like [GCG](/shared/glossary/#gcg) optimize against the model's own [gradients](/shared/glossary/#gradients), and interpretability tools like [SAEs](/shared/glossary/#sae) read its hidden [activations](/shared/glossary/#activations) — neither is possible through a closed API.
 
+### Optical flow {#optical-flow}
+A per-pixel map of motion between two frames: for every pixel it gives an arrow saying which direction and how far that bit of the image moved. "Dense" optical flow computes an arrow for *every* pixel, versus "sparse" flow, which tracks only a few chosen points. It is the rawest form of the "motion signal" in video and shows up everywhere — data filtering, frame interpolation, and motion conditioning. Analogy: imagine laying a sheet of thin see-through paper (tracing paper, the kind you can see a drawing through to copy it) over two snapshots taken a moment apart, then drawing a tiny arrow from where each speck — a tiny spot of detail in the picture — sat in the first frame to where it ended up in the second. Example: between two frames of a car driving right, every pixel on the car gets a rightward arrow while the still background gets near-zero arrows. Common ways to compute it are the classical [Farnebäck](/shared/glossary/#farnebäck-optical-flow) algorithm and the neural [RAFT](/shared/glossary/#raft) model.
+
 ### Optimizer {#optimizer}
 An algorithm that updates model parameters using computed gradients; in PyTorch, a subclass of `torch.optim.Optimizer` that holds parameter groups and per-parameter state
 
 ### Optimizer state {#optimizer-state}
 The extra per-parameter values an [optimizer](/shared/glossary/#optimizer) stores between steps — for example, [Adam](/shared/glossary/#adam) keeps two (the first- and second-moment estimates) — which adds to training memory.
+
+### Orbit {#orbit}
+A camera move that circles around a subject while keeping it centered in frame — like walking in a ring around a statue, always looking inward at it. Because the viewpoint travels around the object, you see its different sides in turn, which makes the orbit a demanding test of whether a video model keeps an object's 3D shape consistent as the angle changes. It is one of the paths a model can follow under [camera control](/shared/glossary/#camera-control).
 
 ### Outcome reward model {#outcome-reward-model}
 A scorer that judges only a solution's final answer as right or wrong, ignoring the steps in between — simpler than a [process reward model](/shared/glossary/#process-reward-model), which grades each step, but blind to *where* a wrong answer first went off track.
@@ -1257,6 +1349,9 @@ When a model learns its training examples *too* literally — memorizing their s
 
 ### Padding {#padding}
 Filling shorter sequences with a placeholder value so that every [sample](/shared/glossary/#sample) in a batch has the same length.
+
+### Pan {#pan}
+A camera move where the camera stays in one spot but rotates left or right — like standing still and turning only your head to sweep your gaze across a room. The viewpoint's position never changes, only the direction it faces, so near and far objects slide across the frame together. It is one of the basic moves a video model learns to follow under [camera control](/shared/glossary/#camera-control).
 
 ### Parameters {#parameters}
 The numbers a model *learns* during training — its adjustable internal settings. Picture thousands of tiny knobs on a giant mixing board: training nudges each knob a little at a time until the whole board produces good output, and the final knob positions *are* what the model "knows." They come in two kinds — [weights](/shared/glossary/#weights) and [biases](/shared/glossary/#biases) — are stored as [tensors](/shared/glossary/#tensor), and are adjusted by the [optimizer](/shared/glossary/#optimizer) during training. (When people say a "7B model," they mean 7 billion of these knobs.) In PyTorch they are `nn.Parameter` objects, registered automatically when assigned to an [`nn.Module`](/shared/glossary/#nnmodule).
@@ -1307,7 +1402,7 @@ Fast rigid-body dynamics library (CRBA, RNEA, ABA)
 An [autoregressive](/shared/glossary/#autoregressive-model) image model — a [CNN (Convolutional Neural Network)](/shared/glossary/#cnn) repurposed for generation — that draws a picture one pixel at a time, predicting each pixel from the pixels already drawn above it and to its left — like filling in a coloring grid square by square, always glancing back at what you have already colored to decide the next color. The image quality is strong and it can report an exact [probability](/shared/glossary/#probability-density) for any picture, but generating one is slow because the pixels must come out strictly in order, each waiting on the one before it.
 
 ### Plücker coordinates {#plücker-coordinates}
-6D representation of a camera ray; standard for camera-conditioning
+A way to describe a single straight line (here, the ray of sight through one pixel) using six numbers instead of a point-plus-direction. The six split into the ray's direction and its *moment* (a [cross product](/shared/glossary/#cross-product) that pins down which parallel line it is), so a line floating anywhere in 3D space gets one compact, position-independent code. Video models use them for [camera control](/shared/glossary/#camera-control): give every pixel of every frame its Plücker ray and the model knows exactly which way the camera is looking, which lets learned camera moves generalize to angles never seen in training — far better than feeding raw camera-position numbers. Named after the 19th-century mathematician Julius Plücker, who introduced this line geometry.
 
 ### PoC {#poc}
 Proof of Concept — a small, rough build whose only job is to show that an idea *can* work, before anyone invests in a polished version. Like frying one test pancake to check the batter before making the whole stack: you are not trying to serve it, just to learn whether the approach is sound.
@@ -1323,6 +1418,11 @@ A judge's tendency to pick an answer based on *where* it sits rather than *what*
 
 ### Position interpolation {#position-interpolation}
 Extending a model's context length by linearly rescaling [RoPE](/shared/glossary/#rope) position indices so longer sequences fall within the trained range
+
+### Position vector {#position-vector}
+A vector that represents the exact location of a specific point in space. You make one by drawing a straight geometric arrow from the origin — the `(0, 0, 0)` center of the coordinate system — directly to your target point. If a point lives at coordinates `(x, y, z)`, its position vector is simply the vector `[x, y, z]`. 
+
+Why do we need this? In geometry, a *point* is just a fixed location, while a general *vector* is just a movement (a direction and a length, like "walk 5 steps North") that can float anywhere in space. A position vector bridges the two: by permanently anchoring the tail of the arrow to the origin, the vector perfectly describes that specific location. This is the mathematical trick that lets you plug a fixed point into vector operations like the [cross product](/shared/glossary/#cross-product).
 
 ### Posterior collapse {#posterior-collapse}
 A [VAE](/shared/glossary/#vae) failure where the decoder grows strong enough to reconstruct inputs on its own and simply ignores the [latent space](/shared/glossary/#latent-space). The encoder then stops bothering to encode anything and just outputs the default prior, so the latent variables carry no information about the input — like a student who has memorized the answer key and no longer reads the question. When this happens the [KL divergence](/shared/glossary/#kl-divergence) term drops toward zero and the latent code becomes useless for generation.
@@ -1401,6 +1501,9 @@ Reducing weight / activation precision (FP16, BF16, FP8, INT8, INT4) to save mem
 
 ### RadixAttention {#radixattention}
 sglang's KV cache organized as a radix tree keyed on prompt prefixes for automatic sharing
+
+### RAFT {#raft}
+RAFT (Recurrent All-Pairs Field Transforms) is a neural network for computing dense [optical flow](/shared/glossary/#optical-flow), and on release one of the most accurate. Its core idea is to compare *all pairs* of pixels between the two frames to build a similarity volume, then iteratively refine a flow estimate with a recurrent update — repeatedly nudging the guess until it stops improving (which is the "recurrent" in its name). Analogy: it is a careful editor who, instead of guessing the motion once, keeps revising the answer over many small passes. Example: feeding RAFT two adjacent video frames returns a `(H, W, 2)` flow field that is far cleaner on fast motion than the classical [Farnebäck](/shared/glossary/#farnebäck-optical-flow) method.
 
 ### RAG {#rag}
 Retrieval-Augmented Generation — give the model an "open-book exam" instead of asking it to answer from memory alone. First a search step fetches the documents most relevant to the question (from a company wiki, a manual, the web), then those documents are pasted into the prompt, and only then does the model write its answer using them as notes. This lets it use fresh or private facts it was never trained on, and makes it easy to check where an answer came from.
@@ -1543,6 +1646,9 @@ A two-step tweak applied to a layer's [activations](/shared/glossary/#activation
 ### Scaling laws {#scaling-laws}
 The empirical finding that a model's [loss](/shared/glossary/#loss-function) drops in a smooth, predictable curve as you add [parameters](/shared/glossary/#parameters), training data, and compute — like a growth chart that lets you forecast a bigger model's quality from smaller ones before you ever build it.
 
+### Scene detection {#scene-detection}
+Automatically finding the "cuts" in a video — the hard jumps where the footage switches from one shot to another — so a long video can be split into clean single-shot clips. It works by watching for a sudden, large change between two adjacent frames, measured by something like the difference in their color histograms (a tally of how many pixels fall into each color bucket) or in deep features. Analogy: flipping through a photo album and starting a new pile every time the picture suddenly looks completely different. Example: a 90-minute movie might be split into roughly 1,500 single-shot clips, each safe to use as a training example because the motion inside it is continuous rather than spanning an editing splice.
+
 ### Scheduler {#scheduler}
 The part of an inference server that decides, at every step, which requests to start, which to keep generating, and which to pause when memory runs low — like an air-traffic controller choosing which planes take off, keep flying, or circle, so the runway (the GPU) is always busy but never overloaded. A good scheduler is often worth more real-world [throughput](/shared/glossary/#throughput) than any single clever kernel.
 
@@ -1630,8 +1736,14 @@ Service Level Objective — a specific, measurable promise about how a service s
 ### SM {#sm}
 Streaming Multiprocessor; the GPU's "core"
 
+### Soft gate {#soft-gate}
+A multiplier that scales each value by some amount *between* fully off (0) and fully on (1), instead of the hard either/or of a switch that is only ever 0 or 1. Picture a dimmer knob rather than a light switch: a hard gate can only block a signal or let it through untouched, but a soft gate can pass 0.3 of it, or 0.8, dialing each value partly up or down. In a [SwiGLU](/shared/glossary/#swiglu) layer the gate amounts come from squeezing one projection of the input through a smooth [activation function](/shared/glossary/#activations) like [Swish](/shared/glossary/#swish), whose output slides continuously rather than snapping between two settings — and that smoothness is what lets the network learn the right gate values from clean [gradients](/shared/glossary/#gradients).
+
 ### softmax {#softmax}
 The function that turns a vector of scores into a probability distribution — each value squeezed into 0–1, and all of them summing to 1; the core of [attention](/shared/glossary/#attention) and classification heads. The name means a *soft* version of `max`: instead of the hard "winner takes all" of [argmax](/shared/glossary/#argmax), which hands the single biggest score 100% and the rest nothing, softmax gives most of the weight to the biggest score while still leaving a little for the others. That smoothness — a dimmer switch rather than an on/off toggle — is what lets the model be trained by gradients.
+
+### Spatiotemporal attention {#spatiotemporal-attention}
+An [attention](/shared/glossary/#attention) pattern for video in which every token attends to every other token across *both* space and time at once — all positions in all frames mixed in a single shared attention operation. This is the most expressive way to model motion, because it can directly relate any pixel in any frame to any other, but its cost grows quadratically with the total number of tokens `T×H×W`, so it becomes very expensive as clips get longer or larger. Contrast [(2+1)D](/shared/glossary/#21d), which splits spatial and temporal attention into two cheaper separate steps, and [windowed attention](/shared/glossary/#windowed-attention), which restricts the joint attention to small local 3D windows. Sora-class models can afford full spatiotemporal attention only because a [3D VAE](/shared/glossary/#3d-vae) first shrinks `T×H×W` aggressively before attention ever runs — moving the expense out of attention and into the compressor.
 
 ### Spatiotemporal patches {#spatiotemporal-patches}
 The 3D version of image [patches](/shared/glossary/#patch): instead of cutting one frame into flat 2D squares, a video is cut into little boxes that span a small image region *and* a few consecutive frames, so each box (also called a *tubelet*) captures appearance and motion at once. Each box becomes one [token](/shared/glossary/#token-visualaudio) for a [transformer](/shared/glossary/#transformer), so movement is baked into the input from the start rather than reconstructed later from separate frames; TubeViT is a model built this way. Like cutting a flip-book into small columns that each go *down through* several pages — one cut shows how that corner of the picture changes over time. Example: a 16-frame clip cut into 2×16×16 patches (2 frames deep, 16×16 pixels wide) becomes a sequence of motion-aware tokens. The trade-off is that 3D boxes multiply the token count fast, raising compute — contrast plain [patchification](/shared/glossary/#patchification), which slices a single still image.
@@ -1644,6 +1756,9 @@ A trick to make [decode](/shared/glossary/#decode) faster for free: a small, fas
 
 ### Stable Diffusion {#stable-diffusion}
 The best-known open-source [diffusion model](/shared/glossary/#diffusion-model) for turning a text prompt into an image (first released by Stability AI in 2022). Its key trick is to do the slow denoising work in a small compressed space (the [latent](/shared/glossary/#ldm) space of a [VAE](/shared/glossary/#vae)) rather than on full-size pixels — like sketching a scene as a rough thumbnail first and only blowing it up to full resolution at the very end — which makes it light enough to run on a single consumer GPU. Because the weights were released publicly, it sparked a huge ecosystem of fine-tunes and add-ons such as [LoRA](/shared/glossary/#lora), [ControlNet](/shared/glossary/#controlnet), and [DreamBooth](/shared/glossary/#dreambooth).
+
+### Stable Video Diffusion (SVD) {#stable-video-diffusion-svd}
+Stability AI's open-weights [image-to-video (I2V)](/shared/glossary/#i2v) model (2023), the canonical baseline for turning a single still image into a short clip. It is built by [temporal inflation](/shared/glossary/#temporal-inflation): it [freezes](/shared/glossary/#frozen) a pretrained [Stable Diffusion](/shared/glossary/#stable-diffusion) image model and adds new time-aware layers that learn motion, so it keeps Stable Diffusion's strong sense of appearance and only has to learn how things move. Released in two variants — one tuned to generate 14 frames, one for 25 — it conditions on the input image (not text), which makes it the easiest strong model to run for hands-on I2V experiments. It also exposes a [motion score](/shared/glossary/#motion-score) input to control how much movement the clip contains.
 
 ### State dict {#state-dict}
 A Python `OrderedDict` that maps every parameter and buffer name to its tensor value; the standard format for saving, loading, and transplanting PyTorch model weights
@@ -1678,6 +1793,9 @@ An improved version of [StyleGAN](/shared/glossary/#stylegan) that fixes visual 
 ### StyleGAN3 {#stylegan3}
 The third generation of the [StyleGAN](/shared/glossary/#stylegan) family, which focuses on fixing "texture sticking" — a problem where textures like hair or wrinkles would stay glued to the screen coordinates even as the face moved. It achieved this by making the entire network "alias-free," ensuring that when the underlying features move, the generated pixels move perfectly with them, like a seamless video rather than a sequence of loosely connected frames.
 
+### Super-resolution {#super-resolution}
+Turning a low-resolution image or video into a higher-resolution one by *inventing* the missing fine detail — not merely stretching the pixels (which only blurs them) but hallucinating plausible texture and sharp edges that were never in the small version. A diffusion-based super-resolution model is trained by taking sharp images, shrinking them, and learning to reconstruct the originals while conditioned on the small input. Like an artist handed a thumbnail and asked to repaint it at poster size, filling in detail consistent with what the thumbnail implies. It is the upscaling stage in a [cascaded diffusion](/shared/glossary/#cascaded-diffusion) pipeline, and "super" simply means resolving detail finer than the input's resolution seemed to allow.
+
 ### SWE (Software Engineering) {#swe}
 Short for **Software Engineering** — the discipline of building, testing, and maintaining software systems. In the AI/LLM context, "SWE" usually appears in compound terms like [SWE-bench](/shared/glossary/#swe-bench) or "SWE-style agent," meaning an [agent](/shared/glossary/#agent) that does the kind of work a human software engineer does: reading code, diagnosing bugs, writing fixes, and running tests.
 
@@ -1688,7 +1806,7 @@ Short for **Software Engineering Benchmark** — a benchmark of real GitHub issu
 Training the same model many times while changing one setting across a range of values, then comparing results to pick the best — for example trying ten different [learning rates](/shared/glossary/#learning-rate) and keeping the winner. Like tasting a sauce as you add salt in small steps to find the amount you like, rather than guessing the whole spoonful at once. A sweep is how you turn a hyperparameter hunch into a measured choice.
 
 ### SwiGLU {#swiglu}
-The activation used in most modern transformer [MLPs](/shared/glossary/#mlp): a [GLU](/shared/glossary/#glu) gate whose non-linearity is [Swish](/shared/glossary/#swish), written `(xW) · Swish(xV)`. In plain terms, the input is projected two ways — one path is the content, the other is squeezed through Swish to become a soft gate — and the two are multiplied so the gate dials each value up or down. It replaced plain [ReLU](/shared/glossary/#relu) feed-forward layers because, for the same size, it tends to learn a little better; it is the default [FFN](/shared/glossary/#ffn) in Llama-style models.
+The activation used in most modern transformer [MLPs](/shared/glossary/#mlp): a [GLU](/shared/glossary/#glu) gate whose non-linearity is [Swish](/shared/glossary/#swish), written `(xW) · Swish(xV)`. In plain terms, the input is projected two ways — one path is the content, the other is squeezed through Swish to become a [soft gate](/shared/glossary/#soft-gate) — and the two are multiplied so the gate dials each value up or down. It replaced plain [ReLU](/shared/glossary/#relu) feed-forward layers because, for the same size, it tends to learn a little better; it is the default [FFN](/shared/glossary/#ffn) in Llama-style models.
 
 ### Swish {#swish}
 A smooth [activation function](/shared/glossary/#activations), `x · σ(x)`, also called [SiLU](/shared/glossary/#silu). It does roughly the same job as [ReLU](/shared/glossary/#relu) — squashing large negatives toward 0 and passing positives through — but with a gentle curve instead of a sharp corner (and it even dips a little below 0 for small negatives before recovering). Think of a soft-closing drawer that eases shut instead of slamming at exactly zero: that smoothness gives the network cleaner [gradients](/shared/glossary/#gradients) to learn from. It is the non-linearity used as the gate inside [SwiGLU](/shared/glossary/#swiglu).
@@ -1706,7 +1824,7 @@ A message placed at the very start of a chat conversation that tells the model h
 Data-flow matmul fabric used in TPUs
 
 ### T2V {#t2v}
-Text-to-Video
+Text-to-Video: generating a video clip from a text prompt alone, with no image to start from — the model must invent both *what the scene contains* and *how it moves*. This makes it harder than [image-to-video (I2V)](/shared/glossary/#i2v), where the first frame is given, and it needs paired text–video training data, which is scarce. Sora, Veo, and Kling are well-known T2V systems.
 
 ### T5 {#t5}
 A text [transformer](/shared/glossary/#transformer) (Google's "Text-to-Text Transfer Transformer") that reads a sentence and produces rich embeddings of its meaning. Unlike [CLIP](/shared/glossary/#clip)'s text encoder, which was trained only to match images to short captions, T5 was trained on general language tasks, so it captures long, detailed prompts and word order more faithfully — which is why models like Imagen, SD3, and Flux feed it (often the large "T5-XXL" variant) into [cross-attention](/shared/glossary/#cross-attention) for better prompt adherence.
@@ -1729,8 +1847,14 @@ Twin Delayed DDPG — DDPG plus three stability fixes
 ### Temperature {#temperature}
 A [sampling](/shared/glossary/#sampling) knob that scales the model's scores before [softmax](/shared/glossary/#softmax): low temperature (e.g. 0.2) sharpens the distribution so the model plays it safe and repeats the likeliest words, while high temperature (e.g. 1.5) flattens it so rarer, more surprising words can win. Think of it as a creativity dial — turn it down for factual answers, up for brainstorming. The same knob appears in [contrastive learning](/shared/glossary/#infonce) (written τ): there the similarity scores are *divided* by τ before the softmax, so a small τ (CLIP learns one starting around 0.07) sharpens the contest and forces the model to focus on its [hardest negatives](/shared/glossary/#hard-negatives), while a large τ softens it — too small destabilizes training, too large and even the true pair is barely preferred.
 
+### Temporal attention {#temporal-attention}
+[Attention](/shared/glossary/#attention) applied only along the time axis of a video: each spatial position (say, the pixel at row 10, column 20) looks at *that same position* across all the frames and decides how its value should change from frame to frame. It is the half of a [(2+1)D](/shared/glossary/#21d) block that handles motion, added on top of ordinary spatial attention (which works within each frame separately), and in [temporal inflation](/shared/glossary/#temporal-inflation) it is exactly the new layer dropped into a pretrained image model to teach it movement. Like tracking one fixed spot on a flip-book through every page to see how it animates, while ignoring the rest of each page. It is far cheaper than [spatiotemporal attention](/shared/glossary/#spatiotemporal-attention) because each position only compares itself across the `T` frames, not against every other position as well.
+
+### Temporal flicker {#temporal-flicker}
+The shimmering, pulsing, or boiling look you get when a video is processed one frame at a time with no coordination across frames. Each frame is reconstructed (or generated) slightly differently from its neighbors — tiny independent errors in texture, color, or brightness — and because the real scene barely changed, your eye reads those frame-to-frame differences as unwanted motion. It is the classic failure of running an image [VAE](/shared/glossary/#vae) per frame, and the main reason video needs compressors and models that span the time axis (a [3D VAE](/shared/glossary/#3d-vae) or [temporal attention](/shared/glossary/#temporal-attention)) rather than treating a clip as a stack of unrelated stills.
+
 ### Temporal inflation {#temporal-inflation}
-Adding time-axis layers to a pretrained 2D model
+The dominant trick for making a video model out of an existing *image* model: take a pretrained 2D network, insert new layers that operate along the time axis (temporal convolutions or temporal [attention](/shared/glossary/#attention)), and usually initialize them as an *identity* (pass-through) so that, at the start of training, the inflated model behaves exactly like the original image model run frame by frame. You then [fine-tune](/shared/glossary/#fine-tuning) so the new layers gradually learn motion while the spatial layers keep everything they already knew about appearance. "Inflation" captures the picture of taking a flat 2D model and puffing it out into the third (time) dimension. [Stable Video Diffusion](/shared/glossary/#stable-video-diffusion-svd), [AnimateDiff](/shared/glossary/#animatediff), and Make-A-Video all use variants of this; the 2024+ frontier (Sora-class models) instead trains spatiotemporal models from scratch.
 
 ### Tensor {#tensor}
 A grid of numbers — the basic container deep learning uses for almost everything. A single number is a 0-D tensor, a list of numbers is 1-D (a *vector*), a table is 2-D (a *matrix*), and you can keep stacking into 3-D and beyond — for example a color image is a 3-D tensor of height × width × 3 color channels. Under the hood it is a (storage, shape, stride, offset, dtype, device, requires_grad) tuple viewing a 1-D [storage](/shared/glossary/#storage) buffer, but the everyday idea is simply "an N-dimensional array of numbers the GPU can crunch in parallel."
@@ -1840,6 +1964,9 @@ Time to *produce* the first token — the elapsed time from when a request arriv
 ### U-Net {#u-net}
 An encoder-decoder network whose name comes from its U shape: the left arm shrinks the image down to a small, abstract summary while the right arm builds it back up to full size, with *skip connections* that hand each down-sampling layer's detail straight across to its matching up-sampling layer. Those skips are what let it keep fine pixel detail while still reasoning about the whole image, which is why it became the standard backbone for [diffusion models](/shared/glossary/#diffusion-model) (before [DiT](/shared/glossary/#dit) brought in transformers). It was originally invented for [medical-image segmentation](/shared/glossary/#medical-image-segmentation).
 
+### UCF-101 {#ucf-101}
+A widely used action-recognition video dataset from the University of Central Florida of about 13,000 short YouTube clips spanning 101 human-action categories (playing guitar, applying makeup, bench-pressing, and so on); the "101" is simply the number of action classes. It is small and low-resolution by modern standards, which is exactly why it became a common testbed for early video generation — you can train on it without a data-center. It shows up constantly in pre-diffusion video-GAN papers as the dataset everyone reported numbers on.
+
 ### Underflow {#underflow}
 Condition where a floating-point value is too small to be represented and rounds to zero; common with `float16` when accumulating very small gradients
 
@@ -1850,7 +1977,7 @@ Robot description formats (ROS, MuJoCo, NVIDIA respectively)
 One message a user sends in a chat conversation, paired with the model's reply (the *assistant turn*). A back-and-forth between user and assistant is a sequence of alternating turns, all under the same opening [system prompt](/shared/glossary/#system-prompt). In typical traffic, the system prompt is long and fixed while each user turn is short and varies — which is exactly the pattern a [prefix cache](/shared/glossary/#prefix-cache) exploits.
 
 ### V2V {#v2v}
-Video-to-Video
+Video-to-Video: transforming an existing video into a new one while keeping its motion and timing — for example restyling it into a cartoon, or re-rendering it conditioned on per-frame depth or pose. The hard part is *temporal consistency*: editing each frame independently makes the result flicker, so V2V methods share information across frames. Contrast with [image-to-video](/shared/glossary/#i2v) (one image in) and [text-to-video](/shared/glossary/#t2v) (text only).
 
 ### Vanishing gradients {#vanishing-gradients}
 A problem during training where [gradients](/shared/glossary/#gradients) become extremely small, effectively preventing the weights from changing their value and stalling the learning process.
@@ -1879,11 +2006,20 @@ A program that automatically checks whether an answer is correct — running uni
 ### Very Deep VAE {#very-deep-vae}
 A [hierarchical VAE](/shared/glossary/#hierarchical-vae) (Child, 2021) that scales to dozens of stacked latent variable groups — far more layers than earlier models. Each group only handles a thin slice of the work, with [residual-like parameterizations](/shared/glossary/#residual-parameterization) keeping gradients flowing through the depth. Like adding so many floors to a building that no single floor needs to bear much weight, it achieved strong image generation quality, showing that deeper hierarchies can capture richer structure than shallow ones.
 
+### Video-CFG {#video-cfg}
+Applying [classifier-free guidance (CFG)](/shared/glossary/#cfg-classifier-free-guidance) to a video model that has more than one condition — typically a text prompt *and* a conditioning image — by giving each condition its own guidance scale instead of one shared dial. You can then push text adherence and image faithfulness independently: strong text guidance to match the prompt, separate image guidance to stay locked to the conditioning frame. The catch unique to video is that turning either scale too high amplifies per-frame detail at the cost of smooth change *between* frames, so the clip's motion begins to flicker or its colors over-saturate — guidance strength trades against temporal smoothness. This is why production video models expose several guidance knobs rather than the single one image models use.
+
+### Video codec {#video-codec}
+The set of rules for compressing video into a small file and decompressing it back into frames — "codec" is short for **co**der–**dec**oder, which is literally what it does. Raw video is enormous (a few seconds can be hundreds of megabytes), so almost all real video is stored compressed; codecs exploit the fact that neighboring frames barely change. Analogy: a codec is like shorthand for a movie — instead of writing every frame in full, it writes "same as the last frame, but this corner moved." Examples include [H.264](/shared/glossary/#h264) (the universal default) and [AV1](/shared/glossary/#av1) (smaller files, slower to decode); the codec lives *inside* a [media container](/shared/glossary/#media-container) like `.mp4`.
+
 ### view {#view}
 A no-copy alias that shares storage with its source; requires a contiguous-compatible layout
 
 ### VIO {#vio}
 Visual-Inertial Odometry — fuse camera and IMU for high-rate ego-motion
+
+### Video GAN {#video-gan}
+A [GAN](/shared/glossary/#gans) adapted to produce short video clips instead of single images: the [generator](/shared/glossary/#generator) outputs a whole stack of frames at once and the [discriminator](/shared/glossary/#discriminator) judges whether the *motion*, not just each individual frame, looks real. The early family — VGAN, TGAN, [MoCoGAN](/shared/glossary/#mocogan), DVD-GAN, and StyleGAN-V — produced only short, low-resolution clips and suffered badly from [mode collapse](/shared/glossary/#mode-collapse) (the generator falling back on a few safe outputs). Each pushed one idea: MoCoGAN separated content from motion, DVD-GAN was the first to reach plausible quality, and StyleGAN-V applied [StyleGAN](/shared/glossary/#stylegan)'s latent-space tricks to video. The whole approach was largely abandoned around 2023 once [diffusion](/shared/glossary/#diffusion-model) proved both sharper and far more stable to train at scale.
 
 ### ViT {#vit}
 Vision Transformer — a [transformer](/shared/glossary/#transformer) that classifies or encodes images by first chopping them into a grid of small square [patches](/shared/glossary/#patch) ([patchification](/shared/glossary/#patchification)), turning each patch into one token, and then treating the picture exactly like a sentence of words. Because a plain transformer has no built-in notion of "next to" the way a [CNN](/shared/glossary/#cnn) does, a ViT adds a learned *positional embedding* to each patch (a small vector that says "I am the patch at row 3, column 5") and usually prepends a [CLS token](/shared/glossary/#cls-token) whose output becomes the whole-image summary. Like reading a mosaic tile by tile, left to right, instead of taking in the whole wall at once — and, given enough data, this beats CNNs because the model can relate any tile to any other from the very first layer instead of only neighboring pixels. The "B/16" in a name like ViT-B/16 means a Base-size model with 16×16-pixel patches.
@@ -1905,6 +2041,9 @@ NVIDIA's 2017 GPU architecture (V100) and the first generation to ship [Tensor C
 
 ### VP / VE SDE {#vp--ve-sde}
 The two standard ways to define the forward noising process of a [diffusion model](/shared/glossary/#diffusion-model), each written as an [SDE](/shared/glossary/#sde-stochastic-differential-equation). Variance-Preserving (VP) — the family [DDPM](/shared/glossary/#ddpm) uses — shrinks the original signal as it adds noise so the total variance stays around 1 the whole way. Variance-Exploding (VE) — used by the early [score](/shared/glossary/#score)-based models — leaves the signal untouched and simply piles on ever-larger noise, so the variance grows without bound. They are mathematically interconvertible and reach similar quality, but differ in numerical conditioning and in which samplers behave well.
+
+### VP9 {#vp9}
+A royalty-free [video codec](/shared/glossary/#video-codec) built by Google as a free alternative to the patent-licensed [H.264](/shared/glossary/#h264). It compresses noticeably better than H.264 — smaller files at the same quality — and is the codec behind most YouTube streams and many `.webm` files, though it has since been largely overtaken by the newer, even-smaller [AV1](/shared/glossary/#av1). Analogy: VP9 is to H.264 what a tighter, license-free ZIP format is to an older paid one — it squeezes the video smaller with no license fee, at the cost of more work to decode it back into frames. Example: a clip saved as a VP9 `.webm` is usually a good bit smaller than the same clip as an [H.264](/shared/glossary/#h264) `.mp4`, but slower to unpack into frames during training.
 
 ### VQA (Visual Question Answering) {#vqa-visual-question-answering}
 The task of answering a natural-language question about an image — "How many people are in this photo?", "What color is the car?" — where the model must read the picture *and* the words together to respond. It is the classic benchmark for [multimodal understanding](/shared/glossary/#modality): unlike captioning, which can lean on generic descriptions, a question pins the model to one specific detail it cannot fake. Think of an open-book exam where the "book" is a photograph and each question forces you to actually look. Most [VLMs](/shared/glossary/#vlm) are evaluated on VQA datasets, and it is the natural small task on which to compare fusion methods like [concatenation](/shared/glossary/#concatenation) versus [cross-attention](/shared/glossary/#cross-attention).
@@ -1950,6 +2089,9 @@ Short for **Wasserstein GAN with Gradient Penalty** — the most popular and rel
 ### Whisper {#whisper}
 OpenAI's open speech-recognition model — an encoder-decoder [transformer](/shared/glossary/#transformer) that turns a [mel spectrogram](/shared/glossary/#mel-spectrogram) of speech into text, trained on 680,000 hours of multilingual audio scraped from the web. Its encoder digests the audio into rich [embeddings](/shared/glossary/#embedding) and its decoder writes out the words, so one model handles transcription, translation, and language identification. Because that encoder learned such general audio representations, people often reuse just the encoder — freezing it and training a small head on top — as a ready-made audio feature extractor (much like a vision [linear probe](/shared/glossary/#linear-probe)). The name evokes catching even quiet, whispered speech.
 
+### Windowed attention {#windowed-attention}
+A cheaper form of [attention](/shared/glossary/#attention) that lets each token attend only to others inside a small local neighborhood (a "window") rather than to the whole sequence. In video, *windowed spatiotemporal attention* applies full joint space-and-time attention but only within small 3D boxes of nearby frames and pixels, so cost grows with the window size instead of the full `T×H×W`. It is the middle ground between cheap [(2+1)D](/shared/glossary/#21d) attention and expensive full [spatiotemporal attention](/shared/glossary/#spatiotemporal-attention): you keep some direct space-time interaction but give up reach across the whole clip. Like reading a document through a small sliding window that shows only a few lines at a time — fast, but you cannot see the whole page at once.
+
 ### Worker processes {#worker-processes}
 Background subprocesses that a [DataLoader](/shared/glossary/#dataloader) spawns to load and preprocess data in parallel with GPU computation.
 
@@ -1979,6 +2121,9 @@ Doing a task the model was never explicitly trained for, with zero task-specific
 
 ### ZMP {#zmp}
 Zero-Moment Point — classical biped balance criterion
+
+### Zoom {#zoom}
+A camera move that magnifies or shrinks the view without the camera physically moving — like using binoculars to pull a faraway sign closer while your feet stay planted. It narrows or widens the lens's field of view, so the whole frame scales in or out at once. Contrast it with a [dolly](/shared/glossary/#dolly), which changes the picture by actually rolling the camera nearer or farther. It is one of the moves a video model can be steered through with [camera control](/shared/glossary/#camera-control).
 
 ### β-VAE {#β-vae}
 A [VAE](/shared/glossary/#vae) variant that multiplies the [KL divergence](/shared/glossary/#kl-divergence) part of the [ELBO](/shared/glossary/#elbo) by an adjustable knob called β. Turning β up past 1 pressures the model to use its [latent space](/shared/glossary/#latent-space) more tidily, often making individual latent dimensions line up with meaningful features (like rotation or thickness) — but push it too far and the model stops reconstructing the input well. It is the simplest way to trade reconstruction quality against a cleaner, more interpretable latent.

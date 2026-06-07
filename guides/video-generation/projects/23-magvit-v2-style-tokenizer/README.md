@@ -1,0 +1,5 @@
+# MagViT-v2-Style Tokenizer
+
+## Key Insight
+
+Diffusion models want *continuous* latents, but [transformer](/shared/glossary/#transformer) and [autoregressive](/shared/glossary/#autoregressive-model) models want *discrete* tokens — and [MagViT-v2](/shared/glossary/#magvit-v2) is the strongest open recipe for turning video into a grid of discrete codes. This project rebuilds its core idea: instead of a learned [codebook](/shared/glossary/#codebook) (which can suffer [codebook collapse](/shared/glossary/#codebook-collapse), where most entries go unused), it discretizes each latent with [FSQ](/shared/glossary/#fsq) or [LFQ](/shared/glossary/#lfq) — two codebook-free schemes that simply snap each coordinate onto a fixed grid, sidestepping collapse entirely. You measure quality with [reconstruction FID](/shared/glossary/#fid): encode real clips to tokens, decode them back, and score how close the rebuilt frames look to the originals. The payoff is that good discrete video tokens let you generate video with the very same next-token machinery used for language.

@@ -1,0 +1,5 @@
+# Temporal CFG Study
+
+## Key Insight
+
+[Classifier-free guidance (CFG)](/shared/glossary/#cfg-classifier-free-guidance) is the inference knob that makes a [diffusion model](/shared/glossary/#diffusion-model) follow its conditioning more closely, but a video model often has *two* conditions pulling on it at once — a text prompt and a conditioning image — and each wants a different amount of push. [Video-CFG](/shared/glossary/#video-cfg) gives them separate guidance scales instead of one shared dial: turn up text guidance for tighter prompt adherence, turn up image guidance to stay faithful to the conditioning frame. This project sweeps the two scales independently and observes the trade-offs — push either too hard and the clip's colors over-saturate or its motion starts to flicker, because guidance amplifies per-frame detail at the expense of smooth change across frames. The lesson is why real video systems expose more than one guidance knob: the strength that makes the text land is rarely the strength that keeps the image and the motion clean.

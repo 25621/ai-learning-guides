@@ -1,0 +1,5 @@
+# Moving MNIST Predictor
+
+## Key Insight
+
+[Future frame prediction](/shared/glossary/#future-frame-prediction) — show a model the first few frames of a clip and ask it to draw what comes next — is the oldest test of whether a network has actually learned how things move, and [Moving MNIST](/shared/glossary/#moving-mnist) (two handwritten digits bouncing around a small frame) is its classic toy benchmark. This project trains a [ConvLSTM](/shared/glossary/#convlstm) — an [LSTM](/shared/glossary/#lstm) that keeps each frame's 2D grid instead of flattening it into a flat list of numbers — to predict the next 10 frames given the first 10. The instructive failure to watch for: because the future is uncertain, a model trained with plain [mean squared error](/shared/glossary/#mse-mean-squared-error) hedges its bets by *blurring* the digits, averaging every plausible next position into one smeared guess. Seeing that blur firsthand explains why later video models reach for sharper, probabilistic objectives like [GANs](/shared/glossary/#gans) and [diffusion](/shared/glossary/#diffusion-model).
