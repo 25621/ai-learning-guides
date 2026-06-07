@@ -1,0 +1,5 @@
+# World Model for RL
+
+## Key Insight
+
+Once you have a [world model](/shared/glossary/#world-model), you can train an agent *without touching the real environment*: let the model imagine thousands of future [rollouts](/shared/glossary/#rollout) and have a [policy](/shared/glossary/#policy) learn from those dreamed trajectories instead of slow, expensive real experience — the core idea of [DreamerV3](/shared/glossary/#dreamerv3). This project builds a lightweight version: learn a world model of a simple environment, roll it forward under candidate actions, and train a policy purely inside that "dream." This guide owns only the generative side — predicting the next state given an [action](/shared/glossary/#action-conditioning); the policy-update loop and the reward objective belong to [RL Phase 6 (Model-Based RL)](../../../reinforcement-learning/#phase-6-model-based-rl). The payoff is sample efficiency: imagined experience is essentially free once the model is trained, so the agent can practice far more than the real world would ever allow.

@@ -498,6 +498,17 @@ const sidebars = {
                 {type: 'doc', id: 'guides/video-generation/projects/streaming-t2v/README', label: 'Streaming T2V'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 9: World Models and Interactive Video',
+              items: [
+                {type: 'doc', id: 'guides/video-generation/projects/action-conditioned-video/README', label: 'Action-conditioned video'},
+                {type: 'doc', id: 'guides/video-generation/projects/gamengen-reproduction-mini/README', label: 'GameNGen reproduction (mini)'},
+                {type: 'doc', id: 'guides/video-generation/projects/latent-action-inference/README', label: 'Latent action inference'},
+                {type: 'doc', id: 'guides/video-generation/projects/world-model-for-rl/README', label: 'World model for RL'},
+                {type: 'doc', id: 'guides/video-generation/projects/real-time-latency-hunt/README', label: 'Real-time latency hunt'},
+              ],
+            },
           ],
         },
         {type: 'doc', id: 'guides/robotics/README', label: 'Robotics'},

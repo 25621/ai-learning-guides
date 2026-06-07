@@ -667,15 +667,15 @@ Where video generation stops being "I make pretty clips" and becomes "I simulate
 
 ### Concepts to Learn
 
-- **What a world model is** — a generative model that, given a state and an action, predicts the next state. A video model conditioned on actions is a world model. *This phase owns the generative side*; using the model as an environment to learn a policy is [RL Phase 6 (Model-Based RL)](../reinforcement-learning/#phase-6-model-based-rl)
-- **The Dreamer line, in one sentence** — Hafner et al.'s DreamerV1/V2/V3 learn a latent world model and train a policy by imagining rollouts in it. We borrow the *generative* idea (predict the next latent given an action); the policy-learning loop and the RL objective are [covered in the RL guide](../reinforcement-learning/#phase-6-model-based-rl)
-- **Genie, Genie 2 (DeepMind)** — playable, action-conditioned video models trained on web video
-- **GameNGen (Google)** — a real-time playable Doom simulation, entirely neural
-- **GAIA-1 / GAIA-2 (Wayve)** — driving world models
-- **NVIDIA Cosmos** — a world-foundation-model platform aimed at training and evaluating embodied/robot policies; the bridge to [Robotics](../robotics/#phase-9-simulation-sim-to-real-and-robot-systems-engineering)
-- **OASIS / Decart** — open neural Minecraft
-- **Latent action models** — inferring actions from unlabeled video (so you can train world models without paired actions)
-- **Real-time constraints** — < 50 ms/frame for interactivity. Forces distillation, caching, or smaller models — the same autoregressive-distillation toolkit as Phase 8
+- **What a [world model](/shared/glossary/#world-model) is** — a generative model that, given a state and an action, predicts the next state. A video model [conditioned on actions](/shared/glossary/#action-conditioning) is a world model. *This phase owns the generative side*; using the model as an environment to learn a policy is [RL Phase 6 (Model-Based RL)](../reinforcement-learning/#phase-6-model-based-rl)
+- **The Dreamer line, in one sentence** — Hafner et al.'s [DreamerV1/V2/V3](/shared/glossary/#dreamerv3) learn a latent [world model](/shared/glossary/#world-model) and train a [policy](/shared/glossary/#policy) by imagining [rollouts](/shared/glossary/#rollout) in it. We borrow the *generative* idea (predict the next latent given an action); the policy-learning loop and the RL objective are [covered in the RL guide](../reinforcement-learning/#phase-6-model-based-rl)
+- **[Genie, Genie 2](/shared/glossary/#genie) (DeepMind)** — playable, [action-conditioned](/shared/glossary/#action-conditioning) video models trained on web video
+- **[GameNGen](/shared/glossary/#gamengen) (Google)** — a real-time playable Doom simulation, entirely neural
+- **GAIA-1 / GAIA-2 (Wayve)** — driving [world models](/shared/glossary/#world-model)
+- **NVIDIA Cosmos** — a [world](/shared/glossary/#world-model)-foundation-model platform aimed at training and evaluating embodied/robot policies; the bridge to [Robotics](../robotics/#phase-9-simulation-sim-to-real-and-robot-systems-engineering)
+- **OASIS / Decart** — an open neural [world model](/shared/glossary/#world-model) of Minecraft
+- **[Latent action models](/shared/glossary/#latent-action-model)** — inferring actions from unlabeled video (so you can train [world models](/shared/glossary/#world-model) without paired actions)
+- **Real-time constraints** — < 50 ms/frame for interactivity. Forces [distillation](/shared/glossary/#distillation), caching, or smaller models — the same autoregressive-distillation toolkit as Phase 8
 - **Connection to physical RL and robotics** — world models are policy-rollouts-as-video; the same model can serve as a simulator for an RL agent ([RL Phase 6](../reinforcement-learning/#phase-6-model-based-rl)) or as a learned simulator for an embodied policy ([Robotics Phase 9](../robotics/#phase-9-simulation-sim-to-real-and-robot-systems-engineering))
 - **Connection to multimodal** — a fully general world model is multimodal: text in, video out, with audio, actions, and physics. Joint cross-modal *understanding* is [Multimodal Learning](../multimodal-learning/)'s territory
 
@@ -704,11 +704,11 @@ is the empty string.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Action-conditioned video | Take a small video diffusion model; add a discrete-action input (e.g., 4 game actions); train on a simple game's recorded play | ⭐⭐⭐⭐⭐ |
-| GameNGen reproduction (mini) | Train an action-conditioned model on a simpler game (Atari, GridWorld) and play it interactively | ⭐⭐⭐⭐⭐ |
-| Latent action inference | Train a model to infer the latent action between two adjacent frames in unlabeled video (Genie-style) | ⭐⭐⭐⭐⭐ |
-| World model for RL | Use a learned world model to roll out trajectories; train a policy in the dream (DreamerV3-light) | ⭐⭐⭐⭐⭐ |
-| Real-time latency hunt | Distill a 30-fps diffusion video model into a 4-step (or 1-step) consistency model; measure ms/frame | ⭐⭐⭐⭐ |
+| [Action-conditioned video](projects/40-action-conditioned-video/README.md) | Take a small video diffusion model; add a discrete-action input (e.g., 4 game actions); train on a simple game's recorded play | ⭐⭐⭐⭐⭐ |
+| [GameNGen reproduction (mini)](projects/41-gamengen-reproduction-mini/README.md) | Train an action-conditioned model on a simpler game (Atari, GridWorld) and play it interactively | ⭐⭐⭐⭐⭐ |
+| [Latent action inference](projects/42-latent-action-inference/README.md) | Train a model to infer the latent action between two adjacent frames in unlabeled video (Genie-style) | ⭐⭐⭐⭐⭐ |
+| [World model for RL](projects/43-world-model-for-rl/README.md) | Use a learned world model to roll out trajectories; train a policy in the dream (DreamerV3-light) | ⭐⭐⭐⭐⭐ |
+| [Real-time latency hunt](projects/44-real-time-latency-hunt/README.md) | Distill a 30-fps diffusion video model into a 4-step (or 1-step) consistency model; measure ms/frame | ⭐⭐⭐⭐ |
 
 ### Key Insight
 
