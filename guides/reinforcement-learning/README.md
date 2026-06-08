@@ -120,11 +120,11 @@ The Bellman operator is a **contraction** in the supremum norm: applying it repe
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Build a gridworld | 5×5 grid with rewards and obstacles; expose `(S, A, P, R, γ)` explicitly | ⭐ |
-| Policy evaluation by matrix inverse | For a small MDP, solve `V^π = (I − γP^π)⁻¹ r^π` directly; verify against iterative evaluation | ⭐⭐ |
-| Hand-trace Bellman backups | On a 3-state MDP, do 10 Bellman backups by hand and plot `V` over iterations | ⭐⭐ |
-| Discount factor study | Same task, sweep `γ ∈ {0.5, 0.9, 0.99, 0.999}`; observe how the optimal policy changes | ⭐⭐ |
-| POMDP exercise | Build a gridworld where the agent only sees its row, not its column; verify the optimal *Markov* policy is suboptimal | ⭐⭐⭐ |
+| [Build a gridworld](projects/01-build-a-gridworld/README.md) | 5×5 grid with rewards and obstacles; expose `(S, A, P, R, γ)` explicitly | ⭐ |
+| [Policy evaluation by matrix inverse](projects/02-policy-evaluation-by-matrix-inverse/README.md) | For a small MDP, solve `V^π = (I − γP^π)⁻¹ r^π` directly; verify against iterative evaluation | ⭐⭐ |
+| [Hand-trace Bellman backups](projects/03-hand-trace-bellman-backups/README.md) | On a 3-state MDP, do 10 Bellman backups by hand and plot `V` over iterations | ⭐⭐ |
+| [Discount factor study](projects/04-discount-factor-study/README.md) | Same task, sweep `γ ∈ {0.5, 0.9, 0.99, 0.999}`; observe how the optimal policy changes | ⭐⭐ |
+| [POMDP exercise](projects/05-pomdp-exercise/README.md) | Build a gridworld where the agent only sees its row, not its column; verify the optimal *Markov* policy is suboptimal | ⭐⭐⭐ |
 
 ### Sample Code: Policy Evaluation on a Small MDP
 

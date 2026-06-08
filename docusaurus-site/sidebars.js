@@ -405,7 +405,24 @@ const sidebars = {
             },
           ],
         },
-        {type: 'doc', id: 'guides/reinforcement-learning/README', label: 'Reinforcement Learning'},
+        {
+          type: 'category',
+          label: 'Reinforcement Learning',
+          link: {type: 'doc', id: 'guides/reinforcement-learning/README'},
+          items: [
+            {
+              type: 'category',
+              label: 'Phase 1: MDPs and the Bellman Equations',
+              items: [
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/build-a-gridworld/README', label: 'Build a gridworld'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/policy-evaluation-by-matrix-inverse/README', label: 'Policy evaluation by matrix inverse'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/hand-trace-bellman-backups/README', label: 'Hand-trace Bellman backups'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/discount-factor-study/README', label: 'Discount factor study'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/pomdp-exercise/README', label: 'POMDP exercise'},
+              ],
+            },
+          ],
+        },
         {
           type: 'category',
           label: 'Video Generation',

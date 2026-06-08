@@ -173,7 +173,10 @@ Behavior Cloning — supervised imitation of demonstrator actions
 The policy that generated the data, in off-policy or offline RL
 
 ### Bellman equation {#bellman-equation}
-The recursive consistency condition `V(s) = E[r + γV(s')]`
+The rule that ties the [value](/shared/glossary/#value-function) of a state to the value of the states it leads to: `V(s) = E[r + γV(s')]`, read as *"the worth of being here equals the reward I get now plus the [discounted](/shared/glossary/#discount-factor) worth of wherever I land next."* It is called *recursive* because a state's value is defined in terms of the same quantity one step later, and a *consistency condition* because the true value function is the one set of numbers that makes both sides agree in every state at once. Almost every RL algorithm is some way of forcing this equation to hold when you cannot compute the right-hand side exactly. Named after Richard Bellman, who developed this style of recursive optimization in the 1950s.
+
+### Bellman operator {#bellman-operator}
+One application of the [Bellman equation](/shared/glossary/#bellman-equation)'s right-hand side, used as an update rule: take your current guess of the [value function](/shared/glossary/#value-function) and, for every state, replace it with *"reward now plus [discounted](/shared/glossary/#discount-factor) value of the next state."* One such sweep over all states is called a **Bellman backup**. Repeating backups is the engine of [value iteration](/shared/glossary/#value-iteration) and policy evaluation, and it is guaranteed to converge because the operator is a [contraction mapping](/shared/glossary/#contraction-mapping) — each backup pulls every guess strictly closer to the true answer. Think of it as one round of "update each cell from its neighbors," repeated until nothing changes.
 
 ### Benchmark {#benchmark}
 A fixed, shared test set used to measure and compare models on a task — like a standardized exam everyone sits so scores line up side by side. [MMLU](/shared/glossary/#mmlu) tests knowledge and [GSM8K](/shared/glossary/#gsm8k) tests math; a benchmark is only meaningful while models have not already seen its answers (see [contamination](/shared/glossary/#contamination)).
@@ -367,6 +370,9 @@ Taking an already-pretrained model and training it further on a new corpus to ad
 ### Continuous batching {#continuous-batching}
 A serving trick where the GPU adds new requests into the running [batch](/shared/glossary/#batching) — and drops finished ones — at every decode step, instead of waiting for the whole batch to finish together. Like a hotel shuttle that can pick up and drop off passengers anywhere along its loop rather than only at the start and end: far fewer empty seats overall, so [throughput](/shared/glossary/#throughput) goes up dramatically. It is the single largest speedup in modern LLM serving and is the default in [vLLM](/shared/glossary/#vllm) and [TGI](/shared/glossary/#tgi).
 
+### Contraction mapping {#contraction-mapping}
+A function that, every time you apply it, pulls any two inputs *closer together* by at least a fixed ratio — so repeating it drags everything toward a single unmovable point (its *fixed point*). This matters in RL because the [Bellman operator](/shared/glossary/#bellman-operator) is a contraction with ratio γ (the [discount factor](/shared/glossary/#discount-factor)): each [backup](/shared/glossary/#bellman-operator) shrinks the gap between your current estimate and the true [value function](/shared/glossary/#value-function) by a factor of γ, so the error falls like `γ, γ², γ³, …` and the estimate is guaranteed to converge. Analogy: photocopying a copy of a copy at 90% size each time — the images shrink toward one point no matter what you started with. This single property justifies every iterative value-based algorithm in RL.
+
 ### ControlNet {#controlnet}
 An add-on that gives a frozen [diffusion model](/shared/glossary/#diffusion-model) precise *spatial* control. It clones the [U-Net](/shared/glossary/#u-net)'s encoder into a parallel branch that reads an auxiliary conditioning image — a [depth map](/shared/glossary/#depth-map), a pose skeleton, a [Canny edge map](/shared/glossary/#canny-edge-detector), a [segmentation map](/shared/glossary/#segmentation-map) — and feeds that branch's features back into the original network so the output follows the supplied structure. The base model stays untouched (so its quality and prompt-following are preserved) and only the new branch is trained; the connections use [zero-convolutions](/shared/glossary/#zero-conv) so the branch contributes nothing at first and is learned gradually. Like laying tracing paper with an outline over a painter's canvas: the prompt still chooses colors and texture, but every shape must follow the lines you drew. Adapting ControlNet to *video* (sometimes called ControlNet-Video) feeds a per-frame conditioning map — e.g. a depth map for every frame — into a video diffusion model; the extra challenge is keeping the control [temporally consistent](/shared/glossary/#temporal-consistency) so the result does not flicker frame to frame.
 
@@ -532,6 +538,9 @@ A strong, off-the-shelf image encoder from Meta trained in a [self-supervised](/
 ### Disaggregated serving {#disaggregated-serving}
 Running prefill and decode on separate GPU pools with KV cache transfer between them
 
+### Discount factor {#discount-factor}
+The number γ (gamma), between 0 and 1, that says how much a reward is worth *per step of delay*: a reward `k` steps in the future counts as `γᵏ` times its face value. With γ close to 0 the agent is short-sighted and chases only immediate reward; with γ close to 1 it is patient and plans far ahead. Two reasons it exists: it keeps the infinite sum of future rewards from blowing up (the geometric series `1 + γ + γ² + … = 1/(1−γ)` is finite only when γ < 1), and it encodes a real preference for sooner over later, the way money today is worth more than money next year. Its size sets the [effective horizon](/shared/glossary/#effective-horizon) — roughly how many steps ahead the agent effectively cares about. It is the `γ` in the [Bellman equation](/shared/glossary/#bellman-equation) and one of the five parts of an [MDP](/shared/glossary/#mdp).
+
 ### Discriminator {#discriminator}
 The "critic" half of a [GAN](/shared/glossary/#gans): a network that looks at an image and outputs how likely it is to be real rather than made by the [generator](/shared/glossary/#generator). It is trained like a detective spotting fakes, and its verdicts are the only teaching signal the generator ever gets — as the discriminator sharpens, the generator is forced to make more convincing images. In [Wasserstein GANs](/shared/glossary/#wasserstein-gan-wgan) it outputs an unbounded score instead of a 0–1 probability and is usually called a *critic*.
 
@@ -611,6 +620,9 @@ Running a model directly on the device in front of the user — a phone, laptop,
 
 ### EDM {#edm}
 A cleaned-up reformulation of [diffusion](/shared/glossary/#diffusion-model) from the paper *Elucidating the Design Space of Diffusion-Based Generative Models* (Karras et al. 2022) that strips away historical baggage and makes training and sampling much easier to tune. Two ideas carry it: index noise by its standard deviation σ rather than a discrete timestep (the [σ-schedule](/shared/glossary/#σ-schedule-karras)), and *precondition* the network — rescale its input, output, and per-σ loss weight so it always sees roughly unit-variance signals no matter how much noise is present. The result is a flat, forgiving hyperparameter surface. A useful rule of thumb: if a 2020-era diffusion paper feels obscure, restate it in EDM's language and it usually becomes obvious.
+
+### Effective horizon {#effective-horizon}
+A rough measure of how many steps into the future an agent's choices actually take into account, set by the [discount factor](/shared/glossary/#discount-factor): about `1/(1−γ)` steps. The intuition is that rewards beyond this point have been shrunk by so many factors of γ that they barely move the decision. For example γ = 0.9 gives `1/(1−0.9) = 1/0.1 = 10` steps, γ = 0.99 gives `1/0.01 = 100` steps, and γ = 0.999 gives 1,000 — so nudging γ from 0.99 to 0.999 makes the agent plan ten times farther ahead. Like a flashlight beam that γ widens or narrows: it sets how far down the road you can see well enough to steer by.
 
 ### EKF {#ekf}
 Extended Kalman Filter — Kalman filter linearized about the current estimate
@@ -1144,6 +1156,9 @@ Scalar measure of how "easy" motion is from a given configuration (e.g. `sqrt(de
 ### Mantissa {#mantissa}
 The part of a [floating-point](https://en.wikipedia.org/wiki/Floating-point_arithmetic) number that holds the *precision digits* — the significant figures sitting in front of the scale factor. In `3.5 × 10¹²`, the `3.5` is the mantissa (also called the *significand*). More mantissa bits give finer resolution between nearby values; fewer mantissa bits leave larger gaps between representable numbers. [FP8](/shared/glossary/#fp8)'s `E4M3` format means 4 [exponent](/shared/glossary/#exponent) bits + 3 mantissa bits, so it can only distinguish about 8 distinct values between each consecutive power of two — coarse, but small enough to fit twice as many numbers in the same memory as [bfloat16](/shared/glossary/#bfloat16).
 
+### Markov property {#markov-property}
+The assumption that the current state already contains everything relevant about the past, so what happens next depends only on *where you are now*, not on how you got there. It is the "memoryless" condition that makes an [MDP](/shared/glossary/#mdp) tractable: when it holds, a [policy](/shared/glossary/#policy) can ignore history and look only at the present state. Named after the mathematician Andrey Markov. Example: in chess the current board position is Markov (the move history doesn't change which moves are legal or good), but a single still photo of a moving ball is *not* — you can't tell which way it is heading without the previous frame. When the property fails, you have a [POMDP](/shared/glossary/#pomdp).
+
 ### Marlin {#marlin}
 A specialized GPU [kernel](/shared/glossary/#kernel) for mixed-precision [matmul](/shared/glossary/#matmul) — 4-bit [weights](/shared/glossary/#weights) multiplied by 16-bit [activations](/shared/glossary/#activations) — built to stay fast even on the skinny, small-batch shapes of [decode](/shared/glossary/#decode). It unpacks the 4-bit weights on the fly while keeping the [Tensor Cores](/shared/glossary/#tensor-core) busy, so a [quantized](/shared/glossary/#quantization) model runs nearly as fast as the math allows. (Named after the fast-swimming marlin fish.)
 
@@ -1153,8 +1168,11 @@ A way to generate image [tokens](/shared/glossary/#token-visualaudio) in paralle
 ### matmul {#matmul}
 Matrix multiplication — the dominant compute operation in neural networks; written `A @ B` in PyTorch.
 
+### Matrix inverse {#matrix-inverse}
+For a square matrix `A`, its inverse `A⁻¹` is the matrix that undoes it: `A⁻¹A = I`, where `I` is the identity matrix (the matrix equivalent of the number 1, leaving anything it multiplies unchanged). Multiplying by `A⁻¹` is how you *divide* by a matrix, which is exactly what solving a system of linear equations `Ax = b` needs — the solution is `x = A⁻¹b`. In RL it gives the one-shot answer to [policy evaluation](/shared/glossary/#policy-evaluation): the [Bellman equation](/shared/glossary/#bellman-equation) for a fixed [policy](/shared/glossary/#policy) is the linear system `(I − γPπ) V = rπ`, so `V = (I − γPπ)⁻¹ rπ`. Analogy: if a matrix is a recipe that scrambles a list of numbers, its inverse is the recipe that unscrambles them. In practice you rarely form the inverse explicitly — solving the system directly (e.g. `np.linalg.solve`) is faster and more numerically stable — but the inverse is the cleanest way to *think* about the answer.
+
 ### MDP {#mdp}
-Markov Decision Process — the tuple `(S, A, P, R, γ)`
+Markov Decision Process — the standard mathematical description of a decision-making problem, written as the tuple `(S, A, P, R, γ)`: the set of **S**tates the world can be in, the **A**ctions the agent can take, the transition [probabilities](/shared/glossary/#transition-function) **P** saying where each action is likely to land you, the [**R**eward function](/shared/glossary/#reward-function) scoring what happens, and the [discount factor](/shared/glossary/#discount-factor) **γ** weighing future reward against present. "Decision Process" because the agent makes a sequence of choices over time; "[Markov](/shared/glossary/#markov-property)" because the next state depends only on the current state and action, not on the full history of how you got there. Nearly every RL method assumes the problem is (or can be treated as) an MDP. When the agent cannot fully observe the state, it becomes a [POMDP](/shared/glossary/#pomdp).
 
 ### Mechanistic interpretability {#mechanistic-interpretability}
 The line of research that tries to reverse-engineer *what individual pieces of a neural network actually do* — which neurons or [attention heads](/shared/glossary/#heads) detect what, where a fact is stored, why a particular output came out. Like opening up a watch to see which gears turn the hands, instead of only timing how fast the watch runs. Main tools: [linear probes](/shared/glossary/#linear-probe), [sparse autoencoders](/shared/glossary/#sae), activation patching, and circuit analysis.
@@ -1401,6 +1419,9 @@ The extra per-parameter values an [optimizer](/shared/glossary/#optimizer) store
 ### Orbit {#orbit}
 A camera move that circles around a subject while keeping it centered in frame — like walking in a ring around a statue, always looking inward at it. Because the viewpoint travels around the object, you see its different sides in turn, which makes the orbit a demanding test of whether a video model keeps an object's 3D shape consistent as the angle changes. It is one of the paths a model can follow under [camera control](/shared/glossary/#camera-control).
 
+### Optimal policy {#optimal-policy}
+The [policy](/shared/glossary/#policy) (rule for choosing actions) that earns the highest expected [return](/shared/glossary/#value-function) from every state — no other policy does better anywhere. Its [value function](/shared/glossary/#value-function) is written `V*`, the one the Bellman *optimality* version of the [Bellman equation](/shared/glossary/#bellman-equation) describes. A key fact: which policy is optimal depends on the [discount factor](/shared/glossary/#discount-factor) — make the agent more short-sighted or more patient and the best action in a state can change. Solving an [MDP](/shared/glossary/#mdp) means finding this policy.
+
 ### Outcome reward model {#outcome-reward-model}
 A scorer that judges only a solution's final answer as right or wrong, ignoring the steps in between — simpler than a [process reward model](/shared/glossary/#process-reward-model), which grades each step, but blind to *where* a wrong answer first went off track.
 
@@ -1481,6 +1502,12 @@ A loose scatter of dots in space, where each dot is one data item placed by its 
 
 ### Policy {#policy}
 In reinforcement learning, the model being trained to choose what to do next — for an [LLM](/shared/glossary/#llm), the network that picks the next token. "Improving the policy" just means making those choices earn more reward.
+
+### Policy evaluation {#policy-evaluation}
+The task of computing the [value function](/shared/glossary/#value-function) of a *given, fixed* [policy](/shared/glossary/#policy) — answering "if I always act this way, how much reward should I expect from each state?" — without yet trying to improve the policy. Because the policy is fixed, the [Bellman equation](/shared/glossary/#bellman-equation) becomes a set of *linear* equations with one unknown per state, so it can be solved two ways: in one shot with a [matrix inverse](/shared/glossary/#matrix-inverse), or by repeatedly applying the [Bellman operator](/shared/glossary/#bellman-operator) until the numbers stop changing. It is the evaluation step that, alternated with a policy-improvement step, builds up to the [optimal policy](/shared/glossary/#optimal-policy).
+
+### POMDP {#pomdp}
+Partially Observable Markov Decision Process — an [MDP](/shared/glossary/#mdp) in which the agent does **not** see the true state, only a partial or noisy *observation* of it. Because that observation alone breaks the [Markov property](/shared/glossary/#markov-property) (it no longer holds everything needed to act well), a [policy](/shared/glossary/#policy) that reacts only to the current observation is provably suboptimal — to act well the agent generally has to *remember* past observations, e.g. with a recurrent network or an explicit belief over which state it is probably in. Example: a robot with only a forward camera that cannot see what is behind it, or a poker player who cannot see opponents' cards. Many real problems that look like MDPs are secretly POMDPs because the "state" the designer chose leaves something important out.
 
 ### Position bias {#position-bias}
 A judge's tendency to pick an answer based on *where* it sits rather than *what* it says — for example, an [LLM-as-judge](/shared/glossary/#llm-as-judge) that quietly prefers whichever response appears first (or last) when shown two side-by-side. Like a job interviewer who can't help favoring the candidate they meet right after lunch, regardless of qualifications. The standard fix is to ask the judge twice with the two answers swapped and accept the verdict only if both runs name the same winner.
@@ -1642,6 +1669,9 @@ Residual Network — a deep [CNN](/shared/glossary/#cnn) whose layers each learn
 
 ### reverse-mode {#reverse-mode}
 The order [autograd](/shared/glossary/#autograd) walks the computation graph when differentiating: the forward pass first, then a single [backward pass](/shared/glossary/#backward-pass) that propagates [gradients](/shared/glossary/#gradients) from the scalar output back to every input. It is the efficient choice when a model has many parameters but only one [loss value](/shared/glossary/#loss-value).
+
+### Reward function {#reward-function}
+The part of an [MDP](/shared/glossary/#mdp) that scores what happens, `R(s, a)`: the immediate number the agent receives for taking action `a` in state `s` (sometimes also depending on the next state). It defines *what the agent is trying to achieve* — the whole goal of RL is to collect as much total reward as possible over time, weighted by the [discount factor](/shared/glossary/#discount-factor). Designing it is deceptively hard: an agent optimizes the reward you *wrote*, not the behavior you *meant*, which is the source of [reward hacking](/shared/glossary/#reward-hacking). Example: in a [gridworld](/shared/glossary/#gridworld) you might give +1 for reaching the goal, −1 for stepping in a hazard, and a small −0.01 each step to encourage short paths.
 
 ### Reward hacking {#reward-hacking}
 A policy that maximizes the reward signal without doing what was intended
@@ -2027,6 +2057,9 @@ The decoder-only / encoder-only / encoder-decoder architecture built from [atten
 ### TransformerEngine {#transformerengine}
 NVIDIA's open-source library that automates safe [FP8](/shared/glossary/#fp8) training and inference on [Hopper](/shared/glossary/#hopper) and [Blackwell](/shared/glossary/#blackwell) GPUs — it picks per-tensor scales each step so the low-bit math stays numerically stable. Like a thermostat for low-precision arithmetic: as values drift toward overflow or underflow, it nudges the scale to keep them inside the safe range. Drop-in [transformer](/shared/glossary/#transformer) layers wrap your model and turn FP8 on without the user having to manage the scaling manually.
 
+### Transition function {#transition-function}
+The part of an [MDP](/shared/glossary/#mdp) that describes how the world moves, `P(s' | s, a)`: the probability of landing in next-state `s'` given that you took action `a` in state `s`. It captures the environment's dynamics, including randomness — like a slippery floor where "go right" actually moves you right only 80% of the time. Also called the transition probabilities, the dynamics, or the model. When these probabilities are *known*, you can plan exactly with [value iteration](/shared/glossary/#value-iteration); when they are *unknown*, the agent must learn from sampled experience, which is what most of RL is about. Example: in a deterministic [gridworld](/shared/glossary/#gridworld), `P` simply maps "in cell 5, move up" to "now in cell 2" with probability 1.
+
 ### transpose {#transpose}
 Swaps two dimensions by rewriting strides — never copies; the result is usually non-contiguous
 
@@ -2079,7 +2112,10 @@ Variational Autoencoder — an [autoencoder](/shared/glossary/#autoencoder) whos
 The [loss](/shared/glossary/#loss-function) measured on held-out data the model was not trained on; the honest signal of how well training is generalizing.
 
 ### Value function {#value-function}
-Expected return; `V(s)` for state-value, `Q(s, a)` for action-value
+How much total future reward you should expect, used as a score for situations. The *return* it averages is the discounted sum of all rewards from now on (`r₀ + γr₁ + γ²r₂ + …`, each step shrunk by the [discount factor](/shared/glossary/#discount-factor) γ). Two flavors: the **state-value** `V(s)` is the expected return starting from state `s` and following your [policy](/shared/glossary/#policy); the **action-value** `Q(s, a)` is the expected return if you first take action `a` and follow the policy afterward. The difference `Q(s, a) − V(s)` is the [advantage](/shared/glossary/#advantage) — how much better that one action is than the policy's average. The [Bellman equation](/shared/glossary/#bellman-equation) is the recursive rule these values must satisfy.
+
+### Value iteration {#value-iteration}
+A dynamic-programming algorithm for solving an [MDP](/shared/glossary/#mdp) when the [transition function](/shared/glossary/#transition-function) and [reward function](/shared/glossary/#reward-function) are known: start with any guess of the [value function](/shared/glossary/#value-function), then repeatedly apply the optimality [Bellman backup](/shared/glossary/#bellman-operator) — set each state's value to the *best* action's "reward now plus [discounted](/shared/glossary/#discount-factor) next-state value" — until the values stop changing. Because that backup is a [contraction mapping](/shared/glossary/#contraction-mapping), the values are guaranteed to converge to the optimum `V*`; reading off the best action in each state then gives the [optimal policy](/shared/glossary/#optimal-policy). It differs from policy iteration by never evaluating a policy to completion — it folds improvement into every sweep.
 
 ### Value network {#value-network}
 The helper network (the "critic") in some RL algorithms that estimates the [value function](/shared/glossary/#value-function) — its best guess of how much future reward a situation is worth — so the [policy](/shared/glossary/#policy) can tell whether an action turned out better or worse than expected. [PPO](/shared/glossary/#ppo) trains one alongside the policy, which roughly doubles the networks held in memory; [GRPO](/shared/glossary/#grpo) skips it entirely by comparing each sampled answer to the group's average instead, which is what makes it cheaper.
