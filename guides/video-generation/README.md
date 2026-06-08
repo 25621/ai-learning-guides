@@ -505,11 +505,11 @@ At inference:
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Implement DiT for video | Take a published DiT image implementation; extend to (T, H, W) patches and 3D RoPE; train on a small video dataset | ⭐⭐⭐⭐⭐ |
-| Flow matching from scratch | Replace DDPM with rectified flow / flow matching in a small video DiT; compare convergence | ⭐⭐⭐⭐ |
-| Read and reproduce OpenSora | Run inference on a pretrained OpenSora checkpoint; modify one component (e.g., the VAE), retrain | ⭐⭐⭐⭐⭐ |
-| MMDiT for video | Implement the SD3-style joint text-video attention; verify text adherence improves | ⭐⭐⭐⭐⭐ |
-| Variable resolution | Modify your DiT to handle arbitrary `(T, H, W)` at inference (Sora's claim); test on aspect ratios it didn't see at training | ⭐⭐⭐⭐⭐ |
+| [Implement DiT for video](projects/25-implement-dit-for-video/README.md) | Take a published DiT image implementation; extend to (T, H, W) patches and 3D RoPE; train on a small video dataset | ⭐⭐⭐⭐⭐ |
+| [Flow matching from scratch](projects/26-flow-matching-from-scratch/README.md) | Replace DDPM with rectified flow / flow matching in a small video DiT; compare convergence | ⭐⭐⭐⭐ |
+| [Read and reproduce OpenSora](projects/27-read-and-reproduce-opensora/README.md) | Run inference on a pretrained OpenSora checkpoint; modify one component (e.g., the VAE), retrain | ⭐⭐⭐⭐⭐ |
+| [MMDiT for video](projects/28-mmdit-for-video/README.md) | Implement the SD3-style joint text-video attention; verify text adherence improves | ⭐⭐⭐⭐⭐ |
+| [Variable resolution](projects/29-variable-resolution/README.md) | Modify your DiT to handle arbitrary `(T, H, W)` at inference (Sora's claim); test on aspect ratios it didn't see at training | ⭐⭐⭐⭐⭐ |
 
 ### Key Insight
 
@@ -568,12 +568,12 @@ text + object trajectory  →  trajectory-controlled   Boximator, DragAnything
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Long-prompt handling | Train or fine-tune with T5-XXL prompts (up to 256 tokens); compare against CLIP-L conditioning on adherence | ⭐⭐⭐⭐ |
-| ControlNet-Video | Adapt ControlNet to a video diffusion model; condition on depth maps across all frames | ⭐⭐⭐⭐ |
-| Camera control | Add Plücker-coordinate camera embeddings; verify pan / zoom / orbit work | ⭐⭐⭐⭐ |
-| Talking head | Run EMO or Hallo on a portrait + audio clip; fine-tune for a specific speaker | ⭐⭐⭐⭐ |
-| Video inversion + edit | Invert a real clip into latent noise; replace an object via prompt edit | ⭐⭐⭐⭐⭐ |
-| LoRA for video | Train a video LoRA on ~50 clips of a specific style or character | ⭐⭐⭐⭐ |
+| [Long-prompt handling](projects/30-long-prompt-handling/README.md) | Train or fine-tune with T5-XXL prompts (up to 256 tokens); compare against CLIP-L conditioning on adherence | ⭐⭐⭐⭐ |
+| [ControlNet-Video](projects/31-controlnet-video/README.md) | Adapt ControlNet to a video diffusion model; condition on depth maps across all frames | ⭐⭐⭐⭐ |
+| [Camera control](projects/14-camera-trajectory/README.md) | Add Plücker-coordinate camera embeddings; verify pan / zoom / orbit work | ⭐⭐⭐⭐ |
+| [Talking head](projects/32-talking-head/README.md) | Run EMO or Hallo on a portrait + audio clip; fine-tune for a specific speaker | ⭐⭐⭐⭐ |
+| [Video inversion + edit](projects/33-video-inversion-edit/README.md) | Invert a real clip into latent noise; replace an object via prompt edit | ⭐⭐⭐⭐⭐ |
+| [LoRA for video](projects/34-lora-for-video/README.md) | Train a video LoRA on ~50 clips of a specific style or character | ⭐⭐⭐⭐ |
 
 ### Key Insight
 
@@ -639,11 +639,11 @@ B. Hierarchical (designed-in):
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Sliding-window T2V | Take an open T2V model; generate 30 seconds by overlapping 5-sec clips; blend in latent space | ⭐⭐⭐⭐ |
-| Keyframe interpolation | Generate 4 keyframes 5 sec apart, then use an I2V or interpolation model to fill in | ⭐⭐⭐⭐ |
-| Character consistency | Use a reference-image encoder (IP-Adapter / character LoRA) across multiple shots; measure drift | ⭐⭐⭐⭐⭐ |
-| LLM shot planner | Use a small LLM to expand "a knight rescues a princess" into a JSON shot list; generate each shot; evaluate coherence | ⭐⭐⭐⭐⭐ |
-| Streaming T2V | Implement chunk-by-chunk generation with a cached KV state across chunks; measure latency vs quality | ⭐⭐⭐⭐⭐ |
+| [Sliding-window T2V](projects/35-sliding-window-t2v/README.md) | Take an open T2V model; generate 30 seconds by overlapping 5-sec clips; blend in latent space | ⭐⭐⭐⭐ |
+| [Keyframe interpolation](projects/36-keyframe-interpolation/README.md) | Generate 4 keyframes 5 sec apart, then use an I2V or interpolation model to fill in | ⭐⭐⭐⭐ |
+| [Character consistency](projects/37-character-consistency/README.md) | Use a reference-image encoder (IP-Adapter / character LoRA) across multiple shots; measure drift | ⭐⭐⭐⭐⭐ |
+| [LLM shot planner](projects/38-llm-shot-planner/README.md) | Use a small LLM to expand "a knight rescues a princess" into a JSON shot list; generate each shot; evaluate coherence | ⭐⭐⭐⭐⭐ |
+| [Streaming T2V](projects/39-streaming-t2v/README.md) | Implement chunk-by-chunk generation with a cached KV state across chunks; measure latency vs quality | ⭐⭐⭐⭐⭐ |
 
 ### Key Insight
 
@@ -667,15 +667,15 @@ Where video generation stops being "I make pretty clips" and becomes "I simulate
 
 ### Concepts to Learn
 
-- **What a world model is** — a generative model that, given a state and an action, predicts the next state. A video model conditioned on actions is a world model. *This phase owns the generative side*; using the model as an environment to learn a policy is [RL Phase 6 (Model-Based RL)](../reinforcement-learning/#phase-6-model-based-rl)
-- **The Dreamer line, in one sentence** — Hafner et al.'s DreamerV1/V2/V3 learn a latent world model and train a policy by imagining rollouts in it. We borrow the *generative* idea (predict the next latent given an action); the policy-learning loop and the RL objective are [covered in the RL guide](../reinforcement-learning/#phase-6-model-based-rl)
-- **Genie, Genie 2 (DeepMind)** — playable, action-conditioned video models trained on web video
-- **GameNGen (Google)** — a real-time playable Doom simulation, entirely neural
-- **GAIA-1 / GAIA-2 (Wayve)** — driving world models
-- **NVIDIA Cosmos** — a world-foundation-model platform aimed at training and evaluating embodied/robot policies; the bridge to [Robotics](../robotics/#phase-9-simulation-sim-to-real-and-robot-systems-engineering)
-- **OASIS / Decart** — open neural Minecraft
-- **Latent action models** — inferring actions from unlabeled video (so you can train world models without paired actions)
-- **Real-time constraints** — < 50 ms/frame for interactivity. Forces distillation, caching, or smaller models — the same autoregressive-distillation toolkit as Phase 8
+- **What a [world model](/shared/glossary/#world-model) is** — a generative model that, given a state and an action, predicts the next state. A video model [conditioned on actions](/shared/glossary/#action-conditioning) is a world model. *This phase owns the generative side*; using the model as an environment to learn a policy is [RL Phase 6 (Model-Based RL)](../reinforcement-learning/#phase-6-model-based-rl)
+- **The Dreamer line, in one sentence** — Hafner et al.'s [DreamerV1/V2/V3](/shared/glossary/#dreamerv3) learn a latent [world model](/shared/glossary/#world-model) and train a [policy](/shared/glossary/#policy) by imagining [rollouts](/shared/glossary/#rollout) in it. We borrow the *generative* idea (predict the next latent given an action); the policy-learning loop and the RL objective are [covered in the RL guide](../reinforcement-learning/#phase-6-model-based-rl)
+- **[Genie, Genie 2](/shared/glossary/#genie) (DeepMind)** — playable, [action-conditioned](/shared/glossary/#action-conditioning) video models trained on web video
+- **[GameNGen](/shared/glossary/#gamengen) (Google)** — a real-time playable Doom simulation, entirely neural
+- **GAIA-1 / GAIA-2 (Wayve)** — driving [world models](/shared/glossary/#world-model)
+- **NVIDIA Cosmos** — a [world](/shared/glossary/#world-model)-foundation-model platform aimed at training and evaluating embodied/robot policies; the bridge to [Robotics](../robotics/#phase-9-simulation-sim-to-real-and-robot-systems-engineering)
+- **OASIS / Decart** — an open neural [world model](/shared/glossary/#world-model) of Minecraft
+- **[Latent action models](/shared/glossary/#latent-action-model)** — inferring actions from unlabeled video (so you can train [world models](/shared/glossary/#world-model) without paired actions)
+- **Real-time constraints** — < 50 ms/frame for interactivity. Forces [distillation](/shared/glossary/#distillation), caching, or smaller models — the same autoregressive-distillation toolkit as Phase 8
 - **Connection to physical RL and robotics** — world models are policy-rollouts-as-video; the same model can serve as a simulator for an RL agent ([RL Phase 6](../reinforcement-learning/#phase-6-model-based-rl)) or as a learned simulator for an embodied policy ([Robotics Phase 9](../robotics/#phase-9-simulation-sim-to-real-and-robot-systems-engineering))
 - **Connection to multimodal** — a fully general world model is multimodal: text in, video out, with audio, actions, and physics. Joint cross-modal *understanding* is [Multimodal Learning](../multimodal-learning/)'s territory
 
@@ -704,11 +704,11 @@ is the empty string.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Action-conditioned video | Take a small video diffusion model; add a discrete-action input (e.g., 4 game actions); train on a simple game's recorded play | ⭐⭐⭐⭐⭐ |
-| GameNGen reproduction (mini) | Train an action-conditioned model on a simpler game (Atari, GridWorld) and play it interactively | ⭐⭐⭐⭐⭐ |
-| Latent action inference | Train a model to infer the latent action between two adjacent frames in unlabeled video (Genie-style) | ⭐⭐⭐⭐⭐ |
-| World model for RL | Use a learned world model to roll out trajectories; train a policy in the dream (DreamerV3-light) | ⭐⭐⭐⭐⭐ |
-| Real-time latency hunt | Distill a 30-fps diffusion video model into a 4-step (or 1-step) consistency model; measure ms/frame | ⭐⭐⭐⭐ |
+| [Action-conditioned video](projects/40-action-conditioned-video/README.md) | Take a small video diffusion model; add a discrete-action input (e.g., 4 game actions); train on a simple game's recorded play | ⭐⭐⭐⭐⭐ |
+| [GameNGen reproduction (mini)](projects/41-gamengen-reproduction-mini/README.md) | Train an action-conditioned model on a simpler game (Atari, GridWorld) and play it interactively | ⭐⭐⭐⭐⭐ |
+| [Latent action inference](projects/42-latent-action-inference/README.md) | Train a model to infer the latent action between two adjacent frames in unlabeled video (Genie-style) | ⭐⭐⭐⭐⭐ |
+| [World model for RL](projects/43-world-model-for-rl/README.md) | Use a learned world model to roll out trajectories; train a policy in the dream (DreamerV3-light) | ⭐⭐⭐⭐⭐ |
+| [Real-time latency hunt](projects/44-real-time-latency-hunt/README.md) | Distill a 30-fps diffusion video model into a 4-step (or 1-step) consistency model; measure ms/frame | ⭐⭐⭐⭐ |
 
 ### Key Insight
 
@@ -770,12 +770,12 @@ The evaluation problem in video generation is *worse* than in image generation, 
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Run VBench end to end | Evaluate an open T2V model on the full VBench suite; reproduce a leaderboard number | ⭐⭐⭐ |
-| Recaption a dataset | Take 100k clips with bad captions, recaption with a strong VLM, train a small model on each — compare quality | ⭐⭐⭐⭐ |
-| Aspect-ratio bucketing | Implement bucketed batching for variable aspect ratios; observe quality improvement on portrait/wide test sets | ⭐⭐⭐ |
-| Consistency-model distillation | Distill a 50-step video diffusion model into a 4-step student; measure speed and quality loss | ⭐⭐⭐⭐⭐ |
-| Watermarking | Add invisible watermarking to your model's outputs; verify with a detector | ⭐⭐⭐⭐ |
-| Physical-plausibility probe | Build 50 trick prompts (water flowing uphill, dropped objects floating); evaluate open models | ⭐⭐⭐ |
+| [Run VBench end to end](projects/45-run-vbench-end-to-end/README.md) | Evaluate an open T2V model on the full VBench suite; reproduce a leaderboard number | ⭐⭐⭐ |
+| [Recaption a dataset](projects/46-recaption-a-dataset/README.md) | Take 100k clips with bad captions, recaption with a strong VLM, train a small model on each — compare quality | ⭐⭐⭐⭐ |
+| [Aspect-ratio bucketing](projects/47-aspect-ratio-bucketing/README.md) | Implement bucketed batching for variable aspect ratios; observe quality improvement on portrait/wide test sets | ⭐⭐⭐ |
+| [Consistency-model distillation](projects/48-consistency-model-distillation/README.md) | Distill a 50-step video diffusion model into a 4-step student; measure speed and quality loss | ⭐⭐⭐⭐⭐ |
+| [Watermarking](projects/49-watermarking/README.md) | Add invisible watermarking to your model's outputs; verify with a detector | ⭐⭐⭐⭐ |
+| [Physical-plausibility probe](projects/50-physical-plausibility-probe/README.md) | Build 50 trick prompts (water flowing uphill, dropped objects floating); evaluate open models | ⭐⭐⭐ |
 
 ### Key Insight
 

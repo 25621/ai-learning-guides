@@ -1,0 +1,5 @@
+# Implement DiT for Video
+
+## Key Insight
+
+The [DiT (Diffusion Transformer)](/shared/glossary/#dit) replaced the [U-Net](/shared/glossary/#u-net) with a pure [transformer](/shared/glossary/#transformer) for image diffusion, and turning it into a *video* model is mostly a matter of changing what a "patch" is. Instead of cutting a single frame into flat 2D squares, you cut the [3D VAE](/shared/glossary/#3d-vae) [latent](/shared/glossary/#latent-video) into [spatiotemporal patches](/shared/glossary/#spatiotemporal-patches) — little boxes that also span a few frames — and add [3D RoPE](/shared/glossary/#rope) so each token carries its row, column, *and* frame index. The rest of the recipe is unchanged from image DiT: project each patch to a token, mix them with [attention](/shared/glossary/#attention), and condition on the denoising step through [AdaLN-Zero](/shared/glossary/#adaln-zero). Building this once makes the whole "[Sora](/shared/glossary/#sora)-class" family demystified — it is the same transformer you already know, fed a sequence of motion-aware tokens instead of word tokens.

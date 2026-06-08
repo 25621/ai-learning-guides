@@ -1,0 +1,5 @@
+# ControlNet-Video
+
+## Key Insight
+
+[ControlNet](/shared/glossary/#controlnet) gives an image [diffusion model](/shared/glossary/#diffusion-model) precise spatial control by feeding it a structural map — a [depth map](/shared/glossary/#depth-map), pose skeleton, or edge map — that dictates *where* shapes go while the prompt decides *what* fills them. This project carries that idea to video by conditioning a video diffusion model on a depth map for *every* frame, so the generated clip follows the real scene's near-and-far layout shot by shot. The new difficulty is [temporal consistency](/shared/glossary/#temporal-consistency): running ControlNet on each frame independently makes textures crawl and flicker, so the control features must be shared across time. Like the difference between a smoothly animated flipbook where each drawing flows into the next, and a scattered pile of individual sketches that jitter wildly when played back—this shared time-awareness is what separates a true [video-to-video](/shared/glossary/#v2v) method from a stack of unrelated image edits.

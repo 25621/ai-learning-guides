@@ -1,0 +1,5 @@
+# Streaming T2V
+
+## Key Insight
+
+Most video models generate a whole clip at once, which means you wait for the entire thing before seeing a single frame — fine for a 5-second clip, impossible for an endless or interactive one. [Streaming video generation](/shared/glossary/#streaming-video-generation) instead emits frames chunk by chunk as it goes, conditioning each new chunk on the ones already produced. This project implements that loop and reuses a [KV cache](/shared/glossary/#kv-cache) across chunks — storing the [attention](/shared/glossary/#attention) keys and values from earlier frames so each new chunk does not recompute the whole history — then measures the [latency](/shared/glossary/#latency)-versus-quality trade-off. The same idea underlies real-time systems like [CausVid](/shared/glossary/#causvid) and [Self-Forcing](/shared/glossary/#self-forcing), which [distill](/shared/glossary/#distillation) a slow full-clip diffusion model into a fast [autoregressive](/shared/glossary/#autoregressive-model) one that produces frames in time order.
