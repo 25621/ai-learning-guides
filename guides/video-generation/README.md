@@ -770,12 +770,12 @@ The evaluation problem in video generation is *worse* than in image generation, 
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Run VBench end to end | Evaluate an open T2V model on the full VBench suite; reproduce a leaderboard number | ⭐⭐⭐ |
-| Recaption a dataset | Take 100k clips with bad captions, recaption with a strong VLM, train a small model on each — compare quality | ⭐⭐⭐⭐ |
-| Aspect-ratio bucketing | Implement bucketed batching for variable aspect ratios; observe quality improvement on portrait/wide test sets | ⭐⭐⭐ |
-| Consistency-model distillation | Distill a 50-step video diffusion model into a 4-step student; measure speed and quality loss | ⭐⭐⭐⭐⭐ |
-| Watermarking | Add invisible watermarking to your model's outputs; verify with a detector | ⭐⭐⭐⭐ |
-| Physical-plausibility probe | Build 50 trick prompts (water flowing uphill, dropped objects floating); evaluate open models | ⭐⭐⭐ |
+| [Run VBench end to end](projects/45-run-vbench-end-to-end/README.md) | Evaluate an open T2V model on the full VBench suite; reproduce a leaderboard number | ⭐⭐⭐ |
+| [Recaption a dataset](projects/46-recaption-a-dataset/README.md) | Take 100k clips with bad captions, recaption with a strong VLM, train a small model on each — compare quality | ⭐⭐⭐⭐ |
+| [Aspect-ratio bucketing](projects/47-aspect-ratio-bucketing/README.md) | Implement bucketed batching for variable aspect ratios; observe quality improvement on portrait/wide test sets | ⭐⭐⭐ |
+| [Consistency-model distillation](projects/48-consistency-model-distillation/README.md) | Distill a 50-step video diffusion model into a 4-step student; measure speed and quality loss | ⭐⭐⭐⭐⭐ |
+| [Watermarking](projects/49-watermarking/README.md) | Add invisible watermarking to your model's outputs; verify with a detector | ⭐⭐⭐⭐ |
+| [Physical-plausibility probe](projects/50-physical-plausibility-probe/README.md) | Build 50 trick prompts (water flowing uphill, dropped objects floating); evaluate open models | ⭐⭐⭐ |
 
 ### Key Insight
 

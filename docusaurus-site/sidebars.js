@@ -509,6 +509,18 @@ const sidebars = {
                 {type: 'doc', id: 'guides/video-generation/projects/real-time-latency-hunt/README', label: 'Real-time latency hunt'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 10: Training at Scale, Evaluation, and Frontier Topics',
+              items: [
+                {type: 'doc', id: 'guides/video-generation/projects/run-vbench-end-to-end/README', label: 'Run VBench end to end'},
+                {type: 'doc', id: 'guides/video-generation/projects/recaption-a-dataset/README', label: 'Recaption a dataset'},
+                {type: 'doc', id: 'guides/video-generation/projects/aspect-ratio-bucketing/README', label: 'Aspect-ratio bucketing'},
+                {type: 'doc', id: 'guides/video-generation/projects/consistency-model-distillation/README', label: 'Consistency-model distillation'},
+                {type: 'doc', id: 'guides/video-generation/projects/watermarking/README', label: 'Watermarking'},
+                {type: 'doc', id: 'guides/video-generation/projects/physical-plausibility-probe/README', label: 'Physical-plausibility probe'},
+              ],
+            },
           ],
         },
         {type: 'doc', id: 'guides/robotics/README', label: 'Robotics'},
