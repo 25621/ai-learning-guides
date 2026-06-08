@@ -1,0 +1,5 @@
+# First-Visit Monte Carlo
+
+## Key Insight
+
+[Monte Carlo](/shared/glossary/#monte-carlo-method) value estimation throws away the need to know the environment's dynamics: instead of computing expected [returns](/shared/glossary/#return) from a model, you simply play many full episodes and average the actual returns that followed each state. The *first-visit* variant counts, within each episode, only the first time a state is reached — which keeps the averaged samples independent and gives an [unbiased](/shared/glossary/#bias-variance-tradeoff) estimate of the [policy](/shared/glossary/#policy)'s [value function](/shared/glossary/#value-function) `V^π`. [Blackjack](/shared/glossary/#blackjack) is the ideal first environment because its rules make the true value of some states easy to work out by hand, so you can check your sampled estimate against an analytic answer — and feel directly how Monte Carlo estimates are unbiased yet [jump around a lot](/shared/glossary/#bias-variance-tradeoff) until you have averaged thousands of episodes.

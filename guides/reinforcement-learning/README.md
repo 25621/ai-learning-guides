@@ -233,12 +233,12 @@ This is why every modern algorithm uses bootstrapped targets.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Value iteration on FrozenLake | Solve the Gym/Gymnasium FrozenLake-v1 with value iteration; visualize `V*` and the greedy policy | ⭐⭐ |
-| Policy iteration vs value iteration | Same problem, both algorithms; count iterations to convergence | ⭐⭐ |
-| First-visit MC | On Blackjack-v1, learn `V^π` for a fixed policy by MC; verify against an analytic solution if possible | ⭐⭐ |
-| Q-learning on FrozenLake | Tabular Q-learning, ε-greedy, decaying ε; report final policy success rate | ⭐⭐ |
-| SARSA vs Q-learning on Cliff Walking | Reproduce Sutton & Barto Fig 6.5; explain why SARSA prefers the safe path | ⭐⭐⭐ |
-| Eligibility traces | Implement TD(λ) with replacing traces; sweep `λ ∈ {0, 0.5, 0.9, 1.0}` | ⭐⭐⭐ |
+| [Value iteration on FrozenLake](projects/06-value-iteration-on-frozenlake/README.md) | Solve the Gym/Gymnasium FrozenLake-v1 with value iteration; visualize `V*` and the greedy policy | ⭐⭐ |
+| [Policy iteration vs value iteration](projects/07-policy-iteration-vs-value-iteration/README.md) | Same problem, both algorithms; count iterations to convergence | ⭐⭐ |
+| [First-visit MC](projects/08-first-visit-mc/README.md) | On Blackjack-v1, learn `V^π` for a fixed policy by MC; verify against an analytic solution if possible | ⭐⭐ |
+| [Q-learning on FrozenLake](projects/09-q-learning-on-frozenlake/README.md) | Tabular Q-learning, ε-greedy, decaying ε; report final policy success rate | ⭐⭐ |
+| [SARSA vs Q-learning on Cliff Walking](projects/10-sarsa-vs-q-learning-on-cliff-walking/README.md) | Reproduce Sutton & Barto Fig 6.5; explain why SARSA prefers the safe path | ⭐⭐⭐ |
+| [Eligibility traces](projects/11-eligibility-traces/README.md) | Implement TD(λ) with replacing traces; sweep `λ ∈ {0, 0.5, 0.9, 1.0}` | ⭐⭐⭐ |
 
 ### Sample Code: Tabular Q-Learning
 

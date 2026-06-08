@@ -1,0 +1,5 @@
+# Q-Learning on FrozenLake
+
+## Key Insight
+
+[Q-learning](/shared/glossary/#q-learning) is the first algorithm in this guide that learns purely from experience without a model: it watches `(state, action, reward, next-state)` [transitions](/shared/glossary/#transition-function) and nudges its [action-value](/shared/glossary/#value-function) estimate `Q(s, a)` toward "reward now plus the [discounted](/shared/glossary/#discount-factor) value of the *best* next action." That "best next action" inside the target — rather than the action actually taken — is what makes Q-learning [off-policy](/shared/glossary/#off-policy): it learns the [optimal policy](/shared/glossary/#optimal-policy) while still wandering randomly through [ε-greedy](/shared/glossary/#epsilon-greedy) action selection, with ε decayed over time so the agent explores early and exploits later. On slippery [FrozenLake](/shared/glossary/#frozenlake), tracking the final [greedy policy](/shared/glossary/#greedy-policy)'s success rate shows tabular Q-learning recovering a near-optimal policy from nothing but sampled rewards.

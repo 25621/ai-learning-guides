@@ -1,0 +1,5 @@
+# Policy Iteration vs Value Iteration
+
+## Key Insight
+
+[Policy iteration](/shared/glossary/#policy-iteration) and [value iteration](/shared/glossary/#value-iteration) are the two classic [dynamic-programming](/shared/glossary/#dynamic-programming) ways to solve a known [MDP](/shared/glossary/#mdp), and they sit at opposite ends of one trade-off. Policy iteration fully evaluates the current [policy](/shared/glossary/#policy) — solving for its [value function](/shared/glossary/#value-function) — before improving it, so each step is expensive but the policy itself locks onto the optimum in very few rounds; value iteration does just one cheap [Bellman backup](/shared/glossary/#bellman-operator) per sweep and therefore needs many more sweeps. Running both on the same task and counting iterations to convergence shows they reach the *identical* [optimal policy](/shared/glossary/#optimal-policy) by different routes — which is the whole point of [generalized policy iteration](/shared/glossary/#generalized-policy-iteration): evaluation and improvement can be interleaved in any proportion and still converge.

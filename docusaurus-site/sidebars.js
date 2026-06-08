@@ -421,6 +421,18 @@ const sidebars = {
                 {type: 'doc', id: 'guides/reinforcement-learning/projects/pomdp-exercise/README', label: 'POMDP exercise'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 2: Tabular Methods — DP, Monte Carlo, and TD',
+              items: [
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/value-iteration-on-frozenlake/README', label: 'Value iteration on FrozenLake'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/policy-iteration-vs-value-iteration/README', label: 'Policy iteration vs value iteration'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/first-visit-mc/README', label: 'First-visit MC'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/q-learning-on-frozenlake/README', label: 'Q-learning on FrozenLake'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/sarsa-vs-q-learning-on-cliff-walking/README', label: 'SARSA vs Q-learning on Cliff Walking'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/eligibility-traces/README', label: 'Eligibility traces'},
+              ],
+            },
           ],
         },
         {
