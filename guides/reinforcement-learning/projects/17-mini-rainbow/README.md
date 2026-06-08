@@ -1,0 +1,5 @@
+# Mini Rainbow
+
+## Key Insight
+
+[Rainbow](/shared/glossary/#rainbow) is the observation that the half-dozen independent improvements to [DQN](/shared/glossary/#dqn) are complementary rather than competing — stacked together they multiply rather than merely add. This project builds a Rainbow-lite from four of them: [Double DQN](/shared/glossary/#double-dqn) and [Dueling DQN](/shared/glossary/#dueling-dqn) for better value estimates, [prioritized experience replay](/shared/glossary/#prioritized-experience-replay-per) for focusing on the most informative transitions, and [n-step returns](/shared/glossary/#n-step-returns), which build the learning target from the rewards seen over the next `n` steps rather than just one — trading a little more variance for much faster propagation of reward back through time. Ablating the components one at a time reveals which carry the most weight on your chosen task, the kind of careful empirical bookkeeping that real reinforcement-learning engineering is mostly made of.

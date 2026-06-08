@@ -1,0 +1,5 @@
+# Prioritized Replay
+
+## Key Insight
+
+Uniform [experience replay](/shared/glossary/#experience-replay) treats every stored transition as equally worth revisiting, but some transitions are far more *surprising* — and therefore more instructive — than others. [Prioritized experience replay (PER)](/shared/glossary/#prioritized-experience-replay-per) samples each transition with probability proportional to the size of its last [TD error](/shared/glossary/#td-error) (the gap between the predicted value and the bootstrapped target), so the agent spends more of its updates on the experiences it currently gets most wrong. Drawing weighted-random samples efficiently from a buffer of millions needs the right data structure: a [sum-tree](/shared/glossary/#sum-tree), a binary tree whose every node stores the total priority of everything beneath it, picks a sample in `O(log n)` steps instead of scanning the whole buffer. Because sampling non-uniformly would otherwise bias the learning target, PER multiplies each update by a small [importance-sampling](/shared/glossary/#importance-sampling) correction weight that cancels the bias back out.

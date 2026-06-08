@@ -1,0 +1,5 @@
+# Atari Pong
+
+## Key Insight
+
+Moving from [CartPole](/shared/glossary/#cartpole)'s four numbers to [Pong](/shared/glossary/#pong)'s raw screen pixels forces two classic preprocessing tricks. [Frame stacking](/shared/glossary/#frame-stacking) feeds the network the last four frames at once instead of a single image, because one still frame cannot reveal which way the ball is moving — velocity is only visible across time, and without it the [Markov property](/shared/glossary/#markov-property) the algorithm assumes is broken. [Reward clipping](/shared/glossary/#reward-clipping) squashes every score change to −1, 0, or +1 so that games with wildly different point scales can all be trained with one shared set of hyperparameters. With a [convolutional](/shared/glossary/#cnn) [Q-network](/shared/glossary/#dqn) reading the stacked frames, the same algorithm that balanced a pole now learns to beat the built-in Pong opponent from pixels alone — the [Atari](/shared/glossary/#atari) result that put deep [reinforcement learning](/shared/glossary/#q-learning) on the map.

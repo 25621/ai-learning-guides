@@ -433,6 +433,19 @@ const sidebars = {
                 {type: 'doc', id: 'guides/reinforcement-learning/projects/eligibility-traces/README', label: 'Eligibility traces'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 3: Function Approximation and DQN',
+              items: [
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/dqn-on-cartpole/README', label: 'DQN on CartPole'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/add-a-replay-buffer/README', label: 'Add a replay buffer'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/atari-pong/README', label: 'Atari Pong'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/double-dueling/README', label: 'Double + Dueling'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/prioritized-replay/README', label: 'Prioritized replay'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/mini-rainbow/README', label: 'Mini Rainbow'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/distributional-dqn-c51/README', label: 'Distributional DQN (C51)'},
+              ],
+            },
           ],
         },
         {
