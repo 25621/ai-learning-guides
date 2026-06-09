@@ -1,0 +1,5 @@
+# The 37 Details
+
+## Key Insight
+
+[PPO](/shared/glossary/#ppo)'s reputation for "just working" comes less from its five-line clipped objective than from roughly three dozen small implementation choices layered on top — things like [advantage](/shared/glossary/#advantage) [normalization](/shared/glossary/#normalization), clipping the [value function](/shared/glossary/#value-function) loss, orthogonal weight initialization, annealing the learning rate to zero, reward scaling, and global gradient clipping. Individually each looks like a minor detail; together they are the difference between a PPO that matches published scores and one that quietly fails to learn. This project implements or audits every one of the [37 documented details](https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/) and measures each as its own [ablation](/shared/glossary/#ablation), so you learn not just *that* they matter but *how much* each contributes. The deeper lesson generalizes beyond PPO: in modern RL the gap between a paper's pseudocode and a working agent is paved with unglamorous engineering.

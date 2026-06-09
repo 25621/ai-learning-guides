@@ -1,0 +1,5 @@
+# PPO on Atari
+
+## Key Insight
+
+Moving [PPO](/shared/glossary/#ppo) from low-dimensional control to [Atari](/shared/glossary/#atari) tests whether the same [on-policy](/shared/glossary/#on-policy) recipe survives raw pixel input, and the answer is yes — with the standard image-RL scaffolding bolted on. The policy and value networks now share a [convolutional](/shared/glossary/#cnn) trunk that reads the screen, the last few frames are stacked together ([frame stacking](/shared/glossary/#frame-stacking)) so the agent can perceive motion and direction from otherwise-static images, and rewards are squashed to a fixed range ([reward clipping](/shared/glossary/#reward-clipping)) so games with wildly different score scales train with one set of hyperparameters. Because PPO is on-policy, it is data-hungry and leans heavily on running many environment copies in parallel to feed each update. Comparing your agent's scores on a few games against published numbers is the honest check that every detail is wired correctly.

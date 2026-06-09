@@ -446,6 +446,19 @@ const sidebars = {
                 {type: 'doc', id: 'guides/reinforcement-learning/projects/distributional-dqn-c51/README', label: 'Distributional DQN (C51)'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 4: Policy Gradients — REINFORCE to PPO',
+              items: [
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/reinforce-on-cartpole/README', label: 'REINFORCE on CartPole'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/add-a-value-baseline/README', label: 'Add a value baseline'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/a2c-with-parallel-envs/README', label: 'A2C with parallel envs'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/ppo-from-scratch/README', label: 'PPO from scratch'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/the-37-details/README', label: 'The 37 details'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/ppo-on-atari/README', label: 'PPO on Atari'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/trpo-for-comparison/README', label: 'TRPO for comparison'},
+              ],
+            },
           ],
         },
         {

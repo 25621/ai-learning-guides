@@ -433,13 +433,13 @@ GAE(γ, λ):
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| REINFORCE on CartPole | Vanilla policy gradient, no baseline; observe the variance | ⭐⭐ |
-| Add a value baseline | Same task, subtract a learned `V(s)`; verify variance drops | ⭐⭐⭐ |
-| A2C with parallel envs | 8 parallel envs, n-step returns, GAE; solve LunarLander | ⭐⭐⭐⭐ |
-| PPO from scratch | Reproduce CleanRL's `ppo.py` line by line; explain each detail | ⭐⭐⭐⭐ |
-| The 37 details | Implement (or audit) every one of the [37 PPO implementation details](https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/); measure each ablation | ⭐⭐⭐⭐⭐ |
-| PPO on Atari | Apply your PPO to a few Atari games; compare against published numbers | ⭐⭐⭐⭐⭐ |
-| TRPO for comparison | Implement TRPO; compare on a Mujoco task; see why nobody uses it anymore | ⭐⭐⭐⭐⭐ |
+| [REINFORCE on CartPole](projects/19-reinforce-on-cartpole/README.md) | Vanilla policy gradient, no baseline; observe the variance | ⭐⭐ |
+| [Add a value baseline](projects/20-add-a-value-baseline/README.md) | Same task, subtract a learned `V(s)`; verify variance drops | ⭐⭐⭐ |
+| [A2C with parallel envs](projects/21-a2c-with-parallel-envs/README.md) | 8 parallel envs, n-step returns, GAE; solve LunarLander | ⭐⭐⭐⭐ |
+| [PPO from scratch](projects/22-ppo-from-scratch/README.md) | Reproduce CleanRL's `ppo.py` line by line; explain each detail | ⭐⭐⭐⭐ |
+| [The 37 details](projects/23-the-37-details/README.md) | Implement (or audit) every one of the [37 PPO implementation details](https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/); measure each ablation | ⭐⭐⭐⭐⭐ |
+| [PPO on Atari](projects/24-ppo-on-atari/README.md) | Apply your PPO to a few Atari games; compare against published numbers | ⭐⭐⭐⭐⭐ |
+| [TRPO for comparison](projects/25-trpo-for-comparison/README.md) | Implement TRPO; compare on a Mujoco task; see why nobody uses it anymore | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: The PPO Update Loop (Sketch)
 
