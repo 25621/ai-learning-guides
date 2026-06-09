@@ -525,12 +525,12 @@ SAC tunes α automatically by gradient descent on the dual problem.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| DDPG on Pendulum | Single-file DDPG; verify it learns; observe the instability | ⭐⭐⭐ |
-| TD3 on HalfCheetah | Full TD3 implementation with twin critics; compare to DDPG | ⭐⭐⭐⭐ |
-| SAC on a Mujoco suite | Implement SAC; run on HalfCheetah, Walker2d, Ant, Humanoid; report final returns | ⭐⭐⭐⭐ |
-| Automatic temperature tuning | Add the auto-α update to SAC; verify it stabilizes entropy across tasks | ⭐⭐⭐⭐ |
-| Reparameterization audit | Verify your `tanh`-squashed Gaussian's log-prob correction is right; off-by-one here silently breaks SAC | ⭐⭐⭐ |
-| Sample efficiency study | Compare PPO vs SAC on the same Mujoco task in wall-clock time and samples used | ⭐⭐⭐⭐ |
+| [DDPG on Pendulum](projects/26-ddpg-on-pendulum/README.md) | Single-file DDPG; verify it learns; observe the instability | ⭐⭐⭐ |
+| [TD3 on HalfCheetah](projects/27-td3-on-halfcheetah/README.md) | Full TD3 implementation with twin critics; compare to DDPG | ⭐⭐⭐⭐ |
+| [SAC on a Mujoco suite](projects/28-sac-on-a-mujoco-suite/README.md) | Implement SAC; run on HalfCheetah, Walker2d, Ant, Humanoid; report final returns | ⭐⭐⭐⭐ |
+| [Automatic temperature tuning](projects/29-automatic-temperature-tuning/README.md) | Add the auto-α update to SAC; verify it stabilizes entropy across tasks | ⭐⭐⭐⭐ |
+| [Reparameterization audit](projects/30-reparameterization-audit/README.md) | Verify your `tanh`-squashed Gaussian's log-prob correction is right; off-by-one here silently breaks SAC | ⭐⭐⭐ |
+| [Sample efficiency study](projects/31-sample-efficiency-study/README.md) | Compare PPO vs SAC on the same Mujoco task in wall-clock time and samples used | ⭐⭐⭐⭐ |
 
 ### Sample Code: The SAC Critic Update
 

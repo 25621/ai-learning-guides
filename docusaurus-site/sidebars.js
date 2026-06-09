@@ -459,6 +459,18 @@ const sidebars = {
                 {type: 'doc', id: 'guides/reinforcement-learning/projects/trpo-for-comparison/README', label: 'TRPO for comparison'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 5: Continuous Control — DDPG, TD3, SAC',
+              items: [
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/ddpg-on-pendulum/README', label: 'DDPG on Pendulum'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/td3-on-halfcheetah/README', label: 'TD3 on HalfCheetah'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/sac-on-a-mujoco-suite/README', label: 'SAC on a Mujoco suite'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/automatic-temperature-tuning/README', label: 'Automatic temperature tuning'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/reparameterization-audit/README', label: 'Reparameterization audit'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/sample-efficiency-study/README', label: 'Sample efficiency study'},
+              ],
+            },
           ],
         },
         {
