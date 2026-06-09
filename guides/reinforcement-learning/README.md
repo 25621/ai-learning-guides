@@ -120,11 +120,11 @@ The Bellman operator is a **contraction** in the supremum norm: applying it repe
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Build a gridworld | 5×5 grid with rewards and obstacles; expose `(S, A, P, R, γ)` explicitly | ⭐ |
-| Policy evaluation by matrix inverse | For a small MDP, solve `V^π = (I − γP^π)⁻¹ r^π` directly; verify against iterative evaluation | ⭐⭐ |
-| Hand-trace Bellman backups | On a 3-state MDP, do 10 Bellman backups by hand and plot `V` over iterations | ⭐⭐ |
-| Discount factor study | Same task, sweep `γ ∈ {0.5, 0.9, 0.99, 0.999}`; observe how the optimal policy changes | ⭐⭐ |
-| POMDP exercise | Build a gridworld where the agent only sees its row, not its column; verify the optimal *Markov* policy is suboptimal | ⭐⭐⭐ |
+| [Build a gridworld](projects/01-build-a-gridworld/README.md) | 5×5 grid with rewards and obstacles; expose `(S, A, P, R, γ)` explicitly | ⭐ |
+| [Policy evaluation by matrix inverse](projects/02-policy-evaluation-by-matrix-inverse/README.md) | For a small MDP, solve `V^π = (I − γP^π)⁻¹ r^π` directly; verify against iterative evaluation | ⭐⭐ |
+| [Hand-trace Bellman backups](projects/03-hand-trace-bellman-backups/README.md) | On a 3-state MDP, do 10 Bellman backups by hand and plot `V` over iterations | ⭐⭐ |
+| [Discount factor study](projects/04-discount-factor-study/README.md) | Same task, sweep `γ ∈ {0.5, 0.9, 0.99, 0.999}`; observe how the optimal policy changes | ⭐⭐ |
+| [POMDP exercise](projects/05-pomdp-exercise/README.md) | Build a gridworld where the agent only sees its row, not its column; verify the optimal *Markov* policy is suboptimal | ⭐⭐⭐ |
 
 ### Sample Code: Policy Evaluation on a Small MDP
 
@@ -233,12 +233,12 @@ This is why every modern algorithm uses bootstrapped targets.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Value iteration on FrozenLake | Solve the Gym/Gymnasium FrozenLake-v1 with value iteration; visualize `V*` and the greedy policy | ⭐⭐ |
-| Policy iteration vs value iteration | Same problem, both algorithms; count iterations to convergence | ⭐⭐ |
-| First-visit MC | On Blackjack-v1, learn `V^π` for a fixed policy by MC; verify against an analytic solution if possible | ⭐⭐ |
-| Q-learning on FrozenLake | Tabular Q-learning, ε-greedy, decaying ε; report final policy success rate | ⭐⭐ |
-| SARSA vs Q-learning on Cliff Walking | Reproduce Sutton & Barto Fig 6.5; explain why SARSA prefers the safe path | ⭐⭐⭐ |
-| Eligibility traces | Implement TD(λ) with replacing traces; sweep `λ ∈ {0, 0.5, 0.9, 1.0}` | ⭐⭐⭐ |
+| [Value iteration on FrozenLake](projects/06-value-iteration-on-frozenlake/README.md) | Solve the Gym/Gymnasium FrozenLake-v1 with value iteration; visualize `V*` and the greedy policy | ⭐⭐ |
+| [Policy iteration vs value iteration](projects/07-policy-iteration-vs-value-iteration/README.md) | Same problem, both algorithms; count iterations to convergence | ⭐⭐ |
+| [First-visit MC](projects/08-first-visit-mc/README.md) | On Blackjack-v1, learn `V^π` for a fixed policy by MC; verify against an analytic solution if possible | ⭐⭐ |
+| [Q-learning on FrozenLake](projects/09-q-learning-on-frozenlake/README.md) | Tabular Q-learning, ε-greedy, decaying ε; report final policy success rate | ⭐⭐ |
+| [SARSA vs Q-learning on Cliff Walking](projects/10-sarsa-vs-q-learning-on-cliff-walking/README.md) | Reproduce Sutton & Barto Fig 6.5; explain why SARSA prefers the safe path | ⭐⭐⭐ |
+| [Eligibility traces](projects/11-eligibility-traces/README.md) | Implement TD(λ) with replacing traces; sweep `λ ∈ {0, 0.5, 0.9, 1.0}` | ⭐⭐⭐ |
 
 ### Sample Code: Tabular Q-Learning
 
@@ -323,13 +323,13 @@ loss = ((Q(s, a) - target)**2).mean()
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| DQN on CartPole | Single-file DQN that solves CartPole-v1 in <30k steps; no replay buffer tricks | ⭐⭐⭐ |
-| Add a replay buffer | Now add experience replay and a target network; verify stability | ⭐⭐⭐ |
-| Atari Pong | Full DQN with frame stacking and reward clipping; solve Pong | ⭐⭐⭐⭐ |
-| Double + Dueling | Add both to your DQN; ablate each on Pong or Breakout | ⭐⭐⭐⭐ |
-| Prioritized replay | Implement PER with a sum-tree; verify the priorities improve sample efficiency | ⭐⭐⭐⭐ |
-| Mini Rainbow | Combine Double + Dueling + PER + n-step; reproduce a ~Rainbow-lite ablation | ⭐⭐⭐⭐⭐ |
-| Distributional DQN (C51) | Predict a categorical distribution over returns; verify on a small env | ⭐⭐⭐⭐⭐ |
+| [DQN on CartPole](projects/12-dqn-on-cartpole/README.md) | Single-file DQN that solves CartPole-v1 in <30k steps; no replay buffer tricks | ⭐⭐⭐ |
+| [Add a replay buffer](projects/13-add-a-replay-buffer/README.md) | Now add experience replay and a target network; verify stability | ⭐⭐⭐ |
+| [Atari Pong](projects/14-atari-pong/README.md) | Full DQN with frame stacking and reward clipping; solve Pong | ⭐⭐⭐⭐ |
+| [Double + Dueling](projects/15-double-dueling/README.md) | Add both to your DQN; ablate each on Pong or Breakout | ⭐⭐⭐⭐ |
+| [Prioritized replay](projects/16-prioritized-replay/README.md) | Implement PER with a sum-tree; verify the priorities improve sample efficiency | ⭐⭐⭐⭐ |
+| [Mini Rainbow](projects/17-mini-rainbow/README.md) | Combine Double + Dueling + PER + n-step; reproduce a ~Rainbow-lite ablation | ⭐⭐⭐⭐⭐ |
+| [Distributional DQN (C51)](projects/18-distributional-dqn-c51/README.md) | Predict a categorical distribution over returns; verify on a small env | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: A Minimal Working DQN
 
@@ -433,13 +433,13 @@ GAE(γ, λ):
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| REINFORCE on CartPole | Vanilla policy gradient, no baseline; observe the variance | ⭐⭐ |
-| Add a value baseline | Same task, subtract a learned `V(s)`; verify variance drops | ⭐⭐⭐ |
-| A2C with parallel envs | 8 parallel envs, n-step returns, GAE; solve LunarLander | ⭐⭐⭐⭐ |
-| PPO from scratch | Reproduce CleanRL's `ppo.py` line by line; explain each detail | ⭐⭐⭐⭐ |
-| The 37 details | Implement (or audit) every one of the [37 PPO implementation details](https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/); measure each ablation | ⭐⭐⭐⭐⭐ |
-| PPO on Atari | Apply your PPO to a few Atari games; compare against published numbers | ⭐⭐⭐⭐⭐ |
-| TRPO for comparison | Implement TRPO; compare on a Mujoco task; see why nobody uses it anymore | ⭐⭐⭐⭐⭐ |
+| [REINFORCE on CartPole](projects/19-reinforce-on-cartpole/README.md) | Vanilla policy gradient, no baseline; observe the variance | ⭐⭐ |
+| [Add a value baseline](projects/20-add-a-value-baseline/README.md) | Same task, subtract a learned `V(s)`; verify variance drops | ⭐⭐⭐ |
+| [A2C with parallel envs](projects/21-a2c-with-parallel-envs/README.md) | 8 parallel envs, n-step returns, GAE; solve LunarLander | ⭐⭐⭐⭐ |
+| [PPO from scratch](projects/22-ppo-from-scratch/README.md) | Reproduce CleanRL's `ppo.py` line by line; explain each detail | ⭐⭐⭐⭐ |
+| [The 37 details](projects/23-the-37-details/README.md) | Implement (or audit) every one of the [37 PPO implementation details](https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/); measure each ablation | ⭐⭐⭐⭐⭐ |
+| [PPO on Atari](projects/24-ppo-on-atari/README.md) | Apply your PPO to a few Atari games; compare against published numbers | ⭐⭐⭐⭐⭐ |
+| [TRPO for comparison](projects/25-trpo-for-comparison/README.md) | Implement TRPO; compare on a Mujoco task; see why nobody uses it anymore | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: The PPO Update Loop (Sketch)
 
@@ -525,12 +525,12 @@ SAC tunes α automatically by gradient descent on the dual problem.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| DDPG on Pendulum | Single-file DDPG; verify it learns; observe the instability | ⭐⭐⭐ |
-| TD3 on HalfCheetah | Full TD3 implementation with twin critics; compare to DDPG | ⭐⭐⭐⭐ |
-| SAC on a Mujoco suite | Implement SAC; run on HalfCheetah, Walker2d, Ant, Humanoid; report final returns | ⭐⭐⭐⭐ |
-| Automatic temperature tuning | Add the auto-α update to SAC; verify it stabilizes entropy across tasks | ⭐⭐⭐⭐ |
-| Reparameterization audit | Verify your `tanh`-squashed Gaussian's log-prob correction is right; off-by-one here silently breaks SAC | ⭐⭐⭐ |
-| Sample efficiency study | Compare PPO vs SAC on the same Mujoco task in wall-clock time and samples used | ⭐⭐⭐⭐ |
+| [DDPG on Pendulum](projects/26-ddpg-on-pendulum/README.md) | Single-file DDPG; verify it learns; observe the instability | ⭐⭐⭐ |
+| [TD3 on HalfCheetah](projects/27-td3-on-halfcheetah/README.md) | Full TD3 implementation with twin critics; compare to DDPG | ⭐⭐⭐⭐ |
+| [SAC on a Mujoco suite](projects/28-sac-on-a-mujoco-suite/README.md) | Implement SAC; run on HalfCheetah, Walker2d, Ant, Humanoid; report final returns | ⭐⭐⭐⭐ |
+| [Automatic temperature tuning](projects/29-automatic-temperature-tuning/README.md) | Add the auto-α update to SAC; verify it stabilizes entropy across tasks | ⭐⭐⭐⭐ |
+| [Reparameterization audit](projects/30-reparameterization-audit/README.md) | Verify your `tanh`-squashed Gaussian's log-prob correction is right; off-by-one here silently breaks SAC | ⭐⭐⭐ |
+| [Sample efficiency study](projects/31-sample-efficiency-study/README.md) | Compare PPO vs SAC on the same Mujoco task in wall-clock time and samples used | ⭐⭐⭐⭐ |
 
 ### Sample Code: The SAC Critic Update
 

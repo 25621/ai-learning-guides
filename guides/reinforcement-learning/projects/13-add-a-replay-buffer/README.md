@@ -1,0 +1,5 @@
+# Add a Replay Buffer
+
+## Key Insight
+
+Two additions turn the fragile [DQN](/shared/glossary/#dqn) of the previous project into the stable recipe that cracked [Atari](/shared/glossary/#atari). [Experience replay](/shared/glossary/#experience-replay) stores past `(state, action, reward, next-state)` transitions in a buffer and trains on random samples drawn from it, which breaks the strong correlation between back-to-back steps and lets each experience be reused many times instead of being seen once and thrown away. A [target network](/shared/glossary/#target-network) — a frozen copy of the [Q-network](/shared/glossary/#dqn) refreshed only every few hundred steps — supplies the `r + γ·maxₐ Q(s′, a)` learning target, so the network is no longer chasing a goalpost that jumps on every gradient step. Together they tame two of the three legs of the [deadly triad](/shared/glossary/#deadly-triad) ([bootstrapping](/shared/glossary/#bootstrapping) and [off-policy](/shared/glossary/#off-policy) data), and the once-collapsing learning curve becomes steady and repeatable.

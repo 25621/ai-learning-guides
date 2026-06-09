@@ -1,0 +1,5 @@
+# TD3 on HalfCheetah
+
+## Key Insight
+
+[TD3](/shared/glossary/#td3) (Twin Delayed DDPG) keeps [DDPG](/shared/glossary/#ddpg)'s [actor-critic](/shared/glossary/#actor-critic) skeleton but adds three fixes that turn a fragile algorithm into a dependable one: [twin critics](/shared/glossary/#twin-critics) whose smaller estimate is used as the target, so the [policy](/shared/glossary/#policy) cannot exploit one critic's lucky [overestimate](/shared/glossary/#overestimation-bias); [delayed policy updates](/shared/glossary/#delayed-policy-updates) that let the critic settle before the actor chases it; and [target policy smoothing](/shared/glossary/#target-policy-smoothing), a little noise added to the target action so the critic cannot overfit to a razor-thin peak. [HalfCheetah](/shared/glossary/#halfcheetah) — a two-legged running robot simulated in [MuJoCo](/shared/glossary/#mujoco) — is the standard benchmark where these fixes visibly lift TD3's [returns](/shared/glossary/#return) above DDPG's noisy, often-diverging ones.

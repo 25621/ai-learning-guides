@@ -1,0 +1,5 @@
+# PPO from Scratch
+
+## Key Insight
+
+[PPO](/shared/glossary/#ppo) (Proximal Policy Optimization) is the [on-policy](/shared/glossary/#on-policy) algorithm that ships in most production RL systems, and its core idea is a safety rail on how far the policy may move in one update. It forms the [importance ratio](/shared/glossary/#importance-sampling) `π_new/π_old` — how much more or less likely the new policy makes each past action — multiplies it by the [advantage](/shared/glossary/#advantage), and then *clips* that ratio to a narrow band around 1 so a single batch can never yank the policy too far. This is a cheap stand-in for [TRPO](/shared/glossary/#trpo)'s expensive [trust region](/shared/glossary/#trust-region): same goal of small, stable steps, but achieved with a one-line clamp instead of constrained optimization. Reproducing CleanRL's `ppo.py` line by line reveals that the famous five-line loss is the easy part — the rest is [GAE](/shared/glossary/#gae), advantage [normalization](/shared/glossary/#normalization), and the [data-wrangling](/shared/glossary/#data-wrangling) details that actually make it learn.

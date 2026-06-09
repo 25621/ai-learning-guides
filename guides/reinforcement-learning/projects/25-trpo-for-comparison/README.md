@@ -1,0 +1,5 @@
+# TRPO for Comparison
+
+## Key Insight
+
+[TRPO](/shared/glossary/#trpo) (Trust Region Policy Optimization) is the algorithm [PPO](/shared/glossary/#ppo) simplified. It pursues the same goal — improve the [policy](/shared/glossary/#policy) without ever taking a step so large it collapses performance — but enforces it rigorously by solving a constrained optimization that keeps the [KL divergence](/shared/glossary/#kl-divergence) between the old and new policy below a fixed budget, the literal [trust region](/shared/glossary/#trust-region). Making that tractable requires heavy machinery: a conjugate-gradient solver to approximate the constraint and a backtracking line search to enforce it every update, which is far more code and compute than PPO's one-line ratio clip. Implementing TRPO on a [MuJoCo](/shared/glossary/#mujoco) task and seeing it match — but not beat — PPO is the clearest way to understand why the field abandoned the mathematically cleaner method for the empirically simpler one.

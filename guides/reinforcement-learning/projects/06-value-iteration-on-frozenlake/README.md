@@ -1,0 +1,5 @@
+# Value Iteration on FrozenLake
+
+## Key Insight
+
+[FrozenLake](/shared/glossary/#frozenlake) is the smallest [Gymnasium](/shared/glossary/#gymnasium) environment whose dynamics are fully known, which is exactly what [value iteration](/shared/glossary/#value-iteration) needs: when the [transition probabilities](/shared/glossary/#transition-function) and [rewards](/shared/glossary/#reward-function) are written down, you can compute the optimal [value function](/shared/glossary/#value-function) `V*` by *planning* — repeatedly applying the optimality [Bellman backup](/shared/glossary/#bellman-operator) — instead of *learning* it from trial and error. Because the ice is slippery, the agent sometimes slides sideways instead of where it aimed, so the [optimal policy](/shared/glossary/#optimal-policy) must respect those random [transitions](/shared/glossary/#transition-function) and often points *away* from the nearest hole rather than straight at the goal. Visualizing `V*` as a heatmap over the grid and the [greedy policy](/shared/glossary/#greedy-policy) as arrows turns the abstract fixed-point computation into something you can see at a glance.

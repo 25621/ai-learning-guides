@@ -1,0 +1,5 @@
+# Add a Value Baseline
+
+## Key Insight
+
+[REINFORCE](/shared/glossary/#reinforce)'s high [variance](/shared/glossary/#bias-variance-tradeoff) comes from weighting every action by the raw [return](/shared/glossary/#return), which swings wildly from episode to episode. Subtracting a [baseline](/shared/glossary/#baseline) — typically a learned [value function](/shared/glossary/#value-function) `V(s)` that estimates the average return from a state — fixes this: the action weight becomes the [advantage](/shared/glossary/#advantage) `A(s,a) = return − V(s)`, which answers "was this action better or worse than usual *here*?" rather than "was the whole episode good?". Crucially this subtraction lowers variance *without adding bias*, because a baseline that depends only on the state (not the action) cancels out in expectation. Adding this single term is the conceptual bridge from REINFORCE to [actor-critic](/shared/glossary/#actor-critic) methods, where the same learned `V(s)` plays the role of the critic.
