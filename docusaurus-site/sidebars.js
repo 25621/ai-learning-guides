@@ -471,6 +471,18 @@ const sidebars = {
                 {type: 'doc', id: 'guides/reinforcement-learning/projects/sample-efficiency-study/README', label: 'Sample efficiency study'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 6: Model-Based RL',
+              items: [
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/pets-random-shooting-mpc/README', label: 'PETS / random shooting MPC'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/cem-mpc/README', label: 'CEM-MPC'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/mini-mbpo/README', label: 'Mini MBPO'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/dreamer-v3-reproduction/README', label: 'Dreamer V3 reproduction'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/mini-muzero/README', label: 'Mini MuZero'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/td-mpc2-study/README', label: 'TD-MPC2 study'},
+              ],
+            },
           ],
         },
         {

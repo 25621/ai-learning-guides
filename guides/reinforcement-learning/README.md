@@ -574,7 +574,7 @@ Everything so far has been **model-free**: learn a policy or value function from
   - **A learned forward dynamics network** `f_θ(s, a) → s', r`
   - **An ensemble** of forward dynamics networks (the standard way to estimate uncertainty)
   - **A latent dynamics model**: encoder `s → z`, transition `z, a → z'`, decoder `z → o` (image obs); the **Dreamer** family
-  - **A generative video model** doing the same job (world models — see Phase 9 of the [Video Generation Guide](../video-generation/))
+  - **A generative video model** doing the same job (world models — see [Phase 9 of the Video Generation Guide](../video-generation/#phase-9-world-models-and-interactive-video))
 - **Three ways to use a model**:
   - **Dyna-style** — generate fake transitions to augment a model-free learner's replay buffer (MBPO is the modern version)
   - **Planning** — use the model directly at decision time (MPC, CEM, MPPI)
@@ -611,12 +611,12 @@ Everything so far has been **model-free**: learn a policy or value function from
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| PETS / random shooting MPC | Learn a 1-step dynamics model on Pendulum; do random-shooting MPC; compare to SAC | ⭐⭐⭐ |
-| CEM-MPC | Replace random shooting with Cross-Entropy Method action search | ⭐⭐⭐⭐ |
-| Mini MBPO | Train SAC with short model rollouts mixed into the replay buffer; verify the sample-efficiency win | ⭐⭐⭐⭐ |
-| Dreamer V3 reproduction | Port the official Dreamer V3 to a custom env; observe how few hyperparameters it needs | ⭐⭐⭐⭐⭐ |
-| Mini MuZero | Implement MuZero on a small game (Tic-Tac-Toe or 4x4 Connect4); see the recurrence between policy, value, and dynamics heads | ⭐⭐⭐⭐⭐ |
-| TD-MPC2 study | Read TD-MPC2 paper; reproduce its DMC suite results | ⭐⭐⭐⭐⭐ |
+| [PETS / random shooting MPC](projects/32-pets-random-shooting-mpc/README.md) | Learn a 1-step dynamics model on Pendulum; do random-shooting MPC; compare to SAC | ⭐⭐⭐ |
+| [CEM-MPC](projects/33-cem-mpc/README.md) | Replace random shooting with Cross-Entropy Method action search | ⭐⭐⭐⭐ |
+| [Mini MBPO](projects/34-mini-mbpo/README.md) | Train SAC with short model rollouts mixed into the replay buffer; verify the sample-efficiency win | ⭐⭐⭐⭐ |
+| [Dreamer V3 reproduction](projects/35-dreamer-v3-reproduction/README.md) | Port the official Dreamer V3 to a custom env; observe how few hyperparameters it needs | ⭐⭐⭐⭐⭐ |
+| [Mini MuZero](projects/36-mini-muzero/README.md) | Implement MuZero on a small game (Tic-Tac-Toe or 4x4 Connect4); see the recurrence between policy, value, and dynamics heads | ⭐⭐⭐⭐⭐ |
+| [TD-MPC2 study](projects/37-td-mpc2-study/README.md) | Read TD-MPC2 paper; reproduce its DMC suite results | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: Random-Shooting MPC
 

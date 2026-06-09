@@ -1,0 +1,5 @@
+# Mini MBPO
+
+## Key Insight
+
+[MBPO](/shared/glossary/#mbpo) (Model-Based Policy Optimization) is the [Dyna](/shared/glossary/#dyna) idea done carefully: train a [dynamics model](/shared/glossary/#dynamics-model), use it to generate short synthetic [rollouts](/shared/glossary/#rollout), and mix those fake transitions into the [replay buffer](/shared/glossary/#experience-replay) that an [off-policy](/shared/glossary/#off-policy) learner like [SAC](/shared/glossary/#sac) trains on. The key design choice is keeping the model rollouts very short — often a single step — because model error compounds with every imagined step, so a short rollout branched from a real state stays trustworthy while still multiplying the data the policy learns from. The payoff is a large [sample-efficiency](/shared/glossary/#sample-efficiency) win: the agent reaches a good policy in far fewer real environment steps than a purely [model-free](/shared/glossary/#model-free-rl) baseline, which is exactly what [model-based RL](/shared/glossary/#model-based-rl) promises.
