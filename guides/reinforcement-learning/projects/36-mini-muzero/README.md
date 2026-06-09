@@ -1,0 +1,5 @@
+# Mini MuZero
+
+## Key Insight
+
+[MuZero](/shared/glossary/#muzero) combines [Monte Carlo Tree Search](/shared/glossary/#mcts) with a learned [dynamics model](/shared/glossary/#dynamics-model) that predicts only what matters for decisions — reward, [value](/shared/glossary/#value-function), and [policy](/shared/glossary/#policy) — without ever reconstructing the actual game board, which is why the same algorithm works on [Atari](/shared/glossary/#atari) pixels as well as board games. Implementing it on a tiny game like [Tic-Tac-Toe](/shared/glossary/#tic-tac-toe) or 4×4 [Connect Four](/shared/glossary/#connect-four) exposes its three coupled heads: a *representation* that encodes the board into an abstract state, a *dynamics* head that predicts the next abstract state and reward from an action, and *prediction* heads that output a value and a policy to guide the search. The "Zero" in the name marks its descent from [AlphaZero](/shared/glossary/#alphazero), which ran the same search-plus-learning loop but was handed the real game rules; MuZero learns the rules instead.

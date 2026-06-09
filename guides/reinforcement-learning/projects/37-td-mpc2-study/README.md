@@ -1,0 +1,5 @@
+# TD-MPC2 Study
+
+## Key Insight
+
+[TD-MPC2](/shared/glossary/#td-mpc2) [plans](/shared/glossary/#planning) with a learned [dynamics model](/shared/glossary/#dynamics-model) over a short horizon and then bootstraps from a learned [value function](/shared/glossary/#value-function) beyond it — fusing the strengths of planning (precise short-term decisions) and value learning (cheap long-term foresight), with the [Cross-Entropy Method](/shared/glossary/#cem) doing the short-horizon action search. Crucially it plans in a learned [latent space](/shared/glossary/#latent-space) rather than over raw observations, so the model only has to be accurate about the features the value and policy actually use. With one fixed set of hyperparameters it masters the whole [DeepMind Control Suite](/shared/glossary/#deepmind-control-suite-dmc) of [continuous-control](/shared/glossary/#continuous-control) tasks, making it the current frontier of [model-based RL](/shared/glossary/#model-based-rl) and a clean demonstration of why sharing representations between the model, value, and policy is what finally made model-based control competitive.
