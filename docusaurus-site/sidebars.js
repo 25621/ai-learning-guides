@@ -640,7 +640,26 @@ const sidebars = {
             },
           ],
         },
-        {type: 'doc', id: 'guides/robotics/README', label: 'Robotics'},
+        {
+          type: 'category',
+          label: 'Robotics',
+          link: {type: 'doc', id: 'guides/robotics/README'},
+          items: [
+            {
+              type: 'category',
+              label: 'Phase 1: Rigid-Body Transforms and Kinematics',
+              items: [
+                {type: 'doc', id: 'guides/robotics/projects/transform-calculator/README', label: 'Transform calculator'},
+                {type: 'doc', id: 'guides/robotics/projects/urdf-visualizer/README', label: 'URDF visualizer'},
+                {type: 'doc', id: 'guides/robotics/projects/forward-kinematics-from-scratch/README', label: 'Forward kinematics from scratch'},
+                {type: 'doc', id: 'guides/robotics/projects/jacobian-from-scratch/README', label: 'Jacobian from scratch'},
+                {type: 'doc', id: 'guides/robotics/projects/damped-least-squares-ik/README', label: 'Damped least-squares IK'},
+                {type: 'doc', id: 'guides/robotics/projects/null-space-posture-control/README', label: 'Null-space posture control'},
+                {type: 'doc', id: 'guides/robotics/projects/hand-eye-calibration/README', label: 'Hand-eye calibration'},
+              ],
+            },
+          ],
+        },
         {
           type: 'category',
           label: 'Multimodal Learning',

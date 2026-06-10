@@ -151,13 +151,13 @@ loss function, or learned model has to handle the double-cover.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Transform calculator | Implement `R`, quaternion, axis-angle conversions; round-trip 10 000 random rotations and verify < 1e-10 error | ⭐⭐ |
-| URDF visualizer | Load a URDF in Python (e.g. via Pinocchio or yourdfpy); render the kinematic tree with random joint angles | ⭐⭐⭐ |
-| Forward kinematics from scratch | Implement FK for a 6-DoF arm using only NumPy and the URDF; verify against the modeling library | ⭐⭐⭐ |
-| Jacobian from scratch | Compute the geometric Jacobian numerically (finite-difference) and analytically; agree to 6 decimal places | ⭐⭐⭐⭐ |
-| Damped least-squares IK | Solve IK for a 7-DoF arm with damping near singularities; visualize wrist singularity and recovery | ⭐⭐⭐⭐ |
-| Null-space posture control | Use the Jacobian null-space to maintain a "home" posture while tracking an end-effector trajectory | ⭐⭐⭐⭐⭐ |
-| Hand-eye calibration | Compute the transform from camera frame to end-effector using the AX = XB formulation; measure residual | ⭐⭐⭐⭐ |
+| [Transform calculator](projects/01-transform-calculator/README.md) | Implement `R`, quaternion, axis-angle conversions; round-trip 10 000 random rotations and verify < 1e-10 error | ⭐⭐ |
+| [URDF visualizer](projects/02-urdf-visualizer/README.md) | Load a URDF in Python (e.g. via Pinocchio or yourdfpy); render the kinematic tree with random joint angles | ⭐⭐⭐ |
+| [Forward kinematics from scratch](projects/03-forward-kinematics-from-scratch/README.md) | Implement FK for a 6-DoF arm using only NumPy and the URDF; verify against the modeling library | ⭐⭐⭐ |
+| [Jacobian from scratch](projects/04-jacobian-from-scratch/README.md) | Compute the geometric Jacobian numerically (finite-difference) and analytically; agree to 6 decimal places | ⭐⭐⭐⭐ |
+| [Damped least-squares IK](projects/05-damped-least-squares-ik/README.md) | Solve IK for a 7-DoF arm with damping near singularities; visualize wrist singularity and recovery | ⭐⭐⭐⭐ |
+| [Null-space posture control](projects/06-null-space-posture-control/README.md) | Use the Jacobian null-space to maintain a "home" posture while tracking an end-effector trajectory | ⭐⭐⭐⭐⭐ |
+| [Hand-eye calibration](projects/07-hand-eye-calibration/README.md) | Compute the transform from camera frame to end-effector using the AX = XB formulation; measure residual | ⭐⭐⭐⭐ |
 
 ### Sample Code: A Minimal 6-DoF Forward Kinematics
 
