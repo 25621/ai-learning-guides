@@ -1,0 +1,5 @@
+# ε-greedy on a Chain
+
+## Key Insight
+
+[Epsilon-greedy (ε-greedy)](/shared/glossary/#epsilon-greedy) is the workhorse [exploration](/shared/glossary/#exploration-vs-exploitation) rule, but this project is built to make it fail. A [chain MDP](/shared/glossary/#chain-mdp) lines its states up in a single row with the only [reward](/shared/glossary/#reward-function) hidden at the far end, so the agent must take many correct steps in a row before it ever sees a payoff — a textbook [sparse-reward](/shared/glossary/#sparse-reward) problem. Because ε-greedy explores by occasionally picking a *uniformly random* action, the chance of randomly walking all the way to the goal is roughly halved with every extra link in the chain, so the time to first discover the reward blows up exponentially as the chain grows. Why it matters: it shows concretely that random jitter is not a real exploration strategy — the moment rewards are rare and far away you need a method that is *directed* toward the unknown, which is the whole motivation for the [intrinsic-motivation](/shared/glossary/#intrinsic-motivation) methods in this phase.

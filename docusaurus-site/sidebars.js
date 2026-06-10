@@ -495,6 +495,18 @@ const sidebars = {
                 {type: 'doc', id: 'guides/reinforcement-learning/projects/dataset-quality-study/README', label: 'Dataset-quality study'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 8: Exploration',
+              items: [
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/epsilon-greedy-on-a-chain/README', label: 'ε-greedy on a chain'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/count-based-on-a-small-env/README', label: 'Count-based on a small env'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/rnd-on-atari/README', label: 'RND on Atari'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/icm/README', label: 'ICM'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/diayn/README', label: 'DIAYN'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/noisy-tv-experiment/README', label: 'Noisy-TV experiment'},
+              ],
+            },
           ],
         },
         {

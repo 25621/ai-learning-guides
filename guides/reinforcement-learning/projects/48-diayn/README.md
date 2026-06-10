@@ -1,0 +1,5 @@
+# DIAYN
+
+## Key Insight
+
+[DIAYN (Diversity Is All You Need)](/shared/glossary/#diayn) learns a whole repertoire of distinct behaviors with *no* environment [reward](/shared/glossary/#reward-function) at all — a form of unsupervised [skill discovery](/shared/glossary/#skill-discovery). It hands the [policy](/shared/glossary/#policy) a randomly chosen "skill" code as extra input and rewards it, via an [intrinsic reward](/shared/glossary/#intrinsic-reward), for making its visited states *predictable from the skill yet different across skills* — formally, for maximizing the [mutual information](/shared/glossary/#mutual-information) between the skill code and the states it produces. The effect is that each skill claims its own region of behavior — one learns to run forward, another to flip, another to stand still — without anyone hand-designing those goals. Why it matters: these pre-trained skills become a ready-made action vocabulary that a later reward-driven task can compose, and the idea connects directly to [maximum-entropy RL](/shared/glossary/#maximum-entropy-rl), which similarly prizes a diverse, non-collapsed policy.

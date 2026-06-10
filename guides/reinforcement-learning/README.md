@@ -783,12 +783,12 @@ Reward-hungry agents in sparse-reward worlds spend almost all of their time wand
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| ε-greedy on a chain | A 10-state chain MDP with reward only at one end; observe how ε-greedy fails as chain length grows | ⭐⭐ |
-| Count-based on a small env | Add a `1/√N(s)` bonus to Q-learning; verify exploration accelerates | ⭐⭐⭐ |
-| RND on Atari | Implement Random Network Distillation; apply to Montezuma's Revenge; see the famous result | ⭐⭐⭐⭐ |
-| ICM | Implement the Intrinsic Curiosity Module; compare to RND on the same task | ⭐⭐⭐⭐ |
-| DIAYN | Train diverse skills with no extrinsic reward; visualize the skill space | ⭐⭐⭐⭐⭐ |
-| Noisy-TV experiment | Construct an environment with a TV that shows random noise; verify that prediction-error methods get stuck staring at it | ⭐⭐⭐ |
+| [ε-greedy on a chain](projects/44-epsilon-greedy-on-a-chain/README.md) | A 10-state chain MDP with reward only at one end; observe how ε-greedy fails as chain length grows | ⭐⭐ |
+| [Count-based on a small env](projects/45-count-based-on-a-small-env/README.md) | Add a `1/√N(s)` bonus to Q-learning; verify exploration accelerates | ⭐⭐⭐ |
+| [RND on Atari](projects/46-rnd-on-atari/README.md) | Implement Random Network Distillation; apply to Montezuma's Revenge; see the famous result | ⭐⭐⭐⭐ |
+| [ICM](projects/47-icm/README.md) | Implement the Intrinsic Curiosity Module; compare to RND on the same task | ⭐⭐⭐⭐ |
+| [DIAYN](projects/48-diayn/README.md) | Train diverse skills with no extrinsic reward; visualize the skill space | ⭐⭐⭐⭐⭐ |
+| [Noisy-TV experiment](projects/49-noisy-tv-experiment/README.md) | Construct an environment with a TV that shows random noise; verify that prediction-error methods get stuck staring at it | ⭐⭐⭐ |
 
 ### Sample Code: An RND Bonus
 
