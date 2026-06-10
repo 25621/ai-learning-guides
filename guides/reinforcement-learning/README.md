@@ -788,7 +788,7 @@ Reward-hungry agents in sparse-reward worlds spend almost all of their time wand
 | [RND on Atari](projects/46-rnd-on-atari/README.md) | Implement Random Network Distillation; apply to Montezuma's Revenge; see the famous result | ⭐⭐⭐⭐ |
 | [ICM](projects/47-icm/README.md) | Implement the Intrinsic Curiosity Module; compare to RND on the same task | ⭐⭐⭐⭐ |
 | [DIAYN](projects/48-diayn/README.md) | Train diverse skills with no extrinsic reward; visualize the skill space | ⭐⭐⭐⭐⭐ |
-| [Noisy-TV experiment](projects/49-noisy-tv-experiment/README.md) | Construct an environment with a TV that shows random noise; verify that prediction-error methods get stuck staring at it | ⭐⭐⭐ |
+| [Noisy-TV experiment](projects/49-noisy-tv-experiment/README.md) | Construct an environment with a TV that shows random noise; verify that naive prediction-error methods get stuck staring at it | ⭐⭐⭐ |
 
 ### Sample Code: An RND Bonus
 
