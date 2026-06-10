@@ -1,0 +1,5 @@
+# Implement CQL
+
+## Key Insight
+
+[CQL (Conservative Q-Learning)](/shared/glossary/#cql) fixes the [out-of-distribution](/shared/glossary/#out-of-distribution) blow-up of naive [offline RL](/shared/glossary/#offline-rl) with one extra penalty bolted onto the normal [Q-learning](/shared/glossary/#q-learning) loss: it pushes *down* the predicted value of all the actions the network is tempted to overrate, while pulling *up* the value of the actions actually present in the dataset. The net effect is [pessimism](/shared/glossary/#pessimism) — the learned `Q` deliberately underestimates unfamiliar actions, so the policy stops chasing the fantasy high-value actions that wrecked naive Q-learning and stays near the [behavior policy](/shared/glossary/#behavior-policy)'s data. It is the value-pessimism counterpart to keeping the policy close to the data ([policy constraint](/shared/glossary/#policy-constraint)), and reproducing its [D4RL](/shared/glossary/#d4rl) numbers is the standard way to learn the approach.

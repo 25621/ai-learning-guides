@@ -574,7 +574,7 @@ Everything so far has been **model-free**: learn a policy or value function from
   - **A learned forward dynamics network** `f_θ(s, a) → s', r`
   - **An ensemble** of forward dynamics networks (the standard way to estimate uncertainty)
   - **A latent dynamics model**: encoder `s → z`, transition `z, a → z'`, decoder `z → o` (image obs); the **Dreamer** family
-  - **A generative video model** doing the same job (world models — see Phase 9 of the [Video Generation Guide](../video-generation/))
+  - **A generative video model** doing the same job (world models — see [Phase 9 of the Video Generation Guide](../video-generation/#phase-9-world-models-and-interactive-video))
 - **Three ways to use a model**:
   - **Dyna-style** — generate fake transitions to augment a model-free learner's replay buffer (MBPO is the modern version)
   - **Planning** — use the model directly at decision time (MPC, CEM, MPPI)
@@ -611,12 +611,12 @@ Everything so far has been **model-free**: learn a policy or value function from
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| PETS / random shooting MPC | Learn a 1-step dynamics model on Pendulum; do random-shooting MPC; compare to SAC | ⭐⭐⭐ |
-| CEM-MPC | Replace random shooting with Cross-Entropy Method action search | ⭐⭐⭐⭐ |
-| Mini MBPO | Train SAC with short model rollouts mixed into the replay buffer; verify the sample-efficiency win | ⭐⭐⭐⭐ |
-| Dreamer V3 reproduction | Port the official Dreamer V3 to a custom env; observe how few hyperparameters it needs | ⭐⭐⭐⭐⭐ |
-| Mini MuZero | Implement MuZero on a small game (Tic-Tac-Toe or 4x4 Connect4); see the recurrence between policy, value, and dynamics heads | ⭐⭐⭐⭐⭐ |
-| TD-MPC2 study | Read TD-MPC2 paper; reproduce its DMC suite results | ⭐⭐⭐⭐⭐ |
+| [PETS / random shooting MPC](projects/32-pets-random-shooting-mpc/README.md) | Learn a 1-step dynamics model on Pendulum; do random-shooting MPC; compare to SAC | ⭐⭐⭐ |
+| [CEM-MPC](projects/33-cem-mpc/README.md) | Replace random shooting with Cross-Entropy Method action search | ⭐⭐⭐⭐ |
+| [Mini MBPO](projects/34-mini-mbpo/README.md) | Train SAC with short model rollouts mixed into the replay buffer; verify the sample-efficiency win | ⭐⭐⭐⭐ |
+| [Dreamer V3 reproduction](projects/35-dreamer-v3-reproduction/README.md) | Port the official Dreamer V3 to a custom env; observe how few hyperparameters it needs | ⭐⭐⭐⭐⭐ |
+| [Mini MuZero](projects/36-mini-muzero/README.md) | Implement MuZero on a small game (Tic-Tac-Toe or 4x4 Connect4); see the recurrence between policy, value, and dynamics heads | ⭐⭐⭐⭐⭐ |
+| [TD-MPC2 study](projects/37-td-mpc2-study/README.md) | Read TD-MPC2 paper; reproduce its DMC suite results | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: Random-Shooting MPC
 
@@ -650,19 +650,19 @@ Model-based RL has been "one breakthrough away from taking over" for a decade. W
 
 ## Phase 7: Offline RL
 
-In **offline RL** (also called batch RL), you have a fixed dataset of past interactions and cannot collect more. This is the regime that matches most real applications: medical records, recommender system logs, robot-fleet data, historical trading data. The challenge is **distribution shift**: the learned policy will want to take actions that aren't in the dataset, and the Q-function will hallucinate huge values for those out-of-distribution actions.
+In **[offline RL](/shared/glossary/#offline-rl)** (also called batch RL), you have a fixed dataset of past interactions and cannot collect more. This is the regime that matches most real applications: medical records, recommender system logs, robot-fleet data, historical trading data. The challenge is **[distribution shift](/shared/glossary/#distribution-shift)**: the learned policy will want to take actions that aren't in the dataset, and the [Q-function](/shared/glossary/#q-learning) will hallucinate huge values for those [out-of-distribution](/shared/glossary/#out-of-distribution) actions.
 
 ### Concepts to Learn
 
 - **Why "just run Q-learning on the data" fails** — the bootstrapped target uses `max_a Q(s', a)`, which is maximized at unseen actions where `Q` is wildly wrong
 - **The two families of fixes**:
-  - **Policy constraint**: stay close to the behavior policy that generated the data (BCQ, BEAR, AWAC, BRAC)
-  - **Value pessimism**: explicitly penalize Q-values at out-of-distribution actions (CQL, IQL — the modern default)
-- **CQL (Conservative Q-Learning)** — adds a penalty to the standard Bellman loss that pushes down Q-values at all actions and pulls them up only at the actions in the data
-- **IQL (Implicit Q-Learning)** — never queries `Q` at out-of-distribution actions at all; uses expectile regression on `V`. Simpler and more robust than CQL
-- **Decision Transformer / Trajectory Transformer** — reframe offline RL as autoregressive *sequence modeling*: condition on a desired return-to-go, predict the next action. Strong when the dataset is large and diverse
-- **Behavior cloning baselines** — sometimes BC is shockingly competitive with offline RL, especially when the dataset is high-quality. Always run it as a baseline
-- **D4RL** — the standard offline-RL benchmark suite
+  - **[Policy constraint](/shared/glossary/#policy-constraint)**: stay close to the [behavior policy](/shared/glossary/#behavior-policy) that generated the data ([BCQ, BEAR, AWAC, BRAC](/shared/glossary/#policy-constraint))
+  - **[Value pessimism](/shared/glossary/#pessimism)**: explicitly penalize Q-values at out-of-distribution actions ([CQL](/shared/glossary/#cql), [IQL](/shared/glossary/#iql) — the modern default)
+- **[CQL (Conservative Q-Learning)](/shared/glossary/#cql)** — adds a penalty to the standard [Bellman](/shared/glossary/#bellman-equation) loss that pushes down Q-values at all actions and pulls them up only at the actions in the data
+- **[IQL (Implicit Q-Learning)](/shared/glossary/#iql)** — never queries `Q` at out-of-distribution actions at all; uses [expectile regression](/shared/glossary/#expectile-regression) on `V`. Simpler and more robust than CQL
+- **[Decision Transformer](/shared/glossary/#decision-transformer) / [Trajectory Transformer](/shared/glossary/#trajectory-transformer)** — reframe offline RL as [autoregressive](/shared/glossary/#autoregressive-model) [sequence modeling](/shared/glossary/#sequence-modeling): condition on a desired [return-to-go](/shared/glossary/#return-to-go), predict the next action. Strong when the dataset is large and diverse
+- **[Behavior cloning](/shared/glossary/#bc) baselines** — sometimes BC is shockingly competitive with offline RL, especially when the dataset is high-quality. Always run it as a baseline
+- **[D4RL](/shared/glossary/#d4rl)** — the standard offline-RL benchmark suite
 - **The relationship to RLHF**: RLHF is a constrained-policy-improvement problem; offline-RL methods (especially DPO-as-offline-RL views) directly inform the RLHF stack
 
 ### The Distribution-Shift Picture
@@ -690,12 +690,12 @@ the modern default.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| BC baseline on D4RL | Behavior cloning on the `walker2d-medium-v2` task; report return | ⭐⭐ |
-| Naive Q-learning on the same dataset | Verify the catastrophic failure | ⭐⭐⭐ |
-| Implement CQL | Add the conservative penalty; reproduce CQL's D4RL numbers | ⭐⭐⭐⭐ |
-| Implement IQL | Verify it works on the same tasks with fewer knobs | ⭐⭐⭐⭐ |
-| Decision Transformer | Implement on D4RL; condition on return-to-go; compare to IQL | ⭐⭐⭐⭐ |
-| Dataset-quality study | Same algorithm, three datasets (random, medium, expert); plot return-vs-data-quality | ⭐⭐⭐ |
+| [BC baseline on D4RL](projects/38-bc-baseline-on-d4rl/README.md) | Behavior cloning on the `walker2d-medium-v2` task; report return | ⭐⭐ |
+| [Naive Q-learning on the same dataset](projects/39-naive-q-learning-on-the-same-dataset/README.md) | Verify the catastrophic failure | ⭐⭐⭐ |
+| [Implement CQL](projects/40-implement-cql/README.md) | Add the conservative penalty; reproduce CQL's D4RL numbers | ⭐⭐⭐⭐ |
+| [Implement IQL](projects/41-implement-iql/README.md) | Verify it works on the same tasks with fewer knobs | ⭐⭐⭐⭐ |
+| [Decision Transformer](projects/42-decision-transformer/README.md) | Implement on D4RL; condition on return-to-go; compare to IQL | ⭐⭐⭐⭐ |
+| [Dataset-quality study](projects/43-dataset-quality-study/README.md) | Same algorithm, three datasets (random, medium, expert); plot return-vs-data-quality | ⭐⭐⭐ |
 
 ### Sample Code: The Heart of IQL
 
@@ -783,12 +783,12 @@ Reward-hungry agents in sparse-reward worlds spend almost all of their time wand
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| ε-greedy on a chain | A 10-state chain MDP with reward only at one end; observe how ε-greedy fails as chain length grows | ⭐⭐ |
-| Count-based on a small env | Add a `1/√N(s)` bonus to Q-learning; verify exploration accelerates | ⭐⭐⭐ |
-| RND on Atari | Implement Random Network Distillation; apply to Montezuma's Revenge; see the famous result | ⭐⭐⭐⭐ |
-| ICM | Implement the Intrinsic Curiosity Module; compare to RND on the same task | ⭐⭐⭐⭐ |
-| DIAYN | Train diverse skills with no extrinsic reward; visualize the skill space | ⭐⭐⭐⭐⭐ |
-| Noisy-TV experiment | Construct an environment with a TV that shows random noise; verify that prediction-error methods get stuck staring at it | ⭐⭐⭐ |
+| [ε-greedy on a chain](projects/44-epsilon-greedy-on-a-chain/README.md) | A 10-state chain MDP with reward only at one end; observe how ε-greedy fails as chain length grows | ⭐⭐ |
+| [Count-based on a small env](projects/45-count-based-on-a-small-env/README.md) | Add a `1/√N(s)` bonus to Q-learning; verify exploration accelerates | ⭐⭐⭐ |
+| [RND on Atari](projects/46-rnd-on-atari/README.md) | Implement Random Network Distillation; apply to Montezuma's Revenge; see the famous result | ⭐⭐⭐⭐ |
+| [ICM](projects/47-icm/README.md) | Implement the Intrinsic Curiosity Module; compare to RND on the same task | ⭐⭐⭐⭐ |
+| [DIAYN](projects/48-diayn/README.md) | Train diverse skills with no extrinsic reward; visualize the skill space | ⭐⭐⭐⭐⭐ |
+| [Noisy-TV experiment](projects/49-noisy-tv-experiment/README.md) | Construct an environment with a TV that shows random noise; verify that naive prediction-error methods get stuck staring at it | ⭐⭐⭐ |
 
 ### Sample Code: An RND Bonus
 
@@ -895,14 +895,14 @@ No reward model. No PPO. Just a clever loss on (prompt, chosen, rejected) triple
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| SFT a small base model | Fine-tune Qwen-0.5B or similar on a small instruction dataset; observe baseline behavior | ⭐⭐ |
-| Train a reward model | Pairwise classifier over SFT outputs; verify on held-out preferences | ⭐⭐⭐ |
-| PPO-style RLHF | Mini-RLHF on a small model and small RM; track KL to reference; watch for reward hacking | ⭐⭐⭐⭐⭐ |
-| DPO | Same dataset, DPO instead of PPO; compare quality, training time, stability | ⭐⭐⭐⭐ |
-| GRPO from scratch | Implement GRPO for a small math task (GSM8K-style) with a verifiable reward | ⭐⭐⭐⭐⭐ |
-| RLVR on math | Train a small reasoning loop on a verifiable math subset; observe the emergence of longer chain-of-thought | ⭐⭐⭐⭐⭐ |
-| Length-bias audit | Plot completion-length distributions of your DPO/PPO models; verify the well-known drift | ⭐⭐⭐ |
-| Reward hacking demo | Intentionally over-train against an RM; characterize the gibberish that emerges | ⭐⭐⭐ |
+| [SFT a small base model](projects/50-sft-a-small-base-model/README.md) | Fine-tune Qwen-0.5B or similar on a small instruction dataset; observe baseline behavior | ⭐⭐ |
+| [Train a reward model](projects/51-train-a-reward-model/README.md) | Pairwise classifier over SFT outputs; verify on held-out preferences | ⭐⭐⭐ |
+| [PPO-style RLHF](projects/52-ppo-style-rlhf/README.md) | Mini-RLHF on a small model and small RM; track KL to reference; watch for reward hacking | ⭐⭐⭐⭐⭐ |
+| [DPO](projects/53-dpo/README.md) | Same dataset, DPO instead of PPO; compare quality, training time, stability | ⭐⭐⭐⭐ |
+| [GRPO from scratch](projects/54-grpo-from-scratch/README.md) | Implement GRPO for a small math task (GSM8K-style) with a verifiable reward | ⭐⭐⭐⭐⭐ |
+| [RLVR on math](projects/55-rlvr-on-math/README.md) | Train a small reasoning loop on a verifiable math subset; observe the emergence of longer chain-of-thought | ⭐⭐⭐⭐⭐ |
+| [Length-bias audit](projects/56-length-bias-audit/README.md) | Plot completion-length distributions of your DPO/PPO models; verify the well-known drift | ⭐⭐⭐ |
+| [Reward hacking demo](projects/57-reward-hacking-demo/README.md) | Intentionally over-train against an RM; characterize the gibberish that emerges | ⭐⭐⭐ |
 
 ### Sample Code: The DPO Loss
 

@@ -1,0 +1,5 @@
+# Implement IQL
+
+## Key Insight
+
+[IQL (Implicit Q-Learning)](/shared/glossary/#iql) sidesteps the [out-of-distribution](/shared/glossary/#out-of-distribution) problem more cleanly than [CQL](/shared/glossary/#cql): instead of penalizing bad actions, it simply *never asks* `Q` about any action outside the dataset. It learns a [value function](/shared/glossary/#value-function) `V(s)` with [expectile regression](/shared/glossary/#expectile-regression) — an asymmetric loss that leans toward the *better* outcomes the data already contains, approximating "the value of the best in-dataset action" without ever evaluating an unseen one — then trains the [policy](/shared/glossary/#policy) by [advantage-weighted regression](/shared/glossary/#advantage-weighted-regression), copying dataset actions but weighting the good ones more heavily. Because every quantity is computed only on actions that really occurred, there is nothing to hallucinate, which makes IQL simpler and more robust than CQL and the modern default for [offline RL](/shared/glossary/#offline-rl).

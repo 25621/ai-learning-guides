@@ -1,0 +1,5 @@
+# Naive Q-Learning on the Same Dataset
+
+## Key Insight
+
+This project deliberately breaks [Q-learning](/shared/glossary/#q-learning) to show *why* [offline RL](/shared/glossary/#offline-rl) needs special algorithms. The bootstrapped target `r + γ·maxₐ′ Q(s′, a′)` picks the action with the highest predicted value — but on a fixed dataset that maximizing action is often one the [behavior policy](/shared/glossary/#behavior-policy) never tried, an [out-of-distribution](/shared/glossary/#out-of-distribution) action where `Q` has seen no data and is free to hallucinate a huge value. [Bootstrapping](/shared/glossary/#bootstrapping) then feeds that fantasy back into other targets, the errors compound (a far worse version of ordinary [overestimation bias](/shared/glossary/#overestimation-bias)), and the learned policy chases exactly those phantom high-value actions — so it scores well in training yet collapses on the real task. Watching the Q-values explode here makes the [distribution shift](/shared/glossary/#distribution-shift) problem concrete and motivates the pessimism and constraint tricks of [CQL](/shared/glossary/#cql) and [IQL](/shared/glossary/#iql).

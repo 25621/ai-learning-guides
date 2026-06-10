@@ -1,0 +1,5 @@
+# Train a Reward Model
+
+## Key Insight
+
+A [reward model](/shared/glossary/#reward-model) is the piece of classic [RLHF](/shared/glossary/#rlhf) that turns subjective human taste into a single number an algorithm can optimize: it scores how good a completion is, standing in for a human rater so millions of answers can be graded automatically. You build it by taking your [SFT](/shared/glossary/#sft) model, swapping its next-token head for a head that outputs one scalar, and training on (prompt, chosen, rejected) triples with the [Bradley-Terry](/shared/glossary/#bradley-terry) loss — which simply pushes the chosen completion's score above the rejected one's, learning *relative* preference rather than any absolute "correct" value. This project trains such a pairwise classifier over your SFT outputs and checks it on held-out preferences. Why it matters: the reward model is the target that [PPO](/shared/glossary/#ppo)-style RLHF then optimizes against — and because it is only an imperfect *proxy* for what humans want, it is exactly the component a policy will later learn to [reward-hack](/shared/glossary/#reward-hacking).
