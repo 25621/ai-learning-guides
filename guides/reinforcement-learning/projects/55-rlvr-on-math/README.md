@@ -1,0 +1,5 @@
+# RLVR on Math
+
+## Key Insight
+
+[RL with Verifiable Rewards (RLVR)](/shared/glossary/#rlvr) throws out the learned [reward model](/shared/glossary/#reward-model) entirely: when an answer can be checked by a program — a math result that matches the known solution, code that passes its unit tests — a deterministic [verifier](/shared/glossary/#verifier) hands back an exact, [unhackable](/shared/glossary/#reward-hacking) reward for free. This project trains a small reasoning loop on a verifiable math subset (GSM8K-style) and watches the model's [chain of thought](/shared/glossary/#cot) grow longer over training, because writing out more reasoning steps leads to more correct — and therefore more rewarded — answers. Why it matters: RLVR is the engine of the [reasoning-model](/shared/glossary/#reasoning-model) wave (o1, R1), and it explains the grand bet of 2026 — the more domains we can convert into verifiable form, the more of [RLHF](/shared/glossary/#rlhf)'s messy preference machinery we can throw away.

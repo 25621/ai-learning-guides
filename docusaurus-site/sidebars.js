@@ -507,6 +507,20 @@ const sidebars = {
                 {type: 'doc', id: 'guides/reinforcement-learning/projects/noisy-tv-experiment/README', label: 'Noisy-TV experiment'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 9: RL for Language Models — RLHF, DPO, GRPO, RLVR',
+              items: [
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/sft-a-small-base-model/README', label: 'SFT a small base model'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/train-a-reward-model/README', label: 'Train a reward model'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/ppo-style-rlhf/README', label: 'PPO-style RLHF'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/dpo/README', label: 'DPO'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/grpo-from-scratch/README', label: 'GRPO from scratch'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/rlvr-on-math/README', label: 'RLVR on math'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/length-bias-audit/README', label: 'Length-bias audit'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/reward-hacking-demo/README', label: 'Reward hacking demo'},
+              ],
+            },
           ],
         },
         {

@@ -895,14 +895,14 @@ No reward model. No PPO. Just a clever loss on (prompt, chosen, rejected) triple
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| SFT a small base model | Fine-tune Qwen-0.5B or similar on a small instruction dataset; observe baseline behavior | ⭐⭐ |
-| Train a reward model | Pairwise classifier over SFT outputs; verify on held-out preferences | ⭐⭐⭐ |
-| PPO-style RLHF | Mini-RLHF on a small model and small RM; track KL to reference; watch for reward hacking | ⭐⭐⭐⭐⭐ |
-| DPO | Same dataset, DPO instead of PPO; compare quality, training time, stability | ⭐⭐⭐⭐ |
-| GRPO from scratch | Implement GRPO for a small math task (GSM8K-style) with a verifiable reward | ⭐⭐⭐⭐⭐ |
-| RLVR on math | Train a small reasoning loop on a verifiable math subset; observe the emergence of longer chain-of-thought | ⭐⭐⭐⭐⭐ |
-| Length-bias audit | Plot completion-length distributions of your DPO/PPO models; verify the well-known drift | ⭐⭐⭐ |
-| Reward hacking demo | Intentionally over-train against an RM; characterize the gibberish that emerges | ⭐⭐⭐ |
+| [SFT a small base model](projects/50-sft-a-small-base-model/README.md) | Fine-tune Qwen-0.5B or similar on a small instruction dataset; observe baseline behavior | ⭐⭐ |
+| [Train a reward model](projects/51-train-a-reward-model/README.md) | Pairwise classifier over SFT outputs; verify on held-out preferences | ⭐⭐⭐ |
+| [PPO-style RLHF](projects/52-ppo-style-rlhf/README.md) | Mini-RLHF on a small model and small RM; track KL to reference; watch for reward hacking | ⭐⭐⭐⭐⭐ |
+| [DPO](projects/53-dpo/README.md) | Same dataset, DPO instead of PPO; compare quality, training time, stability | ⭐⭐⭐⭐ |
+| [GRPO from scratch](projects/54-grpo-from-scratch/README.md) | Implement GRPO for a small math task (GSM8K-style) with a verifiable reward | ⭐⭐⭐⭐⭐ |
+| [RLVR on math](projects/55-rlvr-on-math/README.md) | Train a small reasoning loop on a verifiable math subset; observe the emergence of longer chain-of-thought | ⭐⭐⭐⭐⭐ |
+| [Length-bias audit](projects/56-length-bias-audit/README.md) | Plot completion-length distributions of your DPO/PPO models; verify the well-known drift | ⭐⭐⭐ |
+| [Reward hacking demo](projects/57-reward-hacking-demo/README.md) | Intentionally over-train against an RM; characterize the gibberish that emerges | ⭐⭐⭐ |
 
 ### Sample Code: The DPO Loss
 
