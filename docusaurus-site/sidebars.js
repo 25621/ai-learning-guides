@@ -658,6 +658,20 @@ const sidebars = {
                 {type: 'doc', id: 'guides/robotics/projects/hand-eye-calibration/README', label: 'Hand-eye calibration'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 2: Dynamics and Classical Control',
+              items: [
+                {type: 'doc', id: 'guides/robotics/projects/pendulum-pid/README', label: 'Pendulum PID'},
+                {type: 'doc', id: 'guides/robotics/projects/cart-pole-lqr/README', label: 'Cart-pole LQR'},
+                {type: 'doc', id: 'guides/robotics/projects/inverse-dynamics-from-scratch/README', label: 'Inverse dynamics from scratch'},
+                {type: 'doc', id: 'guides/robotics/projects/computed-torque-trajectory-tracking/README', label: 'Computed-torque trajectory tracking'},
+                {type: 'doc', id: 'guides/robotics/projects/impedance-control/README', label: 'Impedance control'},
+                {type: 'doc', id: 'guides/robotics/projects/mpc-for-a-unicycle/README', label: 'MPC for a unicycle'},
+                {type: 'doc', id: 'guides/robotics/projects/real-arm-pid-tune/README', label: 'Real-arm PID tune'},
+                {type: 'doc', id: 'guides/robotics/projects/force-controlled-drawing/README', label: 'Force-controlled drawing'},
+              ],
+            },
           ],
         },
         {

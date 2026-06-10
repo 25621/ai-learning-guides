@@ -302,14 +302,14 @@ boundary deliberately; bugs love unclear boundaries.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Pendulum PID | Simulate a single pendulum; tune PID to stabilize the up position; plot step response | ⭐⭐ |
-| Cart-pole LQR | Linearize about upright; design LQR; observe basin of attraction | ⭐⭐⭐ |
-| Inverse dynamics from scratch | Implement RNEA for a 2-link arm; verify against Pinocchio | ⭐⭐⭐⭐ |
-| Computed-torque trajectory tracking | Track a sinusoidal joint trajectory on a 6-DoF arm; compare PID-only vs. FF+PID | ⭐⭐⭐⭐ |
-| Impedance control | Push against the arm in simulation; tune virtual stiffness; measure compliance | ⭐⭐⭐⭐ |
-| MPC for a unicycle | Track a figure-8 with a kinematic-bicycle MPC using CasADi or do-mpc | ⭐⭐⭐⭐ |
-| Real-arm PID tune | On a real hobby arm, tune the joint PIDs and characterize the friction; create a friction-compensation FF | ⭐⭐⭐⭐⭐ |
-| Force-controlled drawing | Use impedance control to make the arm draw on a curved surface without breaking the pen | ⭐⭐⭐⭐⭐ |
+| [Pendulum PID](projects/08-pendulum-pid/README.md) | Simulate a single pendulum; tune PID to stabilize the up position; plot step response | ⭐⭐ |
+| [Cart-pole LQR](projects/09-cart-pole-lqr/README.md) | Linearize about upright; design LQR; observe basin of attraction | ⭐⭐⭐ |
+| [Inverse dynamics from scratch](projects/10-inverse-dynamics-from-scratch/README.md) | Implement RNEA for a 2-link arm; verify against Pinocchio | ⭐⭐⭐⭐ |
+| [Computed-torque trajectory tracking](projects/11-computed-torque-trajectory-tracking/README.md) | Track a sinusoidal joint trajectory on a 6-DoF arm; compare PID-only vs. FF+PID | ⭐⭐⭐⭐ |
+| [Impedance control](projects/12-impedance-control/README.md) | Push against the arm in simulation; tune virtual stiffness; measure compliance | ⭐⭐⭐⭐ |
+| [MPC for a unicycle](projects/13-mpc-for-a-unicycle/README.md) | Track a figure-8 with a kinematic-bicycle MPC using CasADi or do-mpc | ⭐⭐⭐⭐ |
+| [Real-arm PID tune](projects/14-real-arm-pid-tune/README.md) | On a real hobby arm, tune the joint PIDs and characterize the friction; create a friction-compensation FF | ⭐⭐⭐⭐⭐ |
+| [Force-controlled drawing](projects/15-force-controlled-drawing/README.md) | Use impedance control to make the arm draw on a curved surface without breaking the pen | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: An LQR for a Linearized System
 
