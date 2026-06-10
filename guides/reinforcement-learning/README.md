@@ -650,19 +650,19 @@ Model-based RL has been "one breakthrough away from taking over" for a decade. W
 
 ## Phase 7: Offline RL
 
-In **offline RL** (also called batch RL), you have a fixed dataset of past interactions and cannot collect more. This is the regime that matches most real applications: medical records, recommender system logs, robot-fleet data, historical trading data. The challenge is **distribution shift**: the learned policy will want to take actions that aren't in the dataset, and the Q-function will hallucinate huge values for those out-of-distribution actions.
+In **[offline RL](/shared/glossary/#offline-rl)** (also called batch RL), you have a fixed dataset of past interactions and cannot collect more. This is the regime that matches most real applications: medical records, recommender system logs, robot-fleet data, historical trading data. The challenge is **[distribution shift](/shared/glossary/#distribution-shift)**: the learned policy will want to take actions that aren't in the dataset, and the [Q-function](/shared/glossary/#q-learning) will hallucinate huge values for those [out-of-distribution](/shared/glossary/#out-of-distribution) actions.
 
 ### Concepts to Learn
 
 - **Why "just run Q-learning on the data" fails** — the bootstrapped target uses `max_a Q(s', a)`, which is maximized at unseen actions where `Q` is wildly wrong
 - **The two families of fixes**:
-  - **Policy constraint**: stay close to the behavior policy that generated the data (BCQ, BEAR, AWAC, BRAC)
-  - **Value pessimism**: explicitly penalize Q-values at out-of-distribution actions (CQL, IQL — the modern default)
-- **CQL (Conservative Q-Learning)** — adds a penalty to the standard Bellman loss that pushes down Q-values at all actions and pulls them up only at the actions in the data
-- **IQL (Implicit Q-Learning)** — never queries `Q` at out-of-distribution actions at all; uses expectile regression on `V`. Simpler and more robust than CQL
-- **Decision Transformer / Trajectory Transformer** — reframe offline RL as autoregressive *sequence modeling*: condition on a desired return-to-go, predict the next action. Strong when the dataset is large and diverse
-- **Behavior cloning baselines** — sometimes BC is shockingly competitive with offline RL, especially when the dataset is high-quality. Always run it as a baseline
-- **D4RL** — the standard offline-RL benchmark suite
+  - **[Policy constraint](/shared/glossary/#policy-constraint)**: stay close to the [behavior policy](/shared/glossary/#behavior-policy) that generated the data ([BCQ, BEAR, AWAC, BRAC](/shared/glossary/#policy-constraint))
+  - **[Value pessimism](/shared/glossary/#pessimism)**: explicitly penalize Q-values at out-of-distribution actions ([CQL](/shared/glossary/#cql), [IQL](/shared/glossary/#iql) — the modern default)
+- **[CQL (Conservative Q-Learning)](/shared/glossary/#cql)** — adds a penalty to the standard [Bellman](/shared/glossary/#bellman-equation) loss that pushes down Q-values at all actions and pulls them up only at the actions in the data
+- **[IQL (Implicit Q-Learning)](/shared/glossary/#iql)** — never queries `Q` at out-of-distribution actions at all; uses [expectile regression](/shared/glossary/#expectile-regression) on `V`. Simpler and more robust than CQL
+- **[Decision Transformer](/shared/glossary/#decision-transformer) / [Trajectory Transformer](/shared/glossary/#trajectory-transformer)** — reframe offline RL as [autoregressive](/shared/glossary/#autoregressive-model) *sequence modeling*: condition on a desired [return-to-go](/shared/glossary/#return-to-go), predict the next action. Strong when the dataset is large and diverse
+- **[Behavior cloning](/shared/glossary/#bc) baselines** — sometimes BC is shockingly competitive with offline RL, especially when the dataset is high-quality. Always run it as a baseline
+- **[D4RL](/shared/glossary/#d4rl)** — the standard offline-RL benchmark suite
 - **The relationship to RLHF**: RLHF is a constrained-policy-improvement problem; offline-RL methods (especially DPO-as-offline-RL views) directly inform the RLHF stack
 
 ### The Distribution-Shift Picture
@@ -690,12 +690,12 @@ the modern default.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| BC baseline on D4RL | Behavior cloning on the `walker2d-medium-v2` task; report return | ⭐⭐ |
-| Naive Q-learning on the same dataset | Verify the catastrophic failure | ⭐⭐⭐ |
-| Implement CQL | Add the conservative penalty; reproduce CQL's D4RL numbers | ⭐⭐⭐⭐ |
-| Implement IQL | Verify it works on the same tasks with fewer knobs | ⭐⭐⭐⭐ |
-| Decision Transformer | Implement on D4RL; condition on return-to-go; compare to IQL | ⭐⭐⭐⭐ |
-| Dataset-quality study | Same algorithm, three datasets (random, medium, expert); plot return-vs-data-quality | ⭐⭐⭐ |
+| [BC baseline on D4RL](projects/38-bc-baseline-on-d4rl/README.md) | Behavior cloning on the `walker2d-medium-v2` task; report return | ⭐⭐ |
+| [Naive Q-learning on the same dataset](projects/39-naive-q-learning-on-the-same-dataset/README.md) | Verify the catastrophic failure | ⭐⭐⭐ |
+| [Implement CQL](projects/40-implement-cql/README.md) | Add the conservative penalty; reproduce CQL's D4RL numbers | ⭐⭐⭐⭐ |
+| [Implement IQL](projects/41-implement-iql/README.md) | Verify it works on the same tasks with fewer knobs | ⭐⭐⭐⭐ |
+| [Decision Transformer](projects/42-decision-transformer/README.md) | Implement on D4RL; condition on return-to-go; compare to IQL | ⭐⭐⭐⭐ |
+| [Dataset-quality study](projects/43-dataset-quality-study/README.md) | Same algorithm, three datasets (random, medium, expert); plot return-vs-data-quality | ⭐⭐⭐ |
 
 ### Sample Code: The Heart of IQL
 

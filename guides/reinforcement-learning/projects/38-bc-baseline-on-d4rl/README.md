@@ -1,0 +1,5 @@
+# BC Baseline on D4RL
+
+## Key Insight
+
+[Behavior cloning](/shared/glossary/#bc) is the most basic thing you can do with a fixed dataset of past experience: throw away the rewards, treat each recorded state as an input and the action the dataset's [behavior policy](/shared/glossary/#behavior-policy) took as the correct label, and train a [policy](/shared/glossary/#policy) by plain [supervised learning](/shared/glossary/#supervised-learning) to reproduce those actions. Run on a [D4RL](/shared/glossary/#d4rl) task like `walker2d-medium-v2` — a [Walker2d](/shared/glossary/#walker2d) locomotion dataset — it gives you a [return](/shared/glossary/#return) number that every fancier [offline RL](/shared/glossary/#offline-rl) method must beat to justify its complexity. Why it matters: when the dataset was collected by a strong expert, simply copying it is hard to beat, so [imitation learning](/shared/glossary/#imitation-learning) by BC is the honest yardstick you always measure first — skip it and you risk celebrating a complicated algorithm that never actually outperformed "just copy the data."

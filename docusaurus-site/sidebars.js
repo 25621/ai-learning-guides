@@ -483,6 +483,18 @@ const sidebars = {
                 {type: 'doc', id: 'guides/reinforcement-learning/projects/td-mpc2-study/README', label: 'TD-MPC2 study'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 7: Offline RL',
+              items: [
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/bc-baseline-on-d4rl/README', label: 'BC baseline on D4RL'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/naive-q-learning-on-the-same-dataset/README', label: 'Naive Q-learning on the same dataset'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/implement-cql/README', label: 'Implement CQL'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/implement-iql/README', label: 'Implement IQL'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/decision-transformer/README', label: 'Decision Transformer'},
+                {type: 'doc', id: 'guides/reinforcement-learning/projects/dataset-quality-study/README', label: 'Dataset-quality study'},
+              ],
+            },
           ],
         },
         {
