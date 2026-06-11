@@ -221,6 +221,13 @@ A small group of examples (sentences, images, prompts) that the model processes 
 ### Batching {#batching}
 Grouping several inference requests so the GPU runs them together in one forward pass instead of one at a time. Like an elevator that waits a moment to gather a few people and carry them up in a single trip rather than going up and down for each person separately — every rider's start is a touch slower, but far more people move per minute. That is the trade-off batching makes: higher [throughput](/shared/glossary/#throughput) (requests finished per second) at a small cost in [latency](/shared/glossary/#latency) (how long one request waits). Production servers like [Triton Inference Server](/shared/glossary/#triton-inference-server) do this grouping for you automatically; see [continuous batching](/shared/glossary/#continuous-batching) for the version that lets riders hop on and off mid-trip.
 
+### Bayes' filter {#bayes-filter}
+**Bayes' filter** is the fundamental mathematical algorithm used in robotics for estimating the hidden state of a system over time from a sequence of noisy control inputs and sensor measurements. It is a recursive algorithm, meaning it calculates the current state estimate (the posterior probability) using only the estimate from the previous step and the latest data. The filter operates in a continuous two-step cycle:
+1. **Predict (or Control Update):** Uses a motion model to project the previous state estimate forward in time, accounting for the uncertainty of the robot's actions (e.g., wheel slippage). This widens the probability distribution, making the estimate less certain.
+2. **Update (or Measurement Update):** Uses a sensor model to adjust the prediction based on new sensor measurements, scaling the probability by how likely the sensor readings are given the predicted state. This contracts the probability distribution, making the estimate more certain.
+
+**Analogy:** Finding a lost dog in a yard. If you last saw the dog in the center of the yard, and you know dogs run around randomly, you predict the dog has probably drifted away from the center, widening your search area (predict step). Then, you hear a bark coming from the bushes near the fence. You combine your prior guess with this noisy sound clue, narrowing your search area to the bushes (update step).
+
 ### BC {#bc}
 Behavior Cloning — the simplest way to learn from a dataset of demonstrations: treat it as plain [supervised learning](/shared/glossary/#supervised-learning) where each input is a state and the label is the action the demonstrator took, and train the [policy](/shared/glossary/#policy) to copy those actions. There is no [reward](/shared/glossary/#reward-function) and no planning — it never asks *whether* an action was good, only *which* action was taken — so it is a form of [imitation learning](/shared/glossary/#imitation-learning) rather than reward-driven RL. Analogy: learning to drive by memorizing exactly what a good driver did at each moment, without ever being told the goal. Despite its simplicity it is a strong baseline in [offline RL](/shared/glossary/#offline-rl): when the dataset comes from an expert, copying it often beats fancier methods, so you always run BC first to know what you are competing against.
 
@@ -453,6 +460,11 @@ A two-player board game where you drop colored discs into a vertical grid and tr
 
 ### Consistency model {#consistency-model}
 A [diffusion](/shared/glossary/#diffusion-model)-derived model trained so that *every* point along a noisy-to-clean denoising path maps directly to the same final clean image — so at sampling time you can jump from pure noise to a finished picture in one (or a handful of) steps instead of the usual dozens. It is built by *consistency [distillation](/shared/glossary/#distillation)*: a student learns to agree with itself at neighboring noise levels along a teacher's [ODE](/shared/glossary/#ode) trajectory. Like a winding park path where every bench has a sign pointing straight to the exit — wherever you start, one glance gets you to the end. Trade-off: a huge speedup (1–4 steps vs ~50) for a modest dip in quality. The latent-space version is the [LCM](/shared/glossary/#lcm).
+
+### Constant-velocity model {#constant-velocity-model}
+**Constant-velocity model** is a mathematical model of motion used in state estimation and tracking that assumes an object moves in a straight line at a constant speed, unless acted upon by random accelerations (modeled as process noise). In state estimation, the system's state vector includes both the object's position and velocity, and the motion equations project the position forward based on the current velocity while keeping the velocity constant (plus noise) for the next step.
+
+**Analogy:** A hockey puck sliding across smooth ice. You expect the puck to keep moving in the same direction and at the same speed (constant velocity). However, minor bumps in the ice or air resistance (process noise) will cause tiny, unpredictable changes in its speed and direction over time.
 
 ### Constitutional AI {#constitutional-ai}
 An alignment recipe (introduced by Anthropic) where some or all human preference labels are replaced by an AI judge that grades responses against a written "constitution" — a short list of principles like "be helpful," "refuse to assist with harm," "don't pretend to be human." Like running a debate club with a published rulebook instead of asking the audience to vote: cheaper, more consistent, and easier to update than collecting fresh human labels for every new behavior. The technique is the foundation of [RLAIF](/shared/glossary/#rlaif).
@@ -838,7 +850,11 @@ A rough measure of how many steps into the future an agent's choices actually ta
 A [MuZero](/shared/glossary/#muzero) variant tuned for [sample efficiency](/shared/glossary/#sample-efficiency) that was the first to reach roughly human-level [Atari](/shared/glossary/#atari) performance from only about two hours of gameplay data. It adds a few targeted fixes — most notably a self-supervised consistency loss that forces the learned [dynamics model](/shared/glossary/#dynamics-model)'s predicted next state to match the actual next state's encoding — so the model wrings useful structure out of far less data. Think of it as MuZero with better study habits, learning the same lessons from a fraction of the practice. It is a landmark result for [model-based RL](/shared/glossary/#model-based-rl)'s core promise of strong sample efficiency.
 
 ### EKF {#ekf}
-Extended Kalman Filter — Kalman filter linearized about the current estimate
+**Extended Kalman Filter (EKF)** is a version of the [Kalman Filter](/shared/glossary/#kf) designed to handle nonlinear systems by linearizing the system equations at each step. In the real world, most systems are nonlinear (e.g., a wheel turning converts rotational motion to linear motion using trigonometry). The EKF approximates these nonlinear functions by using a first-order Taylor expansion (taking the derivative, or [Jacobian](/shared/glossary/#jacobian)) around the current state estimate.
+
+**Analogy:** Navigating a winding mountain road on a dark night. The road curves unpredictably (nonlinear dynamics). Instead of trying to model the entire curvy road at once, you look at the short, straight stretch of road directly in front of your headlights (linearizing at the current point). As long as you update this straight-line approximation frequently, you can successfully steer along the curves. However, if the road curves too sharply or your estimate is way off, the straight-line guess will miss the road entirely, causing the filter to diverge.
+
+**Example:** A self-driving car tracking its position. Its sensors report wheel speeds and steering angle, which relate to its coordinate change via nonlinear trigonometric equations. An EKF linearizes these equations around the car's estimated position at each millisecond, allowing it to fuse wheel encoders and GPS data to keep the tracking stable.
 
 ### ELBO {#elbo}
 Evidence Lower Bound — a mathematical score used to train generative models like [VAEs](/shared/glossary/#vae). It balances two goals: recreating the original input accurately, and keeping the model's internal representation organized. Think of it like packing for a trip: you want to bring everything you need (accurate recreation) but also pack it neatly so the suitcase closes easily (organized representation). The ELBO is the score that measures how well the model balances both tasks.
@@ -932,6 +948,11 @@ First-Come, First-Served — the simplest scheduling rule: handle requests in th
 
 ### FFN {#ffn}
 Feed-Forward Network — the small [MLP](/shared/glossary/#mlp) inside each [transformer](/shared/glossary/#transformer) block. *Position-wise* means it is applied to each token (each position in the sequence) on its own, reusing the **same** weights at every position — like one cashier serving each customer in line one at a time at the same till, never letting them interact. That is the opposite of the [attention](/shared/glossary/#attention) sublayer, where tokens *do* look at each other; the FFN just lets each token "think" by itself.
+
+### Factor graph {#factor-graph}
+**Factor graph** is a graphical model used to represent a complex probability distribution by breaking it down into a product of simpler functions called **factors**. In robotics and [SLAM](/shared/glossary/#slam), it is represented as a bipartite graph with two types of nodes: **variable nodes** (representing the robot's states, such as positions at different time steps) and **factor nodes** (representing sensor measurements or constraints, such as wheel odometry, GPS readings, or loop closures). Solving the factor graph means finding the set of variables that maximizes the likelihood of all factors, which is mathematically equivalent to solving a sparse nonlinear least-squares optimization problem. This global smoothing approach is more accurate than filtering because it maintains the history of states and can correct past errors when loop closures are detected.
+
+**Analogy:** A group of people trying to agree on a schedule. Each person represents a "factor" with specific constraints (e.g., "I must meet Alice between 2 PM and 4 PM", "I need 1 hour to travel from Bob's office"). Instead of scheduling meetings one by one and risking a deadlock, you lay out all the people and constraints on a board and solve them together to find the single schedule that satisfies everyone as best as possible.
 
 ### F/T sensor {#ft-sensor}
 Force/Torque sensor — six-axis force and moment at a wrist or fingertip
@@ -1198,7 +1219,9 @@ Group Relative Policy Optimization — an algorithm for reinforcement learning f
 A benchmark of about 8,000 grade-school math word problems, widely used to test step-by-step reasoning because each problem has a single checkable numeric answer.
 
 ### GTSAM {#gtsam}
-Factor-graph [SLAM](/shared/glossary/#slam) library; the standard back-end for many modern systems
+**Georgia Tech Smoothing and Mapping (GTSAM)** is a popular open-source C++ library (with Python bindings) designed for solving sensor fusion and [SLAM](/shared/glossary/#slam) problems using [factor graphs](/shared/glossary/#factor-graph). Unlike filtering approaches that discard old states, GTSAM frames state estimation as a smoothing problem, optimizing the robot's entire historical trajectory (or a sliding window of it) at once using nonlinear least-squares solvers like Levenberg-Marquardt. It uses iSAM2 (Incremental Smoothing and Mapping), which updates only the affected parts of the factor graph when new measurements arrive, making full-history optimization fast enough to run in real time.
+
+**Analogy:** A detective solving a mystery. Instead of guessing the culprit step-by-step and forgetting past details (filtering), the detective pins every clue, photo, and timeline connection to a large corkboard (the factor graph). When a new clue arrives, they don't rebuild the entire case; they only re-examine the specific suspect and photos connected to that clue (iSAM2's incremental update), maintaining a highly accurate, consistent picture of the whole case.
 
 ### Gymnasium {#gymnasium}
 The standard Python library of reinforcement-learning environments — the maintained successor to OpenAI Gym. It defines the common API every environment follows: `reset()` to start an episode and `step(action)` to take an action and get back the next observation, reward, and whether the episode ended. Because classic testbeds like [FrozenLake](/shared/glossary/#frozenlake), [Blackjack](/shared/glossary/#blackjack), [Cliff Walking](/shared/glossary/#cliff-walking), CartPole, and the MuJoCo control tasks all share this interface, the same training loop can be pointed at any of them with almost no changes.
@@ -1927,6 +1950,16 @@ The numbers a model *learns* during training — its adjustable internal setting
 
 ### Partial derivative {#partial-derivative}
 How much a function changes when you nudge just one of its inputs and hold all the others still — the [derivative](/shared/glossary/#derivative) taken one input at a time. If a recipe's tastiness depends on both salt and sugar, the partial derivative with respect to salt tells you the effect of adding a pinch more salt while keeping the sugar fixed. A [gradient](/shared/glossary/#gradients) is simply the full list of these one-at-a-time slopes, one per [parameter](/shared/glossary/#parameters).
+
+### Particle filter {#particle-filter}
+**Particle filter** (also known as Monte Carlo Localization or MCL) is an algorithm that estimates the state of a system by representing its probability distribution with a set of discrete, weighted samples called **particles**. Each particle represents a single concrete hypothesis of what the system's state might be (e.g., a specific coordinate on a map). The filter updates the particles through a three-step process:
+1. **Predict:** Propagate each particle forward using the system's motion model and add random noise to simulate uncertainty.
+2. **Update:** Calculate a weight for each particle based on how closely its simulated sensors match the actual sensor readings.
+3. **Resample:** Draw a new set of particles from the current set, where particles with higher weights are more likely to be copied and particles with low weights are discarded.
+
+This allows the particle filter to represent arbitrary, multi-modal probability distributions (e.g., "I might be in Room A OR Room B").
+
+**Analogy:** A game of "hot or cold" played by thousands of players in a large, dark castle. Initially, players are scattered randomly in every room (particles). Every time you take a step, all players take the same step. When you report a clue ("I feel a warm breeze"), players near warm vents say "hot" and get higher scores (weights), while players in drafty hallways say "cold" and are eliminated (resampled). Eventually, the surviving players will all gather around the single warm room you are standing in.
 
 ### PagedAttention {#pagedattention}
 A way of storing the [KV cache](/shared/glossary/#kv-cache) for many concurrent requests by splitting each request's cache into small fixed-size "pages" that the engine can scatter freely around GPU memory and look up through a per-request page table — the same idea operating systems use for virtual memory. It removes the wasted space and fragmentation you get when each request needs its own contiguous chunk, which is why [vLLM](/shared/glossary/#vllm) made it the default scheme.
@@ -2782,6 +2815,11 @@ An encoder-decoder network whose name comes from its U shape: the left arm shrin
 ### UCF-101 {#ucf-101}
 A widely used action-recognition video dataset from the University of Central Florida of about 13,000 short YouTube clips spanning 101 human-action categories (playing guitar, applying makeup, bench-pressing, and so on); the "101" is simply the number of action classes. It is small and low-resolution by modern standards, which is exactly why it became a common testbed for early video generation — you can train on it without a data-center. It shows up constantly in pre-diffusion video-GAN papers as the dataset everyone reported numbers on.
 
+### UKF {#ukf}
+**Unscented Kalman Filter (UKF)** is an advanced version of the [Kalman Filter](/shared/glossary/#kf) that handles nonlinear systems without needing to calculate derivatives or [Jacobians](/shared/glossary/#jacobian). Instead of linearizing a nonlinear function (like the [EKF](/shared/glossary/#ekf) does), the UKF represents the probability distribution using a small, carefully chosen set of sample points called **sigma points**. It passes these sigma points directly through the true nonlinear equations and computes the mean and covariance of the transformed points to form the new state estimate. This capture of nonlinearity is mathematically accurate up to the third-order Taylor series expansion, making it significantly more accurate than the EKF for highly nonlinear systems while sharing the same computational complexity.
+
+**Analogy:** Estimating how a crowd of people walking through a winding maze will spread out. An [EKF](/shared/glossary/#ekf) assumes the maze is a straight line locally and projects the crowd's path. A UKF places a few representative "scouts" (sigma points) at the front, middle, and edges of the crowd, has them walk through the actual winding maze, and then reconstructs where the rest of the crowd must be based on where the scouts ended up.
+
 ### Underflow {#underflow}
 Condition where a floating-point value is too small to be represented and rounds to zero; common with `float16` when accumulating very small gradients
 
@@ -2840,7 +2878,9 @@ The set of rules for compressing video into a small file and decompressing it ba
 A no-copy alias that shares storage with its source; requires a contiguous-compatible layout
 
 ### VIO {#vio}
-Visual-Inertial Odometry — fuse camera and IMU for high-rate ego-motion
+**Visual-Inertial Odometry (VIO)** is a state-estimation method that fuses visual data from one or more cameras with inertial data from an [IMU](/shared/glossary/#imu) to estimate how a robot moves through space. By combining the high-rate, short-term accuracy of the IMU (which measures acceleration and angular velocity) with the lower-rate, long-term stability of the camera (which tracks visual features across frames), VIO provides a highly robust, high-frequency estimate of the robot's trajectory. This fusion resolves the scale ambiguity inherent in monocular cameras and constrains the rapid quadratic [drift](/shared/glossary/#drift) of pure [dead reckoning](/shared/glossary/#dead-reckoning).
+
+**Analogy:** Walking down a dimly lit hallway. If you close your eyes, you can feel your steps and turns for a moment, but you quickly become disoriented and lose track of your exact position (pure inertial navigation drift). If you open your eyes but look at a blank, textureless wall, you cannot judge your speed or distance. By keeping your eyes open and tracking visual landmarks (doors, frames) while feeling your body's motion, you can walk smoothly and precisely (visual-inertial fusion).
 
 ### Video GAN {#video-gan}
 A [GAN](/shared/glossary/#gans) adapted to produce short video clips instead of single images: the [generator](/shared/glossary/#generator) outputs a whole stack of frames at once and the [discriminator](/shared/glossary/#discriminator) judges whether the *motion*, not just each individual frame, looks real. The early family — VGAN, TGAN, [MoCoGAN](/shared/glossary/#mocogan), DVD-GAN, and StyleGAN-V — produced only short, low-resolution clips and suffered badly from [mode collapse](/shared/glossary/#mode-collapse) (the generator falling back on a few safe outputs). Each pushed one idea: MoCoGAN separated content from motion, DVD-GAN was the first to reach plausible quality, and StyleGAN-V applied [StyleGAN](/shared/glossary/#stylegan)'s latent-space tricks to video. The whole approach was largely abandoned around 2023 once [diffusion](/shared/glossary/#diffusion-model) proved both sharper and far more stable to train at scale.

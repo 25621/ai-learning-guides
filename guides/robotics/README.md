@@ -576,14 +576,14 @@ dominate modern systems.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| 1D KF | Fuse two noisy thermometers; compare to weighted average; verify covariance contraction | ⭐⭐ |
-| 2D constant-velocity tracker | Track a moving target with KF; tune Q vs. R; observe steady-state gain | ⭐⭐⭐ |
-| EKF localization | Implement EKF on a wheeled robot with wheel odometry + landmark range/bearing | ⭐⭐⭐⭐ |
-| Particle filter | Monte Carlo localization on a known 2D occupancy map | ⭐⭐⭐ |
-| IMU dead reckoning | Integrate accelerometer + gyro on a desk; quantify drift; compare error-state vs. direct integration | ⭐⭐⭐⭐ |
-| VIO MVP | Fuse a monocular camera + IMU using an error-state EKF; evaluate on a public dataset | ⭐⭐⭐⭐⭐ |
-| 2D LiDAR SLAM | Reproduce a small ICP-based scan-matching SLAM with loop closure | ⭐⭐⭐⭐⭐ |
-| Factor-graph practice | Use GTSAM to build a small pose-graph SLAM, intentionally inject loop-closure outliers, fix with robust kernels | ⭐⭐⭐⭐⭐ |
+| [1D KF](projects/24-1d-kf/README.md) | Fuse two noisy thermometers; compare to weighted average; verify covariance contraction | ⭐⭐ |
+| [2D constant-velocity tracker](projects/25-2d-constant-velocity-tracker/README.md) | Track a moving target with KF; tune Q vs. R; observe steady-state gain | ⭐⭐⭐ |
+| [EKF localization](projects/26-ekf-localization/README.md) | Implement EKF on a wheeled robot with wheel odometry + landmark range/bearing | ⭐⭐⭐⭐ |
+| [Particle filter](projects/27-particle-filter/README.md) | Monte Carlo localization on a known 2D occupancy map | ⭐⭐⭐ |
+| [IMU dead reckoning](projects/21-imu-integration/README.md) | Integrate accelerometer + gyro on a desk; quantify drift; compare error-state vs. direct integration | ⭐⭐⭐⭐ |
+| [VIO MVP](projects/28-vio-mvp/README.md) | Fuse a monocular camera + IMU using an error-state EKF; evaluate on a public dataset | ⭐⭐⭐⭐⭐ |
+| [2D LiDAR SLAM](projects/29-2d-lidar-slam/README.md) | Reproduce a small ICP-based scan-matching SLAM with loop closure | ⭐⭐⭐⭐⭐ |
+| [Factor-graph practice](projects/30-factor-graph-practice/README.md) | Use GTSAM to build a small pose-graph SLAM, intentionally inject loop-closure outliers, fix with robust kernels | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: A Particle Filter for 2D Localization
 

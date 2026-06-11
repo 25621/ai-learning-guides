@@ -686,6 +686,20 @@ const sidebars = {
                 {type: 'doc', id: 'guides/robotics/projects/open-vocab-grasping/README', label: 'Open-vocab grasping'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 4: State Estimation, Localization, and SLAM',
+              items: [
+                {type: 'doc', id: 'guides/robotics/projects/24-1d-kf/README', label: '1D KF'},
+                {type: 'doc', id: 'guides/robotics/projects/25-2d-constant-velocity-tracker/README', label: '2D constant-velocity tracker'},
+                {type: 'doc', id: 'guides/robotics/projects/ekf-localization/README', label: 'EKF localization'},
+                {type: 'doc', id: 'guides/robotics/projects/particle-filter/README', label: 'Particle filter'},
+                {type: 'doc', id: 'guides/robotics/projects/imu-integration/README', label: 'IMU dead reckoning'},
+                {type: 'doc', id: 'guides/robotics/projects/vio-mvp/README', label: 'VIO MVP'},
+                {type: 'doc', id: 'guides/robotics/projects/29-2d-lidar-slam/README', label: '2D LiDAR SLAM'},
+                {type: 'doc', id: 'guides/robotics/projects/factor-graph-practice/README', label: 'Factor-graph practice'},
+              ],
+            },
           ],
         },
         {
