@@ -377,8 +377,8 @@ A robot is blind until you give it sensors. Each sensor has its own noise model,
   - **RGB cameras** — high-resolution, cheap, photometric/lighting-sensitive, no depth without inference or pairs
   - **Stereo cameras** — pair of synchronized cameras + disparity; depth quality falls off with distance squared
   - **Time-of-Flight (ToF) / structured-light depth cameras** — direct depth, struggle in sunlight, struggle on shiny/transparent objects
-  - **2D LiDAR** — fast horizontal range scans; the backbone of indoor mobile robots
-  - **3D LiDAR** — rotating or solid-state, dense point clouds, the backbone of self-driving and outdoor mobile robots
+  - **2D [LiDAR](/shared/glossary/#lidar)** — fast horizontal range scans; the backbone of indoor mobile robots
+  - **3D [LiDAR](/shared/glossary/#lidar)** — rotating or solid-state, dense point clouds, the backbone of self-driving and outdoor mobile robots
   - **IMU (inertial measurement unit)** — 3-axis gyro + 3-axis accelerometer (optional magnetometer); high rate, drifts in seconds, indispensable
   - **Encoders** — joint position and velocity, the cleanest measurement on a robot
   - **Force/torque sensors** — wrist-mounted F/T or fingertip taxels; the eyes of contact-rich manipulation
@@ -386,7 +386,7 @@ A robot is blind until you give it sensors. Each sensor has its own noise model,
   - **Tactile / vision-based-tactile (e.g. GelSight-style)** — high-resolution contact images; the new frontier in dexterous manipulation
 - **The camera pinhole model** — `x_pixel = K · [R | t] · X_world`, with `K` the intrinsic matrix `(fx, fy, cx, cy)`. Distortion (radial, tangential) on top of that. Calibrate before doing anything.
 - **Intrinsic calibration** — checkerboard / ChArUco / Kalibr; gives `K` and distortion coefficients per camera.
-- **Extrinsic calibration** — the transform between sensor frames (camera ↔ IMU, camera ↔ lidar, camera ↔ end-effector). The "hand-eye calibration" of Phase 1 is the manipulator special case.
+- **Extrinsic calibration** — the transform between sensor frames (camera ↔ IMU, camera ↔ [lidar](/shared/glossary/#lidar), camera ↔ end-effector). The "hand-eye calibration" of Phase 1 is the manipulator special case.
 - **Time synchronization** — sensors drift, clocks drift, USB introduces jitter. Hardware-triggered cameras + PTP-synced clocks > software timestamps. ROS message_filters / ApproximateTime helps but doesn't save you.
 - **Classical CV building blocks** (still everywhere):
   - **Edge / corner / blob detection** — Canny, Harris, FAST, ORB, SIFT
@@ -401,7 +401,7 @@ A robot is blind until you give it sensors. Each sensor has its own noise model,
   - **Optical flow nets** — RAFT and successors
   - **Visual-inertial / visual front-ends for SLAM** — SuperPoint + SuperGlue replacing classical features
   - **Open-vocabulary perception** — CLIP, OWL-ViT, OpenSeg — language-conditioned segmentation, the bridge into Phase 10 VLA models
-- **Point cloud processing** — voxel filters, downsampling, ICP (iterative closest point) for registration, normal estimation, segmentation.
+- **Point cloud processing** — voxel filters, downsampling, [ICP (iterative closest point)](/shared/glossary/#iterative-closest-point-icp) for [registration](/shared/glossary/#point-cloud-registration), normal estimation, segmentation.
 - **Sensor noise and outlier rejection** — RANSAC is a hammer; use it. Robust loss functions (Huber, Cauchy) in any optimization touching real data.
 - **Latency budgets** — perception adds latency; latency adds phase lag; phase lag eats your control margins. Always characterize end-to-end latency from photon to actuation.
 
@@ -514,12 +514,12 @@ A robot's belief about itself and the world is always a probability distribution
 - **Factor graphs and nonlinear least squares** — the modern view: every measurement is a factor; the MAP estimate is the solution to a sparse least-squares problem solved with Gauss-Newton / Levenberg-Marquardt. Implemented in GTSAM, Ceres, g2o.
 - **Visual odometry (VO)** — estimate motion from images alone. Drifts without loop closure.
 - **Visual-inertial odometry (VIO)** — fuse camera and IMU; the high-rate, low-drift backbone of mobile/aerial robots.
-- **LiDAR odometry** — ICP-style scan matching; LOAM-family stacks are the standard.
-- **SLAM front-end vs. back-end**:
+- **[LiDAR](/shared/glossary/#lidar) odometry** — [ICP](/shared/glossary/#iterative-closest-point-icp)-style scan matching; LOAM-family stacks are the standard.
+- **[SLAM](/shared/glossary/#slam)** front-end vs. back-end:
   - **Front-end**: detect features, match them, propose constraints
-  - **Back-end**: optimize the pose graph (smoothing) or run the filter (filtering)
-  - Modern SLAM is mostly *smoothing*: keep a window of recent poses, optimize jointly. iSAM2 / GTSAM made this real-time.
-- **Loop closure** — when you revisit a place, recognize it (visual bag-of-words, learned place recognition) and add a constraint that closes the drift. The hardest unsolved part of long-horizon SLAM.
+  - **Back-end**: optimize the [pose graph](/shared/glossary/#pose-graph) (smoothing) or run the filter (filtering)
+  - Modern [SLAM](/shared/glossary/#slam) is mostly *smoothing*: keep a window of recent poses, optimize jointly. iSAM2 / GTSAM made this real-time.
+- **[Loop closure](/shared/glossary/#loop-closure)** — when you revisit a place, recognize it (visual bag-of-words, learned place recognition) and add a constraint that closes the drift. The hardest unsolved part of long-horizon SLAM.
 - **Map representations** — occupancy grids (2D), octomaps (3D), TSDFs (dense surfaces), point clouds, ORB-SLAM-style sparse landmarks, neural fields. Choose for the *consumer* of the map (planning, collision, rendering).
 - **Robust estimation** — switchable constraints, max-mixtures, graduated non-convexity; do not trust raw measurements in factor graphs.
 - **Observability** — not every state is observable from every sensor configuration. The yaw of a stationary IMU is not observable; the scale of a monocular VO is not observable. Know which states float.
@@ -582,8 +582,8 @@ dominate modern systems.
 | [Particle filter](projects/27-particle-filter/README.md) | Monte Carlo localization on a known 2D occupancy map | ⭐⭐⭐ |
 | [IMU dead reckoning](projects/21-imu-integration/README.md) | Integrate accelerometer + gyro on a desk; quantify drift; compare error-state vs. direct integration | ⭐⭐⭐⭐ |
 | [VIO MVP](projects/28-vio-mvp/README.md) | Fuse a monocular camera + IMU using an error-state EKF; evaluate on a public dataset | ⭐⭐⭐⭐⭐ |
-| [2D LiDAR SLAM](projects/29-2d-lidar-slam/README.md) | Reproduce a small ICP-based scan-matching SLAM with loop closure | ⭐⭐⭐⭐⭐ |
-| [Factor-graph practice](projects/30-factor-graph-practice/README.md) | Use GTSAM to build a small pose-graph SLAM, intentionally inject loop-closure outliers, fix with robust kernels | ⭐⭐⭐⭐⭐ |
+| [2D LiDAR SLAM](projects/29-2d-lidar-slam/README.md) | Reproduce a small [ICP](/shared/glossary/#iterative-closest-point-icp)-based scan-matching [SLAM](/shared/glossary/#slam) with [loop closure](/shared/glossary/#loop-closure) | ⭐⭐⭐⭐⭐ |
+| [Factor-graph practice](projects/30-factor-graph-practice/README.md) | Use [GTSAM](/shared/glossary/#gtsam) to build a small [pose-graph](/shared/glossary/#pose-graph) [SLAM](/shared/glossary/#slam), intentionally inject [loop-closure](/shared/glossary/#loop-closure) outliers, fix with robust kernels | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: A Particle Filter for 2D Localization
 
