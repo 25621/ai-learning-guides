@@ -672,6 +672,20 @@ const sidebars = {
                 {type: 'doc', id: 'guides/robotics/projects/force-controlled-drawing/README', label: 'Force-controlled drawing'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 3: Sensing and Perception',
+              items: [
+                {type: 'doc', id: 'guides/robotics/projects/camera-calibration/README', label: 'Camera calibration'},
+                {type: 'doc', id: 'guides/robotics/projects/apriltag-pose/README', label: 'AprilTag pose'},
+                {type: 'doc', id: 'guides/robotics/projects/stereo-depth/README', label: 'Stereo depth'},
+                {type: 'doc', id: 'guides/robotics/projects/icp-registration/README', label: 'ICP registration'},
+                {type: 'doc', id: 'guides/robotics/projects/visual-odometry/README', label: 'Visual odometry'},
+                {type: 'doc', id: 'guides/robotics/projects/imu-integration/README', label: 'IMU integration'},
+                {type: 'doc', id: 'guides/robotics/projects/object-6-dof-pose/README', label: 'Object 6-DoF pose'},
+                {type: 'doc', id: 'guides/robotics/projects/open-vocab-grasping/README', label: 'Open-vocab grasping'},
+              ],
+            },
           ],
         },
         {

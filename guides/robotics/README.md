@@ -441,15 +441,15 @@ the planner only wanted a binary "is there a person nearby?"
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Camera calibration | Calibrate your webcam with a checkerboard; report reprojection error < 0.5 px | ⭐⭐ |
-| AprilTag pose | Detect AprilTags, recover 6-DoF pose, project axes back onto the image | ⭐⭐⭐ |
-| Stereo depth | Build a stereo rig (two webcams); compute disparity; convert to depth point cloud | ⭐⭐⭐⭐ |
-| ICP registration | Register two partial point clouds of the same scene; visualize convergence | ⭐⭐⭐ |
-| Visual odometry | Implement a monocular VO front-end on a public dataset; report drift over 100 m | ⭐⭐⭐⭐⭐ |
-| IMU integration | Integrate an IMU on a desk; observe drift in angle (seconds) and position (seconds!) | ⭐⭐⭐ |
-| Hand-eye calibration | Solve AX = XB by capturing arm and tag poses; verify by reprojecting tag from arm motion | ⭐⭐⭐⭐ |
-| Object 6-DoF pose | Pick a small set of objects, train or fine-tune a 6-DoF pose estimator, evaluate ADD-S | ⭐⭐⭐⭐⭐ |
-| Open-vocab grasping | Use SAM + a VLM to segment "the red cup" and propose a top-down grasp | ⭐⭐⭐⭐⭐ |
+| [Camera calibration](projects/16-camera-calibration/README.md) | Calibrate your webcam with a checkerboard; report reprojection error < 0.5 px | ⭐⭐ |
+| [AprilTag pose](projects/17-apriltag-pose/README.md) | Detect AprilTags, recover 6-DoF pose, project axes back onto the image | ⭐⭐⭐ |
+| [Stereo depth](projects/18-stereo-depth/README.md) | Build a stereo rig (two webcams); compute disparity; convert to depth point cloud | ⭐⭐⭐⭐ |
+| [ICP registration](projects/19-icp-registration/README.md) | Register two partial point clouds of the same scene; visualize convergence | ⭐⭐⭐ |
+| [Visual odometry](projects/20-visual-odometry/README.md) | Implement a monocular VO front-end on a public dataset; report drift over 100 m | ⭐⭐⭐⭐⭐ |
+| [IMU integration](projects/21-imu-integration/README.md) | Integrate an IMU on a desk; observe drift in angle (seconds) and position (seconds!) | ⭐⭐⭐ |
+| [Hand-eye calibration](projects/07-hand-eye-calibration/README.md) | Solve AX = XB by capturing arm and tag poses; verify by reprojecting tag from arm motion | ⭐⭐⭐⭐ |
+| [Object 6-DoF pose](projects/22-object-6-dof-pose/README.md) | Pick a small set of objects, train or fine-tune a 6-DoF pose estimator, evaluate ADD-S | ⭐⭐⭐⭐⭐ |
+| [Open-vocab grasping](projects/23-open-vocab-grasping/README.md) | Use SAM + a VLM to segment "the red cup" and propose a top-down grasp | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: AprilTag Pose to Robot Frame
 
