@@ -151,13 +151,13 @@ loss function, or learned model has to handle the double-cover.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Transform calculator | Implement `R`, quaternion, axis-angle conversions; round-trip 10 000 random rotations and verify < 1e-10 error | ⭐⭐ |
-| URDF visualizer | Load a URDF in Python (e.g. via Pinocchio or yourdfpy); render the kinematic tree with random joint angles | ⭐⭐⭐ |
-| Forward kinematics from scratch | Implement FK for a 6-DoF arm using only NumPy and the URDF; verify against the modeling library | ⭐⭐⭐ |
-| Jacobian from scratch | Compute the geometric Jacobian numerically (finite-difference) and analytically; agree to 6 decimal places | ⭐⭐⭐⭐ |
-| Damped least-squares IK | Solve IK for a 7-DoF arm with damping near singularities; visualize wrist singularity and recovery | ⭐⭐⭐⭐ |
-| Null-space posture control | Use the Jacobian null-space to maintain a "home" posture while tracking an end-effector trajectory | ⭐⭐⭐⭐⭐ |
-| Hand-eye calibration | Compute the transform from camera frame to end-effector using the AX = XB formulation; measure residual | ⭐⭐⭐⭐ |
+| [Transform calculator](projects/01-transform-calculator/README.md) | Implement `R`, quaternion, axis-angle conversions; round-trip 10 000 random rotations and verify < 1e-10 error | ⭐⭐ |
+| [URDF visualizer](projects/02-urdf-visualizer/README.md) | Load a URDF in Python (e.g. via Pinocchio or yourdfpy); render the kinematic tree with random joint angles | ⭐⭐⭐ |
+| [Forward kinematics from scratch](projects/03-forward-kinematics-from-scratch/README.md) | Implement FK for a 6-DoF arm using only NumPy and the URDF; verify against the modeling library | ⭐⭐⭐ |
+| [Jacobian from scratch](projects/04-jacobian-from-scratch/README.md) | Compute the geometric Jacobian numerically (finite-difference) and analytically; agree to 6 decimal places | ⭐⭐⭐⭐ |
+| [Damped least-squares IK](projects/05-damped-least-squares-ik/README.md) | Solve IK for a 7-DoF arm with damping near singularities; visualize wrist singularity and recovery | ⭐⭐⭐⭐ |
+| [Null-space posture control](projects/06-null-space-posture-control/README.md) | Use the Jacobian null-space to maintain a "home" posture while tracking an end-effector trajectory | ⭐⭐⭐⭐⭐ |
+| [Hand-eye calibration](projects/07-hand-eye-calibration/README.md) | Compute the transform from camera frame to end-effector using the AX = XB formulation; measure residual | ⭐⭐⭐⭐ |
 
 ### Sample Code: A Minimal 6-DoF Forward Kinematics
 
@@ -302,14 +302,14 @@ boundary deliberately; bugs love unclear boundaries.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Pendulum PID | Simulate a single pendulum; tune PID to stabilize the up position; plot step response | ⭐⭐ |
-| Cart-pole LQR | Linearize about upright; design LQR; observe basin of attraction | ⭐⭐⭐ |
-| Inverse dynamics from scratch | Implement RNEA for a 2-link arm; verify against Pinocchio | ⭐⭐⭐⭐ |
-| Computed-torque trajectory tracking | Track a sinusoidal joint trajectory on a 6-DoF arm; compare PID-only vs. FF+PID | ⭐⭐⭐⭐ |
-| Impedance control | Push against the arm in simulation; tune virtual stiffness; measure compliance | ⭐⭐⭐⭐ |
-| MPC for a unicycle | Track a figure-8 with a kinematic-bicycle MPC using CasADi or do-mpc | ⭐⭐⭐⭐ |
-| Real-arm PID tune | On a real hobby arm, tune the joint PIDs and characterize the friction; create a friction-compensation FF | ⭐⭐⭐⭐⭐ |
-| Force-controlled drawing | Use impedance control to make the arm draw on a curved surface without breaking the pen | ⭐⭐⭐⭐⭐ |
+| [Pendulum PID](projects/08-pendulum-pid/README.md) | Simulate a single pendulum; tune PID to stabilize the up position; plot step response | ⭐⭐ |
+| [Cart-pole LQR](projects/09-cart-pole-lqr/README.md) | Linearize about upright; design LQR; observe basin of attraction | ⭐⭐⭐ |
+| [Inverse dynamics from scratch](projects/10-inverse-dynamics-from-scratch/README.md) | Implement RNEA for a 2-link arm; verify against Pinocchio | ⭐⭐⭐⭐ |
+| [Computed-torque trajectory tracking](projects/11-computed-torque-trajectory-tracking/README.md) | Track a sinusoidal joint trajectory on a 6-DoF arm; compare PID-only vs. FF+PID | ⭐⭐⭐⭐ |
+| [Impedance control](projects/12-impedance-control/README.md) | Push against the arm in simulation; tune virtual stiffness; measure compliance | ⭐⭐⭐⭐ |
+| [MPC for a unicycle](projects/13-mpc-for-a-unicycle/README.md) | Track a figure-8 with a kinematic-bicycle MPC using CasADi or do-mpc | ⭐⭐⭐⭐ |
+| [Real-arm PID tune](projects/14-real-arm-pid-tune/README.md) | On a real hobby arm, tune the joint PIDs and characterize the friction; create a friction-compensation FF | ⭐⭐⭐⭐⭐ |
+| [Force-controlled drawing](projects/15-force-controlled-drawing/README.md) | Use impedance control to make the arm draw on a curved surface without breaking the pen | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: An LQR for a Linearized System
 
@@ -441,15 +441,15 @@ the planner only wanted a binary "is there a person nearby?"
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Camera calibration | Calibrate your webcam with a checkerboard; report reprojection error < 0.5 px | ⭐⭐ |
-| AprilTag pose | Detect AprilTags, recover 6-DoF pose, project axes back onto the image | ⭐⭐⭐ |
-| Stereo depth | Build a stereo rig (two webcams); compute disparity; convert to depth point cloud | ⭐⭐⭐⭐ |
-| ICP registration | Register two partial point clouds of the same scene; visualize convergence | ⭐⭐⭐ |
-| Visual odometry | Implement a monocular VO front-end on a public dataset; report drift over 100 m | ⭐⭐⭐⭐⭐ |
-| IMU integration | Integrate an IMU on a desk; observe drift in angle (seconds) and position (seconds!) | ⭐⭐⭐ |
-| Hand-eye calibration | Solve AX = XB by capturing arm and tag poses; verify by reprojecting tag from arm motion | ⭐⭐⭐⭐ |
-| Object 6-DoF pose | Pick a small set of objects, train or fine-tune a 6-DoF pose estimator, evaluate ADD-S | ⭐⭐⭐⭐⭐ |
-| Open-vocab grasping | Use SAM + a VLM to segment "the red cup" and propose a top-down grasp | ⭐⭐⭐⭐⭐ |
+| [Camera calibration](projects/16-camera-calibration/README.md) | Calibrate your webcam with a checkerboard; report reprojection error < 0.5 px | ⭐⭐ |
+| [AprilTag pose](projects/17-apriltag-pose/README.md) | Detect AprilTags, recover 6-DoF pose, project axes back onto the image | ⭐⭐⭐ |
+| [Stereo depth](projects/18-stereo-depth/README.md) | Build a stereo rig (two webcams); compute disparity; convert to depth point cloud | ⭐⭐⭐⭐ |
+| [ICP registration](projects/19-icp-registration/README.md) | Register two partial point clouds of the same scene; visualize convergence | ⭐⭐⭐ |
+| [Visual odometry](projects/20-visual-odometry/README.md) | Implement a monocular VO front-end on a public dataset; report drift over 100 m | ⭐⭐⭐⭐⭐ |
+| [IMU integration](projects/21-imu-integration/README.md) | Integrate an IMU on a desk; observe drift in angle (seconds) and position (seconds!) | ⭐⭐⭐ |
+| [Hand-eye calibration](projects/07-hand-eye-calibration/README.md) | Solve AX = XB by capturing arm and tag poses; verify by reprojecting tag from arm motion | ⭐⭐⭐⭐ |
+| [Object 6-DoF pose](projects/22-object-6-dof-pose/README.md) | Pick a small set of objects, train or fine-tune a 6-DoF pose estimator, evaluate ADD-S | ⭐⭐⭐⭐⭐ |
+| [Open-vocab grasping](projects/23-open-vocab-grasping/README.md) | Use SAM + a VLM to segment "the red cup" and propose a top-down grasp | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: AprilTag Pose to Robot Frame
 
