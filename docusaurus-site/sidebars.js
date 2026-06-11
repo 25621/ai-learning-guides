@@ -700,6 +700,20 @@ const sidebars = {
                 {type: 'doc', id: 'guides/robotics/projects/factor-graph-practice/README', label: 'Factor-graph practice'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 5: Motion Planning and Trajectory Optimization',
+              items: [
+                {type: 'doc', id: 'guides/robotics/projects/a-star-on-a-grid/README', label: 'A* on a grid'},
+                {type: 'doc', id: 'guides/robotics/projects/rrt-in-2d/README', label: 'RRT in 2D'},
+                {type: 'doc', id: 'guides/robotics/projects/rrt-connect-for-an-arm/README', label: 'RRT-Connect for an arm'},
+                {type: 'doc', id: 'guides/robotics/projects/shortcut-smoothing/README', label: 'Shortcut smoothing'},
+                {type: 'doc', id: 'guides/robotics/projects/chomp-from-scratch/README', label: 'CHOMP from scratch'},
+                {type: 'doc', id: 'guides/robotics/projects/topp/README', label: 'TOPP'},
+                {type: 'doc', id: 'guides/robotics/projects/direct-collocation/README', label: 'Direct collocation'},
+                {type: 'doc', id: 'guides/robotics/projects/footstep-planning/README', label: 'Footstep planning'},
+              ],
+            },
           ],
         },
         {

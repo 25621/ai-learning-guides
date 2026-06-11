@@ -627,24 +627,24 @@ Once you know where the robot is and what it can sense, you have to decide where
 
 ### Concepts to Learn
 
-- **Configuration space (C-space)** — the abstract space of all joint configurations. A 7-DoF arm lives in a 7-dimensional torus. Obstacles in the workspace become exotic blobs in C-space. Planning is really searching C-space.
+- **[Configuration space (C-space)](/shared/glossary/#c-space)** — the abstract space of all joint configurations. A 7-DoF arm lives in a 7-dimensional torus. Obstacles in the workspace become exotic blobs in C-space. Planning is really searching C-space.
 - **The C-space distinction matters because**: collisions are defined in workspace, but search is efficient in C-space; the bridge is collision-checking (FK + per-link mesh tests).
 - **Discrete graph search**:
-  - **Dijkstra** — shortest path in a weighted graph
-  - **A*** — Dijkstra + heuristic; the workhorse of grid-based path planning
+  - **[Dijkstra](/shared/glossary/#dijkstras-algorithm)** — shortest path in a weighted graph
+  - **[A*](/shared/glossary/#a-star-search)** — Dijkstra + heuristic; the workhorse of grid-based path planning
   - **D* / D* Lite** — incremental replanning when the map changes; standard on outdoor mobile robots
 - **Sampling-based motion planning** — for high-DoF arms and continuous spaces:
-  - **PRM (Probabilistic Roadmap)** — preprocess: sample, connect; query: A* on the roadmap. Good for multi-query in a static world.
-  - **RRT (Rapidly-exploring Random Tree)** — incremental tree growth toward random samples. Single-query, great for high-DoF arms.
-  - **RRT-Connect** — bidirectional, fast in practice, the default starting point.
-  - **RRT*** — asymptotically optimal version; rewires the tree to improve cost.
+  - **[PRM (Probabilistic Roadmap)](/shared/glossary/#prm)** — preprocess: sample, connect; query: [A*](/shared/glossary/#a-star-search) on the roadmap. Good for multi-query in a static world.
+  - **[RRT (Rapidly-exploring Random Tree)](/shared/glossary/#rrt)** — incremental tree growth toward random samples. Single-query, great for high-DoF arms.
+  - **[RRT-Connect](/shared/glossary/#rrt-connect)** — bidirectional, fast in practice, the default starting point.
+  - **[RRT*](/shared/glossary/#rrt)** — asymptotically optimal version; rewires the tree to improve cost.
   - **BIT*** and **AIT*** — modern any-time, batch-informed planners; combine sampling with heuristic search.
   - **OMPL** — the Open Motion Planning Library packages all of these.
-- **Trajectory smoothing and shortcutting** — sampling-based plans are jerky; post-process by random shortcutting, B-spline fitting, or trajectory optimization.
-- **Trajectory optimization** — formulate path-planning as continuous optimization:
-  - **CHOMP** — gradient-based, attracts toward goal, repels from obstacles via a signed distance field
-  - **TrajOpt** — sequential convex programming with collision avoidance
-  - **STOMP** — gradient-free, stochastic variant
+- **Trajectory smoothing and shortcutting** — sampling-based plans are jerky; post-process by random shortcutting, B-spline fitting, or [trajectory optimization](/shared/glossary/#trajectory-optimization).
+- **[Trajectory optimization](/shared/glossary/#trajectory-optimization)** — formulate path-planning as continuous optimization:
+  - **[CHOMP](/shared/glossary/#chomp)** — gradient-based, attracts toward goal, repels from obstacles via a [Signed Distance Field (SDF)](/shared/glossary/#sdf)
+  - **[TrajOpt](/shared/glossary/#trajopt)** — sequential convex programming with collision avoidance
+  - **[STOMP](/shared/glossary/#stomp)** — gradient-free, stochastic variant
   - **GCS (Graphs of Convex Sets)** — modern: decompose free space into convex regions; optimize over the graph
   - **Direct collocation / direct shooting** — for dynamics-aware trajectory optimization (the bridge to MPC)
 - **Time-parameterization** — the geometric path is one thing; how fast you traverse it is another. TOPP (time-optimal path parameterization) finds the fastest traversal respecting velocity, acceleration, and torque limits.
@@ -673,14 +673,14 @@ Once you know where the robot is and what it can sense, you have to decide where
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| A* on a grid | Implement A* with the Manhattan heuristic; verify optimality vs. Dijkstra | ⭐⭐ |
-| RRT in 2D | Plan around random obstacles; visualize tree growth | ⭐⭐⭐ |
-| RRT-Connect for an arm | Plan a 7-DoF reach around a table in MuJoCo or PyBullet | ⭐⭐⭐⭐ |
-| Shortcut smoothing | Post-process an RRT plan; quantify length reduction | ⭐⭐⭐ |
-| CHOMP from scratch | Optimize a trajectory against an SDF on a 2D environment | ⭐⭐⭐⭐⭐ |
-| TOPP | Time-parameterize a geometric path under joint-velocity and acceleration limits | ⭐⭐⭐⭐ |
-| Direct collocation | Cart-pole swing-up via collocation in CasADi; compare to LQR for stabilization | ⭐⭐⭐⭐⭐ |
-| Footstep planning | A* over a footstep lattice for a planar biped on stepping stones | ⭐⭐⭐⭐⭐ |
+| [A* on a grid](projects/31-a-star-on-a-grid/README.md) | Implement A* with the Manhattan heuristic; verify optimality vs. Dijkstra | ⭐⭐ |
+| [RRT in 2D](projects/32-rrt-in-2d/README.md) | Plan around random obstacles; visualize tree growth | ⭐⭐⭐ |
+| [RRT-Connect for an arm](projects/33-rrt-connect-for-an-arm/README.md) | Plan a 7-DoF reach around a table in MuJoCo or PyBullet | ⭐⭐⭐⭐ |
+| [Shortcut smoothing](projects/34-shortcut-smoothing/README.md) | Post-process an RRT plan; quantify length reduction | ⭐⭐⭐ |
+| [CHOMP from scratch](projects/35-chomp-from-scratch/README.md) | Optimize a trajectory against an SDF on a 2D environment | ⭐⭐⭐⭐⭐ |
+| [TOPP](projects/36-topp/README.md) | Time-parameterize a geometric path under joint-velocity and acceleration limits | ⭐⭐⭐⭐ |
+| [Direct collocation](projects/37-direct-collocation/README.md) | Cart-pole swing-up via collocation in CasADi; compare to LQR for stabilization | ⭐⭐⭐⭐⭐ |
+| [Footstep planning](projects/38-footstep-planning/README.md) | A* over a footstep lattice for a planar biped on stepping stones | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: RRT in 2D
 
@@ -872,7 +872,7 @@ If a manipulator's challenge is the object, a mobile robot's challenge is the wo
   - **Tracked** — outdoor, rough terrain; slip is severe and must be modeled.
 - **Path tracking** — Pure Pursuit, Stanley, MPC-based tracking. Tune for the right speed regime.
 - **The navigation stack** — the canonical layered design:
-  - **Global planner** — A* / Dijkstra on a static map
+  - **Global planner** — [A*](/shared/glossary/#a-star-search) / [Dijkstra](/shared/glossary/#dijkstras-algorithm) on a static map
   - **Local planner** — DWA, TEB, or MPC over a short horizon, considering dynamic obstacles
   - **Costmap layers** — static (the map), inflation (around obstacles), dynamic (sensed obstacles), social (around humans)
   - **Recovery behaviors** — backup, rotate, clear costmap when stuck
@@ -964,7 +964,7 @@ on different axes today.
 | Project | Description | Difficulty |
 |---------|-------------|------------|
 | Pure pursuit | Follow a smooth path with a differential-drive robot; tune look-ahead | ⭐⭐ |
-| DWA local planner | Implement Dynamic Window Approach; integrate with A* global plan | ⭐⭐⭐⭐ |
+| DWA local planner | Implement Dynamic Window Approach; integrate with [A*](/shared/glossary/#a-star-search) global plan | ⭐⭐⭐⭐ |
 | MPC for an Ackermann car | Tracking a racetrack centerline with kinematic-bicycle MPC | ⭐⭐⭐⭐ |
 | AMCL on a known map | Localize a sim differential-drive robot in a known occupancy map | ⭐⭐⭐ |
 | Quadrotor min-snap | Generate and track a minimum-snap trajectory through 8 waypoints | ⭐⭐⭐⭐⭐ |
@@ -1348,7 +1348,7 @@ The capabilities frontier of robotics is dominated by *integration*, not by any 
 | 2. Dynamics & control | 2 weeks | Cart-pole LQR, computed-torque tracking, impedance demo all working |
 | 3. Perception | 2 weeks | Camera calibrated, AprilTags + ICP + a learned detector in your pipeline |
 | 4. Estimation & SLAM | 2 weeks | Working EKF + a small SLAM demo on a public dataset |
-| 5. Planning | 2 weeks | RRT-Connect + trajectory optimization on a real arm in sim |
+| 5. Planning | 2 weeks | [RRT-Connect](/shared/glossary/#rrt-connect) + [trajectory optimization](/shared/glossary/#trajectory-optimization) on a real arm in sim |
 | 6. Manipulation | 2–3 weeks | Pick-and-place with vision; one contact-rich task (insertion or wiping) |
 | 7. Mobile / legged | 2 weeks | Wheeled nav stack + a small legged-locomotion demo |
 | 8. Learning | 3 weeks | BC + a policy trained with PPO; one diffusion-policy run; understand sim-to-real |
@@ -1473,7 +1473,7 @@ The capabilities frontier of robotics is dominated by *integration*, not by any 
 - [ ] Have implemented a Kalman filter on a 2D tracker and seen its covariance contract
 - [ ] Have run an EKF or particle filter on a known map for mobile-robot localization
 - [ ] Have calibrated a camera and recovered an AprilTag's 6-DoF pose
-- [ ] Have run RRT or RRT-Connect on a 7-DoF arm in simulation
+- [ ] Have run [RRT](/shared/glossary/#rrt) or [RRT-Connect](/shared/glossary/#rrt-connect) on a 7-[DoF](/shared/glossary/#degrees-of-freedom) arm in simulation
 - [ ] Have done a contact-rich manipulation task (insertion / wiping) with impedance control
 - [ ] Have trained a behavior-cloning policy on demonstration data and evaluated it
 - [ ] Have trained an RL policy (PPO or SAC) on a sim task
