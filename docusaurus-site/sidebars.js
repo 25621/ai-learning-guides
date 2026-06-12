@@ -727,6 +727,20 @@ const sidebars = {
                 {type: 'doc', id: 'guides/robotics/projects/cloth-folding/README', label: 'Cloth folding'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 7: Mobile Robots, Legged Locomotion, and Navigation',
+              items: [
+                {type: 'doc', id: 'guides/robotics/projects/pure-pursuit/README', label: 'Pure pursuit'},
+                {type: 'doc', id: 'guides/robotics/projects/dwa-local-planner/README', label: 'DWA local planner'},
+                {type: 'doc', id: 'guides/robotics/projects/mpc-for-an-ackermann-car/README', label: 'MPC for an Ackermann car'},
+                {type: 'doc', id: 'guides/robotics/projects/amcl-on-a-known-map/README', label: 'AMCL on a known map'},
+                {type: 'doc', id: 'guides/robotics/projects/quadrotor-min-snap/README', label: 'Quadrotor min-snap'},
+                {type: 'doc', id: 'guides/robotics/projects/quadruped-trotting-mpc/README', label: 'Quadruped trotting MPC'},
+                {type: 'doc', id: 'guides/robotics/projects/learned-locomotion/README', label: 'Learned locomotion'},
+                {type: 'doc', id: 'guides/robotics/projects/social-navigation/README', label: 'Social navigation'},
+              ],
+            },
           ],
         },
         {

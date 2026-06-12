@@ -963,14 +963,14 @@ on different axes today.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Pure pursuit | Follow a smooth path with a differential-drive robot; tune look-ahead | ⭐⭐ |
-| DWA local planner | Implement Dynamic Window Approach; integrate with [A*](/shared/glossary/#a-star-search) global plan | ⭐⭐⭐⭐ |
-| MPC for an Ackermann car | Tracking a racetrack centerline with kinematic-bicycle MPC | ⭐⭐⭐⭐ |
-| AMCL on a known map | Localize a sim differential-drive robot in a known occupancy map | ⭐⭐⭐ |
-| Quadrotor min-snap | Generate and track a minimum-snap trajectory through 8 waypoints | ⭐⭐⭐⭐⭐ |
-| Quadruped trotting MPC | Reproduce a basic convex MPC trotting controller on a sim quadruped | ⭐⭐⭐⭐⭐ |
-| Learned locomotion | Train an RL policy in Isaac Lab to walk on flat terrain; deploy to a sim transfer | ⭐⭐⭐⭐⭐ |
-| Social navigation | Plan around moving "pedestrian" agents with predictive collision avoidance | ⭐⭐⭐⭐ |
+| [Pure pursuit](projects/46-pure-pursuit/README.md) | Follow a smooth path with a [differential-drive](/shared/glossary/#differential-drive) robot; tune look-ahead | ⭐⭐ |
+| [DWA local planner](projects/47-dwa-local-planner/README.md) | Implement [Dynamic Window Approach](/shared/glossary/#dynamic-window-approach-dwa); integrate with [A*](/shared/glossary/#a-star-search) global plan | ⭐⭐⭐⭐ |
+| [MPC for an Ackermann car](projects/48-mpc-for-an-ackermann-car/README.md) | Tracking a racetrack centerline with [kinematic-bicycle](/shared/glossary/#kinematic-bicycle-model) [MPC](/shared/glossary/#mpc) | ⭐⭐⭐⭐ |
+| [AMCL on a known map](projects/49-amcl-on-a-known-map/README.md) | Localize a sim [differential-drive](/shared/glossary/#differential-drive) robot in a known occupancy map | ⭐⭐⭐ |
+| [Quadrotor min-snap](projects/50-quadrotor-min-snap/README.md) | Generate and track a [minimum-snap trajectory](/shared/glossary/#minimum-snap-trajectory) through 8 waypoints | ⭐⭐⭐⭐⭐ |
+| [Quadruped trotting MPC](projects/51-quadruped-trotting-mpc/README.md) | Reproduce a basic convex [MPC](/shared/glossary/#mpc) trotting controller on a sim quadruped | ⭐⭐⭐⭐⭐ |
+| [Learned locomotion](projects/52-learned-locomotion/README.md) | Train an [RL](/shared/glossary/#reinforcement-learning) [policy](/shared/glossary/#policy) in [Isaac Lab](/shared/glossary/#isaac-lab) to walk on flat terrain; deploy to a sim transfer | ⭐⭐⭐⭐⭐ |
+| [Social navigation](projects/53-social-navigation/README.md) | Plan around moving "pedestrian" agents with predictive collision avoidance | ⭐⭐⭐⭐ |
 
 ### Sample Code: Pure Pursuit for a Differential-Drive Robot
 
