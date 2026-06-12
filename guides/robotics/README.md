@@ -2,7 +2,7 @@
 
 A comprehensive guide to robotics as a *subject* — not just as the hobbyist Arduino project that blinks an LED and drives a two-wheeled cart in a straight line for thirty seconds before the battery dies. The goal is to take you from "I have soldered a servo" to "I can read a 2026 humanoid-manipulation paper, understand why every algorithmic and mechanical decision was made, and stand up a small version of the system end-to-end in simulation and on real hardware." The guide is biased toward what matters in practice now: the math, the systems engineering, and the learning recipes that actually ship.
 
-> **An honest framing.** Most of the "magic" of modern robotics is not a single breakthrough — it is the compounding of a few simple ideas (rigid-body transforms, feedback control, probabilistic estimation, learned policies) executed against the unforgiving thermodynamics of the real world. The math is mostly undergraduate; the engineering is not. This guide teaches kinematics and dynamics deeply because you cannot debug a wobbling robot you do not understand, and then teaches perception, planning, learning, and systems work that the textbook chapters either skip or treat in isolation.
+> **An honest framing.** Most of the "magic" of modern robotics is not a single breakthrough — it is the compounding of a few simple ideas (rigid-body transforms, feedback control, probabilistic estimation, learned policies) executed against the unforgiving thermodynamics of the real world. The math is mostly undergraduate; the engineering is not. This guide teaches [kinematics](/shared/glossary/#kinematics) and dynamics deeply because you cannot debug a wobbling robot you do not understand, and then teaches perception, planning, learning, and systems work that the textbook chapters either skip or treat in isolation.
 
 ---
 
@@ -54,7 +54,7 @@ Robotics combines linear algebra, classical mechanics, probability, control theo
 A robot is a dynamical system whose state x evolves under controls u and
 process noise w, and which you observe only through noisy measurements z.
 
-Everything in this guide — kinematics (a special case of f), control
+Everything in this guide — [kinematics](/shared/glossary/#kinematics) (a special case of f), control
 (choosing u), perception (recovering x from z), planning (choosing a
 sequence of u), learning (fitting f, h, or the controller from data) —
 is some specialization of this one state-space view.
@@ -88,14 +88,14 @@ If that picture is fuzzy now, it will be sharp by the end of Phase 4.
 
 ## Phase 1: Rigid-Body Transforms and Kinematics
 
-Before any robot moves, you must be able to write down where every part of it is, in every coordinate frame you care about. Kinematics is the geometry of motion without worrying about the forces that cause it. Getting frames wrong is the single most common bug in real robot code; getting them right is most of the battle.
+Before any robot moves, you must be able to write down where every part of it is, in every coordinate frame you care about. [Kinematics](/shared/glossary/#kinematics) is the geometry of motion without worrying about the forces that cause it. Getting frames wrong is the single most common bug in real robot code; getting them right is most of the battle.
 
 ### Concepts to Learn
 
 - **Rigid-body transforms** — a position and an orientation that together describe a frame. Three equivalent representations to fluently switch between:
   - **Rotation matrices** `R ∈ SO(3)` — unambiguous, easy to compose, nine numbers for three degrees of freedom
   - **Quaternions** — four numbers, no gimbal lock, awkward to read, the right choice for storage and interpolation
-  - **Euler angles (roll, pitch, yaw)** — three numbers, intuitive, full of singularities, the right choice for *display only*
+  - **[Euler angles](/shared/glossary/#euler-angles) ([roll](/shared/glossary/#roll), [pitch](/shared/glossary/#pitch), [yaw](/shared/glossary/#yaw))** — three numbers, intuitive, full of singularities, the right choice for *display only*
   - **Axis-angle and rotation vectors** — three numbers, the right choice for optimization variables
 - **Homogeneous transforms** `T ∈ SE(3)` — pack `R` and translation `p` into a 4×4 matrix so composition is matrix multiplication:
   - `T = [[R, p], [0, 1]]`
@@ -225,7 +225,7 @@ Frames are not bureaucracy — they are the source language of robotics. Every l
 
 ## Phase 2: Dynamics and Classical Control
 
-Kinematics describes geometry; dynamics describes what happens when forces meet inertia. Classical control is the toolkit for closing the loop: measure, decide, actuate, repeat — fast enough that the laws of physics don't notice you're not omniscient.
+[Kinematics](/shared/glossary/#kinematics) describes geometry; dynamics describes what happens when forces meet inertia. Classical control is the toolkit for closing the loop: measure, decide, actuate, repeat — fast enough that the laws of physics don't notice you're not omniscient.
 
 ### Concepts to Learn
 
@@ -522,7 +522,7 @@ A robot's belief about itself and the world is always a probability distribution
 - **[Loop closure](/shared/glossary/#loop-closure)** — when you revisit a place, recognize it (visual bag-of-words, learned place recognition) and add a constraint that closes the drift. The hardest unsolved part of long-horizon SLAM.
 - **Map representations** — occupancy grids (2D), octomaps (3D), TSDFs (dense surfaces), point clouds, ORB-SLAM-style sparse landmarks, neural fields. Choose for the *consumer* of the map (planning, collision, rendering).
 - **Robust estimation** — switchable constraints, max-mixtures, graduated non-convexity; do not trust raw measurements in factor graphs.
-- **Observability** — not every state is observable from every sensor configuration. The yaw of a stationary IMU is not observable; the scale of a monocular VO is not observable. Know which states float.
+- **Observability** — not every state is observable from every sensor configuration. The [yaw](/shared/glossary/#yaw) of a stationary IMU is not observable; the scale of a monocular VO is not observable. Know which states float.
 
 ### The Kalman Filter in Six Lines
 
@@ -865,7 +865,7 @@ If a manipulator's challenge is the object, a mobile robot's challenge is the wo
 
 ### Concepts to Learn
 
-- **Mobile-robot kinematics** — the under-celebrated chassis math:
+- **Mobile-robot [kinematics](/shared/glossary/#kinematics)** — the under-celebrated chassis math:
   - **Differential drive** — two wheels, fast turning, holonomic-in-place. The most common indoor robot.
   - **Ackermann / car-like** — minimum turning radius, non-holonomic; the cars and many delivery robots.
   - **Omnidirectional** — mecanum / omni wheels; lateral motion at the cost of dirt and friction.
@@ -881,11 +881,11 @@ If a manipulator's challenge is the object, a mobile robot's challenge is the wo
   - **The Zero-Moment Point (ZMP)** — classical biped balance criterion: keep the ground reaction's center of pressure inside the support polygon.
   - **Centroidal dynamics** — track the linear and angular momentum of the body's center of mass; far more tractable than the full multi-body dynamics for online planning.
   - **MPC for locomotion** — every modern quadruped uses some flavor of MPC over a simplified centroidal model.
-  - **Whole-body control (WBC)** — a fast inner loop solving a QP for joint torques that achieves task-space goals (CoM, foot placement) while respecting friction cones and joint limits.
+  - **[Whole-Body Control (WBC)](/shared/glossary/#wbc)** — a fast inner loop solving a [QP](/shared/glossary/#quadratic-program) for joint torques that achieves task-space goals (CoM, foot placement) while respecting friction cones and joint limits.
   - **Gaits** — trot, pace, gallop, walk; emerging from policy or planned explicitly via foot-step sequences.
   - **Learning for locomotion** — RL in massively-parallel simulation (Isaac Gym scale: thousands of robots simultaneously) → policy → real robot. The recipe that made quadruped locomotion go from research demos to commercial reliability over 2018–2024.
 - **Aerial robots / drones**:
-  - **Quadrotor dynamics** — under-actuated (4 inputs, 6 DoF); differentially flat in position and yaw, which makes trajectory generation magical.
+  - **[Quadrotor](/shared/glossary/#quadrotor) dynamics** — under-actuated (4 inputs, 6 DoF); [differentially flat](/shared/glossary/#differential-flatness) in position and [yaw](/shared/glossary/#yaw), which makes trajectory generation magical.
   - **Polynomial / minimum-snap trajectories** — closed-form smooth trajectories through waypoints.
   - **VIO + control** — the standard stack: VIO localizes, MPC or geometric controller tracks.
 - **Self-driving stacks** — the special case at the scale limit:
@@ -1344,7 +1344,7 @@ The capabilities frontier of robotics is dominated by *integration*, not by any 
 | Phase | Duration | Outcome |
 |-------|----------|---------|
 | 0. Prerequisites | 0–2 weeks | Math review done; simulator installed; ROS 2 "hello world" running |
-| 1. Kinematics | 1–2 weeks | FK + Jacobian + IK implemented and tested on a 7-DoF arm |
+| 1. [Kinematics](/shared/glossary/#kinematics) | 1–2 weeks | FK + Jacobian + IK implemented and tested on a 7-DoF arm |
 | 2. Dynamics & control | 2 weeks | Cart-pole LQR, computed-torque tracking, impedance demo all working |
 | 3. Perception | 2 weeks | Camera calibrated, AprilTags + ICP + a learned detector in your pipeline |
 | 4. Estimation & SLAM | 2 weeks | Working EKF + a small SLAM demo on a public dataset |
