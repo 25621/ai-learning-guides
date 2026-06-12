@@ -1199,14 +1199,14 @@ The companies that do it earlier ship sooner.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| URDF → MJCF migration | Take a hobbyist URDF; clean it up; add collision meshes, inertias; load in MuJoCo | ⭐⭐⭐ |
-| System ID on a real arm | Excite joints with chirp signals; fit a friction + inertia model; compare to URDF defaults | ⭐⭐⭐⭐ |
-| Latency budget instrument | Trace photon-to-actuation latency across your stack; report 5/50/95 percentiles | ⭐⭐⭐⭐ |
-| ROS 2 lifecycle node | Implement a perception node with managed lifecycle; verify recovery from sensor disconnect | ⭐⭐⭐ |
-| MCAP logging + Foxglove | Log a complete robot run; replay; visualize trajectories, camera, transforms | ⭐⭐⭐ |
-| Real-time loop drill | Run a 1 kHz control loop on PREEMPT_RT; measure jitter under load; compare to vanilla Linux | ⭐⭐⭐⭐⭐ |
-| Sim-to-real gap forensics | Pick one transfer failure; isolate whether perception, dynamics, or actuation caused it | ⭐⭐⭐⭐⭐ |
-| Eval harness | Build a 50-task sim eval that runs nightly with seeded variations; produce a pass-rate dashboard | ⭐⭐⭐⭐ |
+| [URDF → MJCF migration](projects/62-urdf-mjcf-migration/README.md) | Take a hobbyist URDF; clean it up; add collision meshes, inertias; load in MuJoCo | ⭐⭐⭐ |
+| [System ID on a real arm](projects/63-system-id-on-a-real-arm/README.md) | Excite joints with chirp signals; fit a friction + inertia model; compare to URDF defaults | ⭐⭐⭐⭐ |
+| [Latency budget instrument](projects/64-latency-budget-instrument/README.md) | Trace photon-to-actuation latency across your stack; report 5/50/95 percentiles | ⭐⭐⭐⭐ |
+| [ROS 2 lifecycle node](projects/65-ros-2-lifecycle-node/README.md) | Implement a perception node with managed lifecycle; verify recovery from sensor disconnect | ⭐⭐⭐ |
+| [MCAP logging + Foxglove](projects/66-mcap-logging-foxglove/README.md) | Log a complete robot run; replay; visualize trajectories, camera, transforms | ⭐⭐⭐ |
+| [Real-time loop drill](projects/67-real-time-loop-drill/README.md) | Run a 1 kHz control loop on PREEMPT_RT; measure jitter under load; compare to vanilla Linux | ⭐⭐⭐⭐⭐ |
+| [Sim-to-real gap forensics](projects/68-sim-to-real-gap-forensics/README.md) | Pick one transfer failure; isolate whether perception, dynamics, or actuation caused it | ⭐⭐⭐⭐⭐ |
+| [Eval harness](projects/69-eval-harness/README.md) | Build a 50-task sim eval that runs nightly with seeded variations; produce a pass-rate dashboard | ⭐⭐⭐⭐ |
 
 ### Sample Code: A Hard-Boundary Watchdog
 

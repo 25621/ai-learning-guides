@@ -756,6 +756,20 @@ const sidebars = {
                 {type: 'doc', id: 'guides/robotics/projects/cross-embodiment-fine-tune/README', label: 'Cross-embodiment fine-tune'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 9: Simulation, Sim-to-Real, and Robot Systems Engineering',
+              items: [
+                {type: 'doc', id: 'guides/robotics/projects/urdf-mjcf-migration/README', label: 'URDF → MJCF migration'},
+                {type: 'doc', id: 'guides/robotics/projects/system-id-on-a-real-arm/README', label: 'System ID on a real arm'},
+                {type: 'doc', id: 'guides/robotics/projects/latency-budget-instrument/README', label: 'Latency budget instrument'},
+                {type: 'doc', id: 'guides/robotics/projects/ros-2-lifecycle-node/README', label: 'ROS 2 lifecycle node'},
+                {type: 'doc', id: 'guides/robotics/projects/mcap-logging-foxglove/README', label: 'MCAP logging + Foxglove'},
+                {type: 'doc', id: 'guides/robotics/projects/real-time-loop-drill/README', label: 'Real-time loop drill'},
+                {type: 'doc', id: 'guides/robotics/projects/sim-to-real-gap-forensics/README', label: 'Sim-to-real gap forensics'},
+                {type: 'doc', id: 'guides/robotics/projects/eval-harness/README', label: 'Eval harness'},
+              ],
+            },
           ],
         },
         {
