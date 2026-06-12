@@ -741,6 +741,21 @@ const sidebars = {
                 {type: 'doc', id: 'guides/robotics/projects/social-navigation/README', label: 'Social navigation'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 8: Learning for Robotics',
+              items: [
+                {type: 'doc', id: 'guides/robotics/projects/behavior-cloning-on-a-sim-arm/README', label: 'Behavior cloning on a sim arm'},
+                {type: 'doc', id: 'guides/robotics/projects/dagger/README', label: 'DAgger'},
+                {type: 'doc', id: 'guides/robotics/projects/diffusion-policy/README', label: 'Diffusion policy'},
+                {type: 'doc', id: 'guides/robotics/projects/ppo-for-cart-pole/README', label: 'PPO for cart-pole'},
+                {type: 'doc', id: 'guides/robotics/projects/sac-for-a-sim-arm-reach/README', label: 'SAC for a sim arm reach'},
+                {type: 'doc', id: 'guides/robotics/projects/learned-locomotion/README', label: 'Massively-parallel walking'},
+                {type: 'doc', id: 'guides/robotics/projects/domain-randomization-study/README', label: 'Domain randomization study'},
+                {type: 'doc', id: 'guides/robotics/projects/world-model-planning/README', label: 'World-model planning'},
+                {type: 'doc', id: 'guides/robotics/projects/cross-embodiment-fine-tune/README', label: 'Cross-embodiment fine-tune'},
+              ],
+            },
           ],
         },
         {
