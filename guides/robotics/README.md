@@ -2,7 +2,7 @@
 
 A comprehensive guide to robotics as a *subject* — not just as the hobbyist Arduino project that blinks an LED and drives a two-wheeled cart in a straight line for thirty seconds before the battery dies. The goal is to take you from "I have soldered a servo" to "I can read a 2026 humanoid-manipulation paper, understand why every algorithmic and mechanical decision was made, and stand up a small version of the system end-to-end in simulation and on real hardware." The guide is biased toward what matters in practice now: the math, the systems engineering, and the learning recipes that actually ship.
 
-> **An honest framing.** Most of the "magic" of modern robotics is not a single breakthrough — it is the compounding of a few simple ideas (rigid-body transforms, feedback control, probabilistic estimation, learned policies) executed against the unforgiving thermodynamics of the real world. The math is mostly undergraduate; the engineering is not. This guide teaches kinematics and dynamics deeply because you cannot debug a wobbling robot you do not understand, and then teaches perception, planning, learning, and systems work that the textbook chapters either skip or treat in isolation.
+> **An honest framing.** Most of the "magic" of modern robotics is not a single breakthrough — it is the compounding of a few simple ideas (rigid-body transforms, feedback control, probabilistic estimation, learned policies) executed against the unforgiving thermodynamics of the real world. The math is mostly undergraduate; the engineering is not. This guide teaches [kinematics](/shared/glossary/#kinematics) and dynamics deeply because you cannot debug a wobbling robot you do not understand, and then teaches perception, planning, learning, and systems work that the textbook chapters either skip or treat in isolation.
 
 ---
 
@@ -54,7 +54,7 @@ Robotics combines linear algebra, classical mechanics, probability, control theo
 A robot is a dynamical system whose state x evolves under controls u and
 process noise w, and which you observe only through noisy measurements z.
 
-Everything in this guide — kinematics (a special case of f), control
+Everything in this guide — [kinematics](/shared/glossary/#kinematics) (a special case of f), control
 (choosing u), perception (recovering x from z), planning (choosing a
 sequence of u), learning (fitting f, h, or the controller from data) —
 is some specialization of this one state-space view.
@@ -88,14 +88,14 @@ If that picture is fuzzy now, it will be sharp by the end of Phase 4.
 
 ## Phase 1: Rigid-Body Transforms and Kinematics
 
-Before any robot moves, you must be able to write down where every part of it is, in every coordinate frame you care about. Kinematics is the geometry of motion without worrying about the forces that cause it. Getting frames wrong is the single most common bug in real robot code; getting them right is most of the battle.
+Before any robot moves, you must be able to write down where every part of it is, in every coordinate frame you care about. [Kinematics](/shared/glossary/#kinematics) is the geometry of motion without worrying about the forces that cause it. Getting frames wrong is the single most common bug in real robot code; getting them right is most of the battle.
 
 ### Concepts to Learn
 
 - **Rigid-body transforms** — a position and an orientation that together describe a frame. Three equivalent representations to fluently switch between:
   - **Rotation matrices** `R ∈ SO(3)` — unambiguous, easy to compose, nine numbers for three degrees of freedom
   - **Quaternions** — four numbers, no gimbal lock, awkward to read, the right choice for storage and interpolation
-  - **Euler angles (roll, pitch, yaw)** — three numbers, intuitive, full of singularities, the right choice for *display only*
+  - **[Euler angles](/shared/glossary/#euler-angles) ([roll](/shared/glossary/#roll), [pitch](/shared/glossary/#pitch), [yaw](/shared/glossary/#yaw))** — three numbers, intuitive, full of singularities, the right choice for *display only*
   - **Axis-angle and rotation vectors** — three numbers, the right choice for optimization variables
 - **Homogeneous transforms** `T ∈ SE(3)` — pack `R` and translation `p` into a 4×4 matrix so composition is matrix multiplication:
   - `T = [[R, p], [0, 1]]`
@@ -225,7 +225,7 @@ Frames are not bureaucracy — they are the source language of robotics. Every l
 
 ## Phase 2: Dynamics and Classical Control
 
-Kinematics describes geometry; dynamics describes what happens when forces meet inertia. Classical control is the toolkit for closing the loop: measure, decide, actuate, repeat — fast enough that the laws of physics don't notice you're not omniscient.
+[Kinematics](/shared/glossary/#kinematics) describes geometry; dynamics describes what happens when forces meet inertia. Classical control is the toolkit for closing the loop: measure, decide, actuate, repeat — fast enough that the laws of physics don't notice you're not omniscient.
 
 ### Concepts to Learn
 
@@ -377,8 +377,8 @@ A robot is blind until you give it sensors. Each sensor has its own noise model,
   - **RGB cameras** — high-resolution, cheap, photometric/lighting-sensitive, no depth without inference or pairs
   - **Stereo cameras** — pair of synchronized cameras + disparity; depth quality falls off with distance squared
   - **Time-of-Flight (ToF) / structured-light depth cameras** — direct depth, struggle in sunlight, struggle on shiny/transparent objects
-  - **2D LiDAR** — fast horizontal range scans; the backbone of indoor mobile robots
-  - **3D LiDAR** — rotating or solid-state, dense point clouds, the backbone of self-driving and outdoor mobile robots
+  - **2D [LiDAR](/shared/glossary/#lidar)** — fast horizontal range scans; the backbone of indoor mobile robots
+  - **3D [LiDAR](/shared/glossary/#lidar)** — rotating or solid-state, dense point clouds, the backbone of self-driving and outdoor mobile robots
   - **IMU (inertial measurement unit)** — 3-axis gyro + 3-axis accelerometer (optional magnetometer); high rate, drifts in seconds, indispensable
   - **Encoders** — joint position and velocity, the cleanest measurement on a robot
   - **Force/torque sensors** — wrist-mounted F/T or fingertip taxels; the eyes of contact-rich manipulation
@@ -386,7 +386,7 @@ A robot is blind until you give it sensors. Each sensor has its own noise model,
   - **Tactile / vision-based-tactile (e.g. GelSight-style)** — high-resolution contact images; the new frontier in dexterous manipulation
 - **The camera pinhole model** — `x_pixel = K · [R | t] · X_world`, with `K` the intrinsic matrix `(fx, fy, cx, cy)`. Distortion (radial, tangential) on top of that. Calibrate before doing anything.
 - **Intrinsic calibration** — checkerboard / ChArUco / Kalibr; gives `K` and distortion coefficients per camera.
-- **Extrinsic calibration** — the transform between sensor frames (camera ↔ IMU, camera ↔ lidar, camera ↔ end-effector). The "hand-eye calibration" of Phase 1 is the manipulator special case.
+- **Extrinsic calibration** — the transform between sensor frames (camera ↔ IMU, camera ↔ [lidar](/shared/glossary/#lidar), camera ↔ end-effector). The "hand-eye calibration" of Phase 1 is the manipulator special case.
 - **Time synchronization** — sensors drift, clocks drift, USB introduces jitter. Hardware-triggered cameras + PTP-synced clocks > software timestamps. ROS message_filters / ApproximateTime helps but doesn't save you.
 - **Classical CV building blocks** (still everywhere):
   - **Edge / corner / blob detection** — Canny, Harris, FAST, ORB, SIFT
@@ -401,7 +401,7 @@ A robot is blind until you give it sensors. Each sensor has its own noise model,
   - **Optical flow nets** — RAFT and successors
   - **Visual-inertial / visual front-ends for SLAM** — SuperPoint + SuperGlue replacing classical features
   - **Open-vocabulary perception** — CLIP, OWL-ViT, OpenSeg — language-conditioned segmentation, the bridge into Phase 10 VLA models
-- **Point cloud processing** — voxel filters, downsampling, ICP (iterative closest point) for registration, normal estimation, segmentation.
+- **Point cloud processing** — voxel filters, downsampling, [ICP (iterative closest point)](/shared/glossary/#iterative-closest-point-icp) for [registration](/shared/glossary/#point-cloud-registration), normal estimation, segmentation.
 - **Sensor noise and outlier rejection** — RANSAC is a hammer; use it. Robust loss functions (Huber, Cauchy) in any optimization touching real data.
 - **Latency budgets** — perception adds latency; latency adds phase lag; phase lag eats your control margins. Always characterize end-to-end latency from photon to actuation.
 
@@ -514,15 +514,15 @@ A robot's belief about itself and the world is always a probability distribution
 - **Factor graphs and nonlinear least squares** — the modern view: every measurement is a factor; the MAP estimate is the solution to a sparse least-squares problem solved with Gauss-Newton / Levenberg-Marquardt. Implemented in GTSAM, Ceres, g2o.
 - **Visual odometry (VO)** — estimate motion from images alone. Drifts without loop closure.
 - **Visual-inertial odometry (VIO)** — fuse camera and IMU; the high-rate, low-drift backbone of mobile/aerial robots.
-- **LiDAR odometry** — ICP-style scan matching; LOAM-family stacks are the standard.
-- **SLAM front-end vs. back-end**:
+- **[LiDAR](/shared/glossary/#lidar) odometry** — [ICP](/shared/glossary/#iterative-closest-point-icp)-style scan matching; LOAM-family stacks are the standard.
+- **[SLAM](/shared/glossary/#slam)** front-end vs. back-end:
   - **Front-end**: detect features, match them, propose constraints
-  - **Back-end**: optimize the pose graph (smoothing) or run the filter (filtering)
-  - Modern SLAM is mostly *smoothing*: keep a window of recent poses, optimize jointly. iSAM2 / GTSAM made this real-time.
-- **Loop closure** — when you revisit a place, recognize it (visual bag-of-words, learned place recognition) and add a constraint that closes the drift. The hardest unsolved part of long-horizon SLAM.
+  - **Back-end**: optimize the [pose graph](/shared/glossary/#pose-graph) (smoothing) or run the filter (filtering)
+  - Modern [SLAM](/shared/glossary/#slam) is mostly *smoothing*: keep a window of recent poses, optimize jointly. iSAM2 / GTSAM made this real-time.
+- **[Loop closure](/shared/glossary/#loop-closure)** — when you revisit a place, recognize it (visual bag-of-words, learned place recognition) and add a constraint that closes the drift. The hardest unsolved part of long-horizon SLAM.
 - **Map representations** — occupancy grids (2D), octomaps (3D), TSDFs (dense surfaces), point clouds, ORB-SLAM-style sparse landmarks, neural fields. Choose for the *consumer* of the map (planning, collision, rendering).
 - **Robust estimation** — switchable constraints, max-mixtures, graduated non-convexity; do not trust raw measurements in factor graphs.
-- **Observability** — not every state is observable from every sensor configuration. The yaw of a stationary IMU is not observable; the scale of a monocular VO is not observable. Know which states float.
+- **Observability** — not every state is observable from every sensor configuration. The [yaw](/shared/glossary/#yaw) of a stationary IMU is not observable; the scale of a monocular VO is not observable. Know which states float.
 
 ### The Kalman Filter in Six Lines
 
@@ -576,14 +576,14 @@ dominate modern systems.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| 1D KF | Fuse two noisy thermometers; compare to weighted average; verify covariance contraction | ⭐⭐ |
-| 2D constant-velocity tracker | Track a moving target with KF; tune Q vs. R; observe steady-state gain | ⭐⭐⭐ |
-| EKF localization | Implement EKF on a wheeled robot with wheel odometry + landmark range/bearing | ⭐⭐⭐⭐ |
-| Particle filter | Monte Carlo localization on a known 2D occupancy map | ⭐⭐⭐ |
-| IMU dead reckoning | Integrate accelerometer + gyro on a desk; quantify drift; compare error-state vs. direct integration | ⭐⭐⭐⭐ |
-| VIO MVP | Fuse a monocular camera + IMU using an error-state EKF; evaluate on a public dataset | ⭐⭐⭐⭐⭐ |
-| 2D LiDAR SLAM | Reproduce a small ICP-based scan-matching SLAM with loop closure | ⭐⭐⭐⭐⭐ |
-| Factor-graph practice | Use GTSAM to build a small pose-graph SLAM, intentionally inject loop-closure outliers, fix with robust kernels | ⭐⭐⭐⭐⭐ |
+| [1D KF](projects/24-1d-kf/README.md) | Fuse two noisy thermometers; compare to weighted average; verify covariance contraction | ⭐⭐ |
+| [2D constant-velocity tracker](projects/25-2d-constant-velocity-tracker/README.md) | Track a moving target with KF; tune Q vs. R; observe steady-state gain | ⭐⭐⭐ |
+| [EKF localization](projects/26-ekf-localization/README.md) | Implement EKF on a wheeled robot with wheel odometry + landmark range/bearing | ⭐⭐⭐⭐ |
+| [Particle filter](projects/27-particle-filter/README.md) | Monte Carlo localization on a known 2D occupancy map | ⭐⭐⭐ |
+| [IMU dead reckoning](projects/21-imu-integration/README.md) | Integrate accelerometer + gyro on a desk; quantify drift; compare error-state vs. direct integration | ⭐⭐⭐⭐ |
+| [VIO MVP](projects/28-vio-mvp/README.md) | Fuse a monocular camera + IMU using an error-state EKF; evaluate on a public dataset | ⭐⭐⭐⭐⭐ |
+| [2D LiDAR SLAM](projects/29-2d-lidar-slam/README.md) | Reproduce a small [ICP](/shared/glossary/#iterative-closest-point-icp)-based scan-matching [SLAM](/shared/glossary/#slam) with [loop closure](/shared/glossary/#loop-closure) | ⭐⭐⭐⭐⭐ |
+| [Factor-graph practice](projects/30-factor-graph-practice/README.md) | Use [GTSAM](/shared/glossary/#gtsam) to build a small [pose-graph](/shared/glossary/#pose-graph) [SLAM](/shared/glossary/#slam), intentionally inject [loop-closure](/shared/glossary/#loop-closure) outliers, fix with robust kernels | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: A Particle Filter for 2D Localization
 
@@ -627,24 +627,24 @@ Once you know where the robot is and what it can sense, you have to decide where
 
 ### Concepts to Learn
 
-- **Configuration space (C-space)** — the abstract space of all joint configurations. A 7-DoF arm lives in a 7-dimensional torus. Obstacles in the workspace become exotic blobs in C-space. Planning is really searching C-space.
+- **[Configuration space (C-space)](/shared/glossary/#c-space)** — the abstract space of all joint configurations. A 7-DoF arm lives in a 7-dimensional torus. Obstacles in the workspace become exotic blobs in C-space. Planning is really searching C-space.
 - **The C-space distinction matters because**: collisions are defined in workspace, but search is efficient in C-space; the bridge is collision-checking (FK + per-link mesh tests).
 - **Discrete graph search**:
-  - **Dijkstra** — shortest path in a weighted graph
-  - **A*** — Dijkstra + heuristic; the workhorse of grid-based path planning
+  - **[Dijkstra](/shared/glossary/#dijkstras-algorithm)** — shortest path in a weighted graph
+  - **[A*](/shared/glossary/#a-star-search)** — Dijkstra + heuristic; the workhorse of grid-based path planning
   - **D* / D* Lite** — incremental replanning when the map changes; standard on outdoor mobile robots
 - **Sampling-based motion planning** — for high-DoF arms and continuous spaces:
-  - **PRM (Probabilistic Roadmap)** — preprocess: sample, connect; query: A* on the roadmap. Good for multi-query in a static world.
-  - **RRT (Rapidly-exploring Random Tree)** — incremental tree growth toward random samples. Single-query, great for high-DoF arms.
-  - **RRT-Connect** — bidirectional, fast in practice, the default starting point.
-  - **RRT*** — asymptotically optimal version; rewires the tree to improve cost.
+  - **[PRM (Probabilistic Roadmap)](/shared/glossary/#prm)** — preprocess: sample, connect; query: [A*](/shared/glossary/#a-star-search) on the roadmap. Good for multi-query in a static world.
+  - **[RRT (Rapidly-exploring Random Tree)](/shared/glossary/#rrt)** — incremental tree growth toward random samples. Single-query, great for high-DoF arms.
+  - **[RRT-Connect](/shared/glossary/#rrt-connect)** — bidirectional, fast in practice, the default starting point.
+  - **[RRT*](/shared/glossary/#rrt)** — asymptotically optimal version; rewires the tree to improve cost.
   - **BIT*** and **AIT*** — modern any-time, batch-informed planners; combine sampling with heuristic search.
   - **OMPL** — the Open Motion Planning Library packages all of these.
-- **Trajectory smoothing and shortcutting** — sampling-based plans are jerky; post-process by random shortcutting, B-spline fitting, or trajectory optimization.
-- **Trajectory optimization** — formulate path-planning as continuous optimization:
-  - **CHOMP** — gradient-based, attracts toward goal, repels from obstacles via a signed distance field
-  - **TrajOpt** — sequential convex programming with collision avoidance
-  - **STOMP** — gradient-free, stochastic variant
+- **Trajectory smoothing and shortcutting** — sampling-based plans are jerky; post-process by random shortcutting, B-spline fitting, or [trajectory optimization](/shared/glossary/#trajectory-optimization).
+- **[Trajectory optimization](/shared/glossary/#trajectory-optimization)** — formulate path-planning as continuous optimization:
+  - **[CHOMP](/shared/glossary/#chomp)** — gradient-based, attracts toward goal, repels from obstacles via a [Signed Distance Field (SDF)](/shared/glossary/#sdf)
+  - **[TrajOpt](/shared/glossary/#trajopt)** — sequential convex programming with collision avoidance
+  - **[STOMP](/shared/glossary/#stomp)** — gradient-free, stochastic variant
   - **GCS (Graphs of Convex Sets)** — modern: decompose free space into convex regions; optimize over the graph
   - **Direct collocation / direct shooting** — for dynamics-aware trajectory optimization (the bridge to MPC)
 - **Time-parameterization** — the geometric path is one thing; how fast you traverse it is another. TOPP (time-optimal path parameterization) finds the fastest traversal respecting velocity, acceleration, and torque limits.
@@ -673,14 +673,14 @@ Once you know where the robot is and what it can sense, you have to decide where
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| A* on a grid | Implement A* with the Manhattan heuristic; verify optimality vs. Dijkstra | ⭐⭐ |
-| RRT in 2D | Plan around random obstacles; visualize tree growth | ⭐⭐⭐ |
-| RRT-Connect for an arm | Plan a 7-DoF reach around a table in MuJoCo or PyBullet | ⭐⭐⭐⭐ |
-| Shortcut smoothing | Post-process an RRT plan; quantify length reduction | ⭐⭐⭐ |
-| CHOMP from scratch | Optimize a trajectory against an SDF on a 2D environment | ⭐⭐⭐⭐⭐ |
-| TOPP | Time-parameterize a geometric path under joint-velocity and acceleration limits | ⭐⭐⭐⭐ |
-| Direct collocation | Cart-pole swing-up via collocation in CasADi; compare to LQR for stabilization | ⭐⭐⭐⭐⭐ |
-| Footstep planning | A* over a footstep lattice for a planar biped on stepping stones | ⭐⭐⭐⭐⭐ |
+| [A* on a grid](projects/31-a-star-on-a-grid/README.md) | Implement A* with the Manhattan heuristic; verify optimality vs. Dijkstra | ⭐⭐ |
+| [RRT in 2D](projects/32-rrt-in-2d/README.md) | Plan around random obstacles; visualize tree growth | ⭐⭐⭐ |
+| [RRT-Connect for an arm](projects/33-rrt-connect-for-an-arm/README.md) | Plan a 7-DoF reach around a table in MuJoCo or PyBullet | ⭐⭐⭐⭐ |
+| [Shortcut smoothing](projects/34-shortcut-smoothing/README.md) | Post-process an RRT plan; quantify length reduction | ⭐⭐⭐ |
+| [CHOMP from scratch](projects/35-chomp-from-scratch/README.md) | Optimize a trajectory against an SDF on a 2D environment | ⭐⭐⭐⭐⭐ |
+| [TOPP](projects/36-topp/README.md) | Time-parameterize a geometric path under joint-velocity and acceleration limits | ⭐⭐⭐⭐ |
+| [Direct collocation](projects/37-direct-collocation/README.md) | Cart-pole swing-up via collocation in CasADi; compare to LQR for stabilization | ⭐⭐⭐⭐⭐ |
+| [Footstep planning](projects/38-footstep-planning/README.md) | A* over a footstep lattice for a planar biped on stepping stones | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: RRT in 2D
 
@@ -812,13 +812,13 @@ test for whether your gripper holds the object against gravity.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Analytic 2D grasp | For polygonal objects, compute force-closure grasps; visualize friction cones | ⭐⭐⭐ |
-| Top-down learned grasp | Train or fine-tune a grasp-quality net on a small synthetic set; evaluate on real objects | ⭐⭐⭐⭐ |
-| Peg-in-hole with impedance | Implement spiral-search + impedance control to insert a peg; measure success rate vs. tolerance | ⭐⭐⭐⭐ |
-| AnyGrasp pipeline | Run a pretrained 6-DoF grasp net on point clouds from your depth camera; execute on a real arm | ⭐⭐⭐⭐⭐ |
-| Visuomotor pick | End-to-end policy from camera to grasp on a small object set in MuJoCo | ⭐⭐⭐⭐ |
-| In-hand cube reorientation | Train a multi-finger policy in sim to reorient a cube; quantify success/dropout | ⭐⭐⭐⭐⭐ |
-| Cloth folding | Pick-place primitive policy for folding a square cloth; measure final-state IoU | ⭐⭐⭐⭐⭐ |
+| [Analytic 2D grasp](projects/39-analytic-2d-grasp/README.md) | For polygonal objects, compute force-closure grasps; visualize friction cones | ⭐⭐⭐ |
+| [Top-down learned grasp](projects/40-top-down-learned-grasp/README.md) | Train or fine-tune a grasp-quality net on a small synthetic set; evaluate on real objects | ⭐⭐⭐⭐ |
+| [Peg-in-hole with impedance](projects/41-peg-in-hole-with-impedance/README.md) | Implement spiral-search + impedance control to insert a peg; measure success rate vs. tolerance | ⭐⭐⭐⭐ |
+| [AnyGrasp pipeline](projects/42-anygrasp-pipeline/README.md) | Run a pretrained 6-DoF grasp net on point clouds from your depth camera; execute on a real arm | ⭐⭐⭐⭐⭐ |
+| [Visuomotor pick](projects/43-visuomotor-pick/README.md) | End-to-end policy from camera to grasp on a small object set in MuJoCo | ⭐⭐⭐⭐ |
+| [In-hand cube reorientation](projects/44-in-hand-cube-reorientation/README.md) | Train a multi-finger policy in sim to reorient a cube; quantify success/dropout | ⭐⭐⭐⭐⭐ |
+| [Cloth folding](projects/45-cloth-folding/README.md) | Pick-place primitive policy for folding a square cloth; measure final-state IoU | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: A Top-Down Grasp Score from a Depth Image
 
@@ -865,14 +865,14 @@ If a manipulator's challenge is the object, a mobile robot's challenge is the wo
 
 ### Concepts to Learn
 
-- **Mobile-robot kinematics** — the under-celebrated chassis math:
+- **Mobile-robot [kinematics](/shared/glossary/#kinematics)** — the under-celebrated chassis math:
   - **Differential drive** — two wheels, fast turning, holonomic-in-place. The most common indoor robot.
   - **Ackermann / car-like** — minimum turning radius, non-holonomic; the cars and many delivery robots.
   - **Omnidirectional** — mecanum / omni wheels; lateral motion at the cost of dirt and friction.
   - **Tracked** — outdoor, rough terrain; slip is severe and must be modeled.
 - **Path tracking** — Pure Pursuit, Stanley, MPC-based tracking. Tune for the right speed regime.
 - **The navigation stack** — the canonical layered design:
-  - **Global planner** — A* / Dijkstra on a static map
+  - **Global planner** — [A*](/shared/glossary/#a-star-search) / [Dijkstra](/shared/glossary/#dijkstras-algorithm) on a static map
   - **Local planner** — DWA, TEB, or MPC over a short horizon, considering dynamic obstacles
   - **Costmap layers** — static (the map), inflation (around obstacles), dynamic (sensed obstacles), social (around humans)
   - **Recovery behaviors** — backup, rotate, clear costmap when stuck
@@ -881,11 +881,11 @@ If a manipulator's challenge is the object, a mobile robot's challenge is the wo
   - **The Zero-Moment Point (ZMP)** — classical biped balance criterion: keep the ground reaction's center of pressure inside the support polygon.
   - **Centroidal dynamics** — track the linear and angular momentum of the body's center of mass; far more tractable than the full multi-body dynamics for online planning.
   - **MPC for locomotion** — every modern quadruped uses some flavor of MPC over a simplified centroidal model.
-  - **Whole-body control (WBC)** — a fast inner loop solving a QP for joint torques that achieves task-space goals (CoM, foot placement) while respecting friction cones and joint limits.
+  - **[Whole-Body Control (WBC)](/shared/glossary/#wbc)** — a fast inner loop solving a [QP](/shared/glossary/#quadratic-program) for joint torques that achieves task-space goals (CoM, foot placement) while respecting friction cones and joint limits.
   - **Gaits** — trot, pace, gallop, walk; emerging from policy or planned explicitly via foot-step sequences.
   - **Learning for locomotion** — RL in massively-parallel simulation (Isaac Gym scale: thousands of robots simultaneously) → policy → real robot. The recipe that made quadruped locomotion go from research demos to commercial reliability over 2018–2024.
 - **Aerial robots / drones**:
-  - **Quadrotor dynamics** — under-actuated (4 inputs, 6 DoF); differentially flat in position and yaw, which makes trajectory generation magical.
+  - **[Quadrotor](/shared/glossary/#quadrotor) dynamics** — under-actuated (4 inputs, 6 DoF); [differentially flat](/shared/glossary/#differential-flatness) in position and [yaw](/shared/glossary/#yaw), which makes trajectory generation magical.
   - **Polynomial / minimum-snap trajectories** — closed-form smooth trajectories through waypoints.
   - **VIO + control** — the standard stack: VIO localizes, MPC or geometric controller tracks.
 - **Self-driving stacks** — the special case at the scale limit:
@@ -963,14 +963,14 @@ on different axes today.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Pure pursuit | Follow a smooth path with a differential-drive robot; tune look-ahead | ⭐⭐ |
-| DWA local planner | Implement Dynamic Window Approach; integrate with A* global plan | ⭐⭐⭐⭐ |
-| MPC for an Ackermann car | Tracking a racetrack centerline with kinematic-bicycle MPC | ⭐⭐⭐⭐ |
-| AMCL on a known map | Localize a sim differential-drive robot in a known occupancy map | ⭐⭐⭐ |
-| Quadrotor min-snap | Generate and track a minimum-snap trajectory through 8 waypoints | ⭐⭐⭐⭐⭐ |
-| Quadruped trotting MPC | Reproduce a basic convex MPC trotting controller on a sim quadruped | ⭐⭐⭐⭐⭐ |
-| Learned locomotion | Train an RL policy in Isaac Lab to walk on flat terrain; deploy to a sim transfer | ⭐⭐⭐⭐⭐ |
-| Social navigation | Plan around moving "pedestrian" agents with predictive collision avoidance | ⭐⭐⭐⭐ |
+| [Pure pursuit](projects/46-pure-pursuit/README.md) | Follow a smooth path with a [differential-drive](/shared/glossary/#differential-drive) robot; tune look-ahead | ⭐⭐ |
+| [DWA local planner](projects/47-dwa-local-planner/README.md) | Implement [Dynamic Window Approach](/shared/glossary/#dynamic-window-approach-dwa); integrate with [A*](/shared/glossary/#a-star-search) global plan | ⭐⭐⭐⭐ |
+| [MPC for an Ackermann car](projects/48-mpc-for-an-ackermann-car/README.md) | Tracking a racetrack centerline with [kinematic-bicycle](/shared/glossary/#kinematic-bicycle-model) [MPC](/shared/glossary/#mpc) | ⭐⭐⭐⭐ |
+| [AMCL on a known map](projects/49-amcl-on-a-known-map/README.md) | Localize a sim [differential-drive](/shared/glossary/#differential-drive) robot in a known occupancy map | ⭐⭐⭐ |
+| [Quadrotor min-snap](projects/50-quadrotor-min-snap/README.md) | Generate and track a [minimum-snap trajectory](/shared/glossary/#minimum-snap-trajectory) through 8 waypoints | ⭐⭐⭐⭐⭐ |
+| [Quadruped trotting MPC](projects/51-quadruped-trotting-mpc/README.md) | Reproduce a basic convex [MPC](/shared/glossary/#mpc) trotting controller on a sim quadruped | ⭐⭐⭐⭐⭐ |
+| [Learned locomotion](projects/52-learned-locomotion/README.md) | Train an [RL](/shared/glossary/#reinforcement-learning) [policy](/shared/glossary/#policy) in [Isaac Lab](/shared/glossary/#isaac-lab) to walk on flat terrain; deploy to a sim transfer | ⭐⭐⭐⭐⭐ |
+| [Social navigation](projects/53-social-navigation/README.md) | Plan around moving "pedestrian" agents with predictive collision avoidance | ⭐⭐⭐⭐ |
 
 ### Sample Code: Pure Pursuit for a Differential-Drive Robot
 
@@ -1344,11 +1344,11 @@ The capabilities frontier of robotics is dominated by *integration*, not by any 
 | Phase | Duration | Outcome |
 |-------|----------|---------|
 | 0. Prerequisites | 0–2 weeks | Math review done; simulator installed; ROS 2 "hello world" running |
-| 1. Kinematics | 1–2 weeks | FK + Jacobian + IK implemented and tested on a 7-DoF arm |
+| 1. [Kinematics](/shared/glossary/#kinematics) | 1–2 weeks | FK + Jacobian + IK implemented and tested on a 7-DoF arm |
 | 2. Dynamics & control | 2 weeks | Cart-pole LQR, computed-torque tracking, impedance demo all working |
 | 3. Perception | 2 weeks | Camera calibrated, AprilTags + ICP + a learned detector in your pipeline |
 | 4. Estimation & SLAM | 2 weeks | Working EKF + a small SLAM demo on a public dataset |
-| 5. Planning | 2 weeks | RRT-Connect + trajectory optimization on a real arm in sim |
+| 5. Planning | 2 weeks | [RRT-Connect](/shared/glossary/#rrt-connect) + [trajectory optimization](/shared/glossary/#trajectory-optimization) on a real arm in sim |
 | 6. Manipulation | 2–3 weeks | Pick-and-place with vision; one contact-rich task (insertion or wiping) |
 | 7. Mobile / legged | 2 weeks | Wheeled nav stack + a small legged-locomotion demo |
 | 8. Learning | 3 weeks | BC + a policy trained with PPO; one diffusion-policy run; understand sim-to-real |
@@ -1473,7 +1473,7 @@ The capabilities frontier of robotics is dominated by *integration*, not by any 
 - [ ] Have implemented a Kalman filter on a 2D tracker and seen its covariance contract
 - [ ] Have run an EKF or particle filter on a known map for mobile-robot localization
 - [ ] Have calibrated a camera and recovered an AprilTag's 6-DoF pose
-- [ ] Have run RRT or RRT-Connect on a 7-DoF arm in simulation
+- [ ] Have run [RRT](/shared/glossary/#rrt) or [RRT-Connect](/shared/glossary/#rrt-connect) on a 7-[DoF](/shared/glossary/#degrees-of-freedom) arm in simulation
 - [ ] Have done a contact-rich manipulation task (insertion / wiping) with impedance control
 - [ ] Have trained a behavior-cloning policy on demonstration data and evaluated it
 - [ ] Have trained an RL policy (PPO or SAC) on a sim task
