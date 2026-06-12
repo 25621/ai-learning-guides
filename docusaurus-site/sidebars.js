@@ -714,6 +714,19 @@ const sidebars = {
                 {type: 'doc', id: 'guides/robotics/projects/footstep-planning/README', label: 'Footstep planning'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 6: Manipulation and Grasping',
+              items: [
+                {type: 'doc', id: 'guides/robotics/projects/analytic-2d-grasp/README', label: 'Analytic 2D grasp'},
+                {type: 'doc', id: 'guides/robotics/projects/top-down-learned-grasp/README', label: 'Top-down learned grasp'},
+                {type: 'doc', id: 'guides/robotics/projects/peg-in-hole-with-impedance/README', label: 'Peg-in-hole with impedance'},
+                {type: 'doc', id: 'guides/robotics/projects/anygrasp-pipeline/README', label: 'AnyGrasp pipeline'},
+                {type: 'doc', id: 'guides/robotics/projects/visuomotor-pick/README', label: 'Visuomotor pick'},
+                {type: 'doc', id: 'guides/robotics/projects/in-hand-cube-reorientation/README', label: 'In-hand cube reorientation'},
+                {type: 'doc', id: 'guides/robotics/projects/cloth-folding/README', label: 'Cloth folding'},
+              ],
+            },
           ],
         },
         {

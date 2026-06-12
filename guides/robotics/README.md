@@ -812,13 +812,13 @@ test for whether your gripper holds the object against gravity.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Analytic 2D grasp | For polygonal objects, compute force-closure grasps; visualize friction cones | ⭐⭐⭐ |
-| Top-down learned grasp | Train or fine-tune a grasp-quality net on a small synthetic set; evaluate on real objects | ⭐⭐⭐⭐ |
-| Peg-in-hole with impedance | Implement spiral-search + impedance control to insert a peg; measure success rate vs. tolerance | ⭐⭐⭐⭐ |
-| AnyGrasp pipeline | Run a pretrained 6-DoF grasp net on point clouds from your depth camera; execute on a real arm | ⭐⭐⭐⭐⭐ |
-| Visuomotor pick | End-to-end policy from camera to grasp on a small object set in MuJoCo | ⭐⭐⭐⭐ |
-| In-hand cube reorientation | Train a multi-finger policy in sim to reorient a cube; quantify success/dropout | ⭐⭐⭐⭐⭐ |
-| Cloth folding | Pick-place primitive policy for folding a square cloth; measure final-state IoU | ⭐⭐⭐⭐⭐ |
+| [Analytic 2D grasp](projects/39-analytic-2d-grasp/README.md) | For polygonal objects, compute force-closure grasps; visualize friction cones | ⭐⭐⭐ |
+| [Top-down learned grasp](projects/40-top-down-learned-grasp/README.md) | Train or fine-tune a grasp-quality net on a small synthetic set; evaluate on real objects | ⭐⭐⭐⭐ |
+| [Peg-in-hole with impedance](projects/41-peg-in-hole-with-impedance/README.md) | Implement spiral-search + impedance control to insert a peg; measure success rate vs. tolerance | ⭐⭐⭐⭐ |
+| [AnyGrasp pipeline](projects/42-anygrasp-pipeline/README.md) | Run a pretrained 6-DoF grasp net on point clouds from your depth camera; execute on a real arm | ⭐⭐⭐⭐⭐ |
+| [Visuomotor pick](projects/43-visuomotor-pick/README.md) | End-to-end policy from camera to grasp on a small object set in MuJoCo | ⭐⭐⭐⭐ |
+| [In-hand cube reorientation](projects/44-in-hand-cube-reorientation/README.md) | Train a multi-finger policy in sim to reorient a cube; quantify success/dropout | ⭐⭐⭐⭐⭐ |
+| [Cloth folding](projects/45-cloth-folding/README.md) | Pick-place primitive policy for folding a square cloth; measure final-state IoU | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: A Top-Down Grasp Score from a Depth Image
 
