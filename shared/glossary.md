@@ -2211,6 +2211,13 @@ A fast open-source C++/Python library for rigid-body kinematics and dynamics —
 ### Pinhole camera model {#pinhole-camera-model}
 The simple geometric rule for how a camera turns a 3D point into a 2D pixel: imagine light passing through a single tiny hole onto a flat sensor behind it, so every world point projects along one straight ray to one pixel. In math, the point is first moved into the camera's frame, then divided by its depth (things twice as far appear half as big — this divide is exactly what creates perspective), then scaled by the [camera intrinsics](/shared/glossary/#camera-intrinsics). It ignores the lens's real thickness and its [distortion](/shared/glossary/#lens-distortion), which is why [calibration](/shared/glossary/#camera-calibration) adds distortion terms on top of it. Analogy: a pinhole camera (camera obscura) made from a shoebox — the model is named after exactly that bare-bones device, because its math assumes an idealized hole with no lens at all.
 
+### Pitch {#pitch}
+The rotation of a vehicle or object tilting forward or backward (like a nose-down or nose-up tilt of an airplane).
+* **Why it matters:** In robotics and aerospace, knowing which way an agent is tilting up or down is critical for balance, trajectory tracking, and keeping cameras pointed correctly. For example, if a drone pitches forward too much, it will fly forward rapidly but lose altitude.
+* **How it works:** Pitch is one of the three [Euler angles](/shared/glossary/#euler-angles) used to describe 3D orientation. It is rotation around the transverse (lateral or side-to-side) axis. In a [quadrotor](/shared/glossary/#quadrotor), pitch is controlled by making the front motors spin slower and the rear motors spin faster (to pitch forward), or vice-versa.
+* **Analogy:** Imagine nod-shaking your head "yes" (moving your chin up and down). Your head is pitching.
+* **Example:** When an autonomous car drives up a steep ramp, its pitch angle increases as the nose of the car points up.
+
 ### PixelCNN {#pixelcnn}
 An [autoregressive](/shared/glossary/#autoregressive-model) image model — a [CNN (Convolutional Neural Network)](/shared/glossary/#cnn) repurposed for generation — that draws a picture one pixel at a time, predicting each pixel from the pixels already drawn above it and to its left — like filling in a coloring grid square by square, always glancing back at what you have already colored to decide the next color. The image quality is strong and it can report an exact [probability](/shared/glossary/#probability-density) for any picture, but generating one is slow because the pixels must come out strictly in order, each waiting on the one before it.
 
