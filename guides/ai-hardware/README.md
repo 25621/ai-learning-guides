@@ -84,20 +84,20 @@ is largely about why and how to do better.
 
 ## Phase 1: How a Modern Computer Computes
 
-You can't understand GPUs without first understanding why CPUs aren't enough. This phase is the conceptual setup.
+You can't understand [GPUs](/shared/glossary/#gpu) without first understanding why [CPUs](/shared/glossary/#cpu) aren't enough. This phase is the conceptual setup.
 
 ### Concepts to Learn
 
-- **The memory wall**: the historical gap between CPU compute speed and memory bandwidth, and why it shaped everything that came after
+- **The memory wall**: the historical gap between [CPU](/shared/glossary/#cpu) compute speed and [memory bandwidth](/shared/glossary/#memory-bandwidth), and why it shaped everything that came after
 - **CPU vs GPU philosophy**:
-  - **CPU**: few powerful cores, deep pipelines, huge caches, branch prediction, out-of-order execution — optimized for **latency** on irregular code
-  - **GPU**: thousands of simpler cores, shallow pipelines, tiny per-thread cache, massive parallelism — optimized for **throughput** on regular code
+  - **[CPU](/shared/glossary/#cpu)**: few powerful cores, deep pipelines, huge caches, branch prediction, out-of-order execution — optimized for **latency** on irregular code
+  - **[GPU](/shared/glossary/#gpu)**: thousands of simpler cores, shallow pipelines, tiny per-thread cache, massive parallelism — optimized for **throughput** on regular code
 - **SIMD vs SIMT**:
-  - **SIMD** (Single Instruction Multiple Data): one instruction, many data elements per core (AVX-512, NEON)
-  - **SIMT** (Single Instruction Multiple Threads): one instruction, many threads — NVIDIA's variant; thread divergence and warps
-- **Roofline model** — the most important diagram in the field. Performance is bounded by the *minimum* of (peak FLOPs) and (peak memory bandwidth × arithmetic intensity)
-- **Arithmetic intensity**: FLOPs per byte of memory accessed. Higher = compute-bound. Lower = memory-bound. Most deep-learning ops are memory-bound
-- **Amdahl's law** — your serial fraction limits you no matter how much parallelism you add
+  - **[SIMD](/shared/glossary/#simd)** (Single Instruction Multiple Data): one instruction, many data elements per core ([AVX-512](/shared/glossary/#avx-512), NEON)
+  - **[SIMT](/shared/glossary/#simt)** (Single Instruction Multiple Threads): one instruction, many threads — NVIDIA's variant; thread divergence and warps
+- **[Roofline model](/shared/glossary/#roofline)** — the most important diagram in the field. Performance is bounded by the *minimum* of (peak [FLOPs](/shared/glossary/#flops)) and (peak [memory bandwidth](/shared/glossary/#memory-bandwidth) × [arithmetic intensity](/shared/glossary/#ai-arithmetic-intensity))
+- **[Arithmetic intensity](/shared/glossary/#ai-arithmetic-intensity)**: [FLOPs](/shared/glossary/#flops) per byte of memory accessed. Higher = compute-bound. Lower = memory-bound. Most deep-learning ops are memory-bound
+- **[Amdahl's law](/shared/glossary/#amdahls-law)** — your serial fraction limits you no matter how much parallelism you add
 
 ### The Roofline Diagram
 
@@ -131,11 +131,11 @@ Adding FLOPs there is wasted.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Hand-counted FLOPs | Count the FLOPs in one transformer block (attention + MLP) for a given shape | ⭐⭐ |
-| Roofline by hand | For 5 operations (matmul, layernorm, softmax, gelu, transpose), compute arithmetic intensity and predict which are memory-bound on an A100 | ⭐⭐⭐ |
-| Bandwidth measurement | Measure the actual achieved memory bandwidth of a simple copy kernel on your GPU; compare to the spec | ⭐⭐⭐ |
-| AVX-512 study | Write a vector sum in scalar, autovectorized, and intrinsic AVX-512 code; benchmark on a CPU | ⭐⭐⭐ |
-| GPU vs CPU bake-off | Run the same matmul on CPU (NumPy) and GPU (PyTorch); report wall-clock and FLOPs/sec | ⭐⭐ |
+| [Hand-counted FLOPs](projects/01-hand-counted-flops/README.md) | Count the FLOPs in one transformer block (attention + MLP) for a given shape | ⭐⭐ |
+| [Roofline by hand](projects/02-roofline-by-hand/README.md) | For 5 operations (matmul, layernorm, softmax, gelu, transpose), compute arithmetic intensity and predict which are memory-bound on an A100 | ⭐⭐⭐ |
+| [Bandwidth measurement](projects/03-bandwidth-measurement/README.md) | Measure the actual achieved memory bandwidth of a simple copy kernel on your GPU; compare to the spec | ⭐⭐⭐ |
+| [AVX-512 study](projects/04-avx-512-study/README.md) | Write a vector sum in scalar, autovectorized, and intrinsic AVX-512 code; benchmark on a CPU | ⭐⭐⭐ |
+| [GPU vs CPU bake-off](projects/05-gpu-vs-cpu-bake-off/README.md) | Run the same matmul on CPU (NumPy) and GPU (PyTorch); report wall-clock and FLOPs/sec | ⭐⭐ |
 
 ### Sample Code: Arithmetic Intensity in Practice
 

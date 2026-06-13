@@ -1030,7 +1030,24 @@ const sidebars = {
             },
           ],
         },
-        {type: 'doc', id: 'guides/ai-hardware/README', label: 'AI Hardware'},
+        {
+          type: 'category',
+          label: 'AI Hardware',
+          link: {type: 'doc', id: 'guides/ai-hardware/README'},
+          items: [
+            {
+              type: 'category',
+              label: 'Phase 1: How a Modern Computer Computes',
+              items: [
+                {type: 'doc', id: 'guides/ai-hardware/projects/hand-counted-flops/README', label: 'Hand-counted FLOPs'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/roofline-by-hand/README', label: 'Roofline by hand'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/bandwidth-measurement/README', label: 'Bandwidth measurement'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/avx-512-study/README', label: 'AVX-512 study'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/gpu-vs-cpu-bake-off/README', label: 'GPU vs CPU bake-off'},
+              ],
+            },
+          ],
+        },
       ],
     },
     {

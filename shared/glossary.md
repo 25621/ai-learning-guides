@@ -171,6 +171,10 @@ A way to rank chat models by having them go head-to-head: two models answer the 
 ### argmax {#argmax}
 The "which one is biggest?" operation: given a list of scores it returns the *position* of the largest one, not the value itself. The name is short for *argument of the maximum* — in math the "argument" is the input you hand a function, so `argmax` answers "which input gives the biggest output?" and returns that input's position. If the [logits](/shared/glossary/#logits) are `[1.2, 4.8, 0.3]`, `argmax` is `1` — the index of `4.8` — which the model reads as "pick token #1." Like scanning a class's test scores and naming the top student rather than reading out their mark. [Greedy decoding](/shared/glossary/#greedy-decoding) is just `argmax` applied to the logits at every step, so it always makes the same choice and never gambles.
 
+### Amdahl's law {#amdahls-law}
+A formula that states the speedup of a program from parallelization is strictly limited by its sequential (serial) fraction, no matter how many processors or [GPU](/shared/glossary/#gpu) cores you add.
+**Analogy:** A team of construction workers building a house. If painting the house (a task that can be parallelized among 10 workers) takes 2 hours, but laying the foundation (a task that must be done sequentially by 1 person) takes 10 hours, then even if you hire 100 painters to paint the house instantly, the entire construction will still take at least 10 hours. The sequential bottleneck (the foundation) limits the maximum speedup.
+
 ### Artifact {#artifact}
 An unwanted distortion that a process adds to a signal — something that was not in the original but appears in the output, usually because detail was thrown away to save space. In lossy audio or image compression (an MP3, a JPEG, or a [neural codec](/shared/glossary/#neural-codec)), squeezing the data too hard leaves audible smears, metallic ringing, or muffled detail in sound, and blocky squares or halos around edges in images. Like a photocopy of a photocopy — each pass loses fidelity and adds smudges the original never had. Example: encoding music at a very low [bitrate](/shared/glossary/#bitrate) can make cymbals sound watery or add a faint "underwater" warble — those are compression artifacts.
 
@@ -215,11 +219,15 @@ A model that generates a sequence one piece at a time, where each new piece is p
 * **Analogy**: Imagine trying to place a completely plain, round dinner plate back onto its marked spot on a table. If you rotate the plate by 90 degrees, it still fits perfectly and looks exactly the same, even though individual microscopic ceramic particles have moved. You shouldn't be penalized for rotating it, because the plate's overall shape is perfectly aligned with the spot.
 * **Example**: In a robotic warehouse, when a robot arm needs to pick up a cylindrical can of soup, the vision system uses `ADD-S` to measure how accurately it estimated the can's pose. Because the can is symmetric around its vertical axis, any rotation around that axis is equally good for the gripper to grab it.
 
-### AWQ {#awq}
-Activation-aware Weight Quantization — preserve weights important to large activations
-
 ### AV1 {#av1}
 A modern, royalty-free [video codec](/shared/glossary/#video-codec) — the rules for squeezing video into a small file. AV1 compresses noticeably better than older codecs like [H.264](/shared/glossary/#h264) — often 30–50% smaller files at the same quality — but it is much slower to decode, so reading AV1 video back into frames costs more CPU time. Analogy: it is like a denser ZIP format that saves disk space but takes longer to unzip. Example: storing 100 clips as AV1 `.webm` files might use a third of the disk of the same clips as H.264 `.mp4`, but take several times longer to decode each clip during training.
+
+### AVX-512 {#avx-512}
+Advanced Vector Extensions 512 — a set of [SIMD](/shared/glossary/#simd) instructions for x86 CPUs that can operate on 512-bit wide vector registers. It allows the [CPU](/shared/glossary/#cpu) to perform mathematical operations (like addition or multiplication) on up to 16 single-precision (32-bit) or 8 double-precision (64-bit) floating-point numbers simultaneously in a single clock cycle.
+**Analogy:** A wide-plow snowblower. Instead of shoveling a driveway one scoop at a time (scalar operations), or using a standard small snowblower (older 128-bit or 256-bit SIMD), the wide-plow snowblower clears a massive 512-inch path in a single pass, clearing the snow (processing data) much faster.
+
+### AWQ {#awq}
+Activation-aware Weight Quantization — preserve weights important to large activations
 
 ### Axis-angle {#axis-angle}
 A way to describe a 3D rotation with one axis (a direction you spin around) and one angle (how far you spin), packed into a single three-number vector whose direction is the axis and whose length is the angle in radians. It is the most compact honest description of a rotation — three numbers for three [degrees of freedom](/shared/glossary/#degrees-of-freedom), with none of the redundancy of a nine-number [rotation matrix](/shared/glossary/#se3--so3) — which is exactly why optimizers and learned models prefer it as the variable they adjust. Analogy: to point a friend at a rotation, you say "tilt your head to the left (the axis) by 30 degrees (the angle)"; that one instruction *is* the axis-angle form. The version used in code is often called a *rotation vector*: the same idea, where the vector's length directly carries the angle.
@@ -615,6 +623,10 @@ A specific type of [distribution shift](/shared/glossary/#distribution-shift) wh
 * **Why it matters:** Because behavior cloning is trained on a static expert dataset, the policy never learns how to correct for drift. When a small error shifts the robot off the expert's path, the policy encounters unfamiliar states, makes larger errors, and eventually experiences catastrophic failure.
 * **Analogy:** Imagine trying to walk along a tightrope. An expert demonstration shows you perfectly balanced in the middle of the rope. If you step slightly to the left, you are now in a state you never saw the expert in. Since you do not know the correct action to recover from leaning left, you continue to fall further left.
 * **Example:** A self-driving car policy is trained only on perfect human driving down the center of the lane. If a gust of wind pushes the car near the lane marker, this new state is outside the training distribution (covariate shift), and the model fails to steer back. [DAgger](/shared/glossary/#dagger) solves this by collecting expert labels on these drifted states.
+
+### CPU {#cpu}
+Central Processing Unit — the primary processor of a computer, designed as a general-purpose brain. It consists of a few highly powerful cores optimized for low [latency](/shared/glossary/#latency) on irregular, sequential tasks. It uses deep pipelines, large caches, branch prediction, and out-of-order execution to run single-threaded programs as fast as possible.
+**Analogy:** A master chef who can handle complex, delicate, and changing recipes one step at a time. The chef is extremely fast and smart at making decisions (like deciding what to cook next based on what ingredients are left), but can only work on a few dishes at once.
 
 ### CQL {#cql}
 Conservative Q-Learning — an [offline RL](/shared/glossary/#offline-rl) method that adds one extra penalty term to the standard [Q-learning](/shared/glossary/#q-learning) loss to cure the [out-of-distribution](/shared/glossary/#out-of-distribution) value blow-up. The penalty pushes the predicted value *down* for actions the network is tempted to overrate and pulls it *up* only for the actions actually present in the dataset, so the learned `Q` is deliberately [pessimistic](/shared/glossary/#pessimism) about anything unfamiliar. With unseen actions no longer looking artificially attractive, the greedy policy stays near the [behavior policy](/shared/glossary/#behavior-policy)'s data and avoids the fantasy high-value actions that make naive offline Q-learning collapse. Analogy: a cautious appraiser who marks down any house they have not personally inspected, so you never overpay for one sight-unseen. CQL is the value-pessimism branch of offline RL; [IQL](/shared/glossary/#iql) is the simpler modern alternative, and keeping the policy close to the data instead is [policy constraint](/shared/glossary/#policy-constraint).
@@ -1329,6 +1341,10 @@ Gated Linear Unit — a layer that computes *two* things from the input and mult
 ### GPTQ {#gptq}
 Short for **Generative Pre-trained Transformer Quantization** — a [post-training quantization (PTQ)](/shared/glossary/#ptq--qat) method that compresses each layer's [weights](/shared/glossary/#weights) row by row, using second-order ([Hessian](/shared/glossary/#hessian)) information to choose the int8 / int4 values that minimize the reconstruction error one layer at a time. Despite the name, GPTQ is not GPT-specific; it works on any [transformer](/shared/glossary/#transformer).
 
+### GPU {#gpu}
+Graphics Processing Unit — a specialized processor designed for high-throughput parallel computation. Instead of a few powerful cores, it consists of thousands of simpler cores running in parallel. It is optimized for repetitive, highly structured mathematical operations like [matrix multiplication](/shared/glossary/#matmul) or pixel rendering.
+**Analogy:** A massive factory assembly line with thousands of basic workers. If you need to make one complicated, custom sculpture (a sequential task), the workers will struggle compared to the master chef. But if you need to package millions of identical boxes (a highly parallel task), the factory workers will finish it thousands of times faster than the chef.
+
 ### GQA {#gqa}
 Grouped-Query Attention — sharing K/V [heads](/shared/glossary/#heads) across query heads; primary KV-cache saver at serving time
 
@@ -1620,7 +1636,8 @@ A prompt — sometimes plain English, sometimes a gradient-found suffix like in 
 The undesired variation in the time delay between periodic events, such as spikes or fluctuations in the execution rate of a control loop or message delivery. In robotics, a control loop commanded to run at 1 kHz expects exactly 1.0 milliseconds between steps; jitter is the deviation from this target (e.g., a step takes 1.2 ms, then 0.8 ms). High jitter can introduce instability in physical systems, causing jerky motions, tracking errors, or actuator damage. **Analogy:** Clapping your hands exactly once every second. If you clap at 1.0s, 2.0s, and 3.0s, you have zero jitter. If you clap at 1.1s, 1.8s, and 3.2s, your rhythm is erratic; that timing variability is jitter. On standard operating systems, background processes can interrupt the controller thread, causing high jitter; this is solved by running on a real-time kernel like [PREEMPT_RT](/shared/glossary/#preempt-rt).
 
 ### Kernel {#kernel}
-A single function that runs on the GPU (or CPU) to carry out one operation, such as a matrix multiply or an element-wise add.
+A specialized function designed to run in parallel across many execution threads on a [GPU](/shared/glossary/#gpu) (or CPU) to carry out a single bulk operation, such as a [matrix multiply](/shared/glossary/#matmul) or an element-wise addition.
+**Analogy:** A recipe given to thousands of cooks in a massive kitchen, where each cook follows the exact same instructions to chop their own individual vegetable. Instead of one chef chopping every vegetable one after another (a single thread), the kitchen executes the "chopping kernel" all at once across thousands of cooks (threads), transforming the entire heap of vegetables in a single step.
 
 ### Kernel fusion {#kernel-fusion}
 Combining several small operations into one [kernel](/shared/glossary/#kernel) so the hardware reads and writes memory fewer times and pays fewer launch costs.
@@ -1887,6 +1904,10 @@ A picture of sound: a 2D map with time along one axis and pitch along the other,
 ### Memorization {#memorization}
 When an [LLM](/shared/glossary/#llm) reproduces a chunk of its training data verbatim instead of generalizing from it — give it the right opening prompt and out comes the original passage word for word. Like a student who recites a textbook sentence rather than explaining the idea; useful for trivia, dangerous for copyright, PII, and security. [Deduplication](/shared/glossary/#deduplication) at training time and prompt filtering at serving time are the main mitigations.
 
+### Memory bandwidth {#memory-bandwidth}
+The rate at which data can be read from or written to a processor's memory (such as HBM or system RAM) by the processor's cores, typically measured in gigabytes per second (GB/s) or terabytes per second (TB/s). It is the slope of the memory-bound region in the [roofline](/shared/glossary/#roofline) model.
+**Analogy:** The width of a highway. Even if you have ultra-fast sports cars (fast compute cores), if the highway only has one lane (low memory bandwidth), the cars will get stuck in traffic (the processor will stall waiting for data to arrive from memory). Increasing memory bandwidth is like adding more lanes to the highway.
+
 ### Memory leak {#memory-leak}
 An unintended increase in memory usage over time, often caused in PyTorch by holding onto references to the [loss function](/shared/glossary/#loss-function) or other parts of the [dynamic computation graph](/shared/glossary/#dynamic-computation-graph) across training iterations.
 
@@ -2103,6 +2124,10 @@ A generative model that starts from simple random noise (usually a plain Gaussia
 
 ### np.linalg.solve {#nplinalgsolve}
 A NumPy function that solves a system of linear equations `Ax = b` for the unknown vector `x`, given a square matrix `A` and a known vector `b`. It is the practical alternative to forming the [matrix inverse](/shared/glossary/#matrix-inverse) and multiplying by it: rather than first computing `A⁻¹` and then `A⁻¹b` (two costly steps), it finds `x` in a single pass, which is both faster and less prone to rounding error. Analogy: to undo "multiply by 3" you don't first write out "1 ÷ 3" and then multiply — you just divide by 3 directly; `np.linalg.solve` divides by a whole matrix at once. In RL it gives the closed-form answer to [policy evaluation](/shared/glossary/#policy-evaluation) in one line — `V = np.linalg.solve(I − γPπ, rπ)` — the exact [value function](/shared/glossary/#value-function) for a fixed [policy](/shared/glossary/#policy) without iterating the [Bellman equation](/shared/glossary/#bellman-equation).
+
+### NumPy {#numpy}
+A foundational Python library for scientific computing, providing support for large, multi-dimensional arrays and matrices, along with a collection of high-level mathematical functions to operate on them. It executes operations in optimized C code, making it much faster than standard Python loops. Unlike [PyTorch](/shared/glossary/#pytorch), NumPy arrays run only on the [CPU](/shared/glossary/#cpu) and do not support automatic differentiation ([autograd](/shared/glossary/#autograd)).
+**Analogy:** A highly efficient accountant who works solely with spreadsheets. The accountant is incredibly fast at doing math on whole columns and rows of numbers without having to type out every single equation, but works only at their office desk (the CPU) and doesn't record their steps to automatically undo or trace them backward (no autograd).
 
 ### NVAE {#nvae}
 Short for *Nouveau VAE* — a [hierarchical VAE](/shared/glossary/#hierarchical-vae) from NVIDIA (2020) that stacks many layers of latent variables through a deep network built from depthwise separable [convolutions](/shared/glossary/#convolution-layers) and [residual connections](/shared/glossary/#residual-connection), reaching then state-of-the-art image generation quality. Like a skyscraper where each floor refines the blueprint handed down from above — the top floors sketch the overall shape and the lower floors fill in the fine details. The name "Nouveau" is French for "new," positioning it as a modern reimagining of the classic VAE.
@@ -2823,8 +2848,13 @@ A training [loss](/shared/glossary/#loss-function) that scores each example with
 ### SiLU {#silu}
 Sigmoid Linear Unit — just another name for [Swish](/shared/glossary/#swish), the activation `x · σ(x)`. The two words mean the exact same function: you will see "SiLU" in code (PyTorch's `nn.SiLU`) and "Swish" in papers.
 
+### SIMD {#simd}
+Single Instruction Multiple Data — a computer architecture execution model where a single instruction operates on multiple data points simultaneously using wide vector registers (such as [AVX-512](/shared/glossary/#avx-512) on CPUs or NEON on ARM).
+**Analogy:** A fitness instructor leading an aerobics class. The instructor calls out a single instruction ("Raise your left arm!"), and all fifty participants in the room perform that exact action at the same moment on their own bodies, processing fifty data points (arms) with one command.
+
 ### SIMT {#simt}
-Single Instruction Multiple Threads; NVIDIA's execution model
+Single Instruction Multiple Threads — an execution model used in [GPUs](/shared/glossary/#gpu) where a single instruction is executed across multiple independent threads (a warp of 32 threads). Unlike [SIMD](/shared/glossary/#simd) where the programmer must think about vector registers and packing data explicitly, SIMT allows writing code for a single thread, while the hardware handles executing it across parallel threads and masking out inactive ones during divergence.
+**Analogy:** A school classroom where thirty students are taking the same exam. The teacher reads out a single instruction ("Answer question 3 on page 5"). Every student follows that instruction, but they write their answers independently. If some students finish early, they sit quietly (masked off) while the others catch up.
 
 ### Sim-to-real {#sim-to-real}
 The process of transferring robotic control policies or models trained in simulation (sim) to physical hardware (real). Because simulators cannot perfectly replicate real-world physics, friction, contact dynamics, or sensor noise (a gap known as the [reality gap](/shared/glossary/#reality-gap)), direct transfer often fails, requiring techniques like [domain randomization](/shared/glossary/#domain-randomization) or [domain adaptation](/shared/glossary/#domain-adaptation) to ensure the [policy](/shared/glossary/#policy) generalizes to physical hardware.
@@ -3136,6 +3166,10 @@ PyTorch's launcher command that starts one process per GPU and sets the `RANK`, 
 
 ### TorchScript {#torchscript}
 The legacy serialization/IR for PyTorch; superseded by `torch.export`
+
+### TPU {#tpu}
+Tensor Processing Unit — a custom application-specific integrated circuit (ASIC) designed by Google specifically for machine learning workloads. Unlike general-purpose [CPUs](/shared/glossary/#cpu) or parallel [GPUs](/shared/glossary/#gpu), a TPU is built around a matrix multiply unit (MXU) that uses a systolic array, where data flows directly through a 2D grid of multiply-add units without constantly reading and writing back to a cache.
+**Analogy:** An automated sorting machine in a factory. A GPU is like a team of extremely fast packers, but they still have to pick up items from a warehouse shelf (cache/registers) and put them down. A TPU is like a conveyor belt system where items (data) flow continuously through the machines and get processed as they move, requiring no storage steps in between.
 
 ### Trained or just prompted {#trained-or-just-prompted}
 A choice in how you create a small helper model (like a [router model](/shared/glossary/#router-model)). You can either "train" it (by fine-tuning its weights on thousands of examples, like sending someone to medical school) or "just prompt" it (by taking an existing smart model and simply giving it a written instruction like "You are a router, decide if this question is hard or easy," like handing a smart assistant a checklist). Training takes more effort upfront but is faster and cheaper to run; prompting is quick to set up but costs more per request since you process the instructions every time.
