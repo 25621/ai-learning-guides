@@ -1148,7 +1148,7 @@ A robot is not a single algorithm; it is a system of dozens of interacting proce
 - **System identification** — fit dynamics-parameter values from real-robot trajectories. The unglamorous prerequisite of any serious sim-to-real.
 - **Domain randomization at scale** — over masses, frictions, latencies, communication delays, control gains, sensor noise, visuals. The list of randomized variables is itself an engineering artifact.
 - **Real-time systems** — control loops are hard-real-time-adjacent:
-  - **Linux + PREEMPT_RT** — soft to hard real time; sufficient for kHz loops on most hardware
+  - **Linux + [PREEMPT_RT](/shared/glossary/#preempt-rt)** — soft to hard real time; sufficient for kHz loops on most hardware
   - **Dedicated MCUs / FPGAs** — for the innermost current loops
   - **Memory allocation** — never `malloc` in the control thread; preallocate everything
   - **Logging discipline** — bounded queues, lock-free where possible, never log from the hot path synchronously
@@ -1158,7 +1158,7 @@ A robot is not a single algorithm; it is a system of dozens of interacting proce
   - **DDS QoS** — reliability, durability, history; the place ROS 2 bugs live
 - **Drivers and HALs** — every motor, sensor, and bus has its driver, its firmware, its quirks. A well-abstracted hardware-abstraction-layer is a major asset; a leaky one is a major liability.
 - **Logging, replay, observability** — `rosbag` / MCAP / custom; the same discipline as production software systems, but with images, point clouds, and 1 kHz time series. Replayability is the single highest-ROI feature you build.
-- **Continuous evaluation** — automated test suites for behaviors, integration tests in simulation, hardware-in-the-loop tests. A robotics CI/CD that runs nightly catches regressions you would otherwise discover by smashing into a wall.
+- **Continuous evaluation** — automated test suites for behaviors, integration tests in simulation, hardware-in-the-loop tests. A robotics CI/CD that runs nightly catches [regressions](/shared/glossary/#regression-testing) you would otherwise discover by smashing into a wall.
 - **Safety**:
   - **Physical safety** — emergency stops, force/torque limits, watchdogs, light curtains
   - **Software safety** — input validation at every layer, bounded state, fail-safe defaults, redundant estimators
@@ -1200,11 +1200,11 @@ The companies that do it earlier ship sooner.
 | Project | Description | Difficulty |
 |---------|-------------|------------|
 | [URDF → MJCF migration](projects/62-urdf-mjcf-migration/README.md) | Take a hobbyist URDF; clean it up; add collision meshes, inertias; load in MuJoCo | ⭐⭐⭐ |
-| [System ID on a real arm](projects/63-system-id-on-a-real-arm/README.md) | Excite joints with chirp signals; fit a friction + inertia model; compare to URDF defaults | ⭐⭐⭐⭐ |
+| [System ID on a real arm](projects/63-system-id-on-a-real-arm/README.md) | Excite joints with [chirp signals](/shared/glossary/#chirp); fit a friction + inertia model; compare to URDF defaults | ⭐⭐⭐⭐ |
 | [Latency budget instrument](projects/64-latency-budget-instrument/README.md) | Trace photon-to-actuation latency across your stack; report 5/50/95 percentiles | ⭐⭐⭐⭐ |
 | [ROS 2 lifecycle node](projects/65-ros-2-lifecycle-node/README.md) | Implement a perception node with managed lifecycle; verify recovery from sensor disconnect | ⭐⭐⭐ |
 | [MCAP logging + Foxglove](projects/66-mcap-logging-foxglove/README.md) | Log a complete robot run; replay; visualize trajectories, camera, transforms | ⭐⭐⭐ |
-| [Real-time loop drill](projects/67-real-time-loop-drill/README.md) | Run a 1 kHz control loop on PREEMPT_RT; measure jitter under load; compare to vanilla Linux | ⭐⭐⭐⭐⭐ |
+| [Real-time loop drill](projects/67-real-time-loop-drill/README.md) | Run a 1 kHz control loop on [PREEMPT_RT](/shared/glossary/#preempt-rt); measure jitter under load; compare to vanilla Linux | ⭐⭐⭐⭐⭐ |
 | [Sim-to-real gap forensics](projects/68-sim-to-real-gap-forensics/README.md) | Pick one transfer failure; isolate whether perception, dynamics, or actuation caused it | ⭐⭐⭐⭐⭐ |
 | [Eval harness](projects/69-eval-harness/README.md) | Build a 50-task sim eval that runs nightly with seeded variations; produce a pass-rate dashboard | ⭐⭐⭐⭐ |
 
