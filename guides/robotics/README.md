@@ -1266,7 +1266,7 @@ Once you have a robot that can pick a block and walk across a room, you discover
 - **[Humanoids](/shared/glossary/#humanoid)** — the form factor bet of the late 2020s: anthropomorphic so the world's tools and spaces don't need to change. The combined challenge of bipedal [legged locomotion](/shared/glossary/#legged-locomotion), bimanual [manipulation](/shared/glossary/#manipulation), and whole-body control all at once. Standing-up policies, fall recovery, hand dexterity are all open.
 - **[Dexterous manipulation](/shared/glossary/#dexterous-manipulation)** — multi-fingered, in-hand, contact-rich. [RL](/shared/glossary/#reinforcement-learning) in simulation made this tractable for cubes and small objects; transfer to truly varied objects is still hard.
 - **[World models](/shared/glossary/#world-model) for embodied AI** — generative video/physics models conditioned on actions ([Genie](/shared/glossary/#genie), [DreamerV3](/shared/glossary/#dreamerv3), NVIDIA Cosmos lineage); the closest thing to "imagined [rollouts](/shared/glossary/#rollout)" for [planning](/shared/glossary/#planning).
-- **Foundation-model-driven task and motion planning** — use an [LLM](/shared/glossary/#llm)/[VLM](/shared/glossary/#vlm) to propose subgoals, [primitives](/shared/glossary/#saycan), or code, with classical planners executing each step. [SayCan](/shared/glossary/#saycan), ProgPrompt, Code-as-Policies lineage.
+- **Foundation-model-driven task and motion planning** — use an [LLM](/shared/glossary/#llm)/[VLM](/shared/glossary/#vlm) to propose subgoals, [primitives](/shared/glossary/#primitives), or code, with classical planners executing each step. [SayCan](/shared/glossary/#saycan), ProgPrompt, Code-as-Policies lineage.
 - **[Long-horizon autonomy](/shared/glossary/#long-horizon-autonomy)** — keeping success rates high over thousands of steps. Error compounds; recovery behaviors matter more than headline success rates.
 - **Whole-body manipulation** — using the entire robot body, not just the end-effector: leaning on a counter, kicking a box aside, bracing against a wall.
 - **Soft robotics** — actuators that deform rather than rotate; pneumatic muscles, dielectric elastomers, hydrogels. New design space, new control challenges, often inherently safe for human interaction.
@@ -1317,12 +1317,12 @@ Once you have a robot that can pick a block and walk across a room, you discover
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| [Talk-to-robot demo](projects/70-talk-to-robot-demo/README.md) | Use an [LLM](/shared/glossary/#llm) to decompose "make me coffee" into primitives; execute in a sim kitchen | ⭐⭐⭐⭐ |
+| [Talk-to-robot demo](projects/70-talk-to-robot-demo/README.md) | Use an [LLM](/shared/glossary/#llm) to decompose "make me coffee" into [primitives](/shared/glossary/#primitives); execute in a sim kitchen | ⭐⭐⭐⭐ |
 | [VLA fine-tune](projects/71-vla-fine-tune/README.md) | Take an open VLA; fine-tune on a small task; evaluate vs. from-scratch [BC](/shared/glossary/#bc) | ⭐⭐⭐⭐⭐ |
 | [World-model rollout](projects/72-world-model-rollout/README.md) | Train a tiny action-conditioned video model; planner picks the action chunk whose imagined rollout matches the goal image | ⭐⭐⭐⭐⭐ |
 | [CBF safety filter](projects/73-cbf-safety-filter/README.md) | Wrap a learned [policy](/shared/glossary/#policy) with a control-barrier-function safety filter; show it prevents collisions a naive policy causes | ⭐⭐⭐⭐⭐ |
 | [Long-horizon eval](projects/74-long-horizon-eval/README.md) | Build a 50-step task; measure how per-step success rate × N compounds vs. observed task success | ⭐⭐⭐⭐ |
-| [[Cross-embodiment](/shared/glossary/#cross-embodiment) study](projects/75-cross-embodiment-study/README.md) | Train a [policy](/shared/glossary/#policy) on robot A, deploy on robot B; characterize the transfer gap | ⭐⭐⭐⭐⭐ |
+| [Cross-embodiment study](projects/75-cross-embodiment-study/README.md) | Train a [policy](/shared/glossary/#policy) on robot A, deploy on robot B; characterize the transfer gap | ⭐⭐⭐⭐⭐ |
 
 ### Key Insight
 
