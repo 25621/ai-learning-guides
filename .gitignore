@@ -12,3 +12,4 @@ __pycache__/
 docusaurus-site/.docusaurus/
 docusaurus-site/build/
 docusaurus-site/node_modules/
+/docs/
