@@ -708,10 +708,14 @@ A way to combine two 3D vectors that — unlike the [dot product](/shared/glossa
 This is where the cross product comes in. By taking the cross product of a [position vector](/shared/glossary/#position-vector) (pointing to *any* spot on the track) and the track's *direction*, you create a new vector called the line's **moment**. Think of this moment as a unique fingerprint for the line's exact location in space. The magic of this math is that no matter which spot you pick along that specific track, the cross product always spits out the exact same fingerprint. But if you do the math on the *other* parallel track, you get a completely different fingerprint. So, by keeping just two things — the direction and this fingerprint — you perfectly lock down exactly which line you are talking about.
 
 ### cuBLAS {#cublas}
-NVIDIA's optimized library of dense linear-algebra [kernels](/shared/glossary/#kernel); PyTorch calls it for matrix multiplication on [CUDA](/shared/glossary/#cuda).
+NVIDIA's highly optimized library of dense linear-algebra [kernels](/shared/glossary/#kernel); [PyTorch](/shared/glossary/#pytorch) calls it under the hood to perform fast [matrix multiplication](/shared/glossary/#matmul) on [CUDA](/shared/glossary/#cuda)-enabled [GPUs](/shared/glossary/#gpu).
+**Analogy:** A specialized calculator programmed with the fastest possible shortcuts for doing matrix multiplication.
+**Example:** Calling `torch.matmul(A, B)` on a CUDA tensor uses cuBLAS, bypassing the need for developers to write custom CUDA kernels for standard matrix operations.
 
 ### CUDA {#cuda}
-NVIDIA's GPU compute backend; tensors on the `cuda` device run their kernels here
+Compute Unified Device Architecture — NVIDIA's parallel computing platform and programming model that allows developers to use a C-like programming language to execute code on the [GPU](/shared/glossary/#gpu).
+**Analogy:** A translator that translates standard programming commands into instructions that the massive parallel hardware of the GPU can understand.
+**Example:** Moving a PyTorch tensor to the GPU with `x = x.to('cuda')` registers the memory with the CUDA driver, allowing subsequent operations like `x + 1` to run parallel [CUDA kernels](/shared/glossary/#kernel) on the hardware.
 
 ### CUDA core {#cuda-core}
 The basic arithmetic worker inside an NVIDIA [GPU](/shared/glossary/#gpu) — a tiny unit that performs one simple math operation (such as a single multiply-add) for one thread at a time. A modern GPU has thousands of them, bundled into [SMs](/shared/glossary/#sm), and they all crunch numbers side by side, which is what makes a GPU so fast at the massively repetitive math behind deep learning. Think of one CUDA core as a single cashier: not especially fast on its own, but put thousands of them in one store and they ring up a huge crowd in the time a single super-fast cashier would clear one line. CUDA cores handle everyday general-purpose (FP32) math, while the heaviest [matrix multiplications](/shared/glossary/#matmul) are handed off to the specialized [Tensor Cores](/shared/glossary/#tensor-core) that sit right alongside them.
@@ -728,7 +732,9 @@ An [intrinsic-motivation](/shared/glossary/#intrinsic-motivation) approach in re
 **Why it matters:** It helps agents learn to navigate complex environments when success is rare (e.g. [Montezuma's Revenge](/shared/glossary/#montezumas-revenge)), but it can fail when confronted with unlearnable, random noise (the [noisy-TV problem](/shared/glossary/#noisy-tv-problem)), prompting methods like [ICM](/shared/glossary/#icm) to predict surprise only in a controllable [feature space](/shared/glossary/#feature-space).
 
 ### Custom op {#custom-op}
-A user-defined operation registered with PyTorch (e.g. via `torch.library.custom_op`) so it behaves like a built-in — including working with [`torch.compile`](/shared/glossary/#torchcompile).
+A user-defined operation registered with [PyTorch](/shared/glossary/#pytorch) (e.g. via `torch.library.custom_op`) so it behaves like a built-in operator. Registering a custom operator is essential when writing custom [CUDA](/shared/glossary/#cuda) or [Triton](/shared/glossary/#triton) kernels because it ensures that PyTorch's auto-differentiation and compiler engines can trace the operation without breaking.
+**Analogy:** Adding a new recipe directly to a restaurant's standard kitchen menu. Instead of having to explain the unique recipe to the cooks every time, registering it as a custom op allows the kitchen's automated system to track, order, and cook it just like any other standard dish.
+**Example:** Registering a custom Triton [softmax](/shared/glossary/#softmax) kernel with a custom backward formula ensures that [`torch.compile`](/shared/glossary/#torchcompile) can compile the entire forward and backward training pass without falling back to slow [eager mode](/shared/glossary/#eager-mode) execution.
 
 ### CUTLASS {#cutlass}
 NVIDIA's open template library for matmul kernels
@@ -1713,7 +1719,9 @@ A specialized function designed to run in parallel across many execution threads
 **Analogy:** A recipe given to thousands of cooks in a massive kitchen, where each cook follows the exact same instructions to chop their own individual vegetable. Instead of one chef chopping every vegetable one after another (a single thread), the kitchen executes the "chopping kernel" all at once across thousands of cooks (threads), transforming the entire heap of vegetables in a single step.
 
 ### Kernel fusion {#kernel-fusion}
-Combining several small operations into one [kernel](/shared/glossary/#kernel) so the hardware reads and writes memory fewer times and pays fewer launch costs.
+Combining several sequential mathematical operations into a single [kernel](/shared/glossary/#kernel) to reduce memory access overhead. In deep learning, many operations (like activation functions or normalizations) are memory-bound, meaning the time spent reading and writing data to slow [global memory (HBM)](/shared/glossary/#hbm) dominates the compute time. Fusing these operations keeps intermediate values in fast [registers](/shared/glossary/#registers) on the chip, avoiding slow memory roundtrips.
+**Analogy:** A worker who needs to wash, dry, and fold a shirt. Instead of walking the shirt to the dryer in another building after washing (writing to global memory), and walking it back to fold (reading from global memory), the worker performs all three steps at a single workstation (in registers) before putting the finished shirt away.
+**Example:** Combining a LayerNorm [normalization](/shared/glossary/#normalization) operation and a linear projection into a single [Triton](/shared/glossary/#triton) kernel avoids writing intermediate normalized values to HBM and reading them back, saving substantial memory bandwidth.
 
 ### Keyframe {#keyframe}
 A frame chosen to anchor a specific moment in a video — the picture you fix in place first and then build motion around. The term comes from hand-drawn animation, where a lead artist draws the important "key" poses and assistants fill in the frames between them. In long-form generation you create a few keyframes spread seconds apart to lock down how the scene looks at those points, then use an [image-to-video](/shared/glossary/#i2v) or [frame-interpolation](/shared/glossary/#frame-interpolation) model to invent the frames in between — a form of [hierarchical generation](/shared/glossary/#hierarchical-generation). Choosing keyframes well matters: two that are too different cannot be smoothly bridged.
@@ -3319,7 +3327,9 @@ The process of taking a geometric path (a sequence of positions in space) and as
 **Example:** A factory sorting robot. Once a sampling-based planner finds a collision-free geometric path from the pickup bin to the drop box, TOPP calculates the optimal velocity profile along that path, allowing the robot to move at its physical limits without damaging its motors.
 
 ### torch.compile {#torchcompile}
-The PyTorch 2.x API that traces a model into a graph and generates optimized, [fused kernels](/shared/glossary/#kernel-fusion), speeding up [eager mode](/shared/glossary/#eager-mode) code with a single call.
+The PyTorch 2.x API that JIT-compiles PyTorch code into optimized [CUDA](/shared/glossary/#cuda) or [Triton](/shared/glossary/#triton) kernels. It traces the model execution to capture a computation graph, performs optimization passes like [kernel fusion](/shared/glossary/#kernel-fusion) and dead-code elimination, and generates fast compiled kernels, speeding up standard [eager mode](/shared/glossary/#eager-mode) code.
+**Analogy:** A translator who translates a book page-by-page as you read it (eager mode), versus a translator who reads the entire chapter ahead of time, optimizes the sentence flow, merges redundant phrases, and prints out a clean, polished copy for you to read fast (compiled mode).
+**Example:** Wrapping a model with `compiled_model = torch.compile(model)` invokes the Inductor compiler, which fuses adjacent element-wise operations (like linear bias + ReLU) into single compiled kernels to speed up execution.
 
 ### torch.export {#torchexport}
 The modern PyTorch API that captures a model into a standalone graph; the foundation for deployment paths like [ExecuTorch](/shared/glossary/#executorch) and [AOTInductor](/shared/glossary/#aotinductor).
@@ -3380,7 +3390,9 @@ Pinpointing a 3D location by intersecting two (or more) lines of sight to it. Ea
 A cheap, fast check whose only job is to sound the alarm the instant something goes wrong — named after the thin wire that, when stepped on, sets off a trap or flare. In model deployment a quick metric like [perplexity](/shared/glossary/#perplexity) is used as a tripwire: it won't tell you *what* broke, but it spikes the moment quality drops, so it catches a bad build before the slower, fuller tests even run.
 
 ### Triton {#triton}
-A Python-flavored language for writing GPU kernels, developed by OpenAI
+An open-source, Python-like programming language and compiler developed by OpenAI for writing highly optimized [GPU](/shared/glossary/#gpu) [kernels](/shared/glossary/#kernel). Triton allows developers with no C++/CUDA expertise to write high-performance GPU code by abstracting away warp scheduling, register allocation, and memory coalescing, while still providing control over block-level memory staging.
+**Analogy:** A block-building game where you design rooms (block-level operations) and let the computer handle laying the individual bricks and wiring (warp scheduling and registers).
+**Example:** Writing a [softmax](/shared/glossary/#softmax) kernel in Triton allows you to load rows of data into block pointers and use simple APIs like `tl.sum`, which Triton's compiler compiles into highly optimized GPU machine instructions.
 
 ### Triton Inference Server {#triton-inference-server}
 NVIDIA's production server for hosting models behind an HTTP/gRPC API, with [batching](/shared/glossary/#batching) and multi-model support; unrelated to the [Triton](/shared/glossary/#triton) kernel language despite the shared name.
@@ -3409,7 +3421,9 @@ A widely used action-recognition video dataset from the University of Central Fl
 **Analogy:** Estimating how a crowd of people walking through a winding maze will spread out. An [EKF](/shared/glossary/#ekf) assumes the maze is a straight line locally and projects the crowd's path. A UKF places a few representative "scouts" (sigma points) at the front, middle, and edges of the crowd, has them walk through the actual winding maze, and then reconstructs where the rest of the crowd must be based on where the scouts ended up.
 
 ### Underflow {#underflow}
-Condition where a floating-point value is too small to be represented and rounds to zero; common with `float16` when accumulating very small gradients
+A condition in computer arithmetic where the result of a calculation is a non-zero number that is smaller than the smallest value the [floating-point format](/shared/glossary/#dtype) can physically represent, causing the value to be rounded to zero. This is a common issue when training deep learning models in lower precision (like `float16`), where extremely small [gradients](/shared/glossary/#gradients) round to zero and halt learning.
+**Analogy:** A ruler that can only measure down to millimeters. If you try to measure something that is a fraction of a micrometer, the ruler cannot resolve it and reads it as exactly zero.
+**Example:** In FP16 training, if gradient values fall below the minimum representable limit (`~6e-8`), they round to zero due to underflow, stalling the optimizer's updates. This is typically fixed using [loss scaling (via GradScaler)](/shared/glossary/#gradscaler).
 
 ### Unicycle model {#unicycle-model}
 The simplest useful model of a wheeled robot: a single point that can drive forward at a commanded speed and spin in place at a commanded turning rate, but can never slide sideways. Its state is just position and heading `(x, y, θ)`, and two short equations turn the speed and turn-rate controls into how that state changes. The "cannot move sideways" rule is a [nonholonomic constraint](/shared/glossary/#nonholonomic-constraint)—the same reason a car has to do a [three-point turn](/shared/glossary/#three-point-turn) instead of gliding into a tight parking spot. It is the go-to model for differential-drive robots (two independently driven wheels) and the starting point for path-tracking controllers; its cousin the [kinematic bicycle model](/shared/glossary/#kinematic-bicycle-model) adds an explicit steering angle for car-like vehicles. Analogy: an office chair you can only roll straight ahead and pivot — to reach a spot beside you, you must turn first, then roll, never drift across.
