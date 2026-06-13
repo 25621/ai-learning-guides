@@ -770,6 +770,18 @@ const sidebars = {
                 {type: 'doc', id: 'guides/robotics/projects/eval-harness/README', label: 'Eval harness'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 10: Frontier Topics',
+              items: [
+                {type: 'doc', id: 'guides/robotics/projects/talk-to-robot-demo/README', label: 'Talk-to-robot demo'},
+                {type: 'doc', id: 'guides/robotics/projects/vla-fine-tune/README', label: 'VLA fine-tune'},
+                {type: 'doc', id: 'guides/robotics/projects/world-model-rollout/README', label: 'World-model rollout'},
+                {type: 'doc', id: 'guides/robotics/projects/cbf-safety-filter/README', label: 'CBF safety filter'},
+                {type: 'doc', id: 'guides/robotics/projects/long-horizon-eval/README', label: 'Long-horizon eval'},
+                {type: 'doc', id: 'guides/robotics/projects/cross-embodiment-study/README', label: 'Cross-embodiment study'},
+              ],
+            },
           ],
         },
         {
