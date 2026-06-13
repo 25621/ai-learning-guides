@@ -142,6 +142,35 @@ const config = {
             '**/node_modules/**',
             '**/vendor/**',
           ],
+          sidebarItemsGenerator: async function ({
+            defaultSidebarItemsGenerator,
+            ...args
+          }) {
+            const sidebarItems = await defaultSidebarItemsGenerator(args);
+            const item = args.item;
+            const docs = args.docs;
+            if (item.customProps && item.customProps.phase) {
+              const phase = item.customProps.phase;
+              return sidebarItems.filter(sidebarItem => {
+                if (sidebarItem.type === 'doc') {
+                  const doc = docs.find(d => d.id === sidebarItem.id);
+                  if (doc) {
+                    const match = doc.source.match(/guides\/ai-hardware\/projects\/(\d+)-/);
+                    if (match) {
+                      const projectNum = parseInt(match[1], 10);
+                      if (phase === 1) {
+                        return projectNum >= 1 && projectNum <= 5;
+                      } else if (phase === 2) {
+                        return projectNum >= 6 && projectNum <= 10;
+                      }
+                    }
+                  }
+                }
+                return true;
+              });
+            }
+            return sidebarItems;
+          },
         },
         blog: false,
         theme: {
