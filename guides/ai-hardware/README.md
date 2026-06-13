@@ -84,20 +84,20 @@ is largely about why and how to do better.
 
 ## Phase 1: How a Modern Computer Computes
 
-You can't understand GPUs without first understanding why CPUs aren't enough. This phase is the conceptual setup.
+You can't understand [GPUs](/shared/glossary/#gpu) without first understanding why [CPUs](/shared/glossary/#cpu) aren't enough. This phase is the conceptual setup.
 
 ### Concepts to Learn
 
-- **The memory wall**: the historical gap between CPU compute speed and memory bandwidth, and why it shaped everything that came after
+- **The memory wall**: the historical gap between [CPU](/shared/glossary/#cpu) compute speed and [memory bandwidth](/shared/glossary/#memory-bandwidth), and why it shaped everything that came after
 - **CPU vs GPU philosophy**:
-  - **CPU**: few powerful cores, deep pipelines, huge caches, branch prediction, out-of-order execution — optimized for **latency** on irregular code
-  - **GPU**: thousands of simpler cores, shallow pipelines, tiny per-thread cache, massive parallelism — optimized for **throughput** on regular code
+  - **[CPU](/shared/glossary/#cpu)**: few powerful cores, deep pipelines, huge caches, branch prediction, out-of-order execution — optimized for **latency** on irregular code
+  - **[GPU](/shared/glossary/#gpu)**: thousands of simpler cores, shallow pipelines, tiny per-thread cache, massive parallelism — optimized for **throughput** on regular code
 - **SIMD vs SIMT**:
-  - **SIMD** (Single Instruction Multiple Data): one instruction, many data elements per core (AVX-512, NEON)
-  - **SIMT** (Single Instruction Multiple Threads): one instruction, many threads — NVIDIA's variant; thread divergence and warps
-- **Roofline model** — the most important diagram in the field. Performance is bounded by the *minimum* of (peak FLOPs) and (peak memory bandwidth × arithmetic intensity)
-- **Arithmetic intensity**: FLOPs per byte of memory accessed. Higher = compute-bound. Lower = memory-bound. Most deep-learning ops are memory-bound
-- **Amdahl's law** — your serial fraction limits you no matter how much parallelism you add
+  - **[SIMD](/shared/glossary/#simd)** (Single Instruction Multiple Data): one instruction, many data elements per core ([AVX-512](/shared/glossary/#avx-512), NEON)
+  - **[SIMT](/shared/glossary/#simt)** (Single Instruction Multiple Threads): one instruction, many threads — NVIDIA's variant; thread divergence and warps
+- **[Roofline model](/shared/glossary/#roofline)** — the most important diagram in the field. Performance is bounded by the *minimum* of (peak [FLOPs](/shared/glossary/#flops)) and (peak [memory bandwidth](/shared/glossary/#memory-bandwidth) × [arithmetic intensity](/shared/glossary/#ai-arithmetic-intensity))
+- **[Arithmetic intensity](/shared/glossary/#ai-arithmetic-intensity)**: [FLOPs](/shared/glossary/#flops) per byte of memory accessed. Higher = compute-bound. Lower = memory-bound. Most deep-learning ops are memory-bound
+- **[Amdahl's law](/shared/glossary/#amdahls-law)** — your serial fraction limits you no matter how much parallelism you add
 
 ### The Roofline Diagram
 
@@ -131,11 +131,11 @@ Adding FLOPs there is wasted.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Hand-counted FLOPs | Count the FLOPs in one transformer block (attention + MLP) for a given shape | ⭐⭐ |
-| Roofline by hand | For 5 operations (matmul, layernorm, softmax, gelu, transpose), compute arithmetic intensity and predict which are memory-bound on an A100 | ⭐⭐⭐ |
-| Bandwidth measurement | Measure the actual achieved memory bandwidth of a simple copy kernel on your GPU; compare to the spec | ⭐⭐⭐ |
-| AVX-512 study | Write a vector sum in scalar, autovectorized, and intrinsic AVX-512 code; benchmark on a CPU | ⭐⭐⭐ |
-| GPU vs CPU bake-off | Run the same matmul on CPU (NumPy) and GPU (PyTorch); report wall-clock and FLOPs/sec | ⭐⭐ |
+| [Hand-counted FLOPs](projects/01-hand-counted-flops/README.md) | Count the FLOPs in one transformer block (attention + MLP) for a given shape | ⭐⭐ |
+| [Roofline by hand](projects/02-roofline-by-hand/README.md) | For 5 operations (matmul, layernorm, softmax, gelu, transpose), compute arithmetic intensity and predict which are memory-bound on an A100 | ⭐⭐⭐ |
+| [Bandwidth measurement](projects/03-bandwidth-measurement/README.md) | Measure the actual achieved memory bandwidth of a simple copy kernel on your GPU; compare to the spec | ⭐⭐⭐ |
+| [AVX-512 study](projects/04-avx-512-study/README.md) | Write a vector sum in scalar, autovectorized, and intrinsic AVX-512 code; benchmark on a CPU | ⭐⭐⭐ |
+| [GPU vs CPU bake-off](projects/05-gpu-vs-cpu-bake-off/README.md) | Run the same matmul on CPU (NumPy) and GPU (PyTorch); report wall-clock and FLOPs/sec | ⭐⭐ |
 
 ### Sample Code: Arithmetic Intensity in Practice
 
@@ -228,11 +228,11 @@ Rubin (announced)      Next-gen; production 2026–2027
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| `nvidia-smi` deep dive | For your GPU: report exact compute capability, SM count, HBM type/capacity/bandwidth, NVLink topology | ⭐ |
-| Tensor core utilization | Run `nsys` and `ncu` on a matmul; observe % of time tensor cores are active | ⭐⭐⭐ |
-| Occupancy study | Vary block size in a simple CUDA kernel; observe SM occupancy in Nsight | ⭐⭐⭐ |
-| Divergence demo | Write a kernel with intentional thread divergence; measure the slowdown | ⭐⭐⭐ |
-| Spec compare | Pick three GPUs (consumer/datacenter/old); compute peak bf16 FLOPs, HBM B/W, and AI break-even point | ⭐⭐ |
+| [`nvidia-smi` deep dive](projects/06-nvidia-smi-deep-dive/README.md) | For your GPU: report exact compute capability, SM count, HBM type/capacity/bandwidth, NVLink topology | ⭐ |
+| [Tensor core utilization](projects/07-tensor-core-utilization/README.md) | Run `nsys` and `ncu` on a matmul; observe % of time tensor cores are active | ⭐⭐⭐ |
+| [Occupancy study](projects/08-occupancy-study/README.md) | Vary block size in a simple CUDA kernel; observe SM occupancy in Nsight | ⭐⭐⭐ |
+| [Divergence demo](projects/09-divergence-demo/README.md) | Write a kernel with intentional thread divergence; measure the slowdown | ⭐⭐⭐ |
+| [Spec compare](projects/10-spec-compare/README.md) | Pick three GPUs (consumer/datacenter/old); compute peak bf16 FLOPs, HBM B/W, and AI break-even point | ⭐⭐ |
 
 ### Key Insight
 
@@ -291,11 +291,11 @@ as you can for as long as you can.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Coalesced vs non-coalesced | Write two CUDA kernels — adjacent-stride vs strided access — and measure bandwidth | ⭐⭐⭐ |
-| Bank conflict demo | Reproduce a shared-memory bank conflict; report the slowdown | ⭐⭐⭐⭐ |
-| Tile size sweep | Implement a tiled matmul; vary tile size; observe the sweet spot | ⭐⭐⭐⭐ |
-| HBM saturation | Write a vector-add and measure HBM bandwidth utilization; tune until > 80% of peak | ⭐⭐⭐⭐ |
-| L2 hit rate analysis | Use Nsight Compute to inspect L2 hit rate of an attention kernel; explain what you see | ⭐⭐⭐⭐ |
+| [Coalesced vs non-coalesced](projects/11-coalesced-vs-non-coalesced/README.md) | Write two CUDA kernels — adjacent-stride vs strided access — and measure bandwidth | ⭐⭐⭐ |
+| [Bank conflict demo](projects/12-bank-conflict-demo/README.md) | Reproduce a shared-memory bank conflict; report the slowdown | ⭐⭐⭐⭐ |
+| [Tile size sweep](projects/13-tile-size-sweep/README.md) | Implement a tiled matmul; vary tile size; observe the sweet spot | ⭐⭐⭐⭐ |
+| [HBM saturation](projects/14-hbm-saturation/README.md) | Write a vector-add and measure HBM bandwidth utilization; tune until > 80% of peak | ⭐⭐⭐⭐ |
+| [L2 hit rate analysis](projects/15-l2-hit-rate-analysis/README.md) | Use Nsight Compute to inspect L2 hit rate of an attention kernel; explain what you see | ⭐⭐⭐⭐ |
 
 ### Sample Code: A Coalesced vs Strided Load Demo (CUDA)
 

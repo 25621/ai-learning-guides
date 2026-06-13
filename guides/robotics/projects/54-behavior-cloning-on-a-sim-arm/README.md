@@ -1,0 +1,5 @@
+# Behavior Cloning on a Sim Arm
+
+## Key Insight
+
+[Behavior cloning (BC)](/shared/glossary/#bc) is the foundational baseline for [imitation learning](/shared/glossary/#imitation-learning), framing behavioral reproduction as standard [supervised learning](/shared/glossary/#supervised-learning) where neural networks predict motor [actions](/shared/glossary/#action-conditioning) from current sensory [observations](/shared/glossary/#state). By training a simple [MLP policy](/shared/glossary/#mlp) on joint trajectories recorded during human [teleoperation](/shared/glossary/#teleoperation), the robot learns to reproduce the demonstration task without requiring a complex, hand-engineered [reward function](/shared/glossary/#reward-function). However, because the policy only minimizes prediction errors on the training states, it remains highly vulnerable to [covariate shift](/shared/glossary/#covariate-shift) at test time, where small errors accumulate and steer the arm into unfamiliar configurations from which it cannot recover.

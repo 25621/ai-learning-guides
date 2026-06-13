@@ -1024,9 +1024,9 @@ Through 2020, classical methods dominated practical robotics. Since then, learni
   - **Reinforcement learning (RL)** — optimize a policy by trial and error against a reward. Expensive data, no demonstrator needed, reward-shaping pain.
   - **Hybrid IL + RL** — pretrain with IL, fine-tune with RL. The frontier recipe for manipulation.
 - **Behavior cloning (BC)** — supervised: minimize `‖a − π(s)‖²` (or NLL) over demonstration data. Simple, fast, the right baseline.
-- **The covariate-shift problem of BC** — at test time the policy visits states the human never demonstrated, errors compound. The whole field is variations on coping with this.
-- **DAgger and online IL** — query the expert at states the policy actually visits; close the distribution gap.
-- **Diffusion policies** — represent the action distribution as a denoising diffusion model conditioned on the current observation. State-of-the-art behavior cloning since 2023; handles multimodal action distributions naturally.
+- **The [covariate-shift](/shared/glossary/#covariate-shift) problem of BC** — at test time the policy visits states the human never demonstrated, errors compound. The whole field is variations on coping with this.
+- **[DAgger](/shared/glossary/#dagger) and online IL** — query the expert at states the policy actually visits; close the distribution gap.
+- **[Diffusion policies](/shared/glossary/#diffusion-policy)** — represent the action distribution as a denoising diffusion model conditioned on the current observation. State-of-the-art behavior cloning since 2023; handles multimodal action distributions naturally.
 - **Action chunking and ACT-style policies** — predict a chunk of future actions rather than one; smoother behavior, more robust to perception jitter.
 - **Reinforcement learning for robotics**:
   - **Policy gradient family** — REINFORCE, A2C, PPO. PPO is the dominant on-policy choice.
@@ -1041,8 +1041,8 @@ Through 2020, classical methods dominated practical robotics. Since then, learni
 - **Foundation models for robotics** — the 2023+ thread:
   - **VLAs (Vision-Language-Action models)** — large transformers trained on robot trajectories + internet vision-language data; condition on language goals and predict actions. RT-2, OpenVLA, π0 lineage.
   - **Pretrained vision encoders** — DINO, CLIP, MVP, R3M as frozen feature extractors for policies; small downstream policies suffice.
-  - **Cross-embodiment** — training on data from multiple robots so the policy generalizes across grippers, arms, and platforms. Open X-Embodiment is the standard cross-robot dataset.
-- **Teleoperation as a data source** — VR controllers, ALOHA-style leader-follower rigs, smart-glove and exoskeleton interfaces. The dominant way to collect manipulation data at scale.
+  - **[Cross-embodiment](/shared/glossary/#cross-embodiment)** — training on data from multiple robots so the policy generalizes across grippers, arms, and platforms. [Open X-Embodiment](/shared/glossary/#open-x-embodiment) is the standard cross-robot dataset.
+- **[Teleoperation](/shared/glossary/#teleoperation) as a data source** — VR controllers, ALOHA-style leader-follower rigs, smart-glove and exoskeleton interfaces. The dominant way to collect manipulation data at scale.
 - **Sim-to-real**:
   - **What transfers easily**: visual policies trained with heavy randomization, locomotion in unstructured terrain
   - **What transfers poorly**: anything stiffness-, friction-, or contact-mode-sensitive; tight tolerances; deformables
@@ -1066,15 +1066,15 @@ Through 2020, classical methods dominated practical robotics. Since then, learni
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Behavior cloning on a sim arm | Collect 50 sim teleop demos; train an MLP policy; evaluate success rate | ⭐⭐⭐ |
-| DAgger | Add expert queries on rollouts to BC; quantify the improvement | ⭐⭐⭐⭐ |
-| Diffusion policy | Reproduce a small diffusion-policy on a manipulation task; compare to MLP BC | ⭐⭐⭐⭐⭐ |
-| PPO for cart-pole | The "hello world" of RL; verify your understanding of the loss | ⭐⭐⭐ |
-| SAC for a sim arm reach | Train SAC to reach a target; tune `α` (entropy) carefully | ⭐⭐⭐⭐ |
-| Massively-parallel walking | Train a quadruped policy in Isaac Lab with 4 096 envs; deploy in MuJoCo | ⭐⭐⭐⭐⭐ |
-| Domain randomization study | Same task, with and without randomization; measure transfer gap to a held-out sim env | ⭐⭐⭐⭐ |
-| World-model planning | Train a small world model on play data; plan with CEM in latent space | ⭐⭐⭐⭐⭐ |
-| Cross-embodiment fine-tune | Take an Open-X policy; fine-tune on your own robot; report sample efficiency | ⭐⭐⭐⭐⭐ |
+| [Behavior cloning on a sim arm](projects/54-behavior-cloning-on-a-sim-arm/README.md) | Collect 50 sim teleop demos; train an MLP policy; evaluate success rate | ⭐⭐⭐ |
+| [DAgger](projects/55-dagger/README.md) | Add expert queries on rollouts to BC; quantify the improvement | ⭐⭐⭐⭐ |
+| [Diffusion policy](projects/56-diffusion-policy/README.md) | Reproduce a small diffusion-policy on a manipulation task; compare to MLP BC | ⭐⭐⭐⭐⭐ |
+| [PPO for cart-pole](projects/57-ppo-for-cart-pole/README.md) | The "hello world" of RL; verify your understanding of the loss | ⭐⭐⭐ |
+| [SAC for a sim arm reach](projects/58-sac-for-a-sim-arm-reach/README.md) | Train SAC to reach a target; tune `α` (entropy) carefully | ⭐⭐⭐⭐ |
+| [Massively-parallel walking](projects/52-learned-locomotion/README.md) | Train a quadruped policy in Isaac Lab with 4 096 envs; deploy in MuJoCo | ⭐⭐⭐⭐⭐ |
+| [Domain randomization study](projects/59-domain-randomization-study/README.md) | Same task, with and without randomization; measure transfer gap to a held-out sim env | ⭐⭐⭐⭐ |
+| [World-model planning](projects/60-world-model-planning/README.md) | Train a small world model on play data; plan with CEM in latent space | ⭐⭐⭐⭐⭐ |
+| [Cross-embodiment fine-tune](projects/61-cross-embodiment-fine-tune/README.md) | Take an Open-X policy; fine-tune on your own robot; report sample efficiency | ⭐⭐⭐⭐⭐ |
 
 ### Sample Code: Behavior Cloning, the Minimum Viable Version
 
@@ -1126,9 +1126,9 @@ Robot learning works when (a) data is sufficient and on-distribution, (b) the re
 - *Algorithms for Decision Making* (Kochenderfer et al.) — decision-making spanning POMDPs to RL
 - Sergey Levine's deep-RL course (UC Berkeley CS285)
 - Karol Hausman et al. RT-2 / RT-X papers
-- Diffusion Policy (Chi et al., 2023)
+- [Diffusion Policy](/shared/glossary/#diffusion-policy) (Chi et al., 2023)
 - Isaac Lab and Isaac Gym documentation
-- Open X-Embodiment dataset and tutorials
+- [Open X-Embodiment](/shared/glossary/#open-x-embodiment) dataset and tutorials
 
 ---
 
@@ -1148,7 +1148,7 @@ A robot is not a single algorithm; it is a system of dozens of interacting proce
 - **System identification** — fit dynamics-parameter values from real-robot trajectories. The unglamorous prerequisite of any serious sim-to-real.
 - **Domain randomization at scale** — over masses, frictions, latencies, communication delays, control gains, sensor noise, visuals. The list of randomized variables is itself an engineering artifact.
 - **Real-time systems** — control loops are hard-real-time-adjacent:
-  - **Linux + PREEMPT_RT** — soft to hard real time; sufficient for kHz loops on most hardware
+  - **Linux + [PREEMPT_RT](/shared/glossary/#preempt-rt)** — soft to hard real time; sufficient for kHz loops on most hardware
   - **Dedicated MCUs / FPGAs** — for the innermost current loops
   - **Memory allocation** — never `malloc` in the control thread; preallocate everything
   - **Logging discipline** — bounded queues, lock-free where possible, never log from the hot path synchronously
@@ -1158,7 +1158,7 @@ A robot is not a single algorithm; it is a system of dozens of interacting proce
   - **DDS QoS** — reliability, durability, history; the place ROS 2 bugs live
 - **Drivers and HALs** — every motor, sensor, and bus has its driver, its firmware, its quirks. A well-abstracted hardware-abstraction-layer is a major asset; a leaky one is a major liability.
 - **Logging, replay, observability** — `rosbag` / MCAP / custom; the same discipline as production software systems, but with images, point clouds, and 1 kHz time series. Replayability is the single highest-ROI feature you build.
-- **Continuous evaluation** — automated test suites for behaviors, integration tests in simulation, hardware-in-the-loop tests. A robotics CI/CD that runs nightly catches regressions you would otherwise discover by smashing into a wall.
+- **Continuous evaluation** — automated test suites for behaviors, integration tests in simulation, hardware-in-the-loop tests. A robotics CI/CD that runs nightly catches [regressions](/shared/glossary/#regression-testing) you would otherwise discover by smashing into a wall.
 - **Safety**:
   - **Physical safety** — emergency stops, force/torque limits, watchdogs, light curtains
   - **Software safety** — input validation at every layer, bounded state, fail-safe defaults, redundant estimators
@@ -1199,14 +1199,14 @@ The companies that do it earlier ship sooner.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| URDF → MJCF migration | Take a hobbyist URDF; clean it up; add collision meshes, inertias; load in MuJoCo | ⭐⭐⭐ |
-| System ID on a real arm | Excite joints with chirp signals; fit a friction + inertia model; compare to URDF defaults | ⭐⭐⭐⭐ |
-| Latency budget instrument | Trace photon-to-actuation latency across your stack; report 5/50/95 percentiles | ⭐⭐⭐⭐ |
-| ROS 2 lifecycle node | Implement a perception node with managed lifecycle; verify recovery from sensor disconnect | ⭐⭐⭐ |
-| MCAP logging + Foxglove | Log a complete robot run; replay; visualize trajectories, camera, transforms | ⭐⭐⭐ |
-| Real-time loop drill | Run a 1 kHz control loop on PREEMPT_RT; measure jitter under load; compare to vanilla Linux | ⭐⭐⭐⭐⭐ |
-| Sim-to-real gap forensics | Pick one transfer failure; isolate whether perception, dynamics, or actuation caused it | ⭐⭐⭐⭐⭐ |
-| Eval harness | Build a 50-task sim eval that runs nightly with seeded variations; produce a pass-rate dashboard | ⭐⭐⭐⭐ |
+| [URDF → MJCF migration](projects/62-urdf-mjcf-migration/README.md) | Take a hobbyist URDF; clean it up; add collision meshes, inertias; load in MuJoCo | ⭐⭐⭐ |
+| [System ID on a real arm](projects/63-system-id-on-a-real-arm/README.md) | Excite joints with [chirp signals](/shared/glossary/#chirp); fit a friction + inertia model; compare to URDF defaults | ⭐⭐⭐⭐ |
+| [Latency budget instrument](projects/64-latency-budget-instrument/README.md) | Trace photon-to-actuation latency across your stack; report 5/50/95 percentiles | ⭐⭐⭐⭐ |
+| [ROS 2 lifecycle node](projects/65-ros-2-lifecycle-node/README.md) | Implement a perception node with managed lifecycle; verify recovery from sensor disconnect | ⭐⭐⭐ |
+| [MCAP logging + Foxglove](projects/66-mcap-logging-foxglove/README.md) | Log a complete robot run; replay; visualize trajectories, camera, transforms | ⭐⭐⭐ |
+| [Real-time loop drill](projects/67-real-time-loop-drill/README.md) | Run a 1 kHz control loop on [PREEMPT_RT](/shared/glossary/#preempt-rt); measure jitter under load; compare to vanilla Linux | ⭐⭐⭐⭐⭐ |
+| [Sim-to-real gap forensics](projects/68-sim-to-real-gap-forensics/README.md) | Pick one transfer failure; isolate whether perception, dynamics, or actuation caused it | ⭐⭐⭐⭐⭐ |
+| [Eval harness](projects/69-eval-harness/README.md) | Build a 50-task sim eval that runs nightly with seeded variations; produce a pass-rate dashboard | ⭐⭐⭐⭐ |
 
 ### Sample Code: A Hard-Boundary Watchdog
 
@@ -1261,13 +1261,13 @@ Once you have a robot that can pick a block and walk across a room, you discover
 
 ### Concepts to Learn
 
-- **Vision-Language-Action models (VLAs)** — transformers (often initialized from VLMs) trained on `(image, instruction, action)` triples drawn from large robot datasets. Receive a language command and an image; emit a tokenized or continuous action. The 2023-onward thread that finally lets robots be talked to in natural language.
-- **Generalist robot policies and cross-embodiment** — Open X-Embodiment-scale efforts to train one policy across many robots, manipulator types, and tasks. Generalization is real, modest, and improving every six months.
-- **Humanoids** — the form factor bet of the late 2020s: anthropomorphic so the world's tools and spaces don't need to change. The combined challenge of bipedal locomotion, bimanual manipulation, and whole-body control all at once. Standing-up policies, fall recovery, hand dexterity are all open.
-- **Dexterous manipulation** — multi-fingered, in-hand, contact-rich. RL in simulation made this tractable for cubes and small objects; transfer to truly varied objects is still hard.
-- **World models for embodied AI** — generative video/physics models conditioned on actions (Genie, DreamerV3, NVIDIA Cosmos lineage); the closest thing to "imagined rollouts" for planning.
-- **Foundation-model-driven task and motion planning** — use an LLM/VLM to propose subgoals, primitives, or code, with classical planners executing each step. SayCan, ProgPrompt, Code-as-Policies lineage.
-- **Long-horizon autonomy** — keeping success rates high over thousands of steps. Error compounds; recovery behaviors matter more than headline success rates.
+- **[Vision-Language-Action (VLA) models](/shared/glossary/#vla)** — [transformers](/shared/glossary/#transformer) (often initialized from [VLMs](/shared/glossary/#vlm)) trained on `(image, instruction, action)` triples drawn from large robot datasets. Receive a language command and an image; emit a tokenized or continuous action. The 2023-onward thread that finally lets robots be talked to in natural language.
+- **Generalist robot policies and [cross-embodiment](/shared/glossary/#cross-embodiment)** — [Open X-Embodiment](/shared/glossary/#open-x-embodiment)-scale efforts to train one [policy](/shared/glossary/#policy) across many robots, manipulator types, and tasks. Generalization is real, modest, and improving every six months.
+- **[Humanoids](/shared/glossary/#humanoid)** — the form factor bet of the late 2020s: anthropomorphic so the world's tools and spaces don't need to change. The combined challenge of bipedal [legged locomotion](/shared/glossary/#legged-locomotion), bimanual [manipulation](/shared/glossary/#manipulation), and whole-body control all at once. Standing-up policies, fall recovery, hand dexterity are all open.
+- **[Dexterous manipulation](/shared/glossary/#dexterous-manipulation)** — multi-fingered, in-hand, contact-rich. [RL](/shared/glossary/#reinforcement-learning) in simulation made this tractable for cubes and small objects; transfer to truly varied objects is still hard.
+- **[World models](/shared/glossary/#world-model) for embodied AI** — generative video/physics models conditioned on actions ([Genie](/shared/glossary/#genie), [DreamerV3](/shared/glossary/#dreamerv3), NVIDIA Cosmos lineage); the closest thing to "imagined [rollouts](/shared/glossary/#rollout)" for [planning](/shared/glossary/#planning).
+- **Foundation-model-driven task and motion planning** — use an [LLM](/shared/glossary/#llm)/[VLM](/shared/glossary/#vlm) to propose subgoals, [primitives](/shared/glossary/#primitives), or code, with classical planners executing each step. [SayCan](/shared/glossary/#saycan), ProgPrompt, Code-as-Policies lineage.
+- **[Long-horizon autonomy](/shared/glossary/#long-horizon-autonomy)** — keeping success rates high over thousands of steps. Error compounds; recovery behaviors matter more than headline success rates.
 - **Whole-body manipulation** — using the entire robot body, not just the end-effector: leaning on a counter, kicking a box aside, bracing against a wall.
 - **Soft robotics** — actuators that deform rather than rotate; pneumatic muscles, dielectric elastomers, hydrogels. New design space, new control challenges, often inherently safe for human interaction.
 - **Swarm and multi-robot** — decentralized coordination, communication-aware planning, multi-agent RL. Mostly under-deployed; lots of headroom.
@@ -1275,14 +1275,14 @@ Once you have a robot that can pick a block and walk across a room, you discover
 - **Brain-machine interfaces and assistive robotics** — robot arms controlled from neural decoders, exoskeletons, prosthetics. The intersection where every gram of latency and every Newton of force matters humanely.
 - **The safety and societal stack**:
   - **Functional safety** — IEC 61508, ISO 26262 (auto), ISO 13482 (personal-care robots). The vocabulary by which regulators evaluate "safe enough."
-  - **Verification and runtime monitoring** — STL / signal temporal logic, reachability analysis, control barrier functions (CBFs). The formal-methods toolkit.
+  - **Verification and runtime monitoring** — STL / signal temporal logic, [reachability analysis](/shared/glossary/#topp), [control barrier functions (CBFs)](/shared/glossary/#cbf). The formal-methods toolkit.
   - **Labor and economic effects** — automation's distributional impact; deployment ethics; the choices designers and companies make matter.
   - **Misuse and weaponization** — drones and quadrupeds are dual-use; policy and norms are still forming.
   - **Privacy** — robots that look at people are different from robots that move things; the legal regimes haven't caught up.
 - **The frontier threads to watch in 2026**:
   - **Robot data scaling laws** — is there a "Chinchilla for robots"? How much data, of what kind, per task?
-  - **Sim that's close enough to real that pretraining transfers** — improving physics, contact, and rendering
-  - **Continual on-robot learning** — updating policies on the fleet without catastrophic regressions
+  - **[Sim-to-real](/shared/glossary/#sim-to-real) that's close enough to real that pretraining transfers** — improving physics, contact, and rendering
+  - **Continual on-robot learning** — updating [policies](/shared/glossary/#policy) on the fleet without catastrophic regressions
   - **Human-robot collaboration** — fluent shared-task behavior, intent inference, social norms
   - **Energy and embodiment** — battery density, torque density, drivetrains are still the gating constraints
 
@@ -1301,7 +1301,7 @@ Once you have a robot that can pick a block and walk across a room, you discover
        Perception ──── geometry good; semantics good; persistent identity / memory open
             │
             ▼
-       Generalization  cross-task, cross-embodiment improving rapidly
+       Generalization  cross-task, [cross-embodiment](/shared/glossary/#cross-embodiment) improving rapidly
             │
             ▼
        Reliability ──  long-horizon success rates compounded errors; the bottleneck
@@ -1317,12 +1317,12 @@ Once you have a robot that can pick a block and walk across a room, you discover
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Talk-to-robot demo | Use an LLM to decompose "make me coffee" into primitives; execute in a sim kitchen | ⭐⭐⭐⭐ |
-| VLA fine-tune | Take an open VLA; fine-tune on a small task; evaluate vs. from-scratch BC | ⭐⭐⭐⭐⭐ |
-| World-model rollout | Train a tiny action-conditioned video model; planner picks the action chunk whose imagined rollout matches the goal image | ⭐⭐⭐⭐⭐ |
-| CBF safety filter | Wrap a learned policy with a control-barrier-function safety filter; show it prevents collisions a naive policy causes | ⭐⭐⭐⭐⭐ |
-| Long-horizon eval | Build a 50-step task; measure how per-step success rate × N compounds vs. observed task success | ⭐⭐⭐⭐ |
-| Cross-embodiment study | Train a policy on robot A, deploy on robot B; characterize the transfer gap | ⭐⭐⭐⭐⭐ |
+| [Talk-to-robot demo](projects/70-talk-to-robot-demo/README.md) | Use an [LLM](/shared/glossary/#llm) to decompose "make me coffee" into [primitives](/shared/glossary/#primitives); execute in a sim kitchen | ⭐⭐⭐⭐ |
+| [VLA fine-tune](projects/71-vla-fine-tune/README.md) | Take an open VLA; fine-tune on a small task; evaluate vs. from-scratch [BC](/shared/glossary/#bc) | ⭐⭐⭐⭐⭐ |
+| [World-model rollout](projects/72-world-model-rollout/README.md) | Train a tiny action-conditioned video model; planner picks the action chunk whose imagined rollout matches the goal image | ⭐⭐⭐⭐⭐ |
+| [CBF safety filter](projects/73-cbf-safety-filter/README.md) | Wrap a learned [policy](/shared/glossary/#policy) with a control-barrier-function safety filter; show it prevents collisions a naive policy causes | ⭐⭐⭐⭐⭐ |
+| [Long-horizon eval](projects/74-long-horizon-eval/README.md) | Build a 50-step task; measure how per-step success rate × N compounds vs. observed task success | ⭐⭐⭐⭐ |
+| [Cross-embodiment study](projects/75-cross-embodiment-study/README.md) | Train a [policy](/shared/glossary/#policy) on robot A, deploy on robot B; characterize the transfer gap | ⭐⭐⭐⭐⭐ |
 
 ### Key Insight
 
@@ -1330,7 +1330,7 @@ The capabilities frontier of robotics is dominated by *integration*, not by any 
 
 ### Resources
 
-- Open X-Embodiment dataset, paper, and tutorials
+- [Open X-Embodiment](/shared/glossary/#open-x-embodiment) dataset, paper, and tutorials
 - Robotics Transformer (RT-1, RT-2) and successor papers
 - "Foundation Models for Decision Making" (Stanford, surveys)
 - IEEE-RAS Technical Committees as a map of subfield activity
@@ -1351,7 +1351,7 @@ The capabilities frontier of robotics is dominated by *integration*, not by any 
 | 5. Planning | 2 weeks | [RRT-Connect](/shared/glossary/#rrt-connect) + [trajectory optimization](/shared/glossary/#trajectory-optimization) on a real arm in sim |
 | 6. Manipulation | 2–3 weeks | Pick-and-place with vision; one contact-rich task (insertion or wiping) |
 | 7. Mobile / legged | 2 weeks | Wheeled nav stack + a small legged-locomotion demo |
-| 8. Learning | 3 weeks | BC + a policy trained with PPO; one diffusion-policy run; understand sim-to-real |
+| 8. Learning | 3 weeks | BC + a policy trained with PPO; one [diffusion policy](/shared/glossary/#diffusion-policy) run; understand sim-to-real |
 | 9. Systems engineering | 1–2 weeks | A reproducible eval harness; a real-time loop with logging and a watchdog |
 | 10. Frontier | Ongoing | Picked one thread (humanoids, VLAs, safety, etc.) and going deep |
 
@@ -1443,8 +1443,8 @@ The capabilities frontier of robotics is dominated by *integration*, not by any 
 - Mnih et al. — *Playing Atari with Deep RL* (the modern RL inflection point)
 - Schulman et al. — *PPO*
 - Haarnoja et al. — *Soft Actor-Critic*
-- Chi et al. — *Diffusion Policy*
-- Open X-Embodiment collaboration — *RT-X* / cross-embodiment
+- Chi et al. — *[Diffusion Policy](/shared/glossary/#diffusion-policy)*
+- [Open X-Embodiment](/shared/glossary/#open-x-embodiment) collaboration — *RT-X* / [cross-embodiment](/shared/glossary/#cross-embodiment)
 - Tedrake — *Underactuated Robotics* (book/notes are the de facto curriculum)
 
 ### Communities and Conferences
