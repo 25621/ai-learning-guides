@@ -106,7 +106,17 @@ A single number predicting how visually *pleasing* a human would find an image �
 An [LLM](/shared/glossary/#llm) placed in a loop so it can plan, choose a tool, act, observe the result, and repeat until a task is finished — turning a one-shot answerer into something that carries out multi-step work, like a worker who keeps taking the next action until the whole job is done.
 
 ### AI (arithmetic intensity) {#ai-arithmetic-intensity}
-FLOPs per byte of memory accessed; determines roofline position
+**Arithmetic intensity** (also called **operational intensity**) is the ratio of mathematical operations ([FLOPs](/shared/glossary/#flops)) performed to the number of bytes of data read from or written to main memory ([RAM](/shared/glossary/#ram) or device memory) during an algorithm's execution:
+
+*arithmetic intensity* = *FLOPs* / *bytes*
+
+It measures how much computational work is done on each unit of data once it has been fetched from memory into the processor.
+* If an algorithm has **low arithmetic intensity**, it reads a large amount of data but performs very few calculations on it (such as adding two massive lists of numbers). The processor spends most of its time sitting idle, waiting for data to arrive from memory, which makes the operation **memory-bound**.
+* If an algorithm has **high arithmetic intensity**, it reads a small amount of data but performs many calculations on it (such as multiplying two large matrices). The processor is kept busy doing math, making the operation **compute-bound** (or compute-limited).
+
+**Analogy:** Imagine reading a book.
+* **Low arithmetic intensity:** You turn the page, read a single word, and then immediately turn the page again. You spend almost all your time physically turning pages (reading bytes) rather than reading and thinking (doing math).
+* **High arithmetic intensity:** You turn the page and then spend 30 minutes reading and studying the dense text on that single page. You spend almost all your time thinking and analyzing (doing math) compared to the brief moment you spent turning the page (reading bytes).
 
 ### Alignment (multimodal) {#alignment-multimodal}
 Making embeddings from different modalities comparable in a shared space
@@ -203,7 +213,18 @@ A large public dataset from Google of about two million 10-second clips taken fr
 A neural network that learns to copy its input to its output through a narrow middle layer. It has two halves: an *encoder* that squeezes the input down to a small set of numbers, and a *decoder* that rebuilds the original from those numbers. Because the middle is much smaller than the input, the network cannot simply memorize — it is forced to keep only the most important features, like writing a short summary of a long article and then reconstructing the article from the summary. That small middle representation is called the [latent space](/shared/glossary/#latent-space).
 
 ### autograd {#autograd}
-The [reverse-mode](/shared/glossary/#reverse-mode) automatic differentiation engine
+In deep learning frameworks like [PyTorch](/shared/glossary/#pytorch), **autograd** is the automatic differentiation engine that calculates gradients (derivatives) for mathematical expressions. It is the core mechanism that makes training neural networks possible.
+
+When a neural network makes a prediction (the forward pass) and calculates a [loss function](/shared/glossary/#loss-function) (measuring how incorrect its prediction was), we must figure out how to adjust every weight in the network to minimize that loss (using [gradient descent](/shared/glossary/#gradient-descent)). This adjustment requires computing the gradient of the loss with respect to each weight. Since modern networks contain millions or billions of [weights](/shared/glossary/#weights), calculating these derivatives by hand using calculus (the chain rule) is practically impossible and error-prone.
+
+Autograd automates this entire process:
+1. **Forward Pass:** As operations (like addition, multiplication, or activation functions) are performed on input [tensors](/shared/glossary/#tensor), autograd records them, building a directed graph of all the computations.
+2. **Backward Pass:** When `.backward()` is called on the loss tensor, autograd traverses this graph in reverse (using [reverse-mode](/shared/glossary/#reverse-mode) automatic differentiation), applying the chain rule of calculus to automatically compute and store the gradients for all the weights.
+
+**Analogy:** Imagine a complex Rube Goldberg machine.
+* **Forward Pass:** You roll a marble (the input data) through a sequence of ramps, levers, and gears (the layers of the neural network), resulting in a weight dropping onto a scale (the loss).
+* **Autograd's Record:** While this was happening, a sensor-laden camera tracked every movement, collision, and rotation.
+* **Backward Pass:** You want to know: "If I nudge a specific lever at the start, how much will it change the weight's impact on the scale?" Instead of rebuilding the machine and guessing, you play the recording backward. By analyzing the recorded interactions step-by-step in reverse (the backward pass), you can calculate exactly how a small change to any component propagates to the final output.
 
 ### Automatic temperature tuning {#automatic-temperature-tuning}
 The trick that lets [SAC](/shared/glossary/#sac) set its entropy *temperature* α automatically instead of by hand. In [maximum-entropy RL](/shared/glossary/#maximum-entropy-rl) the temperature α weighs the entropy bonus against reward — high α makes the [policy](/shared/glossary/#policy) act almost randomly, low α makes it collapse to a brittle near-deterministic habit — and SAC is painfully sensitive to its exact value, which differs from task to task. The fix: pick a *target entropy* (a single number saying how random you want the policy to be on average, often set to roughly `−(number of action dimensions)`) and treat α as a learnable value adjusted by gradient descent so the policy's *actual* entropy is pushed toward that target. When the policy is too deterministic, α rises and pays it to explore more; when it is too random, α falls. Analogy: a thermostat for randomness — you set the temperature you want (the target entropy) and the controller (the α update) keeps turning the exploration knob until the room matches. This one change is why SAC can use a single configuration across wildly different robots instead of re-tuning α for each.
@@ -892,6 +913,19 @@ A family of value-based methods that predict the entire *distribution* of possib
 
 ### DiT {#dit}
 Diffusion Transformer — Peebles & Xie's diffusion backbone that replaces the [U-Net](/shared/glossary/#u-net) with a pure [transformer](/shared/glossary/#transformer). It chops the noisy image (really its [VAE](/shared/glossary/#vae) [latent](/shared/glossary/#latent-space)) into a grid of small [patches](/shared/glossary/#patchification), turns each patch into a token, and lets [attention](/shared/glossary/#attention) mix them — the same recipe that took over language modeling, now pointed at denoising. The name simply joins "diffusion" (the denoising task) with "transformer" (the architecture). Its big draw is [scaling](/shared/glossary/#scaling-laws): make it wider or deeper and quality improves along a predictable curve, the way a bigger language model reliably gets better. Like swapping a custom-built, image-shaped machine (the U-Net) for a general-purpose assembly line you can just make longer to produce more. Sizes are named DiT-S (small), DiT-B (base), DiT-L (large), and a suffix like "/2" gives the [patch](/shared/glossary/#patchification) size — DiT-S/2 is the small model with 2×2 patches.
+
+### Divergence {#divergence}
+In GPU computing, **divergence** (often called **branch divergence** or **warp divergence**) occurs when different threads within the same [warp](/shared/glossary/#warp) (a group of 32 threads executing in lockstep) need to execute different paths of a conditional branch (like an `if-else` statement) because their data differs.
+
+Because GPUs are built on the [SIMT](/shared/glossary/#simt) model, all threads in a warp must execute the same instruction at the same time. When they diverge:
+1. The hardware runs the `if` path first, executing the threads that took that branch while masking out (holding idle) the threads that need to run the `else` path.
+2. The hardware then runs the `else` path, executing the remaining threads while masking out the first group.
+
+This serializes execution, meaning the total time taken is the sum of both paths, which can significantly slow down parallel performance.
+
+**Analogy:** Imagine a tour guide (the instruction scheduler) leading a group of 32 tourists (the threads in a warp).
+* **No divergence:** The guide says "Everyone take a photo of this monument" (a single instruction). Everyone does it at once (full parallel efficiency).
+* **Divergence:** The guide says "If you want to buy souvenirs, go to the left door; otherwise, go to the right door." Because tourists want different things, the guide cannot be in two places at once. The guide first takes the souvenir group to the left door while the others stand around waiting, and then takes the second group to the right door while the first group stands around. The tour takes twice as long because the group split up, even though the tourists themselves are capable of walking independently.
 
 ### Dolly {#dolly}
 A camera move where the whole camera physically travels toward or away from the subject — the name comes from the wheeled cart (a "dolly") that camera operators roll along a track. Unlike a [zoom](/shared/glossary/#zoom), which only magnifies the image from a fixed spot, a dolly actually changes the camera's position, so the background shifts relative to the foreground and you get a real sense of moving through the scene. It is one of the moves a video model can be directed through with [camera control](/shared/glossary/#camera-control).
@@ -2695,7 +2729,23 @@ In reinforcement learning, a **rollout** is a complete run or sequence of action
 The spread of responses a model is currently generating when it produces [rollouts](/shared/glossary/#rollout) during RL training — what it tends to say and how varied those answers are. This distribution shifts as training proceeds, which is the whole point; but if it drifts toward weird, repetitive, or gamed outputs, that is a warning sign of [reward hacking](/shared/glossary/#reward-hacking). Watching how it moves is like checking what a student actually writes on practice tests, not just their final score.
 
 ### Roofline {#roofline}
-Performance model bounding throughput as min(peak FLOPs, memory bandwidth × arithmetic intensity)
+The **Roofline model** is a simple performance model that determines the maximum possible computational speed (throughput) of an algorithm on a specific hardware device (like a [GPU](/shared/glossary/#gpu)). It defines a hard limit or "roof" on performance based on the hardware's architecture and the properties of the algorithm.
+
+According to the model, an algorithm's performance is capped by the minimum of two hardware bottlenecks:
+1. **Compute Limit:** The hardware's maximum computational speed (peak [FLOPS](/shared/glossary/#flops)), representing how fast the processor cores can execute calculations when they are fully occupied.
+2. **Memory Limit:** The hardware's [memory bandwidth](/shared/glossary/#memory-bandwidth) multiplied by the algorithm's [arithmetic intensity](/shared/glossary/#ai-arithmetic-intensity), representing how fast data can be loaded from main memory into the processor scaled by how many calculations are performed on each byte of data.
+
+The performance ceiling is represented mathematically as:
+*performance limit* = min(*peak FLOPS*, *memory bandwidth* × *arithmetic intensity*)
+
+**Analogy:** Imagine a busy kitchen preparing fruit salads.
+* **Peak FLOPS (Compute Limit):** The speed of the chefs. If you have extremely fast chefs, they can chop up to 10 fruits per second.
+* **Memory Bandwidth:** The speed of the helper bringing fruit from the pantry. If the helper can only carry 2 fruits per second, the kitchen's supply is limited.
+* **Arithmetic Intensity:** The complexity of the recipe.
+  * **Memory-bound scenario:** If a recipe requires only 1 chop per fruit, the helper brings 2 fruits, and the chefs perform 2 chops per second. The chefs sit idle most of the time because they are waiting for fruits. The kitchen's throughput is limited by the helper (**memory bandwidth**).
+  * **Compute-bound scenario:** If a recipe requires 10 complex decorative chops per fruit, the helper brings 2 fruits, and the chefs must perform 20 chops. However, the chefs chop as fast as they can and reach their maximum capacity of 10 chops per second (leaving fruits piled up). The kitchen's throughput is limited by the chefs (**peak FLOPS**).
+
+When plotted on a graph, this performance ceiling resembles a slanted roof (the memory-limited phase) that bends and flattens out into a horizontal ceiling (the compute-limited phase) as arithmetic intensity increases.
 
 ### RoPE {#rope}
 Rotary Position [Embedding](/shared/glossary/#embedding) — a way to tell a [transformer](/shared/glossary/#transformer) *where* each token sits by physically rotating its query and key vectors by an angle proportional to the position, so the [attention](/shared/glossary/#attention) [dot product](/shared/glossary/#dot-product) between two tokens depends only on how far apart they are. Because the encoding lives in the rotation rather than an added vector, it [extrapolates](/shared/glossary/#extrapolation) to longer sequences than the model trained on. **2D RoPE** extends the trick to images: a [patch](/shared/glossary/#patch) token is rotated by its row *and* its column, encoding 2D spatial position. **3D RoPE** adds a third axis — time — so a video token is rotated by its row, column, *and* frame index; this is the standard position encoding in [DiT](/shared/glossary/#dit)-based video models, and because the rotation extrapolates, it is what lets a model trained on short clips generate longer ones at [variable resolution](/shared/glossary/#variable-resolution). Like giving every seat in a theater a precise angle on a [dial](/shared/glossary/#dial), so the model can always work out the spacing between any two seats — and, for 3D RoPE, every seat across every showtime.
@@ -2853,7 +2903,7 @@ Single Instruction Multiple Data — a computer architecture execution model whe
 **Analogy:** A fitness instructor leading an aerobics class. The instructor calls out a single instruction ("Raise your left arm!"), and all fifty participants in the room perform that exact action at the same moment on their own bodies, processing fifty data points (arms) with one command.
 
 ### SIMT {#simt}
-Single Instruction Multiple Threads — an execution model used in [GPUs](/shared/glossary/#gpu) where a single instruction is executed across multiple independent threads (a warp of 32 threads). Unlike [SIMD](/shared/glossary/#simd) where the programmer must think about vector registers and packing data explicitly, SIMT allows writing code for a single thread, while the hardware handles executing it across parallel threads and masking out inactive ones during divergence.
+Single Instruction Multiple Threads — an execution model used in [GPUs](/shared/glossary/#gpu) where a single instruction is executed across multiple independent threads (a warp of 32 threads). Unlike [SIMD](/shared/glossary/#simd) where the programmer must think about vector registers and packing data explicitly, SIMT allows writing code for a single thread, while the hardware handles executing it across parallel threads and masking out inactive ones during [divergence](/shared/glossary/#divergence).
 **Analogy:** A school classroom where thirty students are taking the same exam. The teacher reads out a single instruction ("Answer question 3 on page 5"). Every student follows that instruction, but they write their answers independently. If some students finish early, they sit quietly (masked off) while the others catch up.
 
 ### Sim-to-real {#sim-to-real}
