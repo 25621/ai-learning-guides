@@ -1057,6 +1057,17 @@ const sidebars = {
                 {type: 'doc', id: 'guides/ai-hardware/projects/spec-compare/README', label: 'Spec compare'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 3: The Memory Hierarchy — Where Your Time Actually Goes',
+              items: [
+                {type: 'doc', id: 'guides/ai-hardware/projects/coalesced-vs-non-coalesced/README', label: 'Coalesced vs non-coalesced'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/bank-conflict-demo/README', label: 'Bank conflict demo'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/tile-size-sweep/README', label: 'Tile size sweep'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/hbm-saturation/README', label: 'HBM saturation'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/l2-hit-rate-analysis/README', label: 'L2 hit rate analysis'},
+              ],
+            },
           ],
         },
       ],

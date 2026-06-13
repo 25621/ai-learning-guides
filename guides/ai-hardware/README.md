@@ -291,11 +291,11 @@ as you can for as long as you can.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Coalesced vs non-coalesced | Write two CUDA kernels — adjacent-stride vs strided access — and measure bandwidth | ⭐⭐⭐ |
-| Bank conflict demo | Reproduce a shared-memory bank conflict; report the slowdown | ⭐⭐⭐⭐ |
-| Tile size sweep | Implement a tiled matmul; vary tile size; observe the sweet spot | ⭐⭐⭐⭐ |
-| HBM saturation | Write a vector-add and measure HBM bandwidth utilization; tune until > 80% of peak | ⭐⭐⭐⭐ |
-| L2 hit rate analysis | Use Nsight Compute to inspect L2 hit rate of an attention kernel; explain what you see | ⭐⭐⭐⭐ |
+| [Coalesced vs non-coalesced](projects/11-coalesced-vs-non-coalesced/README.md) | Write two CUDA kernels — adjacent-stride vs strided access — and measure bandwidth | ⭐⭐⭐ |
+| [Bank conflict demo](projects/12-bank-conflict-demo/README.md) | Reproduce a shared-memory bank conflict; report the slowdown | ⭐⭐⭐⭐ |
+| [Tile size sweep](projects/13-tile-size-sweep/README.md) | Implement a tiled matmul; vary tile size; observe the sweet spot | ⭐⭐⭐⭐ |
+| [HBM saturation](projects/14-hbm-saturation/README.md) | Write a vector-add and measure HBM bandwidth utilization; tune until > 80% of peak | ⭐⭐⭐⭐ |
+| [L2 hit rate analysis](projects/15-l2-hit-rate-analysis/README.md) | Use Nsight Compute to inspect L2 hit rate of an attention kernel; explain what you see | ⭐⭐⭐⭐ |
 
 ### Sample Code: A Coalesced vs Strided Load Demo (CUDA)
 
