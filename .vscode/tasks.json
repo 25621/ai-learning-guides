@@ -26,6 +26,19 @@
       }
     },
     {
+      "label": "Docusaurus: Clear",
+      "type": "shell",
+      "command": "npm run clear",
+      "options": {
+        "cwd": "${workspaceFolder}/docusaurus-site"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "panel": "dedicated",
+        "reveal": "silent"
+      }
+    },
+    {
       "label": "Docusaurus: Start",
       "type": "shell",
       "command": "npm run start",
@@ -54,6 +67,7 @@
       "dependsOrder": "sequence",
       "dependsOn": [
         "Docusaurus: Stop",
+        "Docusaurus: Clear",
         "Docusaurus: Start"
       ],
       "problemMatcher": []
