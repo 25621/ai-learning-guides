@@ -1046,6 +1046,17 @@ const sidebars = {
                 {type: 'doc', id: 'guides/ai-hardware/projects/gpu-vs-cpu-bake-off/README', label: 'GPU vs CPU bake-off'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 2: GPU Architecture, Inside Out',
+              items: [
+                {type: 'doc', id: 'guides/ai-hardware/projects/nvidia-smi-deep-dive/README', label: 'nvidia-smi deep dive'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/tensor-core-utilization/README', label: 'Tensor core utilization'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/occupancy-study/README', label: 'Occupancy study'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/divergence-demo/README', label: 'Divergence demo'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/spec-compare/README', label: 'Spec compare'},
+              ],
+            },
           ],
         },
       ],

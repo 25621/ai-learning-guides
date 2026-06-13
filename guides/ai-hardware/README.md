@@ -228,11 +228,11 @@ Rubin (announced)      Next-gen; production 2026–2027
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| `nvidia-smi` deep dive | For your GPU: report exact compute capability, SM count, HBM type/capacity/bandwidth, NVLink topology | ⭐ |
-| Tensor core utilization | Run `nsys` and `ncu` on a matmul; observe % of time tensor cores are active | ⭐⭐⭐ |
-| Occupancy study | Vary block size in a simple CUDA kernel; observe SM occupancy in Nsight | ⭐⭐⭐ |
-| Divergence demo | Write a kernel with intentional thread divergence; measure the slowdown | ⭐⭐⭐ |
-| Spec compare | Pick three GPUs (consumer/datacenter/old); compute peak bf16 FLOPs, HBM B/W, and AI break-even point | ⭐⭐ |
+| [`nvidia-smi` deep dive](projects/06-nvidia-smi-deep-dive/README.md) | For your GPU: report exact compute capability, SM count, HBM type/capacity/bandwidth, NVLink topology | ⭐ |
+| [Tensor core utilization](projects/07-tensor-core-utilization/README.md) | Run `nsys` and `ncu` on a matmul; observe % of time tensor cores are active | ⭐⭐⭐ |
+| [Occupancy study](projects/08-occupancy-study/README.md) | Vary block size in a simple CUDA kernel; observe SM occupancy in Nsight | ⭐⭐⭐ |
+| [Divergence demo](projects/09-divergence-demo/README.md) | Write a kernel with intentional thread divergence; measure the slowdown | ⭐⭐⭐ |
+| [Spec compare](projects/10-spec-compare/README.md) | Pick three GPUs (consumer/datacenter/old); compute peak bf16 FLOPs, HBM B/W, and AI break-even point | ⭐⭐ |
 
 ### Key Insight
 

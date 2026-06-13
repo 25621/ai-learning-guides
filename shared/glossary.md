@@ -538,6 +538,13 @@ How much a robot yields—gives way—when something pushes on it, the opposite 
 
 **Example:** A robot writing with a pencil. If the robot is rigidly stiff and the table is slightly higher than expected, it will press down too hard and instantly snap the pencil lead. A compliant robot will yield slightly when it feels the table pushing back, allowing it to write smoothly even if the surface is uneven. Similarly, a compliant robot can easily wiggle a key into a misaligned keyhole, whereas a rigid robot would jam.
 
+### Compute capability {#compute-capability}
+An integer version number assigned by NVIDIA to define the hardware features, instruction sets, and numerical formats supported by a specific [GPU](/shared/glossary/#gpu) architecture. It dictates which low-precision formats (like [FP8](/shared/glossary/#fp8) or [FP4](/shared/glossary/#fp4)) and specialized operations (like hardware [Tensor Cores](/shared/glossary/#tensor-core)) are available on that chip.
+
+**Analogy:** A phone's operating system version (e.g., iOS 17). A newer version supports all the features of older versions but introduces new capabilities, APIs, and performance optimizations.
+
+**Example:** An A100 GPU has compute capability 8.0 (Ampere architecture), which supports [BF16](/shared/glossary/#bfloat16) and [TF32](/shared/glossary/#tf32). An H100 GPU has compute capability 9.0 (Hopper architecture), adding support for [FP8](/shared/glossary/#fp8) and dynamic scaling in its [TransformerEngine](/shared/glossary/#transformerengine). Code targeting compute capability 9.0 features cannot run on an 8.0 GPU.
+
 ### Computed-torque control {#computed-torque-control}
 A control method for robot arms that uses the arm's own [inverse dynamics](/shared/glossary/#inverse-dynamics) as a [feedforward](/shared/glossary/#feedforward-control) term to *cancel* its nonlinear physics, so what is left over behaves like a simple, predictable system. Concretely, you take the desired acceleration, add a small [PID](/shared/glossary/#pid)-style correction for tracking error, and then plug that through the [manipulator equation](/shared/glossary/#manipulator-equation) `M(q)q̈ + C(q,q̇)q̇ + g(q)` to work out exactly the torques that produce it — gravity, inertia, and velocity effects all accounted for in advance. Because the model has already absorbed the hard nonlinear part, each joint then responds like an independent, well-behaved unit that a light feedback gain can steer precisely. It is the natural baseline controller for any torque-controlled arm whose dynamics model is trustworthy. Analogy: an archer who already knows the wind and the arrow's drop and pre-aims for them, so only a tiny last-moment adjustment is needed — versus one who fires straight at the target and fights every gust after the fact.
 
@@ -1410,6 +1417,13 @@ Using the chain rule, we can determine the exact rate of change of the Loss (`L`
 ### Gradient checkpointing {#gradient-checkpointing}
 A memory-saving technique that discards intermediate activations during the forward pass and recomputes them during the backward pass.
 
+### Gradient descent {#gradient-descent}
+An optimization algorithm used to minimize a model's [loss function](/shared/glossary/#loss-function) by iteratively moving its parameters in the direction of the steepest decrease (the negative [gradient](/shared/glossary/#gradients)). The size of the steps taken in this direction is determined by the [learning rate](/shared/glossary/#learning-rate).
+
+**Analogy:** A hiker stuck on a foggy mountain who wants to find the valley at the bottom. Since they cannot see the path, they feel the slope of the ground under their feet and take a step in the direction that goes downhill most steeply. By repeating this step-by-step, they will eventually reach the bottom.
+
+**Example:** During training, after the backward pass computes the gradients of the loss with respect to all [weights](/shared/glossary/#weights), the optimizer updates the weights by subtracting a fraction of the gradient (e.g., `weight = weight - learning_rate * gradient`). This adjusts the model to make slightly more accurate predictions on the next batch.
+
 ### Gradient penalty {#gradient-penalty}
 An extra [loss](/shared/glossary/#loss-function) term used in [Wasserstein GANs](/shared/glossary/#wasserstein-gan-wgan) (WGAN-GP) that keeps the critic 1-[Lipschitz](/shared/glossary/#lipschitz-constraint) — meaning its output cannot change faster than its input. It works by measuring the size of the critic's [gradient](/shared/glossary/#gradients) with respect to its input image and pushing that size toward 1. This replaces the original WGAN's blunt trick of clipping weights to a fixed range, which often hurt quality, and is the main reason WGAN-GP trains so stably.
 
@@ -2159,12 +2173,33 @@ A generative model that starts from simple random noise (usually a plain Gaussia
 ### np.linalg.solve {#nplinalgsolve}
 A NumPy function that solves a system of linear equations `Ax = b` for the unknown vector `x`, given a square matrix `A` and a known vector `b`. It is the practical alternative to forming the [matrix inverse](/shared/glossary/#matrix-inverse) and multiplying by it: rather than first computing `A⁻¹` and then `A⁻¹b` (two costly steps), it finds `x` in a single pass, which is both faster and less prone to rounding error. Analogy: to undo "multiply by 3" you don't first write out "1 ÷ 3" and then multiply — you just divide by 3 directly; `np.linalg.solve` divides by a whole matrix at once. In RL it gives the closed-form answer to [policy evaluation](/shared/glossary/#policy-evaluation) in one line — `V = np.linalg.solve(I − γPπ, rπ)` — the exact [value function](/shared/glossary/#value-function) for a fixed [policy](/shared/glossary/#policy) without iterating the [Bellman equation](/shared/glossary/#bellman-equation).
 
+### Nsight Compute {#nsight-compute}
+A kernel-level profiling tool from NVIDIA (often run via the command-line command `ncu`) that provides detailed performance metrics for individual [CUDA](/shared/glossary/#cuda) [kernels](/shared/glossary/#kernel). It measures register usage, shared memory utilization, cache hit rates, memory access patterns, and whether execution is bottlenecked by arithmetic throughput or memory bandwidth.
+
+**Analogy:** A microscope for a watchmaker. Rather than looking at the clock's overall timekeeping, it zooms in on the individual gears and springs to see exactly which tooth is slipping or where friction is slowing down the movement.
+
+**Example:** Profiling a custom matrix multiplication kernel with `ncu` reveals that the [Tensor Cores](/shared/glossary/#tensor-core) are active only 20% of the time because non-coalesced memory loads are saturating the [HBM](/shared/glossary/#hbm) bandwidth.
+
+### Nsight Systems {#nsight-systems}
+A system-wide profiling tool from NVIDIA (often run via the command-line command `nsys`) that visualizes an application's CPU and [GPU](/shared/glossary/#gpu) activity over a timeline. It helps identify coarse-grained bottlenecks, such as slow data transfers over PCIe, serialization issues, or gaps where the GPU is idle waiting for CPU dispatch.
+
+**Analogy:** A Gantt chart for a construction site. It shows when the concrete trucks arrive, when the workers are building, and when work stops because they are waiting on materials, helping the foreman see the overall flow of the project.
+
+**Example:** Profiling a [PyTorch](/shared/glossary/#pytorch) training step with `nsys profile python train.py` produces a timeline trace showing that the GPU is idle for 30% of the step because of slow CPU-side data preprocessing.
+
 ### NumPy {#numpy}
 A foundational Python library for scientific computing, providing support for large, multi-dimensional arrays and matrices, along with a collection of high-level mathematical functions to operate on them. It executes operations in optimized C code, making it much faster than standard Python loops. Unlike [PyTorch](/shared/glossary/#pytorch), NumPy arrays run only on the [CPU](/shared/glossary/#cpu) and do not support automatic differentiation ([autograd](/shared/glossary/#autograd)).
 **Analogy:** A highly efficient accountant who works solely with spreadsheets. The accountant is incredibly fast at doing math on whole columns and rows of numbers without having to type out every single equation, but works only at their office desk (the CPU) and doesn't record their steps to automatically undo or trace them backward (no autograd).
 
 ### NVAE {#nvae}
 Short for *Nouveau VAE* — a [hierarchical VAE](/shared/glossary/#hierarchical-vae) from NVIDIA (2020) that stacks many layers of latent variables through a deep network built from depthwise separable [convolutions](/shared/glossary/#convolution-layers) and [residual connections](/shared/glossary/#residual-connection), reaching then state-of-the-art image generation quality. Like a skyscraper where each floor refines the blueprint handed down from above — the top floors sketch the overall shape and the lower floors fill in the fine details. The name "Nouveau" is French for "new," positioning it as a modern reimagining of the classic VAE.
+
+### nvidia-smi {#nvidia-smi}
+NVIDIA System Management Interface — a command-line utility that provides monitoring and management capabilities for NVIDIA [GPUs](/shared/glossary/#gpu). It reports real-time metrics such as GPU utilization, temperature, power draw, memory usage, [compute capability](/shared/glossary/#compute-capability), active processes, and [NVLink](/shared/glossary/#nvlink) topology.
+
+**Analogy:** A car's dashboard. It displays real-time speed, engine temperature, fuel level, and warning lights, letting the driver know if the vehicle is running smoothly or hitting its limits without needing to look under the hood.
+
+**Example:** Running `nvidia-smi` in the terminal tells a developer if their model's training loop is hitting a memory bottleneck (GPU memory usage is at 99%) or if the GPU is running hot and throttling its clock speed.
 
 ### NVLink {#nvlink}
 NVIDIA's GPU-GPU interconnect; much faster than PCIe
@@ -2177,6 +2212,13 @@ The practice of making a running system's inner state visible from the outside �
 
 ### Object permanence {#object-permanence}
 The basic fact that objects keep existing even when you cannot see them — a ball that rolls behind a couch is still there and should reappear on the other side. For a video generator this is a surprisingly hard test: a model that only makes each frame look locally plausible may let an object silently vanish, change color, or duplicate while it is briefly hidden (occluded) and then revealed. Infants learn object permanence in their first year; generative video models still routinely fail it, which is why it is one of the world-behavior criteria [Sora](/shared/glossary/#sora)'s report singles out. It is one facet of the broader [physical plausibility](/shared/glossary/#physical-plausibility) problem and closely tied to [world consistency](/shared/glossary/#world-consistency).
+
+### Occupancy {#occupancy}
+The ratio of active [warps](/shared/glossary/#warp) on a Streaming Multiprocessor ([SM](/shared/glossary/#sm)) to the maximum number of warps the SM is physically capable of supporting at once. High occupancy allows the GPU's warp scheduler to hide memory latency by switching to another active warp when the current one stalls on data retrieval.
+
+**Analogy:** A busy call center. If you have only one operator (low occupancy) and they get put on hold (memory latency), the whole desk sits idle. If you have many operators (high occupancy), as soon as one is put on hold, another operator can immediately handle a different call, keeping the center productive.
+
+**Example:** If a [CUDA](/shared/glossary/#cuda) block uses too many registers or too much shared memory, the SM cannot fit many blocks at once, resulting in low occupancy. If a warp stalls waiting for [HBM](/shared/glossary/#hbm) and there are no other active warps ready to run, the SM's compute units go unused, reducing performance.
 
 ### OCR (Optical Character Recognition) {#ocr-optical-character-recognition}
 Reading the text *inside* an image — turning pixels of letters into actual characters a computer can use — for example pulling the line items off a photographed receipt or the words out of a scanned page. It is the skill that separates a [VLM](/shared/glossary/#vlm) that "sees a document" from one that can answer "what is the total?", and it is hard precisely because the answer often hides in small print that survives only if the image is fed in at high enough resolution (one reason [AnyRes](/shared/glossary/#anyres) tiling helps). Analogy: the difference between glancing at a street sign and actually reading the words on it. Example: given a photo of a price tag, an OCR-capable model returns the string "$19.99" rather than just "a label"; benchmarks like DocVQA and OCRBench score exactly this ability.
@@ -2564,6 +2606,13 @@ RAFT (Recurrent All-Pairs Field Transforms) is a neural network for computing de
 
 ### RAG {#rag}
 Retrieval-Augmented Generation — give the model an "open-book exam" instead of asking it to answer from memory alone. First a search step fetches the documents most relevant to the question (from a company wiki, a manual, the web), then those documents are pasted into the prompt, and only then does the model write its answer using them as notes. This lets it use fresh or private facts it was never trained on, and makes it easy to check where an answer came from.
+
+### RAM {#ram}
+Random Access Memory (also called main memory or system memory) — a fast, volatile hardware component that holds the data and program instructions currently being used by the [CPU](/shared/glossary/#cpu) or [GPU](/shared/glossary/#gpu). In contrast to permanent storage (like SSDs), RAM allows extremely quick read and write access, but loses its contents when powered off.
+
+**Analogy:** A workspace desk. Anything you are actively working on (documents, pencils, calculator) is laid out on the desk for immediate access. If you need something else, you must open the filing cabinet (storage/SSD), which takes much longer. At the end of the day, the desk is wiped completely clean.
+
+**Example:** When loading a [PyTorch](/shared/glossary/#pytorch) model, the weights are first read from the hard drive and loaded into the system RAM. If you are training on a GPU, the weights are then transferred from the system RAM to the GPU's dedicated high-bandwidth memory ([HBM](/shared/glossary/#hbm)).
 
 ### Rainbow {#rainbow}
 A 2017 agent that combines six independent improvements to [DQN](/shared/glossary/#dqn) into one, demonstrating that they are complementary — the combination clearly beats any single piece. The six are: [Double DQN](/shared/glossary/#double-dqn), [Dueling DQN](/shared/glossary/#dueling-dqn), [prioritized experience replay](/shared/glossary/#prioritized-experience-replay-per), [n-step returns](/shared/glossary/#n-step-returns), [distributional RL](/shared/glossary/#distributional-rl) (the [C51](/shared/glossary/#c51) variant), and *noisy nets* (which add learnable noise to the network's weights so exploration is driven by the agent itself rather than a hand-set [ε-greedy](/shared/glossary/#epsilon-greedy) rate). The name reflects blending these separately-developed techniques into a single agent. Its lesson — that well-chosen tricks stack rather than cancel — is why "just add the known improvements" is a reliable recipe in deep RL.
@@ -3141,6 +3190,13 @@ Specialized matmul unit in NVIDIA GPUs since [Volta](/shared/glossary/#volta)
 
 ### Tensor parallelism (TP) {#tensor-parallelism-tp}
 Splitting each layer's [weights](/shared/glossary/#weights) across several GPUs so they each do part of the math, then combining their partial results with an [all-reduce](/shared/glossary/#allreduce). "At attention/[MLP](/shared/glossary/#mlp) boundaries" means that combining happens at two natural seams in every [transformer](/shared/glossary/#transformer) block — once at the end of the [attention](/shared/glossary/#attention) sublayer and once at the end of the MLP sublayer — because *within* a sublayer the GPUs can work independently, but at its edge their pieces must be added back together before the next step can start. Like four cooks each preparing part of a dish and merging everything at two fixed points before it moves on.
+
+### TF32 {#tf32}
+TensorFloat-32 — a proprietary 19-bit math format introduced by NVIDIA for accelerating single-precision workloads on [Tensor Cores](/shared/glossary/#tensor-core). It uses the same 8-bit [exponent](/shared/glossary/#exponent) as [FP32](/shared/glossary/#float32) (to preserve dynamic range) and the same 10-bit [mantissa](/shared/glossary/#mantissa) as [FP16](/shared/glossary/#float16) (to reduce hardware footprint), allowing the [GPU](/shared/glossary/#gpu) to run matrix multiplications faster without requiring code changes to scale gradients.
+
+**Analogy:** A shipping box that is standard height and width on the outside (so it fits on all standard conveyor belts and delivery trucks without modifications), but is shallower on the inside to save material and weight. It fits the same sorting system (the FP32 data pipeline) but handles the cargo (precision math) with less internal volume (fewer mantissa bits).
+
+**Example:** When training a model on an A100 GPU with automatic TF32 enabled, the GPU automatically reads [FP32](/shared/glossary/#float32) inputs, converts them to TF32 to accelerate matrix multiplications on the Tensor Cores, and writes the output back in standard FP32. This provides up to a 10× speedup on matrix math compared to standard FP32 training, with virtually no impact on model accuracy.
 
 ### TFLOPs {#tflops}
 Tera (10¹²) floating-point operations per second
