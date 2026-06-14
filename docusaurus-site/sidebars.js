@@ -1081,6 +1081,17 @@ const sidebars = {
                 {type: 'doc', id: 'guides/ai-hardware/projects/custom-op-registration/README', label: 'Custom op registration'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 5: TPUs, NPUs, and Alternative Accelerators',
+              items: [
+                {type: 'doc', id: 'guides/ai-hardware/projects/run-a-tpu-notebook/README', label: 'Run a TPU notebook'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/amd-mi300-inference/README', label: 'AMD MI300 inference'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/apple-silicon-llm/README', label: 'Apple Silicon LLM'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/compare-accelerators/README', label: 'Compare accelerators'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/tenstorrent-dev/README', label: 'Tenstorrent dev'},
+              ],
+            },
           ],
         },
       ],

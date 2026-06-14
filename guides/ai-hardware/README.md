@@ -508,11 +508,12 @@ TPU-style systolic array:
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Run a TPU notebook | Free Kaggle/Colab TPU; train a small model with JAX or PyTorch/XLA | ⭐⭐⭐ |
-| AMD MI300 inference | If you can rent one: run a large LLM on MI300X via ROCm + vLLM; report tokens/sec | ⭐⭐⭐⭐ |
-| Apple Silicon LLM | Run a 7B–70B model on a Mac Studio via MLX or llama.cpp; benchmark | ⭐⭐⭐ |
-| Compare accelerators | Same model, same batch, on three different hardware types (e.g., A100, M2 Max, free TPU); report all metrics | ⭐⭐⭐⭐ |
-| Tenstorrent dev | Buy or rent a Tenstorrent card; write a simple kernel using their open SDK | ⭐⭐⭐⭐⭐ |
+| [Run a TPU notebook](projects/23-run-a-tpu-notebook/README.md) | Free Kaggle/Colab TPU; train a small model with JAX or PyTorch/XLA | ⭐⭐⭐ |
+| [AMD MI300 inference](projects/24-amd-mi300-inference/README.md) | If you can rent one: run a large LLM on MI300X via ROCm + vLLM; report tokens/sec | ⭐⭐⭐⭐ |
+| [Apple Silicon LLM](projects/25-apple-silicon-llm/README.md) | Run a 7B–70B model on a Mac Studio via MLX or llama.cpp; benchmark | ⭐⭐⭐ |
+| [Compare accelerators](projects/26-compare-accelerators/README.md) | Same model, same batch, on three different hardware types (e.g., A100, M2 Max, free TPU); report all metrics | ⭐⭐⭐⭐ |
+| [Tenstorrent dev](projects/27-tenstorrent-dev/README.md) | Buy or rent a Tenstorrent card; write a simple kernel using their open SDK | ⭐⭐⭐⭐⭐ |
+
 
 ### Key Insight
 
