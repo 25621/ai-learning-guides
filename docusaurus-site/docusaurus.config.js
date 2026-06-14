@@ -118,60 +118,72 @@ const config = {
     ],
   ],
 
+  // The docs content plugin is registered here (rather than via the classic
+  // preset's `docs` option) so it can be wrapped by ./plugins/docs-watch-scoped,
+  // which narrows the dev-server file watcher. With `path: '..'` the stock
+  // plugin watches the entire repo root recursively, descending into venv/ and
+  // node_modules/ and exhausting the OS inotify limit (ENOSPC) on `start`.
+  plugins: [
+    [
+      require.resolve('./plugins/docs-watch-scoped.js'),
+      {
+        path: '..',
+        routeBasePath: '/',
+        sidebarPath: require.resolve('./sidebars.js'),
+        breadcrumbs: true,
+        editUrl: ({docPath}) =>
+          `https://github.com/25621/ai-learning-guides/edit/main/${docPath}`,
+        include: [
+          'README.md',
+          'guides/*/README.md',
+          'guides/*/projects/*/README.md',
+          'shared/glossary.md',
+        ],
+        exclude: [
+          '**/_site/**',
+          '**/mdbook-site/**',
+          '**/docusaurus-site/**',
+          '**/node_modules/**',
+          '**/vendor/**',
+        ],
+        sidebarItemsGenerator: async function ({
+          defaultSidebarItemsGenerator,
+          ...args
+        }) {
+          const sidebarItems = await defaultSidebarItemsGenerator(args);
+          const item = args.item;
+          const docs = args.docs;
+          if (item.customProps && item.customProps.phase) {
+            const phase = item.customProps.phase;
+            return sidebarItems.filter(sidebarItem => {
+              if (sidebarItem.type === 'doc') {
+                const doc = docs.find(d => d.id === sidebarItem.id);
+                if (doc) {
+                  const match = doc.source.match(/guides\/ai-hardware\/projects\/(\d+)-/);
+                  if (match) {
+                    const projectNum = parseInt(match[1], 10);
+                    if (phase === 1) {
+                      return projectNum >= 1 && projectNum <= 5;
+                    } else if (phase === 2) {
+                      return projectNum >= 6 && projectNum <= 10;
+                    }
+                  }
+                }
+              }
+              return true;
+            });
+          }
+          return sidebarItems;
+        },
+      },
+    ],
+  ],
+
   presets: [
     [
       'classic',
       {
-        docs: {
-          path: '..',
-          routeBasePath: '/',
-          sidebarPath: require.resolve('./sidebars.js'),
-          breadcrumbs: true,
-          editUrl: ({docPath}) =>
-            `https://github.com/25621/ai-learning-guides/edit/main/${docPath}`,
-          include: [
-            'README.md',
-            'guides/*/README.md',
-            'guides/*/projects/*/README.md',
-            'shared/glossary.md',
-          ],
-          exclude: [
-            '**/_site/**',
-            '**/mdbook-site/**',
-            '**/docusaurus-site/**',
-            '**/node_modules/**',
-            '**/vendor/**',
-          ],
-          sidebarItemsGenerator: async function ({
-            defaultSidebarItemsGenerator,
-            ...args
-          }) {
-            const sidebarItems = await defaultSidebarItemsGenerator(args);
-            const item = args.item;
-            const docs = args.docs;
-            if (item.customProps && item.customProps.phase) {
-              const phase = item.customProps.phase;
-              return sidebarItems.filter(sidebarItem => {
-                if (sidebarItem.type === 'doc') {
-                  const doc = docs.find(d => d.id === sidebarItem.id);
-                  if (doc) {
-                    const match = doc.source.match(/guides\/ai-hardware\/projects\/(\d+)-/);
-                    if (match) {
-                      const projectNum = parseInt(match[1], 10);
-                      if (phase === 1) {
-                        return projectNum >= 1 && projectNum <= 5;
-                      } else if (phase === 2) {
-                        return projectNum >= 6 && projectNum <= 10;
-                      }
-                    }
-                  }
-                }
-                return true;
-              });
-            }
-            return sidebarItems;
-          },
-        },
+        docs: false,
         blog: false,
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

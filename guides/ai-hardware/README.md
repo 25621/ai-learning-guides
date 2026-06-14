@@ -333,15 +333,15 @@ The point at which you stop being a hardware consumer and become a producer.
 
 ### Concepts to Learn
 
-- **CUDA C++ basics**: `__global__`, `__device__`, thread/block IDs, `__syncthreads()`, shared memory
-- **Launch configuration**: choosing block and grid dimensions; occupancy calculator
-- **CUDA streams**: how multiple operations run concurrently; events for synchronization
+- **[CUDA](/shared/glossary/#cuda) C++ basics**: `__global__`, `__device__`, thread/block IDs, `__syncthreads()`, [shared memory](/shared/glossary/#shared-memory)
+- **Launch configuration**: choosing block and grid dimensions; [occupancy](/shared/glossary/#occupancy) calculator
+- **[CUDA streams](/shared/glossary/#cuda-stream)**: how multiple operations run concurrently; events for synchronization
 - **CUB and Thrust**: the standard library of CUDA — already-optimized parallel primitives
-- **cuBLAS and cuDNN**: NVIDIA's optimized libraries; "compete with these on matmul/attention only if you have a very good reason"
-- **Triton** — Python-flavored GPU language; pointers, blocks, masks, `tl.load`/`tl.store`, autotuning
-- **The dispatcher integration**: how a custom kernel becomes a `torch.library.custom_op` that `torch.compile` can pick up
-- **CUTLASS** — NVIDIA's template library for matmul-like kernels; what FlashAttention is built on
-- **The kernel-writing workflow**: prototype in Python (PyTorch eager), profile, identify a memory-bound region, rewrite the offending op as one fused kernel, benchmark, regress
+- **[cuBLAS](/shared/glossary/#cublas)** and cuDNN: NVIDIA's optimized libraries; "compete with these on [matmul](/shared/glossary/#matmul)/[attention](/shared/glossary/#attention) only if you have a very good reason"
+- **[Triton](/shared/glossary/#triton)** — Python-flavored [GPU](/shared/glossary/#gpu) language; pointers, blocks, masks, `tl.load`/`tl.store`, autotuning
+- **The dispatcher integration**: how a custom [kernel](/shared/glossary/#kernel) becomes a `torch.library.custom_op` (a [custom op](/shared/glossary/#custom-op)) that [torch.compile](/shared/glossary/#torchcompile) can pick up
+- **CUTLASS** — NVIDIA's template library for matmul-like kernels; what [FlashAttention](/shared/glossary/#flashattention) is built on
+- **The kernel-writing workflow**: prototype in Python (PyTorch eager), profile, identify a memory-bound region, rewrite the offending op as one [fused kernel](/shared/glossary/#kernel-fusion), benchmark, regress
 
 ### When to Write a Custom Kernel
 
@@ -379,13 +379,13 @@ Pick CUDA when:
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| CUDA vector add | Write the canonical "hello world" CUDA kernel; profile and tune block size | ⭐⭐ |
-| CUDA tiled matmul | Implement a shared-memory tiled matmul; aim for > 50% of cuBLAS throughput | ⭐⭐⭐⭐ |
-| Triton softmax | Implement softmax in Triton; verify numerical match and bandwidth utilization | ⭐⭐⭐ |
-| Triton matmul | Tile-based matmul in Triton; aim for > 70% of cuBLAS | ⭐⭐⭐⭐ |
-| Fused LayerNorm | One Triton kernel that does layernorm + linear; benchmark against eager + cuDNN | ⭐⭐⭐⭐ |
-| Mini FlashAttention | Tiled, online-softmax attention kernel in Triton; verify numerical match | ⭐⭐⭐⭐⭐ |
-| Custom op registration | Wrap your Triton kernel as a `torch.library.custom_op` so `torch.compile` can use it | ⭐⭐⭐⭐ |
+| [CUDA vector add](projects/16-cuda-vector-add/README.md) | Write the canonical "hello world" CUDA kernel; profile and tune block size | ⭐⭐ |
+| [CUDA tiled matmul](projects/17-cuda-tiled-matmul/README.md) | Implement a shared-memory tiled matmul; aim for > 50% of cuBLAS throughput | ⭐⭐⭐⭐ |
+| [Triton softmax](projects/18-triton-softmax/README.md) | Implement softmax in Triton; verify numerical match and bandwidth utilization | ⭐⭐⭐ |
+| [Triton matmul](projects/19-triton-matmul/README.md) | Tile-based matmul in Triton; aim for > 70% of cuBLAS | ⭐⭐⭐⭐ |
+| [Fused LayerNorm](projects/20-fused-layernorm/README.md) | One Triton kernel that does layernorm + linear; benchmark against eager + cuDNN | ⭐⭐⭐⭐ |
+| [Mini FlashAttention](projects/21-mini-flashattention/README.md) | Tiled, online-softmax attention kernel in Triton; verify numerical match | ⭐⭐⭐⭐⭐ |
+| [Custom op registration](projects/22-custom-op-registration/README.md) | Wrap your Triton kernel as a `torch.library.custom_op` so `torch.compile` can use it | ⭐⭐⭐⭐ |
 
 ### Sample Code: A Triton Fused LayerNorm Forward
 
@@ -508,11 +508,12 @@ TPU-style systolic array:
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Run a TPU notebook | Free Kaggle/Colab TPU; train a small model with JAX or PyTorch/XLA | ⭐⭐⭐ |
-| AMD MI300 inference | If you can rent one: run a large LLM on MI300X via ROCm + vLLM; report tokens/sec | ⭐⭐⭐⭐ |
-| Apple Silicon LLM | Run a 7B–70B model on a Mac Studio via MLX or llama.cpp; benchmark | ⭐⭐⭐ |
-| Compare accelerators | Same model, same batch, on three different hardware types (e.g., A100, M2 Max, free TPU); report all metrics | ⭐⭐⭐⭐ |
-| Tenstorrent dev | Buy or rent a Tenstorrent card; write a simple kernel using their open SDK | ⭐⭐⭐⭐⭐ |
+| [Run a TPU notebook](projects/23-run-a-tpu-notebook/README.md) | Free Kaggle/Colab TPU; train a small model with JAX or PyTorch/XLA | ⭐⭐⭐ |
+| [AMD MI300 inference](projects/24-amd-mi300-inference/README.md) | If you can rent one: run a large LLM on MI300X via ROCm + vLLM; report tokens/sec | ⭐⭐⭐⭐ |
+| [Apple Silicon LLM](projects/25-apple-silicon-llm/README.md) | Run a 7B–70B model on a Mac Studio via MLX or llama.cpp; benchmark | ⭐⭐⭐ |
+| [Compare accelerators](projects/26-compare-accelerators/README.md) | Same model, same batch, on three different hardware types (e.g., A100, M2 Max, free TPU); report all metrics | ⭐⭐⭐⭐ |
+| [Tenstorrent dev](projects/27-tenstorrent-dev/README.md) | Buy or rent a Tenstorrent card; write a simple kernel using their open SDK | ⭐⭐⭐⭐⭐ |
+
 
 ### Key Insight
 
