@@ -567,11 +567,11 @@ think hard about which step in this hierarchy you're going through.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| `nccl-tests` | Run NVIDIA's official NCCL benchmark on your multi-GPU setup; report AllReduce bandwidth | ⭐⭐⭐ |
-| Multi-GPU DDP | Train a model on 2+ GPUs with DDP; profile to see AllReduce time vs compute time | ⭐⭐⭐ |
-| FSDP scaling | Scale to 4–8 GPUs with FSDP; observe how communication scales with world size | ⭐⭐⭐⭐ |
-| Multi-node setup | Set up 2-node training (cloud or two boxes on a LAN); report cross-node bandwidth | ⭐⭐⭐⭐ |
-| Topology study | Use `nvidia-smi topo -m` to inspect your GPU topology; predict NCCL performance based on it | ⭐⭐⭐ |
+| [`nccl-tests`](projects/28-nccl-tests/README.md) | Run NVIDIA's official NCCL benchmark on your multi-GPU setup; report AllReduce bandwidth | ⭐⭐⭐ |
+| [Multi-GPU DDP](projects/29-multi-gpu-ddp/README.md) | Train a model on 2+ GPUs with DDP; profile to see AllReduce time vs compute time | ⭐⭐⭐ |
+| [FSDP scaling](projects/30-fsdp-scaling/README.md) | Scale to 4–8 GPUs with FSDP; observe how communication scales with world size | ⭐⭐⭐⭐ |
+| [Multi-node setup](projects/31-multi-node-setup/README.md) | Set up 2-node training (cloud or two boxes on a LAN); report cross-node bandwidth | ⭐⭐⭐⭐ |
+| [Topology study](projects/32-topology-study/README.md) | Use `nvidia-smi topo -m` to inspect your GPU topology; predict NCCL performance based on it | ⭐⭐⭐ |
 
 ### Key Insight
 

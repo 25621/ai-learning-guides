@@ -1092,6 +1092,17 @@ const sidebars = {
                 {type: 'doc', id: 'guides/ai-hardware/projects/tenstorrent-dev/README', label: 'Tenstorrent dev'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 6: Interconnects, Multi-GPU, and Multi-Node',
+              items: [
+                {type: 'doc', id: 'guides/ai-hardware/projects/nccl-tests/README', label: 'nccl-tests'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/multi-gpu-ddp/README', label: 'Multi-GPU DDP'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/fsdp-scaling/README', label: 'FSDP scaling'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/multi-node-setup/README', label: 'Multi-node setup'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/topology-study/README', label: 'Topology study'},
+              ],
+            },
           ],
         },
       ],
