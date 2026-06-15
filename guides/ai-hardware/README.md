@@ -593,30 +593,30 @@ The hardware game is largely the precision game. This phase is about what bits t
 
 ### Concepts to Learn
 
-- **Floating-point primer**: sign + exponent + mantissa; what each does
+- **Floating-point primer**: sign + [exponent](/shared/glossary/#exponent) + [mantissa](/shared/glossary/#mantissa); what each does
 - **Common formats**:
-  - **FP32** — 1+8+23 — the dinosaur; almost never used for training in 2026
-  - **FP16** — 1+5+10 — narrow range, needs `GradScaler`; mostly being replaced
-  - **BF16** — 1+8+7 — same range as FP32, less precision; the modern training default
-  - **TF32** — NVIDIA-only marketing name for "FP32 input, 10-bit mantissa internally"; basically transparent
-  - **FP8** — multiple variants (E4M3, E5M2); the modern *inference* default and increasingly training
-  - **FP4** — Blackwell-introduced; 1+2+1 or 1+3+0 variants; pushed mostly for inference
-  - **INT8 / INT4** — integer quantization, no fractional part; common for inference
-  - **NF4** — "normal-float 4-bit" from QLoRA; non-uniform quantization grid tuned for neural-net weights
-- **Range vs precision trade-off**: more exponent bits = bigger range = harder to overflow; more mantissa bits = better precision near each value
+  - **[FP32](/shared/glossary/#float32)** — 1+8+23 — the dinosaur; almost never used for training in 2026
+  - **[FP16](/shared/glossary/#float16)** — 1+5+10 — narrow range, needs `GradScaler`; mostly being replaced
+  - **[BF16](/shared/glossary/#bfloat16)** — 1+8+7 — same range as FP32, less precision; the modern training default
+  - **[TF32](/shared/glossary/#tf32)** — NVIDIA-only marketing name for "FP32 input, 10-bit [mantissa](/shared/glossary/#mantissa) internally"; basically transparent
+  - **[FP8](/shared/glossary/#fp8)** — multiple variants (E4M3, E5M2); the modern *inference* default and increasingly training
+  - **[FP4](/shared/glossary/#fp4)** — [Blackwell](/shared/glossary/#blackwell)-introduced; 1+2+1 or 1+3+0 variants; pushed mostly for inference
+  - **[INT8](/shared/glossary/#int8) / [INT4](/shared/glossary/#int4)** — integer [quantization](/shared/glossary/#quantization), no fractional part; common for inference
+  - **[NF4](/shared/glossary/#nf4)** — "normal-float 4-bit" from [QLoRA](/shared/glossary/#qlora); non-uniform quantization grid tuned for neural-net [weights](/shared/glossary/#weights)
+- **Range vs precision trade-off**: more [exponent](/shared/glossary/#exponent) bits = bigger range = harder to overflow; more [mantissa](/shared/glossary/#mantissa) bits = better precision near each value
 - **Quantization fundamentals**:
-  - **PTQ (Post-Training Quantization)** — quantize an already-trained model; cheap, modest quality loss
-  - **QAT (Quantization-Aware Training)** — train with simulated quantization; better quality, expensive
-  - **Calibration data** — sample inputs used to set quantization scales
-  - **Per-tensor** vs **per-channel** vs **per-group** quantization scales
-  - **Activation quantization** vs **weight-only quantization** — weight-only is much easier; activations need careful range handling
+  - **[PTQ (Post-Training Quantization)](/shared/glossary/#ptq--qat)** — quantize an already-trained model; cheap, modest quality loss
+  - **[QAT (Quantization-Aware Training)](/shared/glossary/#ptq--qat)** — train with simulated quantization; better quality, expensive
+  - **[Calibration data](/shared/glossary/#calibration)** — sample inputs used to set quantization scales
+  - **[Per-tensor](/shared/glossary/#per-tensor-quantization)** vs **[per-channel](/shared/glossary/#per-channel-quantization)** vs **[per-group](/shared/glossary/#per-group-quantization)** quantization scales
+  - **Activation quantization** vs **weight-only quantization** — weight-only is much easier; [activations](/shared/glossary/#activations) need careful range handling
 - **Modern quantization methods**:
-  - **GPTQ** — gradient-free, weight-only, INT4; the workhorse
-  - **AWQ** — preserves "important" weights at higher precision
-  - **SmoothQuant** — handles activation outliers
+  - **[GPTQ](/shared/glossary/#gptq)** — gradient-free, weight-only, [INT4](/shared/glossary/#int4); the workhorse
+  - **[AWQ](/shared/glossary/#awq)** — preserves "important" weights at higher precision
+  - **[SmoothQuant](/shared/glossary/#smoothquant)** — handles activation outliers
   - **GGUF / GGML quantizations** — llama.cpp's family; K-quants, I-quants
-- **FP8 training** — Hopper's Transformer Engine handles dynamic scaling automatically; works well for many models
-- **The KV-cache** quantization angle — quantizing the KV cache can dramatically reduce memory for long-context inference
+  - **[FP8](/shared/glossary/#fp8)** training — [Hopper](/shared/glossary/#hopper)'s [Transformer Engine](/shared/glossary/#transformerengine) handles dynamic scaling automatically; works well for many models
+  - **The [KV-cache](/shared/glossary/#kv-cache)** quantization angle — quantizing the KV cache can dramatically reduce memory for long-context inference
 
 ### The Format Zoo, Visualized
 
@@ -639,12 +639,12 @@ NF4              -    -    -         non-uniform    4-bit "buckets"
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Format sweep | Train the same model in FP32, BF16, FP16, FP8; compare quality and speed | ⭐⭐⭐ |
-| Quantize a small LLM | Take a 7B model; quantize to INT4 with GPTQ; measure quality drop (perplexity, MMLU subset) | ⭐⭐⭐ |
-| KV-cache quantization | Quantize a model's KV cache to INT8; measure long-context inference savings | ⭐⭐⭐⭐ |
-| Calibration data study | Quantize with 1, 16, 256 calibration samples; measure how quality varies | ⭐⭐⭐⭐ |
-| Per-channel vs per-tensor | For one model: try both quantization granularities; measure quality and inference speed | ⭐⭐⭐⭐ |
-| QLoRA fine-tune | Fine-tune a 7B model with QLoRA on a single 24 GB GPU; measure peak memory | ⭐⭐⭐⭐ |
+| [Format sweep](projects/33-format-sweep/README.md) | Train the same model in FP32, BF16, FP16, FP8; compare quality and speed | ⭐⭐⭐ |
+| [Quantize a small LLM](projects/34-quantize-a-small-llm/README.md) | Take a 7B model; quantize to INT4 with GPTQ; measure quality drop (perplexity, MMLU subset) | ⭐⭐⭐ |
+| [KV-cache quantization](projects/35-kv-cache-quantization/README.md) | Quantize a model's KV cache to INT8; measure long-context inference savings | ⭐⭐⭐⭐ |
+| [Calibration data study](projects/36-calibration-data-study/README.md) | Quantize with 1, 16, 256 calibration samples; measure how quality varies | ⭐⭐⭐⭐ |
+| [Per-channel vs per-tensor](projects/37-per-channel-vs-per-tensor/README.md) | For one model: try both quantization granularities; measure quality and inference speed | ⭐⭐⭐⭐ |
+| [QLoRA fine-tune](projects/38-qlora-fine-tune/README.md) | Fine-tune a 7B model with QLoRA on a single 24 GB GPU; measure peak memory | ⭐⭐⭐⭐ |
 
 ### Sample Code: A Simple Symmetric Quantizer
 
@@ -674,7 +674,7 @@ print(f"mean abs error: {err.item():.5f}")     # ~0.002 for normally-distributed
 
 ### Key Insight
 
-The hardware FLOP curve has been climbing dramatically partly because of better silicon and partly because **the precision keeps shrinking**. A 2026 Blackwell at FP4 has ~30× the headline FLOPs of a 2017 V100 at FP16. Maybe 5× of that is real compute; the rest is bit-shrinkage. The catch: every bit you give up has to be earned back somehow — by calibration, by careful scaling, by smarter algorithms. The "FP4 LLM" you're running on Blackwell isn't free; it's the cumulative product of dozens of papers and years of hardware-software co-design. The lesson for practitioners: precision is a knob, not a property. Tune it intentionally.
+The hardware [FLOP](/shared/glossary/#flops) curve has been climbing dramatically partly because of better silicon and partly because **the precision keeps shrinking**. A 2026 [Blackwell](/shared/glossary/#blackwell) at [FP4](/shared/glossary/#fp4) has ~30× the headline [FLOPs](/shared/glossary/#flops) of a 2017 V100 at [FP16](/shared/glossary/#float16). Maybe 5× of that is real compute; the rest is bit-shrinkage. The catch: every bit you give up has to be earned back somehow — by [calibration](/shared/glossary/#calibration), by careful scaling, by smarter algorithms. The "FP4 LLM" you're running on [Blackwell](/shared/glossary/#blackwell) isn't free; it's the cumulative product of dozens of papers and years of hardware-software co-design. The lesson for practitioners: precision is a knob, not a property. Tune it intentionally.
 
 ### Resources
 

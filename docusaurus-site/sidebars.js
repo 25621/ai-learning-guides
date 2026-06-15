@@ -1103,6 +1103,18 @@ const sidebars = {
                 {type: 'doc', id: 'guides/ai-hardware/projects/topology-study/README', label: 'Topology study'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 7: Numeric Formats and Quantization',
+              items: [
+                {type: 'doc', id: 'guides/ai-hardware/projects/format-sweep/README', label: 'Format sweep'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/quantize-a-small-llm/README', label: 'Quantize a small LLM'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/kv-cache-quantization/README', label: 'KV-cache quantization'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/calibration-data-study/README', label: 'Calibration data study'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/per-channel-vs-per-tensor/README', label: 'Per-channel vs per-tensor'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/qlora-fine-tune/README', label: 'QLoRA fine-tune'},
+              ],
+            },
           ],
         },
       ],
