@@ -1115,6 +1115,18 @@ const sidebars = {
                 {type: 'doc', id: 'guides/ai-hardware/projects/qlora-fine-tune/README', label: 'QLoRA fine-tune'},
               ],
             },
+            {
+              type: 'category',
+              label: 'Phase 8: Inference Systems and Serving',
+              items: [
+                {type: 'doc', id: 'guides/ai-hardware/projects/deploy-with-vllm/README', label: 'Deploy with vLLM'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/latency-vs-throughput/README', label: 'Latency vs throughput'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/kv-cache-memory-math/README', label: 'KV-cache memory math'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/quantization-for-serving/README', label: 'Quantization for serving'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/speculative-decoding/README', label: 'Speculative decoding'},
+                {type: 'doc', id: 'guides/ai-hardware/projects/continuous-batching-demo/README', label: 'Continuous batching demo'},
+              ],
+            },
           ],
         },
       ],

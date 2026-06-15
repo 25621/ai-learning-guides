@@ -740,12 +740,12 @@ This is the single biggest economic fact about LLM serving.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Deploy with vLLM | Serve a 7B model with vLLM; measure tokens/sec at various batch sizes | ⭐⭐ |
-| Latency vs throughput | Plot tokens/sec vs batch size; identify the knee | ⭐⭐⭐ |
-| KV-cache memory math | For Llama-3 8B at context length 32k, batch 1, 8, 32: compute KV cache size; verify with `nvidia-smi` | ⭐⭐⭐ |
-| Quantization for serving | Serve the same model in FP16, FP8, INT4 (AWQ/GPTQ); compare throughput and quality | ⭐⭐⭐⭐ |
-| Speculative decoding | Set up a 7B model with a 0.5B draft model; measure speedup on a real benchmark | ⭐⭐⭐⭐ |
-| Continuous batching demo | Compare static vs continuous batching on a workload with varying sequence lengths | ⭐⭐⭐ |
+| [Deploy with vLLM](projects/39-deploy-with-vllm/README.md) | Serve a 7B model with vLLM; measure tokens/sec at various batch sizes | ⭐⭐ |
+| [Latency vs throughput](projects/40-latency-vs-throughput/README.md) | Plot tokens/sec vs batch size; identify the knee | ⭐⭐⭐ |
+| [KV-cache memory math](projects/41-kv-cache-memory-math/README.md) | For Llama-3 8B at context length 32k, batch 1, 8, 32: compute KV cache size; verify with `nvidia-smi` | ⭐⭐⭐ |
+| [Quantization for serving](projects/42-quantization-for-serving/README.md) | Serve the same model in FP16, FP8, INT4 (AWQ/GPTQ); compare throughput and quality | ⭐⭐⭐⭐ |
+| [Speculative decoding](projects/43-speculative-decoding/README.md) | Set up a 7B model with a 0.5B draft model; measure speedup on a real benchmark | ⭐⭐⭐⭐ |
+| [Continuous batching demo](projects/44-continuous-batching-demo/README.md) | Compare static vs continuous batching on a workload with varying sequence lengths | ⭐⭐⭐ |
 
 ### Key Insight
 
