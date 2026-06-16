@@ -768,27 +768,27 @@ The honest section. Most "DIY AI hardware" content online is misleading; this ph
 
 ### What You Cannot Realistically DIY
 
-- **Design and fabricate a new GPU/TPU/HBM from scratch.** A modern accelerator chip costs $200M–$2B to design, and each tapeout at TSMC is tens of millions of dollars. HBM stacks require specialized DRAM fabs (only SK Hynix, Samsung, Micron). No individual or small team is doing this.
-- **Compete with NVIDIA on a general-purpose accelerator.** Many companies have tried; few have succeeded. The compounded software ecosystem is harder to replicate than the silicon.
+- **Design and fabricate a new [GPU](/shared/glossary/#gpu)/[TPU](/shared/glossary/#tpu)/[HBM](/shared/glossary/#hbm) from scratch.** A modern accelerator chip costs $200M–$2B to design, and each tapeout at TSMC is tens of millions of dollars. HBM stacks require specialized DRAM fabs (only SK Hynix, Samsung, Micron). No individual or small team is doing this.
+- **Compete with NVIDIA on a general-purpose accelerator.** Many companies have tried; few have succeeded. The compounded software ecosystem ([CUDA](/shared/glossary/#cuda), [cuBLAS](/shared/glossary/#cublas), [TensorRT](/shared/glossary/#tensorrt)) is harder to replicate than the silicon.
 
 ### What You Can Realistically DIY
 
 | Project class | What's involved | Realism |
 |---------------|-----------------|---------|
 | **Multi-GPU workstation build** | Pick GPUs, motherboard, PSU, cooling; assemble; benchmark | ⭐ Very realistic; ~$3–30k |
-| **Power and thermals engineering** | Undervolting, cooling design, dual-PSU setups; running 2-4 RTX cards | ⭐⭐ Realistic with care |
-| **Custom CUDA/Triton kernels** | Phase 4 territory; ship a kernel that beats cuBLAS on a niche shape | ⭐⭐⭐ Realistic; weeks of work |
-| **FPGA inference accelerator** | Implement a small Transformer block on an FPGA dev board (Alveo, Pynq) | ⭐⭐⭐⭐ Realistic but slow ROI |
-| **Tenstorrent kernel development** | Buy a Grayskull/Wormhole card; write programs against their open SDK | ⭐⭐⭐ Realistic, growing ecosystem |
-| **Edge / Jetson deployment** | Quantize and deploy on Jetson Nano/Orin or Coral; real product territory | ⭐⭐ Very realistic |
-| **Tinytapeout-style small ASIC** | Submit a tiny digital design that gets fabbed in a shared multi-project wafer | ⭐⭐⭐⭐⭐ Realistic but for tiny designs only |
+| **Power and thermals engineering** | [Undervolting](/shared/glossary/#undervolting), cooling design, dual-PSU setups; running 2-4 RTX cards | ⭐⭐ Realistic with care |
+| **Custom [CUDA](/shared/glossary/#cuda)/[Triton](/shared/glossary/#triton) kernels** | Phase 4 territory; ship a [kernel](/shared/glossary/#kernel) that beats [cuBLAS](/shared/glossary/#cublas) on a niche shape | ⭐⭐⭐ Realistic; weeks of work |
+| **[FPGA](/shared/glossary/#fpga) inference accelerator** | Implement a small [Transformer](/shared/glossary/#transformer) block on an FPGA dev board (Alveo, Pynq) | ⭐⭐⭐⭐ Realistic but slow ROI |
+| **[Tenstorrent](/shared/glossary/#tenstorrent) kernel development** | Buy a Grayskull/Wormhole card; write programs against their open SDK | ⭐⭐⭐ Realistic, growing ecosystem |
+| **Edge / [Jetson](/shared/glossary/#jetson) deployment** | [Quantize](/shared/glossary/#quantization) and deploy on Jetson Nano/Orin or Coral; real product territory | ⭐⭐ Very realistic |
+| **[TinyTapeout](/shared/glossary/#tinytapeout)-style small [ASIC](/shared/glossary/#asic)** | Submit a tiny digital design that gets fabbed in a shared multi-project wafer | ⭐⭐⭐⭐⭐ Realistic but for tiny designs only |
 
 ### Concepts to Learn (for each path)
 
-- **Multi-GPU workstation**: power budget math (your GPUs draw 350–600W each — your PSU and circuit need headroom), PCIe lane requirements (×16/×16 for 2-GPU; threadripper/Xeon for 4+ GPUs at full bandwidth), thermals (open-air vs blower-style cards; data-center-pulled cards often have blowers but need fan adapters), VRAM math (24 GB × 2 ≠ 48 GB unless NVLink-bridged on Ampere)
-- **FPGAs**: bitstream concepts; Vivado/Vitis; Xilinx/AMD vs Intel/Altera; high-level synthesis (HLS) vs Verilog; the brutal reality that an FPGA at ~$2k might match a $400 GPU at ~10× the dev time
-- **Tinytapeout / Skywater130**: open-source PDK (Skywater130nm); the multi-project wafer model; submitting a small design that gets fabricated in a shared run
-- **Edge deployment**: TensorRT, ExecuTorch, ONNX Runtime; INT8 calibration on real edge devices; thermal throttling
+- **Multi-GPU workstation**: power budget math (your GPUs draw 350–600W each — your PSU and circuit need headroom), [PCIe](/shared/glossary/#pcie) lane requirements (×16/×16 for 2-GPU; Threadripper/Xeon for 4+ GPUs at full bandwidth), thermals (open-air vs blower-style cards; data-center-pulled cards often have blowers but need fan adapters), [VRAM](/shared/glossary/#vram) math (24 GB × 2 ≠ 48 GB unless [NVLink](/shared/glossary/#nvlink)-bridged on Ampere)
+- **FPGAs**: bitstream concepts; Vivado/Vitis; Xilinx/AMD vs Intel/Altera; high-level synthesis (HLS) vs Verilog; the brutal reality that an [FPGA](/shared/glossary/#fpga) at ~$2k might match a $400 [GPU](/shared/glossary/#gpu) at ~10× the dev time
+- **[TinyTapeout](/shared/glossary/#tinytapeout) / SkyWater 130**: open-source PDK (SkyWater 130nm); the multi-project wafer model; submitting a small design that gets fabricated in a shared run
+- **[Edge deployment](/shared/glossary/#edge-inference)**: [TensorRT](/shared/glossary/#tensorrt), [ExecuTorch](/shared/glossary/#executorch), [ONNX Runtime](/shared/glossary/#onnx-runtime); [INT8](/shared/glossary/#int8) calibration on real edge devices; [thermal throttling](/shared/glossary/#thermal-throttling)
 
 ### A Realistic 2-GPU AI Workstation Build (2026 mid-range)
 
@@ -820,13 +820,13 @@ What this gets you:
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| 2-GPU build plan | Spec a complete build for your budget and target workloads; defend each choice | ⭐⭐ |
-| Build and benchmark | Actually build a 2-GPU workstation; report `nccl-tests` numbers | ⭐⭐⭐ |
-| Power and thermals | Undervolt your GPUs; measure perf-per-watt change; design airflow | ⭐⭐⭐ |
-| Jetson deployment | Deploy a quantized 7B model on Jetson Orin Nano; report tokens/sec | ⭐⭐⭐ |
-| FPGA inference | Implement a small CNN on a Pynq or DE10-Nano board | ⭐⭐⭐⭐⭐ |
-| Tenstorrent kernel | Write a non-trivial program on a Tenstorrent card via tt-metal | ⭐⭐⭐⭐ |
-| Tinytapeout submission | Submit a small digital design for a shared-wafer fab run | ⭐⭐⭐⭐⭐ |
+| [2-GPU build plan](projects/45-2-gpu-build-plan/README.md) | Spec a complete build for your budget and target workloads; defend each choice | ⭐⭐ |
+| [Build and benchmark](projects/46-build-and-benchmark/README.md) | Actually build a 2-GPU workstation; report `nccl-tests` numbers | ⭐⭐⭐ |
+| [Power and thermals](projects/47-power-and-thermals/README.md) | Undervolt your GPUs; measure perf-per-watt change; design airflow | ⭐⭐⭐ |
+| [Jetson deployment](projects/48-jetson-deployment/README.md) | Deploy a quantized 7B model on Jetson Orin Nano; report tokens/sec | ⭐⭐⭐ |
+| [FPGA inference](projects/49-fpga-inference/README.md) | Implement a small CNN on a Pynq or DE10-Nano board | ⭐⭐⭐⭐⭐ |
+| [Tenstorrent kernel](projects/27-tenstorrent-dev/README.md) | Write a non-trivial program on a Tenstorrent card via tt-metal | ⭐⭐⭐⭐ |
+| [Tinytapeout submission](projects/50-tinytapeout-submission/README.md) | Submit a small digital design for a shared-wafer fab run | ⭐⭐⭐⭐⭐ |
 
 ### Key Insight
 
