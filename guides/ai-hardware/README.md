@@ -333,15 +333,15 @@ The point at which you stop being a hardware consumer and become a producer.
 
 ### Concepts to Learn
 
-- **CUDA C++ basics**: `__global__`, `__device__`, thread/block IDs, `__syncthreads()`, shared memory
-- **Launch configuration**: choosing block and grid dimensions; occupancy calculator
-- **CUDA streams**: how multiple operations run concurrently; events for synchronization
+- **[CUDA](/shared/glossary/#cuda) C++ basics**: `__global__`, `__device__`, thread/block IDs, `__syncthreads()`, [shared memory](/shared/glossary/#shared-memory)
+- **Launch configuration**: choosing block and grid dimensions; [occupancy](/shared/glossary/#occupancy) calculator
+- **[CUDA streams](/shared/glossary/#cuda-stream)**: how multiple operations run concurrently; events for synchronization
 - **CUB and Thrust**: the standard library of CUDA — already-optimized parallel primitives
-- **cuBLAS and cuDNN**: NVIDIA's optimized libraries; "compete with these on matmul/attention only if you have a very good reason"
-- **Triton** — Python-flavored GPU language; pointers, blocks, masks, `tl.load`/`tl.store`, autotuning
-- **The dispatcher integration**: how a custom kernel becomes a `torch.library.custom_op` that `torch.compile` can pick up
-- **CUTLASS** — NVIDIA's template library for matmul-like kernels; what FlashAttention is built on
-- **The kernel-writing workflow**: prototype in Python (PyTorch eager), profile, identify a memory-bound region, rewrite the offending op as one fused kernel, benchmark, regress
+- **[cuBLAS](/shared/glossary/#cublas)** and cuDNN: NVIDIA's optimized libraries; "compete with these on [matmul](/shared/glossary/#matmul)/[attention](/shared/glossary/#attention) only if you have a very good reason"
+- **[Triton](/shared/glossary/#triton)** — Python-flavored [GPU](/shared/glossary/#gpu) language; pointers, blocks, masks, `tl.load`/`tl.store`, autotuning
+- **The dispatcher integration**: how a custom [kernel](/shared/glossary/#kernel) becomes a `torch.library.custom_op` (a [custom op](/shared/glossary/#custom-op)) that [torch.compile](/shared/glossary/#torchcompile) can pick up
+- **CUTLASS** — NVIDIA's template library for matmul-like kernels; what [FlashAttention](/shared/glossary/#flashattention) is built on
+- **The kernel-writing workflow**: prototype in Python (PyTorch eager), profile, identify a memory-bound region, rewrite the offending op as one [fused kernel](/shared/glossary/#kernel-fusion), benchmark, regress
 
 ### When to Write a Custom Kernel
 
@@ -379,13 +379,13 @@ Pick CUDA when:
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| CUDA vector add | Write the canonical "hello world" CUDA kernel; profile and tune block size | ⭐⭐ |
-| CUDA tiled matmul | Implement a shared-memory tiled matmul; aim for > 50% of cuBLAS throughput | ⭐⭐⭐⭐ |
-| Triton softmax | Implement softmax in Triton; verify numerical match and bandwidth utilization | ⭐⭐⭐ |
-| Triton matmul | Tile-based matmul in Triton; aim for > 70% of cuBLAS | ⭐⭐⭐⭐ |
-| Fused LayerNorm | One Triton kernel that does layernorm + linear; benchmark against eager + cuDNN | ⭐⭐⭐⭐ |
-| Mini FlashAttention | Tiled, online-softmax attention kernel in Triton; verify numerical match | ⭐⭐⭐⭐⭐ |
-| Custom op registration | Wrap your Triton kernel as a `torch.library.custom_op` so `torch.compile` can use it | ⭐⭐⭐⭐ |
+| [CUDA vector add](projects/16-cuda-vector-add/README.md) | Write the canonical "hello world" CUDA kernel; profile and tune block size | ⭐⭐ |
+| [CUDA tiled matmul](projects/17-cuda-tiled-matmul/README.md) | Implement a shared-memory tiled matmul; aim for > 50% of cuBLAS throughput | ⭐⭐⭐⭐ |
+| [Triton softmax](projects/18-triton-softmax/README.md) | Implement softmax in Triton; verify numerical match and bandwidth utilization | ⭐⭐⭐ |
+| [Triton matmul](projects/19-triton-matmul/README.md) | Tile-based matmul in Triton; aim for > 70% of cuBLAS | ⭐⭐⭐⭐ |
+| [Fused LayerNorm](projects/20-fused-layernorm/README.md) | One Triton kernel that does layernorm + linear; benchmark against eager + cuDNN | ⭐⭐⭐⭐ |
+| [Mini FlashAttention](projects/21-mini-flashattention/README.md) | Tiled, online-softmax attention kernel in Triton; verify numerical match | ⭐⭐⭐⭐⭐ |
+| [Custom op registration](projects/22-custom-op-registration/README.md) | Wrap your Triton kernel as a `torch.library.custom_op` so `torch.compile` can use it | ⭐⭐⭐⭐ |
 
 ### Sample Code: A Triton Fused LayerNorm Forward
 
@@ -508,11 +508,12 @@ TPU-style systolic array:
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Run a TPU notebook | Free Kaggle/Colab TPU; train a small model with JAX or PyTorch/XLA | ⭐⭐⭐ |
-| AMD MI300 inference | If you can rent one: run a large LLM on MI300X via ROCm + vLLM; report tokens/sec | ⭐⭐⭐⭐ |
-| Apple Silicon LLM | Run a 7B–70B model on a Mac Studio via MLX or llama.cpp; benchmark | ⭐⭐⭐ |
-| Compare accelerators | Same model, same batch, on three different hardware types (e.g., A100, M2 Max, free TPU); report all metrics | ⭐⭐⭐⭐ |
-| Tenstorrent dev | Buy or rent a Tenstorrent card; write a simple kernel using their open SDK | ⭐⭐⭐⭐⭐ |
+| [Run a TPU notebook](projects/23-run-a-tpu-notebook/README.md) | Free Kaggle/Colab TPU; train a small model with JAX or PyTorch/XLA | ⭐⭐⭐ |
+| [AMD MI300 inference](projects/24-amd-mi300-inference/README.md) | If you can rent one: run a large LLM on MI300X via ROCm + vLLM; report tokens/sec | ⭐⭐⭐⭐ |
+| [Apple Silicon LLM](projects/25-apple-silicon-llm/README.md) | Run a 7B–70B model on a Mac Studio via MLX or llama.cpp; benchmark | ⭐⭐⭐ |
+| [Compare accelerators](projects/26-compare-accelerators/README.md) | Same model, same batch, on three different hardware types (e.g., A100, M2 Max, free TPU); report all metrics | ⭐⭐⭐⭐ |
+| [Tenstorrent dev](projects/27-tenstorrent-dev/README.md) | Buy or rent a Tenstorrent card; write a simple kernel using their open SDK | ⭐⭐⭐⭐⭐ |
+
 
 ### Key Insight
 
@@ -566,11 +567,11 @@ think hard about which step in this hierarchy you're going through.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| `nccl-tests` | Run NVIDIA's official NCCL benchmark on your multi-GPU setup; report AllReduce bandwidth | ⭐⭐⭐ |
-| Multi-GPU DDP | Train a model on 2+ GPUs with DDP; profile to see AllReduce time vs compute time | ⭐⭐⭐ |
-| FSDP scaling | Scale to 4–8 GPUs with FSDP; observe how communication scales with world size | ⭐⭐⭐⭐ |
-| Multi-node setup | Set up 2-node training (cloud or two boxes on a LAN); report cross-node bandwidth | ⭐⭐⭐⭐ |
-| Topology study | Use `nvidia-smi topo -m` to inspect your GPU topology; predict NCCL performance based on it | ⭐⭐⭐ |
+| [`nccl-tests`](projects/28-nccl-tests/README.md) | Run NVIDIA's official NCCL benchmark on your multi-GPU setup; report AllReduce bandwidth | ⭐⭐⭐ |
+| [Multi-GPU DDP](projects/29-multi-gpu-ddp/README.md) | Train a model on 2+ GPUs with DDP; profile to see AllReduce time vs compute time | ⭐⭐⭐ |
+| [FSDP scaling](projects/30-fsdp-scaling/README.md) | Scale to 4–8 GPUs with FSDP; observe how communication scales with world size | ⭐⭐⭐⭐ |
+| [Multi-node setup](projects/31-multi-node-setup/README.md) | Set up 2-node training (cloud or two boxes on a LAN); report cross-node bandwidth | ⭐⭐⭐⭐ |
+| [Topology study](projects/32-topology-study/README.md) | Use `nvidia-smi topo -m` to inspect your GPU topology; predict NCCL performance based on it | ⭐⭐⭐ |
 
 ### Key Insight
 
@@ -592,30 +593,30 @@ The hardware game is largely the precision game. This phase is about what bits t
 
 ### Concepts to Learn
 
-- **Floating-point primer**: sign + exponent + mantissa; what each does
+- **Floating-point primer**: sign + [exponent](/shared/glossary/#exponent) + [mantissa](/shared/glossary/#mantissa); what each does
 - **Common formats**:
-  - **FP32** — 1+8+23 — the dinosaur; almost never used for training in 2026
-  - **FP16** — 1+5+10 — narrow range, needs `GradScaler`; mostly being replaced
-  - **BF16** — 1+8+7 — same range as FP32, less precision; the modern training default
-  - **TF32** — NVIDIA-only marketing name for "FP32 input, 10-bit mantissa internally"; basically transparent
-  - **FP8** — multiple variants (E4M3, E5M2); the modern *inference* default and increasingly training
-  - **FP4** — Blackwell-introduced; 1+2+1 or 1+3+0 variants; pushed mostly for inference
-  - **INT8 / INT4** — integer quantization, no fractional part; common for inference
-  - **NF4** — "normal-float 4-bit" from QLoRA; non-uniform quantization grid tuned for neural-net weights
-- **Range vs precision trade-off**: more exponent bits = bigger range = harder to overflow; more mantissa bits = better precision near each value
+  - **[FP32](/shared/glossary/#float32)** — 1+8+23 — the dinosaur; almost never used for training in 2026
+  - **[FP16](/shared/glossary/#float16)** — 1+5+10 — narrow range, needs `GradScaler`; mostly being replaced
+  - **[BF16](/shared/glossary/#bfloat16)** — 1+8+7 — same range as FP32, less precision; the modern training default
+  - **[TF32](/shared/glossary/#tf32)** — NVIDIA-only marketing name for "FP32 input, 10-bit [mantissa](/shared/glossary/#mantissa) internally"; basically transparent
+  - **[FP8](/shared/glossary/#fp8)** — multiple variants (E4M3, E5M2); the modern *inference* default and increasingly training
+  - **[FP4](/shared/glossary/#fp4)** — [Blackwell](/shared/glossary/#blackwell)-introduced; 1+2+1 or 1+3+0 variants; pushed mostly for inference
+  - **[INT8](/shared/glossary/#int8) / [INT4](/shared/glossary/#int4)** — integer [quantization](/shared/glossary/#quantization), no fractional part; common for inference
+  - **[NF4](/shared/glossary/#nf4)** — "normal-float 4-bit" from [QLoRA](/shared/glossary/#qlora); non-uniform quantization grid tuned for neural-net [weights](/shared/glossary/#weights)
+- **Range vs precision trade-off**: more [exponent](/shared/glossary/#exponent) bits = bigger range = harder to overflow; more [mantissa](/shared/glossary/#mantissa) bits = better precision near each value
 - **Quantization fundamentals**:
-  - **PTQ (Post-Training Quantization)** — quantize an already-trained model; cheap, modest quality loss
-  - **QAT (Quantization-Aware Training)** — train with simulated quantization; better quality, expensive
-  - **Calibration data** — sample inputs used to set quantization scales
-  - **Per-tensor** vs **per-channel** vs **per-group** quantization scales
-  - **Activation quantization** vs **weight-only quantization** — weight-only is much easier; activations need careful range handling
+  - **[PTQ (Post-Training Quantization)](/shared/glossary/#ptq--qat)** — quantize an already-trained model; cheap, modest quality loss
+  - **[QAT (Quantization-Aware Training)](/shared/glossary/#ptq--qat)** — train with simulated quantization; better quality, expensive
+  - **[Calibration data](/shared/glossary/#calibration)** — sample inputs used to set quantization scales
+  - **[Per-tensor](/shared/glossary/#per-tensor-quantization)** vs **[per-channel](/shared/glossary/#per-channel-quantization)** vs **[per-group](/shared/glossary/#per-group-quantization)** quantization scales
+  - **Activation quantization** vs **weight-only quantization** — weight-only is much easier; [activations](/shared/glossary/#activations) need careful range handling
 - **Modern quantization methods**:
-  - **GPTQ** — gradient-free, weight-only, INT4; the workhorse
-  - **AWQ** — preserves "important" weights at higher precision
-  - **SmoothQuant** — handles activation outliers
+  - **[GPTQ](/shared/glossary/#gptq)** — gradient-free, weight-only, [INT4](/shared/glossary/#int4); the workhorse
+  - **[AWQ](/shared/glossary/#awq)** — preserves "important" weights at higher precision
+  - **[SmoothQuant](/shared/glossary/#smoothquant)** — handles activation outliers
   - **GGUF / GGML quantizations** — llama.cpp's family; K-quants, I-quants
-- **FP8 training** — Hopper's Transformer Engine handles dynamic scaling automatically; works well for many models
-- **The KV-cache** quantization angle — quantizing the KV cache can dramatically reduce memory for long-context inference
+  - **[FP8](/shared/glossary/#fp8)** training — [Hopper](/shared/glossary/#hopper)'s [Transformer Engine](/shared/glossary/#transformerengine) handles dynamic scaling automatically; works well for many models
+  - **The [KV-cache](/shared/glossary/#kv-cache)** quantization angle — quantizing the KV cache can dramatically reduce memory for long-context inference
 
 ### The Format Zoo, Visualized
 
@@ -638,12 +639,12 @@ NF4              -    -    -         non-uniform    4-bit "buckets"
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Format sweep | Train the same model in FP32, BF16, FP16, FP8; compare quality and speed | ⭐⭐⭐ |
-| Quantize a small LLM | Take a 7B model; quantize to INT4 with GPTQ; measure quality drop (perplexity, MMLU subset) | ⭐⭐⭐ |
-| KV-cache quantization | Quantize a model's KV cache to INT8; measure long-context inference savings | ⭐⭐⭐⭐ |
-| Calibration data study | Quantize with 1, 16, 256 calibration samples; measure how quality varies | ⭐⭐⭐⭐ |
-| Per-channel vs per-tensor | For one model: try both quantization granularities; measure quality and inference speed | ⭐⭐⭐⭐ |
-| QLoRA fine-tune | Fine-tune a 7B model with QLoRA on a single 24 GB GPU; measure peak memory | ⭐⭐⭐⭐ |
+| [Format sweep](projects/33-format-sweep/README.md) | Train the same model in FP32, BF16, FP16, FP8; compare quality and speed | ⭐⭐⭐ |
+| [Quantize a small LLM](projects/34-quantize-a-small-llm/README.md) | Take a 7B model; quantize to INT4 with GPTQ; measure quality drop (perplexity, MMLU subset) | ⭐⭐⭐ |
+| [KV-cache quantization](projects/35-kv-cache-quantization/README.md) | Quantize a model's KV cache to INT8; measure long-context inference savings | ⭐⭐⭐⭐ |
+| [Calibration data study](projects/36-calibration-data-study/README.md) | Quantize with 1, 16, 256 calibration samples; measure how quality varies | ⭐⭐⭐⭐ |
+| [Per-channel vs per-tensor](projects/37-per-channel-vs-per-tensor/README.md) | For one model: try both quantization granularities; measure quality and inference speed | ⭐⭐⭐⭐ |
+| [QLoRA fine-tune](projects/38-qlora-fine-tune/README.md) | Fine-tune a 7B model with QLoRA on a single 24 GB GPU; measure peak memory | ⭐⭐⭐⭐ |
 
 ### Sample Code: A Simple Symmetric Quantizer
 
@@ -673,7 +674,7 @@ print(f"mean abs error: {err.item():.5f}")     # ~0.002 for normally-distributed
 
 ### Key Insight
 
-The hardware FLOP curve has been climbing dramatically partly because of better silicon and partly because **the precision keeps shrinking**. A 2026 Blackwell at FP4 has ~30× the headline FLOPs of a 2017 V100 at FP16. Maybe 5× of that is real compute; the rest is bit-shrinkage. The catch: every bit you give up has to be earned back somehow — by calibration, by careful scaling, by smarter algorithms. The "FP4 LLM" you're running on Blackwell isn't free; it's the cumulative product of dozens of papers and years of hardware-software co-design. The lesson for practitioners: precision is a knob, not a property. Tune it intentionally.
+The hardware [FLOP](/shared/glossary/#flops) curve has been climbing dramatically partly because of better silicon and partly because **the precision keeps shrinking**. A 2026 [Blackwell](/shared/glossary/#blackwell) at [FP4](/shared/glossary/#fp4) has ~30× the headline [FLOPs](/shared/glossary/#flops) of a 2017 V100 at [FP16](/shared/glossary/#float16). Maybe 5× of that is real compute; the rest is bit-shrinkage. The catch: every bit you give up has to be earned back somehow — by [calibration](/shared/glossary/#calibration), by careful scaling, by smarter algorithms. The "FP4 LLM" you're running on [Blackwell](/shared/glossary/#blackwell) isn't free; it's the cumulative product of dozens of papers and years of hardware-software co-design. The lesson for practitioners: precision is a knob, not a property. Tune it intentionally.
 
 ### Resources
 
@@ -739,12 +740,12 @@ This is the single biggest economic fact about LLM serving.
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| Deploy with vLLM | Serve a 7B model with vLLM; measure tokens/sec at various batch sizes | ⭐⭐ |
-| Latency vs throughput | Plot tokens/sec vs batch size; identify the knee | ⭐⭐⭐ |
-| KV-cache memory math | For Llama-3 8B at context length 32k, batch 1, 8, 32: compute KV cache size; verify with `nvidia-smi` | ⭐⭐⭐ |
-| Quantization for serving | Serve the same model in FP16, FP8, INT4 (AWQ/GPTQ); compare throughput and quality | ⭐⭐⭐⭐ |
-| Speculative decoding | Set up a 7B model with a 0.5B draft model; measure speedup on a real benchmark | ⭐⭐⭐⭐ |
-| Continuous batching demo | Compare static vs continuous batching on a workload with varying sequence lengths | ⭐⭐⭐ |
+| [Deploy with vLLM](projects/39-deploy-with-vllm/README.md) | Serve a 7B model with vLLM; measure tokens/sec at various batch sizes | ⭐⭐ |
+| [Latency vs throughput](projects/40-latency-vs-throughput/README.md) | Plot tokens/sec vs batch size; identify the knee | ⭐⭐⭐ |
+| [KV-cache memory math](projects/41-kv-cache-memory-math/README.md) | For Llama-3 8B at context length 32k, batch 1, 8, 32: compute KV cache size; verify with `nvidia-smi` | ⭐⭐⭐ |
+| [Quantization for serving](projects/42-quantization-for-serving/README.md) | Serve the same model in FP16, FP8, INT4 (AWQ/GPTQ); compare throughput and quality | ⭐⭐⭐⭐ |
+| [Speculative decoding](projects/43-speculative-decoding/README.md) | Set up a 7B model with a 0.5B draft model; measure speedup on a real benchmark | ⭐⭐⭐⭐ |
+| [Continuous batching demo](projects/44-continuous-batching-demo/README.md) | Compare static vs continuous batching on a workload with varying sequence lengths | ⭐⭐⭐ |
 
 ### Key Insight
 
@@ -767,27 +768,27 @@ The honest section. Most "DIY AI hardware" content online is misleading; this ph
 
 ### What You Cannot Realistically DIY
 
-- **Design and fabricate a new GPU/TPU/HBM from scratch.** A modern accelerator chip costs $200M–$2B to design, and each tapeout at TSMC is tens of millions of dollars. HBM stacks require specialized DRAM fabs (only SK Hynix, Samsung, Micron). No individual or small team is doing this.
-- **Compete with NVIDIA on a general-purpose accelerator.** Many companies have tried; few have succeeded. The compounded software ecosystem is harder to replicate than the silicon.
+- **Design and fabricate a new [GPU](/shared/glossary/#gpu)/[TPU](/shared/glossary/#tpu)/[HBM](/shared/glossary/#hbm) from scratch.** A modern accelerator chip costs $200M–$2B to design, and each tapeout at TSMC is tens of millions of dollars. HBM stacks require specialized DRAM fabs (only SK Hynix, Samsung, Micron). No individual or small team is doing this.
+- **Compete with NVIDIA on a general-purpose accelerator.** Many companies have tried; few have succeeded. The compounded software ecosystem ([CUDA](/shared/glossary/#cuda), [cuBLAS](/shared/glossary/#cublas), [TensorRT](/shared/glossary/#tensorrt)) is harder to replicate than the silicon.
 
 ### What You Can Realistically DIY
 
 | Project class | What's involved | Realism |
 |---------------|-----------------|---------|
 | **Multi-GPU workstation build** | Pick GPUs, motherboard, PSU, cooling; assemble; benchmark | ⭐ Very realistic; ~$3–30k |
-| **Power and thermals engineering** | Undervolting, cooling design, dual-PSU setups; running 2-4 RTX cards | ⭐⭐ Realistic with care |
-| **Custom CUDA/Triton kernels** | Phase 4 territory; ship a kernel that beats cuBLAS on a niche shape | ⭐⭐⭐ Realistic; weeks of work |
-| **FPGA inference accelerator** | Implement a small Transformer block on an FPGA dev board (Alveo, Pynq) | ⭐⭐⭐⭐ Realistic but slow ROI |
-| **Tenstorrent kernel development** | Buy a Grayskull/Wormhole card; write programs against their open SDK | ⭐⭐⭐ Realistic, growing ecosystem |
-| **Edge / Jetson deployment** | Quantize and deploy on Jetson Nano/Orin or Coral; real product territory | ⭐⭐ Very realistic |
-| **Tinytapeout-style small ASIC** | Submit a tiny digital design that gets fabbed in a shared multi-project wafer | ⭐⭐⭐⭐⭐ Realistic but for tiny designs only |
+| **Power and thermals engineering** | [Undervolting](/shared/glossary/#undervolting), cooling design, dual-PSU setups; running 2-4 RTX cards | ⭐⭐ Realistic with care |
+| **Custom [CUDA](/shared/glossary/#cuda)/[Triton](/shared/glossary/#triton) kernels** | Phase 4 territory; ship a [kernel](/shared/glossary/#kernel) that beats [cuBLAS](/shared/glossary/#cublas) on a niche shape | ⭐⭐⭐ Realistic; weeks of work |
+| **[FPGA](/shared/glossary/#fpga) inference accelerator** | Implement a small [Transformer](/shared/glossary/#transformer) block on an FPGA dev board (Alveo, Pynq) | ⭐⭐⭐⭐ Realistic but slow ROI |
+| **[Tenstorrent](/shared/glossary/#tenstorrent) kernel development** | Buy a Grayskull/Wormhole card; write programs against their open SDK | ⭐⭐⭐ Realistic, growing ecosystem |
+| **Edge / [Jetson](/shared/glossary/#jetson) deployment** | [Quantize](/shared/glossary/#quantization) and deploy on Jetson Nano/Orin or Coral; real product territory | ⭐⭐ Very realistic |
+| **[TinyTapeout](/shared/glossary/#tinytapeout)-style small [ASIC](/shared/glossary/#asic)** | Submit a tiny digital design that gets fabbed in a shared multi-project wafer | ⭐⭐⭐⭐⭐ Realistic but for tiny designs only |
 
 ### Concepts to Learn (for each path)
 
-- **Multi-GPU workstation**: power budget math (your GPUs draw 350–600W each — your PSU and circuit need headroom), PCIe lane requirements (×16/×16 for 2-GPU; threadripper/Xeon for 4+ GPUs at full bandwidth), thermals (open-air vs blower-style cards; data-center-pulled cards often have blowers but need fan adapters), VRAM math (24 GB × 2 ≠ 48 GB unless NVLink-bridged on Ampere)
-- **FPGAs**: bitstream concepts; Vivado/Vitis; Xilinx/AMD vs Intel/Altera; high-level synthesis (HLS) vs Verilog; the brutal reality that an FPGA at ~$2k might match a $400 GPU at ~10× the dev time
-- **Tinytapeout / Skywater130**: open-source PDK (Skywater130nm); the multi-project wafer model; submitting a small design that gets fabricated in a shared run
-- **Edge deployment**: TensorRT, ExecuTorch, ONNX Runtime; INT8 calibration on real edge devices; thermal throttling
+- **Multi-GPU workstation**: power budget math (your GPUs draw 350–600W each — your PSU and circuit need headroom), [PCIe](/shared/glossary/#pcie) lane requirements (×16/×16 for 2-GPU; Threadripper/Xeon for 4+ GPUs at full bandwidth), thermals (open-air vs blower-style cards; data-center-pulled cards often have blowers but need fan adapters), [VRAM](/shared/glossary/#vram) math (24 GB × 2 ≠ 48 GB unless [NVLink](/shared/glossary/#nvlink)-bridged on Ampere)
+- **FPGAs**: bitstream concepts; Vivado/Vitis; Xilinx/AMD vs Intel/Altera; high-level synthesis (HLS) vs Verilog; the brutal reality that an [FPGA](/shared/glossary/#fpga) at ~$2k might match a $400 [GPU](/shared/glossary/#gpu) at ~10× the dev time
+- **[TinyTapeout](/shared/glossary/#tinytapeout) / SkyWater 130**: open-source PDK (SkyWater 130nm); the multi-project wafer model; submitting a small design that gets fabricated in a shared run
+- **[Edge deployment](/shared/glossary/#edge-inference)**: [TensorRT](/shared/glossary/#tensorrt), [ExecuTorch](/shared/glossary/#executorch), [ONNX Runtime](/shared/glossary/#onnx-runtime); [INT8](/shared/glossary/#int8) calibration on real edge devices; [thermal throttling](/shared/glossary/#thermal-throttling)
 
 ### A Realistic 2-GPU AI Workstation Build (2026 mid-range)
 
@@ -819,13 +820,13 @@ What this gets you:
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| 2-GPU build plan | Spec a complete build for your budget and target workloads; defend each choice | ⭐⭐ |
-| Build and benchmark | Actually build a 2-GPU workstation; report `nccl-tests` numbers | ⭐⭐⭐ |
-| Power and thermals | Undervolt your GPUs; measure perf-per-watt change; design airflow | ⭐⭐⭐ |
-| Jetson deployment | Deploy a quantized 7B model on Jetson Orin Nano; report tokens/sec | ⭐⭐⭐ |
-| FPGA inference | Implement a small CNN on a Pynq or DE10-Nano board | ⭐⭐⭐⭐⭐ |
-| Tenstorrent kernel | Write a non-trivial program on a Tenstorrent card via tt-metal | ⭐⭐⭐⭐ |
-| Tinytapeout submission | Submit a small digital design for a shared-wafer fab run | ⭐⭐⭐⭐⭐ |
+| [2-GPU build plan](projects/45-2-gpu-build-plan/README.md) | Spec a complete build for your budget and target workloads; defend each choice | ⭐⭐ |
+| [Build and benchmark](projects/46-build-and-benchmark/README.md) | Actually build a 2-GPU workstation; report `nccl-tests` numbers | ⭐⭐⭐ |
+| [Power and thermals](projects/47-power-and-thermals/README.md) | Undervolt your GPUs; measure perf-per-watt change; design airflow | ⭐⭐⭐ |
+| [Jetson deployment](projects/48-jetson-deployment/README.md) | Deploy a quantized 7B model on Jetson Orin Nano; report tokens/sec | ⭐⭐⭐ |
+| [FPGA inference](projects/49-fpga-inference/README.md) | Implement a small CNN on a Pynq or DE10-Nano board | ⭐⭐⭐⭐⭐ |
+| [Tenstorrent kernel](projects/27-tenstorrent-dev/README.md) | Write a non-trivial program on a Tenstorrent card via tt-metal | ⭐⭐⭐⭐ |
+| [Tinytapeout submission](projects/50-tinytapeout-submission/README.md) | Submit a small digital design for a shared-wafer fab run | ⭐⭐⭐⭐⭐ |
 
 ### Key Insight
 

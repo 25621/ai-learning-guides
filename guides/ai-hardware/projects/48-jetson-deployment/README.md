@@ -1,0 +1,5 @@
+# Jetson Deployment
+
+## Key Insight
+
+Deploying deep learning models on resource-constrained [edge](/shared/glossary/#edge-inference) hardware forces developers to optimize for a fundamentally different set of trade-offs than cloud or desktop inference. An NVIDIA [Jetson](/shared/glossary/#jetson) board packs a [CUDA](/shared/glossary/#cuda)-capable [GPU](/shared/glossary/#gpu) into a module that runs on 5–40 watts — orders of magnitude less than a desktop card — by sharing a single pool of memory between CPU and GPU (eliminating [PCIe](/shared/glossary/#pcie) transfer overhead). [Quantizing](/shared/glossary/#quantization) a model to [INT8](/shared/glossary/#int8) or [FP8](/shared/glossary/#fp8) precision and compiling it with [TensorRT](/shared/glossary/#tensorrt) squeezes maximum performance from this limited hardware, enabling real-time inference for robotics and computer vision applications where low [latency](/shared/glossary/#latency) and power efficiency matter more than raw [throughput](/shared/glossary/#throughput).
