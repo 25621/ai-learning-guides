@@ -1,0 +1,7 @@
+metric,value
+compression,32x32x1 -> 8x8x4 (4x fewer numbers)
+pixel MSE,0.01249
+feature-space MSE,0.02058
+classifier agreement (orig vs recon),0.976
+latent std (pre-scaling),2.794
+scale_factor (1/std),0.3579
