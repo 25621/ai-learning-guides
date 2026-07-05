@@ -26,3 +26,85 @@ The automation lives almost entirely in the data pipeline, not the model code. T
 6. **Automate the training loop** — condition dropout (~10% null) is handled in the DataLoader collate step, alongside AMP, gradient checkpointing, FSDP/ZeRO sharding, periodic checkpointing, logging, and automatic FID evaluation.
 
 The "alt-text → filter → VLM recaption" stages are what remove manual labeling; the rest (latent caching, WebDataset, distributed training) is infrastructure for running it at scale.
+
+## What's in this directory
+
+| File | Role |
+|------|------|
+| `train_cfg.py` | Project 28's conditional training plus the one line that matters: 10% of labels are replaced by a reserved NULL class |
+| `sample_cfg.py` | CFG at inference, a scale sweep scored for purity and diversity, and a full class grid |
+
+The demo conditions on MNIST digit labels — a label plays the role the text
+prompt plays in a T2I model, with class index 10 as the learned null.
+
+```bash
+python train_cfg.py                # ~3 min on CPU
+python sample_cfg.py               # sweep + grid + metrics, ~2 min
+```
+
+## Implementation notes
+
+**Training** (`train_cfg.py`) is project 28's loop with one added line:
+
+```python
+drop = torch.rand(y.shape) < 0.1
+y = torch.where(drop, torch.full_like(y, NULL_CLASS), y)
+```
+
+The embedding table simply has 11 rows instead of 10. Nothing else changes —
+not the loss, not the architecture, not the sampler.
+
+**Inference** (`sample_cfg.py`) wraps the trained model so project 24's
+sampling loop can drive it unchanged:
+
+```python
+eps_cfg = eps_uncond + scale * (eps_cond - eps_uncond)
+```
+
+`scale = 1` collapses to plain conditional sampling and `scale = 0` to
+unconditional — both sanity checks fall out of the same code path. One
+implementation trick worth stealing: the whole sweep runs as a *single
+batch*, with a per-sample scale vector broadcast against the model outputs,
+so five scales cost one sampling loop (each loop still calls the model
+twice per step — that doubled cost is CFG's price everywhere it is used).
+
+## Results
+
+**The sweep.** Rows top to bottom: `s = 1, 3, 5, 8, 12`, all asking for the
+digit 3, all rows starting from the same noise. Purity is the fraction an
+independent classifier labels as a 3; diversity is the mean pairwise
+distance in that classifier's feature space (`outputs/sweep_metrics.csv`
+has the numbers):
+
+![CFG scale sweep](outputs/scale_sweep.png)
+
+![Purity vs scale](outputs/purity_vs_scale.png)
+
+![Diversity vs scale](outputs/diversity_vs_scale.png)
+
+Read the two curves together and you get CFG's whole story: in the recorded
+run purity jumps from 72% at `s = 1` to 100% by `s = 3` and stays there,
+while diversity drops sharply over the same interval (15.2 to 10.9) and then
+plateaus — fidelity to the condition is *bought with* variety, and the
+purchase happens almost entirely at low scales. (On a 10-class toy the
+diversity floor is reached quickly; in text-to-image models the collapse
+keeps deepening with scale, which is why production defaults sit near
+`s = 7.5` rather than 30.) On MNIST the visual "oversaturation" of extreme
+CFG shows up as strokes pushed hard to the pixel-range limits.
+
+**All ten classes at `s = 3`** — a working conditional generator from one
+model and one dropout line, no classifier anywhere in sight (contrast
+project 29, which needed a second network and its gradients):
+
+![All classes at scale 3](outputs/class_grid_s3.png)
+
+## Things to try
+
+- Set the null row's usage to zero (train with `--p-uncond 0`) and sample
+  with CFG anyway. The "unconditional" branch is now an untrained embedding
+  — watch guidance turn into noise amplification.
+- Compare `s = 5` here against project 29's classifier guidance at its best
+  scale, at equal sampling cost. Same steering goal, opposite plumbing.
+- Guide with a *mismatched* pair: condition on 3 but use class 8's
+  prediction as the "unconditional" branch. You have reinvented negative
+  prompts (project 40).
