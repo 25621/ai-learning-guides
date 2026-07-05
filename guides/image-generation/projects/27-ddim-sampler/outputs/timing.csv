@@ -1,0 +1,6 @@
+sampler,steps,seconds
+DDPM,300,12.7
+DDIM eta=0,100,4.3
+DDIM eta=0,50,2.1
+DDIM eta=0,20,0.7
+DDIM eta=0,10,0.4
