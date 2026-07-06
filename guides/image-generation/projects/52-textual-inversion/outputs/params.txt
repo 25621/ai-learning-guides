@@ -1,0 +1,2 @@
+Textual Inversion trains ONE vector: 128 parameters (512 bytes as float32).
+Compare: LoRA ~ tens of thousands (project 50); DreamBooth ~ the entire 367,905-param model (project 51).

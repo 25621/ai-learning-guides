@@ -1,0 +1,5 @@
+model,bpd
+uniform floor,1.000
+independent per-pixel,0.3794
+PixelCNN,0.1208
+sample_seconds_per_image,0.68

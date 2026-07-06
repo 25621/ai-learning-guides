@@ -1,0 +1,7 @@
+# Generated artifacts from running the project code — datasets and model
+# checkpoints are reproducible from the scripts and stay out of the repo.
+# The small PNG outputs embedded in the READMEs are committed.
+**/data/
+**/checkpoints/
+**/__pycache__/
+**/outputs/run*.log

@@ -1,0 +1,9 @@
+=== subject LAST ===
+total tokens: 89 | kept: 77 (limit 77)
+WHAT THE MODEL SEES: a highly detailed photograph taken at golden hour with soft warm light , shot on a full frame camera with a 5 0 mm lens at f / 1 . 8 , shallow depth of field , rich color grading , cinematic composition , rule of thirds , gentle film grain , atmospheric haze in the background , professional photography , award winning , ultra sharp focus on the subject , beautiful bokeh ,
+SILENTLY DROPPED:    subject is a bright purple elephant standing in a shallow river
+
+=== subject FIRST ===
+total tokens: 86 | kept: 77 (limit 77)
+WHAT THE MODEL SEES: a bright purple elephant standing in a shallow river , a highly detailed photograph taken at golden hour with soft warm light , shot on a full frame camera with a 5 0 mm lens at f / 1 . 8 , shallow depth of field , rich color grading , cinematic composition , rule of thirds , gentle film grain , atmospheric haze in the background , professional photography , award winning , ultra
+SILENTLY DROPPED:    focus on the subject , beautiful bokeh

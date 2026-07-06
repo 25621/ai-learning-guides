@@ -1,0 +1,4 @@
+model,mnist_bpd,cifar_bpd
+uniform (no model),8.000,8.000
+global histogram,1.968,7.911
+per-pixel histogram,1.678,7.859

@@ -1,0 +1,4 @@
+quantity,pixel-space (28x28x1),latent-space (8x8x4)
+dimensions per example,784,256 (3.1x fewer)
+"train step, batch 64 (median ms)",167,27 (6.2x faster)
+"300-step sampling, batch 8 (s)",see project 24,1.7

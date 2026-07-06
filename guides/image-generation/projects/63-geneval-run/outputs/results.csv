@@ -1,0 +1,4 @@
+category,accuracy,n
+single,0.725,40
+two-same,0.575,40
+two-diff,0.250,40

@@ -1,0 +1,9 @@
+method,steps,nfe,rmse_vs_reference
+euler,5,5,0.7948
+euler,10,10,0.2912
+euler,20,20,0.1210
+euler,50,50,0.0460
+heun,5,9,0.9475
+heun,10,19,0.1194
+heun,20,39,0.0515
+heun,50,99,0.0073

@@ -1,0 +1,9 @@
+pair,quadratic_weighted_kappa
+human-human,0.892
+LLM-LLM,0.907
+human-LLM,0.853
+
+correlation,spearman_vs_human_consensus
+human-human,0.754
+LLM-judge,0.586
+AutoScore,0.472
