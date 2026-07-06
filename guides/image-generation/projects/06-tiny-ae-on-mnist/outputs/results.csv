@@ -1,0 +1,3 @@
+metric,value
+latent_dim,32
+test_recon_bce,58.18
