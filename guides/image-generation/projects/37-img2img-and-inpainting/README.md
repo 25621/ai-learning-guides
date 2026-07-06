@@ -27,7 +27,7 @@ the scheduler down to zero, decode once at the end.
 
 **img2img is a late entry point.** Encode the init image with the VAE,
 noise it *directly* to an intermediate level with the closed-form forward
-jump (project 24's `q_sample`, wearing its `scheduler.add_noise` name), and
+jump (the [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project's `q_sample`, wearing its `scheduler.add_noise` name), and
 run only the remaining portion of the loop:
 
 ```python
@@ -80,4 +80,4 @@ latents to the original:
 - Feed the inpainting loop a mask of all ones. You have proven inpainting
   strictly generalizes txt2img.
 - Reverse the mask sense: keep the hole, regenerate the *surroundings* —
-  that is exactly project 42 (outpainting), which imports this file.
+  that is exactly the [Outpainting](../42-outpainting/README.md) project, which imports this file.

@@ -13,7 +13,7 @@ Instead of learning the data density `p(x)` directly — which requires an intra
 | `train_score.py` | Denoising score matching — the objective is three lines |
 | `sample_and_plot.py` | Annealed Langevin dynamics plus every figure below |
 
-Everything runs on CPU in about a minute. Project 34 reuses the checkpoints
+Everything runs on CPU in about a minute. The [Probability flow ODE](../34-probability-flow-ode/README.md) project reuses the checkpoints
 trained here to build the probability-flow ODE and exact likelihoods.
 
 ## The objective, in full
@@ -35,7 +35,7 @@ Three details carry all the theory:
 - **The `sigma *` inside the loss** makes every noise scale contribute a
   comparable gradient — otherwise small sigmas (with huge scores, `~1/sigma`)
   would drown out everything else. This is the seed of the idea that EDM
-  (project 33) later turns into full preconditioning.
+  (the [EDM reparameterization](../33-edm-reparameterization/README.md) project) later turns into full preconditioning.
 - **A whole ladder of sigmas is trained at once**, from 0.05 (barely blurred)
   to 8.0 (the data is one featureless cloud). The high end is not waste: a
   score field only defined near the data would give a sampler started from
@@ -69,7 +69,7 @@ exactly what `∇ log p` should look like:
 **Annealing in action.** The same 2 000 particles photographed at five rungs
 of the ladder: a diffuse cloud contracts to a ring, then condenses into eight
 crisp modes. This is "coarse structure first, detail later" — the same
-schedule story as the image-space DDPM in project 24, drawn in 2D:
+schedule story as the image-space DDPM in the [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project, drawn in 2D:
 
 ![Annealed Langevin progression](outputs/annealing_eight_gaussians.png)
 

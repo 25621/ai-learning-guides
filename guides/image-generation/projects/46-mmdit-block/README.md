@@ -19,7 +19,7 @@ The full-scale version conditions on a T5/CLIP-encoded caption over a
 captioned photo dataset; the mini version stands in a 2-token learned
 "caption" per digit class, which preserves everything architectural — two
 streams, joint attention, per-stream weights — at CPU cost. Note the
-deliberate pairing: this model trains with project 45's flow-matching loss,
+deliberate pairing: this model trains with the [Rectified flow from scratch](../45-rectified-flow-from-scratch/README.md) project's flow-matching loss,
 because MMDiT + rectified flow is literally the SD3 recipe.
 
 ## The block, and what makes it MMDiT
@@ -41,12 +41,12 @@ Look at `MMDiTBlock.forward` and find the three design decisions:
    attention matrix.
 
 Everything else — AdaLN-Zero modulation, zero-init gates, the final
-modulated projection — is project 43's DiT machinery, reused.
+modulated projection — is the [Implement DiT-S/2](../43-implement-dit-s-2/README.md) project's DiT machinery, reused.
 
 ## Results
 
 **Per-class samples** (16 Euler steps, one column per class token pair).
-Class identity flows through *attention alone* — unlike projects 28/43,
+Class identity flows through *attention alone* — unlike the [Class-conditional DDPM](../28-class-conditional-ddpm/README.md) and [Implement DiT-S/2](../43-implement-dit-s-2/README.md) projects,
 where the label enters through AdaLN, here AdaLN carries only the timestep
 and the label reaches the image exclusively via the caption tokens the image
 attends to:

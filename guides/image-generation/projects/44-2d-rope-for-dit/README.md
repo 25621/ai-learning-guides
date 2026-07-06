@@ -17,7 +17,7 @@ To unpack that last point: *learned position vectors* are a **lookup table** —
 python compare_positions.py       # trains both models, ~9 min total on CPU
 ```
 
-This is why project 43 wrote its attention by hand: RoPE must rotate `q`
+This is why the [Implement DiT-S/2](../43-implement-dit-s-2/README.md) project wrote its attention by hand: RoPE must rotate `q`
 and `k` *before* their dot product, a spot `nn.MultiheadAttention` does not
 expose. The injection point is one optional callable on the `Attention`
 module; `dit.py` is otherwise untouched.
@@ -40,7 +40,7 @@ module; `dit.py` is otherwise untouched.
 ## Results
 
 Both variants train at a deliberately short budget (1 200 steps — see
-project 43 on mini-DiT convergence), so absolute sample quality is rough;
+the [Implement DiT-S/2](../43-implement-dit-s-2/README.md) project on mini-DiT convergence), so absolute sample quality is rough;
 everything below is about the *relative* comparison, which is what the
 controlled experiment isolates.
 

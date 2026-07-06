@@ -8,11 +8,11 @@
 
 | File | Role |
 |------|------|
-| `outpaint.py` | Canvas construction (with mirrored-edge pre-fill), the border mask, and the call into project 37's inpainting loop |
+| `outpaint.py` | Canvas construction (with mirrored-edge pre-fill), the border mask, and the call into the [img2img and inpainting](../37-img2img-and-inpainting/README.md) project's inpainting loop |
 
-The heavy lifting is imported from project 37's `diy_pipeline.py` —
+The heavy lifting is imported from the [img2img and inpainting](../37-img2img-and-inpainting/README.md) project's `diy_pipeline.py` —
 literally the same `inpaint()` function, handed a wider canvas and a mask
-that is the *complement* of the usual one. If you have read project 37,
+that is the *complement* of the usual one. If you have read the [img2img and inpainting](../37-img2img-and-inpainting/README.md) project,
 this file contains almost nothing new, and that is the lesson.
 
 ```bash

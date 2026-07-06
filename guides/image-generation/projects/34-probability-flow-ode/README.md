@@ -8,10 +8,10 @@ Every [diffusion model](/shared/glossary/#diffusion-model) can be sampled two eq
 
 | File | Role |
 |------|------|
-| `pf_ode.py` | The PF-ODE and reverse-SDE samplers for project 30's score model, and exact log-likelihood via the change-of-variables integral |
+| `pf_ode.py` | The PF-ODE and reverse-SDE samplers for the [Score matching from scratch](../30-score-matching-from-scratch/README.md) project's score model, and exact log-likelihood via the change-of-variables integral |
 | `make_figures.py` | Trajectory comparison, sample check, the log-density heatmap, and the likelihood table |
 
-The model is project 30's 2D score network, reused unchanged — run that
+The model is the [Score matching from scratch](../30-score-matching-from-scratch/README.md) project's 2D score network, reused unchanged — run that
 project's `train_score.py` first. Working in 2D is the point: the
 divergence in the likelihood formula can be computed *exactly* (two
 Jacobian rows via autograd), where an image model needs a stochastic trace
@@ -24,7 +24,7 @@ python make_figures.py            # ~2 min on CPU
 
 ## From SDE to ODE
 
-Project 30 sampled with (annealed) Langevin dynamics — a stochastic
+The [Score matching from scratch](../30-score-matching-from-scratch/README.md) project sampled with (annealed) Langevin dynamics — a stochastic
 process. Song et al.'s result: for the VE forward process `x_sigma = x0 +
 sigma * eps`, the deterministic ODE
 
@@ -34,7 +34,7 @@ dx / dsigma = -sigma * s(x, sigma)
 
 has the same marginal distribution at every sigma as the stochastic
 reverse SDE. `pf_ode.py` implements both from the same score network:
-`ode_sample` (Heun integration, the same solver as projects 31/33) and
+`ode_sample` (Heun integration, the same solver as the [Higher-order sampler](../31-higher-order-sampler/README.md) and [EDM reparameterization](../33-edm-reparameterization/README.md) projects) and
 `sde_sample` (Euler–Maruyama with fresh noise each step).
 
 **The picture worth the whole project** — a handful of trajectories from
@@ -92,13 +92,13 @@ Exact likelihood is exact *for the model*, not for the world.
 
 ## Where this shows up at scale
 
-- Swap sigma-space for the DDPM bridge of project 31 and the same ODE gives
+- Swap sigma-space for the DDPM bridge of the [Higher-order sampler](../31-higher-order-sampler/README.md) project and the same ODE gives
   deterministic sampling for image models — that is DDIM's continuous limit
-  (project 27 found it in discrete form).
-- Integrating a *real image* up the ODE is DDIM inversion (project 55), the
+  (the [DDIM sampler](../27-ddim-sampler/README.md) project found it in discrete form).
+- Integrating a *real image* up the ODE is DDIM inversion (the [DDIM inversion + edit](../55-ddim-inversion-edit/README.md) project), the
   backbone of a family of editing methods.
 - The likelihood integral with a Hutchinson trace estimator is how diffusion
-  papers report bits-per-dim on images — project 02's metric, now computable
+  papers report bits-per-dim on images — the [Bits-per-dim baseline](../02-bits-per-dim-baseline/README.md) project's metric, now computable
   for diffusion models.
 
 ## Things to try

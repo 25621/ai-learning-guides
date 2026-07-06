@@ -9,7 +9,7 @@
 | File | Role |
 |------|------|
 | `edm.py` | The four preconditioning coefficients, the log-normal training loss, the Karras sigma schedule, and the Heun sampler — EDM's whole Table 1 in ~90 lines |
-| `train_edm.py` | Training on MNIST (the recorded demo; the guide's CIFAR-10 target is the same code with project 25's loader) |
+| `train_edm.py` | Training on MNIST (the recorded demo; the guide's CIFAR-10 target is the same code with the [DDPM on CIFAR-10](../25-ddpm-on-cifar-10/README.md) project's loader) |
 | `sample_and_plots.py` | 18-step Heun samples and the diagnostic figures |
 
 ```bash
@@ -37,7 +37,7 @@ c_out   = sigma * sigma_data / sqrt(sigma^2 + sigma_data^2)   target has unit va
 c_noise = log(sigma) / 4                           well-scaled conditioning
 ```
 
-`F` is project 24's U-Net, byte-for-byte — its sinusoidal "time" embedding
+`F` is the [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project's U-Net, byte-for-byte — its sinusoidal "time" embedding
 happily accepts the continuous `c_noise`. The two limits explain why this
 works: at tiny sigma, `c_skip -> 1` and `F` only predicts a small residual
 correction; at huge sigma, `c_skip -> 0` and `F` predicts the image from
@@ -59,14 +59,14 @@ lambda(sigma) = (sigma^2 + sigma_data^2) / (sigma * sigma_data)^2
 the same "units of F's output," so no noise level dominates the gradient.
 
 **Sampling** uses the Karras sigma grid (`rho = 7`) and Heun — the same
-solver machinery as project 31, but with no DDPM-to-sigma bridge needed:
+solver machinery as the [Higher-order sampler](../31-higher-order-sampler/README.md) project, but with no DDPM-to-sigma bridge needed:
 the model is native to sigma-space.
 
 ## Results
 
 **Samples with 18 Heun steps** (35 model evaluations — compare the 300-step
 ancestral loop the DDPM projects used). Same U-Net, same data, same 3-minute
-CPU budget as project 24; the sampler is 8x cheaper and the digits are
+CPU budget as the [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project; the sampler is 8x cheaper and the digits are
 comparable:
 
 ![EDM samples, 18-step Heun](outputs/samples_heun18.png)
@@ -92,9 +92,9 @@ covers a lot of ground (high sigma):
 ## Why this is "the cleanest formulation"
 
 Restated in EDM language, the earlier projects collapse into special cases:
-project 24's DDPM is this model with a particular (worse) weighting and a
-particular discrete sigma grid; project 26's schedule debate becomes a
-choice of sampling grid, decoupled from training; project 31's solver
+the [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project's DDPM is this model with a particular (worse) weighting and a
+particular discrete sigma grid; the [Cosine vs linear schedule](../26-cosine-vs-linear-schedule/README.md) project's schedule debate becomes a
+choice of sampling grid, decoupled from training; the [Higher-order sampler](../31-higher-order-sampler/README.md) project's solver
 bridge becomes unnecessary. That collapse — many historical knobs becoming
 one legible parameterization — is the actual content of the EDM paper, and
 why the guide says to read it multiple times.
@@ -106,4 +106,4 @@ why the guide says to read it multiple times.
 - Move the log-normal (`p_mean = 0`): more effort at high sigma, worse
   fine detail at equal steps.
 - Sample with 5 Heun steps. EDM at 5 steps on MNIST is still legible —
-  then read about consistency distillation (project 60), which chases 1.
+  then read about [consistency distillation](../60-consistency-distillation/README.md), which chases 1.

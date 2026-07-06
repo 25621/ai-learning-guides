@@ -10,7 +10,7 @@
 |------|------|
 | `rf.py` | The whole method: interpolation, loss, Euler sampler — ~40 lines |
 | `train_rf_toy.py` | 2D toy training plus the trajectory and few-step figures |
-| `train_rf_mnist.py` | Project 24's U-Net retargeted from noise to velocity |
+| `train_rf_mnist.py` | The [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project's U-Net retargeted from noise to velocity |
 | `sample_rf_mnist.py` | Few-step Euler grids on MNIST |
 
 ```bash
@@ -27,13 +27,13 @@ discrete `T`, no `q_sample`-vs-`p_sample` asymmetry. The forward "process"
 is `x_t = (1-t) x0 + t eps` and its exact velocity is the constant
 `eps - x0`. The loss is one MSE. The sampler is Euler on `dx/dt = v`. This
 is why the field moved: the schedule zoo the earlier phases carefully tuned
-(projects 26, 33, 35) is replaced by a linear interpolation with nothing to
-tune. In sigma-language (project 33), rectified flow is one more choice of
+(the [Cosine vs linear schedule](../26-cosine-vs-linear-schedule/README.md), [EDM reparameterization](../33-edm-reparameterization/README.md), and [VP vs VE comparison](../35-vp-vs-ve-comparison/README.md) projects) is replaced by a linear interpolation with nothing to
+tune. In sigma-language (the [EDM reparameterization](../33-edm-reparameterization/README.md) project), rectified flow is one more choice of
 interpolation path — but the cleanest-conditioned one, with unit-scale
 inputs and targets at every `t` for free.
 
 The `eps` argument in `rf_loss` looks redundant today — by default noise is
-drawn randomly per batch. It is the single hook project 47 (re-flow) needs:
+drawn randomly per batch. It is the single hook the [Re-flow](../47-re-flow/README.md) project needs:
 pass FIXED (sample, noise) couples instead and the same function performs
 reflow training.
 
@@ -41,10 +41,10 @@ reflow training.
 
 **The trajectories.** Sampling paths radiate from the prior toward the
 modes, mostly straight (measured chord/arc straightness 0.871 — compare
-project 34's visibly curved diffusion ODE paths on this same dataset). Not
+the [Probability flow ODE](../34-probability-flow-ode/README.md) project's visibly curved diffusion ODE paths on this same dataset). Not
 perfectly straight: random pairing means paths *would* cross, and the
 marginal velocity field must bend near the center where crossings
-concentrate. That residual bend is exactly what project 47 removes:
+concentrate. That residual bend is exactly what the [Re-flow](../47-re-flow/README.md) project removes:
 
 ![Rectified-flow sampling paths](outputs/rf_paths.png)
 
@@ -58,7 +58,7 @@ the paths' shared early direction — the bend near t = 1 is the whole error:
 
 Rows top to bottom: 1, 2, 4, 8, 16 Euler steps, same starting noise. Two
 steps gives ghosted but recognizable digits; four is legible; sixteen is
-comparable to the 300-step DDPM loop of project 24 — with the *same U-Net*,
+comparable to the 300-step DDPM loop of the [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project — with the *same U-Net*,
 retrained for ~3 minutes on the velocity target:
 
 ![MNIST few-step Euler sampling](outputs/few_step_mnist.png)
@@ -69,7 +69,7 @@ sinusoidal embedding's comfortable range — `VelocityUNet` in
 
 ## Things to try
 
-- Sample the MNIST model with Heun (project 31's solver on `dx/dt = v`):
+- Sample the MNIST model with Heun (the [Higher-order sampler](../31-higher-order-sampler/README.md) project's solver on `dx/dt = v`):
   at 4–8 steps the second-order correction still buys visible quality.
 - Plot `||v_theta(x_t, t)||` along a sampling path: for straight paths it
   should be nearly constant in `t` — a cheap straightness diagnostic.

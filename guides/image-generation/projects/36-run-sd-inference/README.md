@@ -9,7 +9,7 @@
 | File | Role |
 |------|------|
 | `run_sd_inference.py` | Loads the pipeline and runs the three sweeps, one contact sheet each |
-| `contact.py` | Small helper that pastes labeled images into one sheet (reused by projects 37 and 40–42) |
+| `contact.py` | Small helper that pastes labeled images into one sheet (reused by the [img2img and inpainting](../37-img2img-and-inpainting/README.md) and [Negative prompts study](../40-negative-prompts-study/README.md) projects–42) |
 
 **About the model.** The recorded run uses `segmind/tiny-sd` — a
 knowledge-distilled Stable Diffusion 1.5 with the identical architecture,
@@ -26,8 +26,8 @@ python run_sd_inference.py       # ~6 min on a multicore CPU
 
 Note what the three sweeps really are: everything in this pipeline is
 machinery you have already built by hand — the CFG extrapolation is project
-32, the samplers are project 31's solvers on project 34's ODE, and the VAE
-encode/decode bracket is projects 38/39. This project is where those pieces
+32, the samplers are the [Higher-order sampler](../31-higher-order-sampler/README.md) project's solvers on the [Probability flow ODE](../34-probability-flow-ode/README.md) project's ODE, and the VAE
+encode/decode bracket is the [Train a latent DDPM](../38-train-a-latent-ddpm/README.md) and [Train a VAE for diffusion](../39-train-a-vae-for-diffusion/README.md) projects. This project is where those pieces
 meet a 900M-parameter production model.
 
 ## Results
@@ -41,14 +41,14 @@ and color to the edge of poster-like:
 
 **Step-count sweep** (DPM++ 2M, CFG 7.5). Three steps is recognizably the
 right scene with smeared detail, and the gap from 12 to 25 is subtle — the
-higher-order-solver lesson from project 31 operating at full scale:
+higher-order-solver lesson from the [Higher-order sampler](../31-higher-order-sampler/README.md) project operating at full scale:
 
 ![Step count sweep](outputs/steps_sweep.png)
 
 **Sampler comparison at 8 steps** (CFG 7.5). At generous step counts all
 good samplers agree; starving them to 8 steps is where they differentiate.
 DPM++ 2M holds together best at this budget, DDIM is the softest, Euler
-in between — same ranking the solver-error curves of project 31 predict:
+in between — same ranking the solver-error curves of the [Higher-order sampler](../31-higher-order-sampler/README.md) project predict:
 
 ![Sampler comparison](outputs/sampler_sweep.png)
 
@@ -59,5 +59,5 @@ in between — same ranking the solver-error curves of project 31 predict:
 - Sweep CFG at 3 steps. Guidance and step count interact: high CFG needs
   enough steps to absorb the push it applies.
 - Print `pipe.unet.config.cross_attention_dim` and trace where the text
-  embeddings enter — then look at project 46's MMDiT block for how the
+  embeddings enter — then look at the [MMDiT block](../46-mmdit-block/README.md) project for how the
   same wiring looks in current-generation models.

@@ -24,14 +24,14 @@ fixed 600-step budget. Per model, two numbers:
   (parameter counts flatter the DiT, whose attention costs more per
   parameter; FLOPs estimates hide constant factors that wall-clock does not).
 - **Quality axis:** Fréchet distance in MNIST-classifier feature space
-  (project 26's metric) over 256 samples drawn with 50-step DDIM — the
+  (the [Cosine vs linear schedule](../26-cosine-vs-linear-schedule/README.md) project's metric) over 256 samples drawn with 50-step DDIM — the
   budget FID protocol scaled to a CPU. All six models are scored by the
   same frozen feature net against the same 2 048 real digits, so the
   *ranking* is meaningful even though the absolute numbers are not
   publishable FIDs.
 
-Everything is deliberately reused: `UNet` from project 24, `DiT` from
-project 43, `DDIMSampler` from project 27, the metric from projects 25/26.
+Everything is deliberately reused: `UNet` from the [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project, `DiT` from
+the [Implement DiT-S/2](../43-implement-dit-s-2/README.md) project, `DDIMSampler` from the [DDIM sampler](../27-ddim-sampler/README.md) project, the metric from the [DDPM on CIFAR-10](../25-ddpm-on-cifar-10/README.md) and [Cosine vs linear schedule](../26-cosine-vs-linear-schedule/README.md) projects.
 A scaling study is a harness around pieces you already trust.
 
 ## Results
@@ -49,7 +49,7 @@ story — it just locates it *above* toy scale. What the DiT paper showed
 keeps its slope while the U-Net's bends flat; the frontier lives far up and
 to the right of this plot.
 
-Read this figure alongside project 43's convergence finding (the mini-DiT
+Read this figure alongside the [Implement DiT-S/2](../43-implement-dit-s-2/README.md) project's convergence finding (the mini-DiT
 needed ~2.3x the U-Net's steps for comparable samples) — same effect, two
 views.
 

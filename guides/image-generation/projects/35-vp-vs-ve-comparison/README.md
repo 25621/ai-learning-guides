@@ -8,7 +8,7 @@
 
 | File | Role |
 |------|------|
-| `sde.py` | VP and VE behind one interface: `perturb` for training, `ancestral_step` for sampling. VP delegates to project 24's DDPM math (DDPM *is* discrete VP); VE is a geometric sigma ladder with the NCSN reverse step |
+| `sde.py` | VP and VE behind one interface: `perturb` for training, `ancestral_step` for sampling. VP delegates to the [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project's DDPM math (DDPM *is* discrete VP); VE is a geometric sigma ladder with the NCSN reverse step |
 | `train_sde.py` | One training loop for both — run it twice, changing only `--family` |
 | `compare.py` | Grids, loss curves, and Fréchet distance in MNIST-classifier feature space |
 
@@ -33,7 +33,7 @@ VE:  x_t = x0 + sigma_t * eps,   sigma: 0.01 -> 30           variance explodes
 VE loss sits well above VP's and stays noisier throughout. The reason is
 input conditioning: the VP network always sees inputs of variance ~1, while
 the VE network must handle raw magnitudes from 0.01 to 30 across ladder
-rungs — precisely the burden EDM's `c_in` preconditioning (project 33) was
+rungs — precisely the burden EDM's `c_in` preconditioning (the [EDM reparameterization](../33-edm-reparameterization/README.md) project) was
 invented to remove. At this budget, VE's eps-prediction at large sigma is
 the hardest regression in either family:
 
@@ -41,7 +41,7 @@ the hardest regression in either family:
 
 **Sample quality at equal budget.** VP produces the cleaner digits; VE's
 are visibly rougher. In feature-space Fréchet distance (same protocol as
-project 26), the recorded run gives:
+the [Cosine vs linear schedule](../26-cosine-vs-linear-schedule/README.md) project), the recorded run gives:
 
 | family | Fréchet distance (lower is better) |
 |--------|-------------------------------------|
@@ -67,7 +67,7 @@ step never rescales the signal at all; it only subtracts noise:
 VE reverse:  mean = x + (sigma_t^2 - sigma_prev^2) * score
 ```
 
-Both use the clamped implied-`x0` safeguard from project 24 — VE needs it
+Both use the clamped implied-`x0` safeguard from the [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project — VE needs it
 even more, because at `sigma = 30` a small relative error in eps is an
 absolute error of magnitude ~30 in the implied clean image.
 
@@ -91,9 +91,9 @@ have already built in this phase.
 - Drop VE's `sigma_max` from 30 to 5: training stabilizes noticeably —
   and coverage of large-scale structure degrades. That tension is why NCSN
   needed big sigmas, and why preconditioning mattered so much.
-- Wrap the VE model in project 33's `c_in`-style input scaling (divide the
+- Wrap the VE model in the [EDM reparameterization](../33-edm-reparameterization/README.md) project's `c_in`-style input scaling (divide the
   network input by `sqrt(sigma^2 + sigma_data^2)`, retrain) and watch the
   gap to VP close — the cleanest demonstration that the gap was
   conditioning, not the SDE family itself.
 - Sample the VP model with the VE reverse step via the sigma bridge from
-  project 31 — interconvertibility, verified in code.
+  the [Higher-order sampler](../31-higher-order-sampler/README.md) project — interconvertibility, verified in code.

@@ -12,7 +12,7 @@ A [negative prompt](/shared/glossary/#negative-prompt) is a second prompt naming
 
 The recorded run is a scaled-down version of the guide's protocol so it
 finishes in minutes on CPU: 4 prompts × 2 conditions with the distilled
-SD 1.5 (`segmind/tiny-sd`, see project 36) and CLIP ViT-B/32 scoring. The
+SD 1.5 (`segmind/tiny-sd`, see the [Run SD inference](../36-run-sd-inference/README.md) project) and CLIP ViT-B/32 scoring. The
 full study is the same loop with bigger constants — 50 prompts, FID against
 a real-image set, and a learned aesthetic head on the CLIP features. Nothing
 about the mechanism changes with scale, only the error bars.
@@ -23,14 +23,14 @@ python negative_prompts.py       # ~5 min on a multicore CPU
 
 ## Where the negative enters (the whole trick)
 
-Project 32 established CFG:
+The [Classifier-free guidance](../32-classifier-free-guidance/README.md) project established CFG:
 `eps = eps_uncond + s * (eps_cond - eps_uncond)`. A negative prompt is one
 line: the `""` used to compute `eps_uncond` becomes `"ugly, blurry, low
 quality, deformed"`. The extrapolation now points *from* that description
 *toward* yours — every step actively walks away from "blurry" instead of
 away from "average image." That is the entire implementation; `diffusers`
 exposes it as the `negative_prompt` argument. You reinvented this in
-project 32's "Things to try" by guiding class 3 away from class 8.
+the [Classifier-free guidance](../32-classifier-free-guidance/README.md) project's "Things to try" by guiding class 3 away from class 8.
 
 ## Results
 

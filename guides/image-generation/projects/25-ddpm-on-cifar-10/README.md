@@ -8,12 +8,12 @@ Moving a [DDPM (Denoising Diffusion Probabilistic Model)](/shared/glossary/#ddpm
 
 | File | Role |
 |------|------|
-| `train_cifar.py` | Training on CIFAR-10; reuses project 24's `unet.py` and `diffusion.py` unchanged. Default flags give a small CPU "smoke run"; `--full` selects the paper-scale model |
+| `train_cifar.py` | Training on CIFAR-10; reuses the [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project's `unet.py` and `diffusion.py` unchanged. Default flags give a small CPU "smoke run"; `--full` selects the paper-scale model |
 | `sample_cifar.py` | Sample grid from a checkpoint (the model config is stored in the checkpoint) |
 | `fid.py` | FID from InceptionV3 pool features, with the matrix square root done by eigendecomposition — no scipy needed |
 | `plot_loss.py` | Loss curve figure from the training log |
 
-The point of this project is what *doesn't* change from project 24: the loss,
+The point of this project is what *doesn't* change from the [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project: the loss,
 the schedule, and the sampling loop are imported as-is. Scaling up is a data
 loader (RGB, random horizontal flips — the one augmentation DDPM uses), an
 input-channel count, and model width.
@@ -91,7 +91,7 @@ What separates FID-below-20 from blobs, in rough order of importance:
    0.995 default suits short runs).
 4. **Horizontal flips** — already in the loader.
 5. **Sampling with the posterior variance** (`beta_tilde`) — already in
-   project 24's `p_sample`.
+   the [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project's `p_sample`.
 
 With those, a linear-schedule DDPM lands around FID 10–15 at ~400k steps on
 one modern GPU; the paper's 3.17 adds dropout and longer training. Verify

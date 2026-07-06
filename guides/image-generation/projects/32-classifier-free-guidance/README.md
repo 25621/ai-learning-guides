@@ -31,7 +31,7 @@ The "alt-text → filter → VLM recaption" stages are what remove manual labeli
 
 | File | Role |
 |------|------|
-| `train_cfg.py` | Project 28's conditional training plus the one line that matters: 10% of labels are replaced by a reserved NULL class |
+| `train_cfg.py` | The [Class-conditional DDPM](../28-class-conditional-ddpm/README.md) project's conditional training plus the one line that matters: 10% of labels are replaced by a reserved NULL class |
 | `sample_cfg.py` | CFG at inference, a scale sweep scored for purity and diversity, and a full class grid |
 
 The demo conditions on MNIST digit labels — a label plays the role the text
@@ -44,7 +44,7 @@ python sample_cfg.py               # sweep + grid + metrics, ~2 min
 
 ## Implementation notes
 
-**Training** (`train_cfg.py`) is project 28's loop with one added line:
+**Training** (`train_cfg.py`) is the [Class-conditional DDPM](../28-class-conditional-ddpm/README.md) project's loop with one added line:
 
 ```python
 drop = torch.rand(y.shape) < 0.1
@@ -54,7 +54,7 @@ y = torch.where(drop, torch.full_like(y, NULL_CLASS), y)
 The embedding table simply has 11 rows instead of 10. Nothing else changes —
 not the loss, not the architecture, not the sampler.
 
-**Inference** (`sample_cfg.py`) wraps the trained model so project 24's
+**Inference** (`sample_cfg.py`) wraps the trained model so the [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project's
 sampling loop can drive it unchanged:
 
 ```python
@@ -94,7 +94,7 @@ CFG shows up as strokes pushed hard to the pixel-range limits.
 
 **All ten classes at `s = 3`** — a working conditional generator from one
 model and one dropout line, no classifier anywhere in sight (contrast
-project 29, which needed a second network and its gradients):
+the [Classifier guidance](../29-classifier-guidance/README.md) project, which needed a second network and its gradients):
 
 ![All classes at scale 3](outputs/class_grid_s3.png)
 
@@ -103,8 +103,8 @@ project 29, which needed a second network and its gradients):
 - Set the null row's usage to zero (train with `--p-uncond 0`) and sample
   with CFG anyway. The "unconditional" branch is now an untrained embedding
   — watch guidance turn into noise amplification.
-- Compare `s = 5` here against project 29's classifier guidance at its best
+- Compare `s = 5` here against the [Classifier guidance](../29-classifier-guidance/README.md) project at its best
   scale, at equal sampling cost. Same steering goal, opposite plumbing.
 - Guide with a *mismatched* pair: condition on 3 but use class 8's
   prediction as the "unconditional" branch. You have reinvented negative
-  prompts (project 40).
+  prompts (the [Negative prompts study](../40-negative-prompts-study/README.md) project).

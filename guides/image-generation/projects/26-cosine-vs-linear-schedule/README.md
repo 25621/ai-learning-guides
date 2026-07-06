@@ -11,12 +11,12 @@ The [noise schedule](/shared/glossary/#noise-schedule) decides how fast a [DDPM]
 | `compare.py` | The whole study: schedule curves, loss curves, sample grids from both checkpoints, and a Fréchet distance for each in classifier feature space |
 | `feature_net.py` | A small MNIST classifier trained once and used only as a feature extractor for the metric |
 
-There is deliberately no training script here: the two models are project 24's
+There is deliberately no training script here: the two models are the [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project's
 `train.py` run twice, changing **only** `--schedule`. Same architecture, same
 seed, same step budget, same optimizer — a few minutes each on CPU:
 
 ```bash
-# arm 1 — project 24's checkpoint is the linear arm (train it there)
+# arm 1 — the DDPM on MNIST project's checkpoint is the linear arm (train it there)
 python ../24-ddpm-on-mnist/train.py --schedule linear
 
 # arm 2 — the cosine twin, saved into this project
@@ -29,7 +29,7 @@ python compare.py
 
 ## The only line that differs
 
-Both schedules live in project 24's `diffusion.py` (`make_beta_schedule`).
+Both schedules live in the [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project's `diffusion.py` (`make_beta_schedule`).
 Linear specifies the per-step noise `beta_t` directly; cosine goes the other
 way around — it specifies how much *signal* should survive at every step
 (`a_bar_t`, a squared-cosine curve) and derives each `beta_t` from the ratio
@@ -88,12 +88,12 @@ identical sampling seed) gives:
 - A war story this project reproduced by accident: with cosine's near-1 final
   betas, the textbook eps-form reverse update explodes into saturated noise.
   The fix — clamp the implied `x0` to `[-1, 1]` inside each reverse step
-  (`posterior_mean` in project 24's `diffusion.py`) — is standard in every
+  (`posterior_mean` in the [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project's `diffusion.py`) — is standard in every
   real diffusion codebase and the difference it makes is dramatic: the
   cosine model's Fréchet distance drops from ~1800 (pure static) to 70.9.
 - The cosine schedule's late steps still carry visible structure, so the
   denoising trajectory sharpens more gradually — compare trajectory strips if
-  you rerun project 24's `sample.py` against the cosine checkpoint.
+  you rerun the [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project's `sample.py` against the cosine checkpoint.
 - Try other `--T` values: the linear schedule's "wasted tail" fraction stays
   fixed under the scaled-beta convention, but the cosine curve's shape does
   not depend on `T` at all — verify both claims against the `a_bar` plot.

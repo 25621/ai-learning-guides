@@ -15,7 +15,7 @@ A [DDPM (Denoising Diffusion Probabilistic Model)](/shared/glossary/#ddpm) learn
 | `make_figures.py` | Builds the forward-process strip and the loss curve for this README |
 | `plot_style.py` | Shared matplotlib styling used by all Phase 5 project figures |
 
-The other Phase 5 projects (25–29) import `diffusion.py` and `unet.py` from here — everything after this project is a variation on these two files.
+The other Phase 5 projects import `diffusion.py` and `unet.py` from here — everything after this project is a variation on these two files.
 
 ## How the implementation maps to the math
 
@@ -137,7 +137,7 @@ coarse-to-fine character of diffusion sampling is visible in every column:
 - Drop the fresh noise term in `p_sample` (keep only the mean) and look at the
   samples — you have just discovered why the stochasticity matters.
 - Train with `--schedule cosine` and compare — that is
-  [project 26](../26-cosine-vs-linear-schedule/README.md).
+  the [Cosine vs linear schedule](../26-cosine-vs-linear-schedule/README.md) project.
 - Move along the quality-compute curve: `--T 1000 --steps 4000` in one
   direction, `--T 100` in the other. Quality degrades gracefully on MNIST —
   then reason about why large `T` matters more for natural images.

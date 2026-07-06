@@ -11,7 +11,7 @@ A trained [diffusion model](/shared/glossary/#diffusion-model) defines a smooth 
 | `solvers.py` | The DDPM-to-sigma-space bridge, the Karras step grid, and Euler/Heun integration with an honest NFE counter |
 | `compare_solvers.py` | Same starting noise through every (solver, step count) pair; RMSE against a fine reference; the convergence-order plot |
 
-The model is an ordinary DDPM trained with project 24's script — nothing
+The model is an ordinary DDPM trained with the [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project's script — nothing
 about training changes:
 
 ```bash
@@ -110,6 +110,6 @@ a memory of one previous slope — a good exercise on this codebase.
   the grid choice can cost more than the solver order.
 - Push Heun to 2–3 steps. Second order does not save you when the step is
   enormous — watch where the breakdown happens.
-- Wire these solvers to project 33's natively-EDM model (no bridge needed)
+- Wire these solvers to the [EDM reparameterization](../33-edm-reparameterization/README.md) project's natively-EDM model (no bridge needed)
   and verify the picture is unchanged: the solver math never cared how the
   denoiser was trained.

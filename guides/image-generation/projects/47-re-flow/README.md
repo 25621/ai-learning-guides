@@ -8,15 +8,15 @@ A freshly trained [rectified flow](/shared/glossary/#rectified-flow) model alrea
 
 | File | Role |
 |------|------|
-| `reflow.py` | The whole procedure: generate couples from project 45's model, retrain on them, measure straightness and 1-step quality before/after |
+| `reflow.py` | The whole procedure: generate couples from the [Rectified flow from scratch](../45-rectified-flow-from-scratch/README.md) project's model, retrain on them, measure straightness and 1-step quality before/after |
 
 ```bash
-python reflow.py            # ~2 min on CPU (needs project 45's toy checkpoint)
+python reflow.py            # ~2 min on CPU (needs the Rectified flow from scratch toy checkpoint)
 ```
 
 ## Why random pairing bends paths — and fixing the pairing unbends them
 
-Project 45 trains on *random* (data, noise) pairs: every batch, each data
+The [Rectified flow from scratch](../45-rectified-flow-from-scratch/README.md) project trains on *random* (data, noise) pairs: every batch, each data
 point is matched with fresh noise. Individually each training pair defines a
 straight line, but lines from different pairs **cross**, and a velocity
 field is single-valued — at a crossing point it must output one vector, so
@@ -35,7 +35,7 @@ The couples produced by *integrating the round-1 ODE* have a special
 property: ODE trajectories cannot cross (uniqueness of solutions), so the
 new pairing is crossing-free — and the optimal velocity field for a
 crossing-free coupling is genuinely straight lines. Note the code reuse:
-`train(pairs=...)` is project 45's training function; re-flow changed the
+`train(pairs=...)` is the [Rectified flow from scratch](../45-rectified-flow-from-scratch/README.md) project's training function; re-flow changed the
 *dataset*, not the objective. Also note round 2 never sees real data — only
 round-1 samples. Reflow is self-distillation, and any bias in round 1's
 samples is inherited (why you stop after a round or two).
@@ -56,7 +56,7 @@ line segments, drawn with a ruler:
 ![Paths after re-flow](outputs/paths_after.png)
 
 **One step is now enough.** After re-flow, a SINGLE Euler step from the
-prior lands on the eight modes — compare project 45's 1-step panel, which
+prior lands on the eight modes — compare the [Rectified flow from scratch](../45-rectified-flow-from-scratch/README.md) project's 1-step panel, which
 collapsed to a blob. The 1-step energy distance improving by ~190x is that
 picture as a number:
 
@@ -73,5 +73,5 @@ the "Turbo" models used in phase 7's inference projects.
   where the gains stop (and watch sample bias compound).
 - Break it on purpose: generate the couples with only 3 Euler steps. Sloppy
   couples = sloppy shortcut — teacher quality bounds student quality.
-- Re-flow the MNIST rectified flow from project 45 (same two lines with
+- Re-flow the MNIST rectified flow from the [Rectified flow from scratch](../45-rectified-flow-from-scratch/README.md) project (same two lines with
   image tensors) and compare its 1-step row before and after.

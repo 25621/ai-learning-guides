@@ -27,11 +27,11 @@ The SD-class VAE loss is `recon + w_lpips * LPIPS + w_adv * GAN + w_kl * KL`
 with `w_kl` tiny. This project keeps the structure at MNIST scale:
 
 - **Reconstruction (MSE)** — the backbone.
-- **Perceptual term** — feature-space distance under project 26's MNIST
+- **Perceptual term** — feature-space distance under the [Cosine vs linear schedule](../26-cosine-vs-linear-schedule/README.md) project's MNIST
   classifier, standing in for LPIPS: match what a recognition network sees,
   not just pixels.
 - **KL, weight 1e-4** — deliberately ~4 orders of magnitude lighter than a
-  generative VAE's (compare project 07). We do not want `N(0, I)` latents we
+  generative VAE's (compare the [Vanilla VAE](../07-vanilla-vae/README.md) project). We do not want `N(0, I)` latents we
   can sample from; we want a *smooth, bounded* latent space. The diffusion
   model does the generating. This weighting is the single biggest conceptual
   difference between "a VAE" and "a VAE for diffusion."
@@ -46,7 +46,7 @@ standard deviation on held-out data and stores `1/std` in the checkpoint —
 the same statistic SD ships as its famous `0.18215`. Diffusion assumes
 roughly unit-variance data at `t = 0` (every schedule in phases 5–6 was
 built on that assumption); an unscaled latent space quietly breaks the noise
-schedule. Project 38 multiplies by this factor on encode and divides on
+schedule. The [Train a latent DDPM](../38-train-a-latent-ddpm/README.md) project multiplies by this factor on encode and divides on
 decode.
 
 ## Results
@@ -57,7 +57,7 @@ the 4×-fewer-numbers bottleneck:
 ![Originals over reconstructions](outputs/reconstructions.png)
 
 **The audit** (`outputs/metrics.csv`, recorded run): pixel MSE, perceptual
-distance, and — the most decision-relevant row — how often project 26's
+distance, and — the most decision-relevant row — how often the [Cosine vs linear schedule](../26-cosine-vs-linear-schedule/README.md) project's
 classifier gives the original and its reconstruction the same label. If the
 compressor loses class identity, no diffusion model in this latent space can
 draw a legible digit.
@@ -71,7 +71,7 @@ exists to guarantee:
 
 ## Things to try
 
-- Retrain with `--kl-weight 1.0` (a real VAE) and rerun project 38 on it:
+- Retrain with `--kl-weight 1.0` (a real VAE) and rerun the [Train a latent DDPM](../38-train-a-latent-ddpm/README.md) project on it:
   reconstructions blur and the diffusion samples inherit the blur — the
   leaky-compressor ceiling, demonstrated.
 - Retrain with `--kl-weight 0` (a plain autoencoder): reconstruction

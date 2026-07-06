@@ -11,7 +11,7 @@ A plain [DDPM](/shared/glossary/#ddpm) samples by reversing its noising process 
 | `ddim.py` | The sampler: ~30 lines implementing the DDIM update over an arbitrary timestep subsequence, with the `eta` knob |
 | `compare_samplers.py` | Runs the full T-step DDPM and 10/20/50/100-step DDIM from the **same starting noise**, plus an `eta` study and wall-clock timings |
 
-No training happens here — the checkpoint is project 24's. That is the whole
+No training happens here — the checkpoint is the [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project's. That is the whole
 point: the DDPM objective trains a noise predictor `eps(x_t, t)`, and any
 sampler that can use a noise predictor can drive it.
 
@@ -48,7 +48,7 @@ pixel range, and clamping keeps big first steps from derailing.
 ## Run it
 
 ```bash
-python compare_samplers.py     # needs project 24's checkpoint; under a minute on CPU
+python compare_samplers.py     # needs the DDPM on MNIST checkpoint; under a minute on CPU
 ```
 
 ## Results
@@ -86,4 +86,4 @@ it), and its deterministic path is the conceptual bridge to everything in
 Phase 6: it is the discrete ancestor of the probability-flow ODE, and
 "DDIM inversion" (running the deterministic path backwards to recover the
 `x_T` of a real image) powers a whole family of editing techniques you will
-meet in project 55.
+meet in the [DDIM inversion + edit](../55-ddim-inversion-edit/README.md) project.

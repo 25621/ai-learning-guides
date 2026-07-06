@@ -8,13 +8,13 @@ By default a [DDPM](/shared/glossary/#ddpm) draws a random sample from everythin
 
 | File | Role |
 |------|------|
-| `unet_conditional.py` | The conditional model — a subclass of project 24's U-Net that adds exactly one layer |
+| `unet_conditional.py` | The conditional model — a subclass of the [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project's U-Net that adds exactly one layer |
 | `train_conditional.py` | Training with labels; `--dataset mnist` (CPU-friendly demo, the checked-in run) or `--dataset cifar10` (the guide's target — use a GPU) |
 | `sample_classes.py` | Samples a grid with one column per requested class |
 
 ## The entire change, in full
 
-Project 24's ResBlocks already modulate their GroupNorm with a scale-and-shift
+The [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project's ResBlocks already modulate their GroupNorm with a scale-and-shift
 computed from the conditioning vector — that *is* AdaGN. So class conditioning
 does not touch the U-Net body at all; the label simply joins the time
 embedding before it fans out to every block:
@@ -34,12 +34,12 @@ That is the whole diff against the unconditional model. Each class learns a
 128-d embedding; adding it to the time embedding means every ResBlock's
 scale-and-shift now depends on *both* "how noisy is this" and "what class
 should this be." The training loop changes by one argument — the loss call
-passes `model_kwargs={"y": labels}` and project 24's `diffusion.loss` forwards
+passes `model_kwargs={"y": labels}` and the [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project's `diffusion.loss` forwards
 it to the model. Nothing about the diffusion math changes.
 
 Compare this with the two heavier conditioning mechanisms you will meet later:
-cross-attention (project 36 onward: per-*token* conditioning for text, where a
-single global vector is too coarse) and classifier guidance (project 29:
+cross-attention (the [Run SD inference](../36-run-sd-inference/README.md) project onward: per-*token* conditioning for text, where a
+single global vector is too coarse) and classifier guidance (the [Classifier guidance](../29-classifier-guidance/README.md) project:
 steering an *unconditional* model at sampling time). AdaGN-style label
 injection is the lightest of the three and is exactly how Dhariwal & Nichol's
 ImageNet models consumed their class labels.
@@ -54,10 +54,10 @@ python sample_classes.py                          # 8 rows x 10 labeled columns
 python train_conditional.py --dataset cifar10 --device cuda --T 1000 --steps 200000
 ```
 
-The checked-in run is the MNIST demo — same budget as project 24 so the two
+The checked-in run is the MNIST demo — same budget as the [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project so the two
 are directly comparable. CIFAR-10 uses the identical code path (RGB channels
 and 8×8 attention are picked up from the dataset flag) but needs GPU-scale
-training before classes are recognizable, per project 25.
+training before classes are recognizable, per the [DDPM on CIFAR-10](../25-ddpm-on-cifar-10/README.md) project.
 
 ## Results
 
@@ -65,7 +65,7 @@ Every row asks for classes 0–9 left to right; rows differ only in noise seed.
 Two things to check, in order of importance:
 
 1. **Controllability** — column `c` reliably contains the digit `c`. Compare
-   project 24's unconditional grid, where classes land wherever they please.
+   the [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project's unconditional grid, where classes land wherever they please.
 2. **Per-class style diversity within a column** — conditioning constrains
    *what*, not *how*: stroke weight and slant still vary down each column.
 
@@ -84,6 +84,6 @@ noise slightly more predictable.
   and the rest of the network carries digit-ness in general.
 - Drop the label for 10% of training batches (replace with a learned "null"
   embedding). You have just trained a model that supports classifier-free
-  guidance — that is project 32.
+  guidance — that is the [Classifier-free guidance](../32-classifier-free-guidance/README.md) project.
 - Count parameters added by conditioning (`python unet_conditional.py`): ten
   embeddings of 128 numbers, well under 1% of the model.

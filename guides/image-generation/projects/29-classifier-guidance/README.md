@@ -9,18 +9,18 @@
 | File | Role |
 |------|------|
 | `noisy_classifier.py` | Trains a small time-conditioned CNN on *noised* digits and measures its accuracy at every noise level |
-| `guided_sampling.py` | The guided reverse loop: project 24's **unconditional** DDPM steered by the classifier's gradients, with a guidance-scale sweep |
+| `guided_sampling.py` | The guided reverse loop: the [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project's **unconditional** DDPM steered by the classifier's gradients, with a guidance-scale sweep |
 
 The checked-in demo runs on MNIST so it completes on a CPU alongside project
 24's checkpoint; the CIFAR-10 version from the guide is the same two scripts
-pointed at project 25's model and loader — nothing in the method changes.
+pointed at the [DDPM on CIFAR-10](../25-ddpm-on-cifar-10/README.md) project's model and loader — nothing in the method changes.
 
 ## Part 1: a classifier that works at every noise level
 
 An off-the-shelf classifier is useless here: during sampling it will be shown
 images that are 10% signal and 90% static, a distribution it has never seen.
 So `noisy_classifier.py` trains exactly the way the diffusion model trains —
-sample a random `t`, noise the image with project 24's `q_sample`, and demand
+sample a random `t`, noise the image with the [DDPM on MNIST](../24-ddpm-on-mnist/README.md) project's `q_sample`, and demand
 the label anyway. The timestep enters through FiLM on each conv block, so one
 classifier serves all noise levels, just like the U-Net does.
 
@@ -60,14 +60,14 @@ Two implementation details that are easy to get wrong:
 Note what is and is not conditioned: the diffusion model never sees the label
 at all, at training or sampling time. The label enters *only* through the
 classifier's gradient. Class control is bolted onto a finished unconditional
-model — the exact opposite trade-off from project 28, where conditioning is
+model — the exact opposite trade-off from the [Class-conditional DDPM](../28-class-conditional-ddpm/README.md) project, where conditioning is
 baked into training.
 
 ## Run it
 
 ```bash
 python noisy_classifier.py                  # ~2 min on CPU, incl. the accuracy sweep
-python guided_sampling.py                   # needs project 24's checkpoint, ~3 min
+python guided_sampling.py                   # needs the DDPM on MNIST checkpoint, ~3 min
 ```
 
 ## Results
@@ -98,7 +98,7 @@ class, from a model that was never trained on labels:
 - Guide with a *clean-image* classifier (train with `--T 1` so it never sees
   real noise) and watch guidance fail at high `t` — the reason "trained on
   noisy images" is in this project's title.
-- Compare against project 28's grid at equal compute. Conditional training
+- Compare against the [Class-conditional DDPM](../28-class-conditional-ddpm/README.md) project's grid at equal compute. Conditional training
   wins on purity-per-FLOP; guidance wins on not having to retrain the
   generator. Holding both trade-offs in your head is the setup for
-  classifier-free guidance (project 32), which gets the best of each.
+  classifier-free guidance (the [Classifier-free guidance](../32-classifier-free-guidance/README.md) project), which gets the best of each.
