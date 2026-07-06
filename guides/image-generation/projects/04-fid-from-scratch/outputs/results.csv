@@ -1,0 +1,10 @@
+setting,fid
+self (A vs A),0.000
+real vs real (A vs B),72.198
+noise sigma 0.1,124.57
+noise sigma 0.2,182.64
+noise sigma 0.4,259.32
+noise sigma 0.8,337.93
+blur k 3,127.55
+blur k 5,191.16
+blur k 7,246.97

@@ -1,0 +1,5 @@
+metric,real,noise
+pcs_for_90pct_variance,81,730
+top2_variance_fraction,0.408,0.005
+mean_pairwise_distance,18.55,22.63
+std_pairwise_distance,4.44,0.24
