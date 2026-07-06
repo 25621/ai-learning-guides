@@ -1,5 +1,12 @@
 # Train a Latent DDPM
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** Generating high-resolution images in pixel space is extremely expensive because the model has to process millions of pixels at every step. In this project, we compress the images first using a smart encoder (VAE) into a tiny, packed grid called "latents" (like compressing a photo into a ZIP file). We then train the diffusion model entirely inside this tiny space, making it much faster, and decompress it back to pixels at the end.
+- **Analogy:** Imagine you want to mail a giant LEGO castle to a friend. Instead of shipping the fully built castle in a massive, expensive box, you disassemble it into a few bags of bricks, mail those in a small envelope, and let your friend build the castle using the instructions when it arrives.
+- **Example:** Running a diffusion model on 512x512 pixels takes a lot of computer power. But if we compress the image by 8x into a 64x64 latent space, the model only has to process 1/64th of the data, speeding up the generation process by over 20 times.
+
+
 ## Key Insight
 
 This project is a miniature of how [Stable Diffusion](/shared/glossary/#stable-diffusion) actually works: instead of running [DDPM](/shared/glossary/#ddpm) directly on pixels, you first compress each [CIFAR-10](/shared/glossary/#cifar-10) image with an 8× [VAE](/shared/glossary/#vae) into a tiny 4×4 [latent](/shared/glossary/#latent-space), then train a small [U-Net](/shared/glossary/#u-net) to denoise in that latent grid — the core idea of [latent diffusion (LDM)](/shared/glossary/#ldm). Because the latent has roughly 48× fewer numbers than the pixels, every training and sampling step is dramatically cheaper, and you decode back to pixels only at the very end. Comparing it to a pixel-space DDPM on the same data makes the central lesson concrete: most of diffusion's cost is spent on pixel detail the VAE can reconstruct anyway.

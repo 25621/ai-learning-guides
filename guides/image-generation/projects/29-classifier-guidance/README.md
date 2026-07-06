@@ -1,5 +1,12 @@
 # Classifier Guidance
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** To make sure our image generator creates high-quality pictures of a specific class (like a "dog"), we can hire a helper: a separately trained image classifier. At each step of cleaning the noise, the classifier looks at the half-cleaned image and calculates gradients (arrows showing how to change the pixels) to make the image look *more* like a dog. We use these gradients to steer the diffusion model's steps.
+- **Analogy:** Imagine drawing a horse with a blindfold on, while a friend who can see stands next to you saying, "Make the ears pointier," "Make the legs longer," or "Nudge your pen upward." The friend is the classifier, and their feedback guides your hand to draw a better horse.
+- **Example:** If the diffusion model is trying to generate a cat but the face looks a bit blurry, the classifier calculates that adding more contrast around the eyes will increase the "cat-ness" score. It nudges the pixels in that direction, resulting in a much sharper, more recognizable cat face.
+
+
 ## Key Insight
 
 [Classifier guidance](/shared/glossary/#classifier-guidance) was the first trick that made conditional [DDPM](/shared/glossary/#ddpm) samples both sharp and on-target: you train a separate image classifier *on noisy images*, then during sampling nudge each denoising step in the direction its [gradient](/shared/glossary/#gradients) says will make the chosen class more likely. Intuitively the classifier whispers "a little more cat-ness, this way" at every step, and that push — a [score](/shared/glossary/#score)-like signal, the gradient of a log-probability with respect to the image — sharpens the output toward the requested class. The catch is that it needs an extra, specially-trained noisy classifier, exactly the cost that [classifier-free guidance (CFG)](/shared/glossary/#cfg-classifier-free-guidance) later removed by folding the same effect into the diffusion model itself. This project builds the original: train the noisy classifier on [CIFAR-10](/shared/glossary/#cifar-10) and use its gradients to steer the samples.

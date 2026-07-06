@@ -1,5 +1,12 @@
 # Re-flow
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** Even though Rectified Flow tries to draw straight paths, the trained model's paths still have minor curves and bends. "Re-flow" is a distillation technique where we use the trained model to generate clean images from noise, and then train a *new* model on these exact generated pairs. This straightens the paths even further.
+- **Analogy:** Imagine hikers walking through a forest. The first group finds a winding trail through the trees. The second group (Re-flow) looks at where the first group went and builds a paved, perfectly straight road, bypassing all the bends.
+- **Example:** A standard model needs 20 steps to generate a good image because it has to correct for slight curves in the path. A Re-flowed model can generate a high-quality image in just 1 or 2 steps because the path is a perfectly straight line from noise to image.
+
+
 ## Key Insight
 
 A freshly trained [rectified flow](/shared/glossary/#rectified-flow) model already follows fairly straight paths from noise to image, but they are not perfectly straight, so taking very few [sampling](/shared/glossary/#sampling) steps still wobbles off course. "Re-flow" fixes this by using the trained model to generate many (noise, image) pairs, then training a *second* model to map each noise sample directly to its paired image along a straight line — literally teaching it the shortcut the first model discovered. After one or two rounds the trajectories become straight enough to sample in as few as one or two steps, which is the foundation of the fast [distillation](/shared/glossary/#distillation) methods behind real-time image generators.

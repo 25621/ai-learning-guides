@@ -1,5 +1,12 @@
 # img2img and Inpainting
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** Instead of starting from pure random noise, we can start with a real image and edit it. For *img2img*, we add a little bit of noise to a photo and let the model clean it up while following a new prompt. For *inpainting*, we draw a mask over a specific part of the image (like a person's shirt), noise only that part, and tell the model to fill in the masked area while keeping the rest of the image exactly the same.
+- **Analogy:** img2img is like tracing over a sketch with a pencil, adding your own style. Inpainting is like using white-out on a spelling error in a letter and writing the correct word over it, matching the handwriting of the rest of the letter.
+- **Example:** You take a photo of a dog sitting on a lawn, draw a mask over the dog, and type "a sleeping tiger." The model erases the dog and generates a tiger in its place, while leaving the grass and trees around it completely untouched.
+
+
 ## Key Insight
 
 [img2img](/shared/glossary/#img2img) and [inpainting](/shared/glossary/#inpainting) show that the same trained [diffusion model](/shared/glossary/#diffusion-model) does far more than generate from scratch — both fall out of the [Stable Diffusion](/shared/glossary/#stable-diffusion) sampling loop almost for free. The key control is the *noise strength* (also called denoising strength): instead of starting from pure noise, you partially noise an existing image and denoise from there, so a low strength keeps the original almost intact while a high strength redraws it freely. Inpainting adds a mask so only the selected region is regenerated while the known pixels are pasted back on every step — exactly how you erase an object or swap a face without disturbing the rest of the picture.

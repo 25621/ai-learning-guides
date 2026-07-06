@@ -1,5 +1,12 @@
 # Rectified Flow from Scratch
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** Traditional diffusion models add noise in a curved, complex way. Rectified Flow simplifies this by drawing a straight line directly from the clean image to the random noise. The model is trained to predict the "velocity" (the speed and direction) of this straight path, allowing us to generate images in very few steps by just walking along these straight arrows.
+- **Analogy:** Imagine driving from your house to a shop. Standard diffusion is like navigating winding, twisty country roads with lots of turns (noise schedule). Rectified Flow is like building a straight highway directly from your driveway to the shop, so you can just point the steering wheel straight and drive.
+- **Example:** Instead of needing a complicated noise schedule table with parameters to tune, Rectified Flow uses a simple formula `x_t = (1-t)*x_0 + t*eps` and converges faster, producing clean images in 20 steps.
+
+
 ## Key Insight
 
 [Rectified flow](/shared/glossary/#rectified-flow) is a kind of [flow matching](/shared/glossary/#flow-matching): instead of predicting the noise added at a discrete step the way [DDPM](/shared/glossary/#ddpm) does, you train the model to predict a *velocity* — the straight-line direction `ε - x_0` that points from a half-noised image back toward clean data. Because the training paths are straight lines, [sampling](/shared/glossary/#sampling) simply steps along the predicted arrows by solving an [ODE](/shared/glossary/#ode) (with [Euler](/shared/glossary/#euler-method) or [Heun](/shared/glossary/#heuns-method)), and you reach good images in only 10–50 steps. Re-deriving your earlier diffusion model with this objective shows how little has to change — the same network, but a simpler loss with no [noise schedule](/shared/glossary/#noise-schedule) to tune — yet it trains cleanly and few-step sampling works out of the box.

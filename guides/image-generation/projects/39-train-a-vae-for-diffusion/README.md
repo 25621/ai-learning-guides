@@ -1,5 +1,12 @@
 # Train a VAE for Diffusion
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** To make Latent Diffusion work, we need a perfect compressor (a Variational Autoencoder, or VAE) that can compress an image and decompress it without losing any important details like eyes or textures. We train this VAE by combining three losses: a pixel loss (matching colors), a perceptual loss (checking if it looks realistic to humans), and a discriminator (an AI judge that tries to spot if the output looks fake).
+- **Analogy:** Imagine hiring an architect to draw a blueprint of a house, and then a builder to reconstruct the house from the blueprint. You want to make sure the builder doesn't forget the windows or doors. The discriminator is a building inspector who rejects the house if the brick textures look cheap or blurry.
+- **Example:** If you train a VAE with only pixel loss, the reconstructed faces look blurry and lack eyelashes or skin details. Adding the perceptual and discriminator losses forces the VAE to reconstruct sharp, realistic details, ensuring the latent space is high-quality for diffusion.
+
+
 ## Key Insight
 
 Every [latent diffusion](/shared/glossary/#ldm) model is only as good as the [VAE](/shared/glossary/#vae) it generates in, so this project trains that compressor properly before any diffusion happens — on [CelebA](/shared/glossary/#celeba) faces, where it is easy to judge whether reconstructions look real. The recipe is the one [Stable Diffusion](/shared/glossary/#stable-diffusion)'s VAE descends from: combine a [perceptual loss (LPIPS)](/shared/glossary/#perceptual-loss-lpips) for sharp textures, an adversarial loss from a [discriminator](/shared/glossary/#discriminator) so fine detail looks real instead of blurry, and a light [KL](/shared/glossary/#kl-divergence) penalty to keep the latent space smooth enough to diffuse in. The point is to verify the VAE is a faithful compressor first — a leaky one silently caps the quality of any diffusion model you later train on its latents.

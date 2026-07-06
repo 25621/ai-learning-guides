@@ -1,5 +1,12 @@
 # Implement DiT-S/2
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** For years, diffusion models used a network structure called a U-Net (which uses convolutions) to process images. A Diffusion Transformer (DiT) swaps this out for a Transformer (the same architecture behind ChatGPT). It breaks the image into a grid of tiny square patches (tokens) and lets them talk to each other to predict the noise.
+- **Analogy:** Imagine a team of workers describing a crime scene. A U-Net is like workers who can only talk to their immediate neighbors to build a picture. A Transformer is like putting all the workers in a chatroom where anyone can talk to anyone else directly, making it much easier to coordinate the global layout.
+- **Example:** A small DiT-S/2 divides a 32x32 image into 2x2 patches (giving 256 tokens) and processes them through 12 attention blocks, learning to generate class-conditional CIFAR-10 images with highly predictable quality improvements as compute scales up.
+
+
 ## Key Insight
 
 This project replaces the [U-Net](/shared/glossary/#u-net) at the heart of a diffusion model with a [Diffusion Transformer (DiT)](/shared/glossary/#dit): you cut the noisy [latent](/shared/glossary/#latent-space) into 2×2 [patches](/shared/glossary/#patchification) (that is the "/2"), feed the resulting sequence of tokens through 12 transformer blocks of width 384 (the "S", for small), and predict the added noise just as before. The conditioning — the timestep plus the class label — enters through [AdaLN-Zero](/shared/glossary/#adaln-zero), which predicts per-channel shift/scale/gate values that start at zero, so each block begins as a do-nothing identity and only gradually learns to modulate the activations. Training it [class-conditionally](/shared/glossary/#class-conditioning) on [CIFAR-10](/shared/glossary/#cifar-10) and comparing [FID](/shared/glossary/#fid) against your earlier U-Net baseline reveals the transformer's real selling point: it is not magically better at this small scale, but it [scales](/shared/glossary/#scaling-laws) far more predictably as you add parameters and compute.

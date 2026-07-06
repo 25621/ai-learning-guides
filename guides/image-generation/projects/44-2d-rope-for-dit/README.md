@@ -1,5 +1,12 @@
 # 2D RoPE for DiT
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** Since a transformer treats the image patches like an unordered bag of tokens, it doesn't know which patch is in the top-left or bottom-right. 2D RoPE (Rotary Position Embeddings) fixes this by rotating the math vectors of each patch based on its row and column coordinates, allowing the model to understand the exact 2D distance between any two patches.
+- **Analogy:** Imagine trying to assemble a puzzle where all the pieces are blank on the back. Learned positions are like writing a specific seat number on each piece—but if the table gets bigger, you run out of numbers. 2D RoPE is like drawing grid lines on the table using angles; no matter how big the table gets, you can always calculate the exact angle and position of any piece.
+- **Example:** A model trained on 256x256 images can generate 512x512 images without getting distorted or repeating the subject, because the 2D RoPE math naturally scales to larger coordinates.
+
+
 ## Key Insight
 
 A [transformer](/shared/glossary/#transformer) has no built-in sense of position — to it, a sequence of image [patches](/shared/glossary/#patch) is just an unordered bag — so you must tell it *where* each patch sits. [2D RoPE (rotary position embedding)](/shared/glossary/#rope) does this by rotating each token's query and key vectors by an angle set from its row and column, so the [attention](/shared/glossary/#attention) [dot product](/shared/glossary/#dot-product) between two patches depends only on their relative spacing rather than their absolute coordinates. Swapping a [DiT](/shared/glossary/#dit)'s learned position vectors for 2D RoPE usually improves quality — especially when generating at resolutions larger than the model was trained on, because rotations extrapolate to unseen positions far more gracefully than a fixed lookup table of learned vectors.

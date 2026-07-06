@@ -1,5 +1,12 @@
 # Score Matching from Scratch
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** Instead of trying to learn a complicated formula for the probability of every possible image, we learn a "score." The score is simply a map of arrows pointing from low-probability zones (bad, noisy images) toward high-probability zones (good, clean images). We train the model by adding noise to a point and teaching it to point an arrow directly back to where the clean point was.
+- **Analogy:** Imagine being lost in a dark valley. Instead of having a complete map of the entire country, you just have a compass that always points toward the nearest warm cabin. If you follow the compass arrows, you will eventually walk right to a cabin.
+- **Example:** We place 2D points in a shape like a double ring. The model learns a grid of arrows pointing toward the rings. If we put a random point anywhere on the screen and follow the arrows (using Langevin dynamics), the point slides smoothly until it lands perfectly on one of the rings.
+
+
 ## Key Insight
 
 Instead of learning the data density `p(x)` directly — which requires an intractable normalizing constant — [score matching](/shared/glossary/#score-matching) learns its [score](/shared/glossary/#score), the [gradient](/shared/glossary/#gradients) of log-density `∇_x log p(x)` that tells you which way to nudge a point to make it more likely. The practical trick is *denoising score matching*: add a known amount of Gaussian noise to each sample and train the network to point back toward the clean point, which provably equals the score of the noised distribution — so you never need the true density. Once you have the score, you generate with [Langevin dynamics](/shared/glossary/#langevin-dynamics): repeatedly step in the score direction plus a little random jitter, like a ball rolling into high-probability valleys while being shaken so it doesn't get stuck in one spot. This project builds the whole loop on 2D toy data (8-Gaussians, swiss roll) — small enough that you can plot the learned vector field and watch the sampled points line up with the true distribution.

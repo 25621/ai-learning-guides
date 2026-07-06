@@ -1,5 +1,12 @@
 # Classifier-Free Guidance
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** While Classifier Guidance used a separate model to steer images, Classifier-Free Guidance (CFG) does it within a single model. During training, we randomly hide the class label (like "dog") 10% of the time, so the model learns to paint both with a prompt and without one. At generation time, we run the model twice: once asking for a "dog" and once asking for "nothing." We then amplify the difference, pushing the image hard away from "nothing" and toward "dog."
+- **Analogy:** Imagine asking a kid to draw "a dog." First they draw a generic animal shape. Then you say, "No, make it look *extra* like a dog!" They look at their generic shape, think about what makes a dog unique (like floppy ears and a wagging tail), and draw those features extra large and clear.
+- **Example:** With a guidance scale of `1.0`, the model generates a somewhat blurry dog that blends into the background. When you turn the guidance scale up to `7.5`, the model strongly emphasizes the dog's features, making it pop out with crisp fur and clear eyes.
+
+
 ## Key Insight
 
 [Classifier-free guidance (CFG)](/shared/glossary/#cfg-classifier-free-guidance) is the single biggest practical trick in modern text-to-image generation: it makes samples follow the prompt far more closely, and unlike the earlier [classifier guidance](/shared/glossary/#classifier-guidance) it needs no separate classifier at all. The recipe is to train *one* model that sometimes sees the real condition and sometimes a "null" (empty) condition — done by randomly dropping the condition about 10% of the time during training — so the same network learns both the conditional and unconditional prediction. At sampling time you run it twice and extrapolate: start from the unconditional prediction and push *away* from it and *toward* the conditional one, with a "guidance scale" controlling how hard you push. This sharpens the output toward modes the prompt strongly implies, but turn the scale too high and you get oversaturated, less diverse images — the trade-off this project maps by sweeping the scale from 1.0 to 12.0.

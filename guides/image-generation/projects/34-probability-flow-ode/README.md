@@ -1,5 +1,12 @@
 # Probability Flow ODE
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** Diffusion sampling is usually random—like a particle bouncing around in a breeze. But we can convert it into a deterministic path where there is no wind at all, only a steady current. This is the Probability Flow ODE. Because the path is completely predictable, if you start with a specific noise pattern, you will always get the exact same image. This also lets us calculate exactly how "common" or "rare" the model thinks an image is (its likelihood).
+- **Analogy:** Imagine a slide filled with water. A drop of water sliding down will bounce around randomly due to turbulence (SDE). But if we freeze the water into a smooth ice slide, any sled let go at the top will slide down the exact same path every single time (ODE).
+- **Example:** You take a photo of a cat, run the model backward to find its exact "noise fingerprint," change one pixel in that noise, and run it forward. The output is the exact same cat but with slightly different lighting, demonstrating perfect control over the generation.
+
+
 ## Key Insight
 
 Every [diffusion model](/shared/glossary/#diffusion-model) can be sampled two equivalent ways: as a noisy stochastic process — an [SDE](/shared/glossary/#sde-stochastic-differential-equation) that injects fresh randomness at every step — or as a single deterministic trajectory, the [probability flow ODE](/shared/glossary/#probability-flow-ode), which shares the *exact same* distribution at every noise level. Determinism buys two things the stochastic sampler can't: the same starting noise always maps to the same image (so you can smoothly interpolate between samples and invert a real image back to its noise), and because an ODE has a well-defined change-of-variables, you can compute the model's exact log-likelihood — how probable it thinks any given image is. This project converts an SDE sampler to its ODE form, checks the samples still look right, and computes those exact likelihoods.

@@ -1,5 +1,12 @@
 # Class-Conditional DDPM
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** A normal diffusion model is like a wild artist who paints whatever they feel like when you turn them on—you might get a cat, a car, or a plane, but you can't choose. Class conditioning is like giving the artist a command. We feed the category label (like "frog" or "ship") into the model during training, using special layers that adjust the model's inner settings based on the class, so we can tell it exactly what type of image to paint.
+- **Analogy:** Imagine a jukebox that plays random songs. Class conditioning is like adding a button panel so you can select "Jazz" or "Rock" instead of just hoping for a song you like.
+- **Example:** When you ask the model for class `6` (frog), it adjusts its internal settings and guides the random noise to form a green frog sitting on a leaf, instead of a random truck or plane.
+
+
 ## Key Insight
 
 By default a [DDPM](/shared/glossary/#ddpm) draws a random sample from everything it learned — you cannot ask it for a specific digit or object. [Class conditioning](/shared/glossary/#class-conditioning) fixes that by feeding the desired label into the network alongside the noisy image, so the same model can be steered to generate exactly the class you want. This project injects the label through the network's [normalization](/shared/glossary/#normalization) layers — a learned, per-class [scale-and-shift](/shared/glossary/#scale-and-shift) applied to the [activations](/shared/glossary/#activations), an approach often called [AdaGN (adaptive group normalization)](/shared/glossary/#adagn-adaptive-group-normalization) — training on labeled [CIFAR-10](/shared/glossary/#cifar-10) and then verifying you can summon any of the ten classes on demand. It is the smallest possible step toward the conditioning that, once scaled up to text prompts, becomes modern text-to-image generation.

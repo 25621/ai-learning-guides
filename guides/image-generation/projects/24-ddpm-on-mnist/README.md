@@ -1,5 +1,12 @@
 # DDPM on MNIST
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** Imagine learning to paint by taking a clean picture, throwing sand on it until it is completely buried under random grains, and then learning to brush the sand away grain-by-grain to reveal the picture again. That is what a Denoising Diffusion model does. We take a clean picture of a handwritten number, add random static noise in steps until it is just random fuzz, and teach a computer network (called a U-Net) to guess exactly what noise we added at each step so we can clean it off.
+- **Analogy:** It is like restoring a dusty old painting. Instead of trying to paint a masterpiece from a blank canvas all at once, you start with a canvas covered in dust, and your only job is to blow a tiny bit of dust off at each step until the beautiful painting underneath is clean.
+- **Example:** If you start with a screen of pure black-and-white static, the model looks at it and says, "I think there is a faint shape of a '7' buried under here; let's wipe away some fuzz." After 300 steps of cleaning, a perfect, clean number `7` appears.
+
+
 ## Key Insight
 
 A [DDPM (Denoising Diffusion Probabilistic Model)](/shared/glossary/#ddpm) learns to generate images by mastering one almost trivial skill: look at a noisy image and predict the noise that was added to it. Training has two halves — a *forward process* that takes a clean [MNIST](/shared/glossary/#mnist) digit and stirs in a controlled amount of random (Gaussian) noise (you can jump straight to any noise level in a single step, so generating training pairs is essentially free), and a learned *reverse process* in which a small [U-Net](/shared/glossary/#u-net) — an encoder-decoder with skip connections that let it keep fine pixel detail while still reasoning about the whole image — guesses that noise so it can be subtracted away. The [loss](/shared/glossary/#loss-function) is just [mean squared error](/shared/glossary/#mse-mean-squared-error) between the predicted and the true noise, which is why diffusion training is so stable compared with a [GAN](/shared/glossary/#gans)'s two-player tug-of-war. This project builds the whole pipeline at toy scale and samples by starting from pure static and running the reverse step `T` times (often 1000), watching a recognizable digit slowly emerge from the noise.

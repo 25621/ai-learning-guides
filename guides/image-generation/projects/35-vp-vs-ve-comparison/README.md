@@ -1,5 +1,12 @@
 # VP vs VE Comparison
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** When we add noise to an image, we have two classic choices: do we keep the overall brightness/volume constant (Variance-Preserving or VP), or do we let the noise explode to infinity (Variance-Exploding or VE)? VP (used in DDPM) shrinks the original image as it adds noise, while VE (used in early score matching) keeps the image size constant and just stacks noise on top.
+- **Analogy:** Imagine painting over a drawing. VP is like watering down your paint so that no matter how many layers you add, the thickness of the paint on the canvas stays the same. VE is like squeezing thick paint directly from the tube onto the canvas, building a giant mountain of paint.
+- **Example:** VP models work great for natural photos because the numbers stay bounded between -1 and 1. VE models are useful when you want to handle arbitrary noise scales without scaling the image down, though they require careful numerical handling so the numbers don't blow up.
+
+
 ## Key Insight
 
 [VP and VE](/shared/glossary/#vp--ve-sde) are the two classic ways to define the forward noising process of a diffusion model. Variance-Preserving (VP) — the family [DDPM](/shared/glossary/#ddpm) belongs to — shrinks the original signal as it adds noise so the total variance stays around 1 the whole way; Variance-Exploding (VE) — used by the original [score](/shared/glossary/#score)-based papers — leaves the signal untouched and just piles on ever-larger noise, so the variance grows without bound. The two are mathematically interconvertible and reach similar [FID](/shared/glossary/#fid), but they differ in numerical conditioning and in which samplers behave well, which is exactly what makes the comparison instructive. This project trains the same model under both [SDE](/shared/glossary/#sde-stochastic-differential-equation) families and compares quality, training stability, and sampler behavior side by side.

@@ -1,5 +1,12 @@
 # DDIM Sampler
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** Normally, cleaning a noisy image to generate a new one is a slow, random process. You have to roll dice at every step to add back some random jitter, which forces you to take 1000 tiny steps to get a good result. DDIM (Denoising Diffusion Implicit Models) is a smart math trick that removes the dice-rolling. Because the path is deterministic (no random dice), the model can take huge, confident leaps forward and skip most of the steps.
+- **Analogy:** Imagine hiking down a mountain in a thick fog. In a standard DDPM, you walk blindly, taking a step, throwing a dice to decide which way to wiggle, and taking another step—which requires 1000 tiny steps so you don't fall. With DDIM, you use a compass and follow a straight, mapped trail, allowing you to take 50 large strides to reach the bottom safely in a fraction of the time.
+- **Example:** Instead of waiting 10 seconds for the model to run 1000 steps of noisy calculations, you switch the sampler to DDIM and get a clean, high-quality photo in just 50 steps, taking less than a second.
+
+
 ## Key Insight
 
 A plain [DDPM](/shared/glossary/#ddpm) samples by reversing its noising process one tiny *stochastic* step at a time, which can mean up to 1000 network calls to make a single image — accurate but painfully slow. [DDIM (Denoising Diffusion Implicit Models)](/shared/glossary/#ddim) rewrites that reverse process as a *deterministic* path: given the same starting noise it always lands on the same image, and because the path is smooth you can take big strides along it, skipping most of the steps. The headline result you will reproduce is that ~50 DDIM steps match the quality of a 1000-step DDPM — roughly a 20× speedup for almost no loss in quality — and the same trained model is reused unchanged, since DDIM only changes how you *sample*, not how you *train*.

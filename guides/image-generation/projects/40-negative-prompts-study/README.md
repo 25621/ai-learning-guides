@@ -1,5 +1,12 @@
 # Negative Prompts Study
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** A negative prompt tells the model what *not* to draw. It works by running Classifier-Free Guidance in reverse: we tell the model what the bad version looks like (e.g., "blurry, low quality") and push the generation away from it. This project runs tests to see if using negative prompts actually improves the scientific scores (like realism and prompt matching) of the output images.
+- **Analogy:** Imagine telling a chef: "Make me a soup, and whatever you do, do NOT make it salty, watery, or cold." It helps the chef avoid common mistakes and focus on making a rich, hot soup.
+- **Example:** When generating "a mountain landscape," the image might look a bit flat or default. Adding the negative prompt "blurry, bad lighting, cartoon" pushes the model to generate a crisp photo with dramatic, realistic lighting instead.
+
+
 ## Key Insight
 
 A [negative prompt](/shared/glossary/#negative-prompt) is a second prompt naming what you *don't* want ("ugly, blurry, low quality"), and it costs nothing extra because it simply replaces the blank unconditional input that [classifier-free guidance (CFG)](/shared/glossary/#cfg-classifier-free-guidance) already runs — the model is pushed away from the negative prompt's prediction and toward your real one. This project measures whether that actually helps by generating 50 prompts with and without negatives and scoring both sets: [FID](/shared/glossary/#fid) for realism, a [CLIP](/shared/glossary/#clip) score for prompt adherence, and an [aesthetic score](/shared/glossary/#aesthetic-score) for human-judged appeal. The result builds honest intuition for when negatives genuinely improve images versus when they merely shift the style.

@@ -1,5 +1,12 @@
 # Compare DiT and U-Net Scaling
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** This project compares the scaling behavior of U-Nets and Diffusion Transformers (DiT). By training different sizes of DiTs (Small, Base, Large) and comparing them to U-Nets on the same dataset, we can plot how quality improves as we spend more computing power.
+- **Analogy:** A U-Net is like a highly customized steam engine—efficient at small sizes, but hard to make go faster. A Transformer is like a jet engine—it might be heavy and slow to start, but as you scale it up, it scales incredibly well and leaves the steam engine far behind.
+- **Example:** If you train a small U-Net and a small DiT, the U-Net might win. But if you increase the budget by 10x, the DiT's performance improves dramatically, whereas the U-Net's performance starts to plateau, showing why Transformers are the choice for large-scale models.
+
+
 ## Key Insight
 
 The reason the field switched from [U-Nets](/shared/glossary/#u-net) to [Diffusion Transformers (DiT)](/shared/glossary/#dit) is not that a small DiT beats a small U-Net — often it does not — but that DiT obeys cleaner [scaling laws](/shared/glossary/#scaling-laws): as you grow the model and the compute you spend on it, quality improves along a smoother, steeper line. Training DiT-S, DiT-B, and DiT-L on the same data and plotting [FID](/shared/glossary/#fid) against [FLOPs](/shared/glossary/#flops) makes that slope visible — the DiT curve keeps dropping where the U-Net flattens out. This is the same lesson that played out in language modeling: predictable scaling beats clever architecture once you can afford to scale.

@@ -1,5 +1,12 @@
 # Higher-Order Sampler
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** When generating an image, the model is solving a math puzzle: drawing a smooth curve from random noise to a clean image. A simple solver (Euler) assumes the curve is made of straight lines, so it makes errors and drifts off-course unless it takes hundreds of tiny steps. Higher-order samplers (like Heun or DPM-Solver++) look ahead and average their steps, allowing them to bend their path smoothly and reach the target in very few steps.
+- **Analogy:** Imagine driving a car around a sharp curve. A simple driver (Euler) only looks at the road right in front of the hood, driving in a series of jerky straight lines and constantly oversteering. A professional driver (Heun) looks ahead at the curve, smoothly turning the wheel to match the bend, using far fewer adjustments to stay in the lane.
+- **Example:** If a standard Euler sampler needs 100 steps to make a crisp image, the DPM-Solver++ sampler can make an equally crisp image in just 12 steps by calculating the mathematical curves of the noise flow.
+
+
 ## Key Insight
 
 A trained [diffusion model](/shared/glossary/#diffusion-model) defines a smooth [ODE](/shared/glossary/#ode) whose solution carries pure noise to a clean image, so *sampling* is just numerically solving that ODE — and how many steps you need depends entirely on how accurate your solver is. The simplest solver, the [Euler method](/shared/glossary/#euler-method), takes a straight-line step using the slope where it currently sits and accumulates error fast, so it needs many steps. Higher-order solvers cut the error per step: [Heun's method](/shared/glossary/#heuns-method) is a predict-then-correct step that averages the slope at the start and end of each interval, and [DPM-Solver++](/shared/glossary/#dpm-solver) is a multistep method tailored to the exact mathematical shape of the diffusion ODE — so 10–20 steps match what Euler needs 100+ for. This project swaps the slow many-step sampler of an existing [DDPM](/shared/glossary/#ddpm) for these and measures the quality-versus-steps trade-off.

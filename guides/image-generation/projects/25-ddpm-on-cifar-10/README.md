@@ -1,5 +1,12 @@
 # DDPM on CIFAR-10
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** In the previous project, we generated simple, grayscale handwritten numbers. Now, we are leveling up to generate color photos of real-world objects like airplanes, frogs, and trucks from the CIFAR-10 dataset. This is much harder because color photos have millions of possible color combinations, complex textures (like animal fur or shiny metal surfaces), and detailed backgrounds. To handle this, we build a larger, more capable computer brain (U-Net) and train it longer.
+- **Analogy:** If generating MNIST digits is like learning to draw simple stick figures, generating CIFAR-10 photos is like learning to paint realistic oil portraits of pets and landscapes. You need a bigger set of brushes (more parameters) and more practice hours (longer training).
+- **Example:** Instead of just black-and-white shapes, the model starts with a colorful block of static noise and gradually removes the colorful fuzz until a tiny, detailed red truck driving on a green road emerges.
+
+
 ## Key Insight
 
 Moving a [DDPM (Denoising Diffusion Probabilistic Model)](/shared/glossary/#ddpm) from grayscale [MNIST](/shared/glossary/#mnist) digits to 32×32 color [CIFAR-10](/shared/glossary/#cifar-10) photos is the jump from "it works on a toy" to "I actually understand this," because natural images carry texture, color, and structure that a too-small [U-Net](/shared/glossary/#u-net) simply cannot capture. The standard bar is a [FID (Fréchet Inception Distance)](/shared/glossary/#fid) below 20 — FID scores how close your generated images are to real ones by comparing them in the feature space of a pretrained image classifier, where lower means more realistic — and clearing it forces you to get the [noise schedule](/shared/glossary/#noise-schedule), model capacity, and training length all right at once. The payoff is a model whose samples are recognizable objects rather than colorful blobs, plus the confidence that the core recipe scales beyond toy data.

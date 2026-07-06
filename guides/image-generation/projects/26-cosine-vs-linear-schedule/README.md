@@ -1,5 +1,12 @@
 # Cosine vs Linear Schedule
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** When we add noise to an image, we need a plan (called a "schedule") for how much noise to add at each step. A *linear* schedule is like dumping the same bucket of sand on a painting at every step; it gets completely buried almost immediately, meaning the model spends most steps looking at pure static and learning nothing. A *cosine* schedule starts by adding noise very gently, only getting faster in the middle, and slowing down again at the end, so the painting's shape remains recognizable for much longer.
+- **Analogy:** Imagine trying to teach someone to recognize a face while putting a frosted glass pane in front of it. A linear schedule is like spray-painting the glass thick black in the first second—now they can't see anything. A cosine schedule is like turning a dimmer switch down slowly, giving their eyes time to adapt to the dimming light.
+- **Example:** Under a linear schedule, by step 50 out of 300, a cat photo is already a gray blob of noise. Under a cosine schedule, the cat's eyes and ears are still faintly visible at step 150, allowing the model to learn the shape of ears and eyes at those intermediate steps.
+
+
 ## Key Insight
 
 The [noise schedule](/shared/glossary/#noise-schedule) decides how fast a [DDPM](/shared/glossary/#ddpm) destroys an image as it walks from clean data to pure static — and that single choice quietly controls how well the model trains. A *linear* schedule adds noise at a constant rate, which turns out to wipe out almost all image structure too early, so the model wastes many of its later steps learning from inputs that are already nearly pure static. A *cosine* schedule (Nichol & Dhariwal) instead follows the gentle shoulder of a cosine curve, keeping more signal alive through the middle of the process so every step carries useful information. This project trains two otherwise-identical models and compares their [FID (Fréchet Inception Distance)](/shared/glossary/#fid) and samples, making the schedule's impact concrete rather than theoretical.

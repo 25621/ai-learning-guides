@@ -1,5 +1,12 @@
 # Run SD Inference
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** Stable Diffusion 1.5 is a powerful model that can generate high-quality images from text. This project runs the model using the `diffusers` library and lets you experiment with the three main knobs: how many steps to run (speed vs quality), which sampler to use (how it solves the math), and the guidance scale (how closely it follows your words).
+- **Analogy:** Think of Stable Diffusion as a high-tech camera. The text prompt is the scene you want to shoot, the sampler is the lens type, the step count is the exposure time, and the guidance scale is the focus contrast. Changing these settings changes the style and sharpness of the photo.
+- **Example:** You type "a cat astronaut." With a guidance scale of `1.0`, you get a blurry astronaut shape. With `7.5`, you get a sharp, cute cat in a space suit. With `20.0`, the colors become cartoonishly bright and high-contrast because the model is trying too hard to follow the prompt.
+
+
 ## Key Insight
 
 [Stable Diffusion](/shared/glossary/#stable-diffusion) 1.5 turned text-to-image generation into something you can run on a single consumer GPU, and the `diffusers` library wraps the whole pipeline — text encoder, [U-Net](/shared/glossary/#u-net), and [VAE](/shared/glossary/#vae) decoder — behind a few lines of code. This project builds intuition for the three knobs that matter most at inference: the [classifier-free guidance (CFG)](/shared/glossary/#cfg-classifier-free-guidance) scale (how hard the model is pushed toward your prompt), the sampler (the [ODE/SDE](/shared/glossary/#ode) solver that takes each denoising step, e.g. [DDIM](/shared/glossary/#ddim) or [DPM-Solver++](/shared/glossary/#dpm-solver)), and the number of steps (more steps = slower but usually cleaner). Sweeping each one while holding the others fixed exposes the trade-offs — high CFG sharpens prompt adherence but oversaturates, while a [higher-order sampler](/shared/glossary/#higher-order-sampler) reaches good quality in far fewer steps — all without touching the model weights.

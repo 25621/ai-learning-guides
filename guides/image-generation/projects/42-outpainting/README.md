@@ -1,5 +1,12 @@
 # Outpainting
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** Outpainting lets you expand an image outwards, imagining what lies beyond the borders of a photo. It works by pasting the original image in the center of a larger blank canvas, masking the empty outer border, and running an inpainting model to fill in the empty space while matching the colors, lighting, and style of the original image.
+- **Analogy:** Imagine you have a small physical photograph of a house. You tape it to the center of a large sheet of paper, pick up some colored pencils, and paint the surrounding garden, sky, and driveway so they connect seamlessly with the edges of the photo.
+- **Example:** You upload a square portrait of a person. By running outpainting, the model extends the canvas to a wide landscape format, generating a realistic background of a forest and sky that matches the lighting and style of the original photo.
+
+
 ## Key Insight
 
 [Outpainting](/shared/glossary/#outpainting) extends an image *beyond* its original borders — turning a portrait into a full scene — and the trick is that it is just [inpainting](/shared/glossary/#inpainting) pointed outward: you paste the original onto a larger blank canvas, mark the new border region as the area to fill, and let the [diffusion model](/shared/glossary/#diffusion-model) generate only there while keeping the original pixels fixed. Because the model conditions on the surviving edge, the new content continues the scene's lighting, texture, and lines naturally instead of starting fresh. This project builds it directly on top of an inpainting loop, which is the whole point: no new training, just a bigger canvas and the right mask.

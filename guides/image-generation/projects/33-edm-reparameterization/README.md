@@ -1,5 +1,12 @@
 # EDM Reparameterization
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** Standard diffusion models use complicated math schedules indexed by steps from 1 to 1000, which makes them hard to tune. The EDM (Elucidated Diffusion Models) recipe simplifies this. It measures noise by its actual standard deviation (called $\sigma$, which you can think of as the "fuzziness level") and rescales the inputs and outputs at every level so the network always sees numbers of the same scale.
+- **Analogy:** Imagine trying to weigh objects ranging from feathers to elephants on a single scale. It's very hard. EDM is like a smart scale that automatically adds or removes counterweights (preconditioning) so it is always measuring a weight that fits comfortably on its display, making it much more accurate.
+- **Example:** Instead of having to tune learning rates and noise schedules for weeks, EDM's preconditioning keeps the training stable and lets you generate high-quality images using standard settings without any exploding gradients.
+
+
 ## Key Insight
 
 [EDM](/shared/glossary/#edm) (Karras et al. 2022) doesn't change what a [diffusion model](/shared/glossary/#diffusion-model) *is* — it changes the bookkeeping so training and sampling stop fighting you. Instead of indexing noise by a discrete timestep `t`, it uses the noise standard deviation σ directly (the [σ-schedule](/shared/glossary/#σ-schedule-karras)), and it adds *preconditioning*: the network's input, output, and per-σ loss weight are each rescaled so the network always sees roughly unit-variance signals no matter how much noise is present. Without this, the network wastes capacity learning to rescale wildly different magnitudes across noise levels; with it, the hyperparameter surface becomes flat and forgiving, so good results stop depending on lucky tuning. This project re-derives your [CIFAR-10](/shared/glossary/#cifar-10) model in σ-space and lets you observe the cleaner training and sampling behavior firsthand.
