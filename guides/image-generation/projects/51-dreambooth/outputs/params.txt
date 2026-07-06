@@ -1,0 +1,2 @@
+DreamBooth updates EVERY weight: 367,905 trainable parameters.
+The saved artifact is the full model — the opposite of LoRA's few %.
