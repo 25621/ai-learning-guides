@@ -2,9 +2,9 @@
 
 ## ELI5 (Explain Like I'm 5)
 
-- **The Big Idea:** To build an editor you say instructions to ("make it bold", "turn it upside down"), you first need thousands of before/after examples. Nobody edits those by hand — you *generate* them. Then a single model learns to go from (picture + instruction) straight to the edited picture in one shot.
-- **Analogy:** A cooking student learns faster from a stack of "before and after" photos than from watching one dish being cooked very slowly. Once they have studied enough pairs, they can cook the "after" directly from a picture of the "before" plus the recipe name — no slow step-by-step required.
-- **Example:** We auto-generate (digit, instruction, edited-digit) triples with simple image ops standing in for GPT, then train one model that edits a fresh digit five different ways, each in a single denoising pass.
+- **The Big Idea:** To build an editor that obeys typed instructions like "make it bold" or "flip it upside down," you first need thousands of "before and after" example pairs to learn from. Making those by hand one at a time would take forever, so instead you generate them automatically. Once you have enough pairs, one model learns to jump straight from (a picture + an instruction) to the edited picture, in a single step — no slow trial and error.
+- **Analogy:** A cooking student learns much faster from a big stack of "before" and "after" photos of dishes than from watching one dish cooked in slow motion. Study enough of those photo pairs, each labeled with the recipe's name, and eventually the student can picture the finished "after" dish the moment they see the "before" ingredients and the recipe name — no step-by-step demonstration required.
+- **Example:** We auto-generate hundreds of (digit, instruction, edited-digit) example triples using simple, scripted image edits standing in for a real image-editing AI. Then we train one model that, given a fresh digit and any of five instructions ("thicken", "invert", "flip", ...), produces the edited result in a single pass.
 
 ## Key Insight
 

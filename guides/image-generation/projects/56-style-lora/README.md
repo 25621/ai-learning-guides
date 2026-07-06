@@ -2,9 +2,9 @@
 
 ## ELI5 (Explain Like I'm 5)
 
-- **The Big Idea:** The same tiny "sticky note" adapter that teaches a model a new *subject* can instead teach it a new *look*. Train it on images that share a style, and it learns the style itself — so you can then ask for things it never saw in that style and it renders them that way.
-- **Analogy:** You show an artist thirty pictures all drawn with a thick marker. They do not memorize those thirty pictures; they pick up the *marker technique*. Now ask them to draw something new and it comes out in thick marker too. If instead they just re-drew the thirty pictures, they overfit — they learned the pictures, not the technique.
-- **Example:** We train a LoRA on bold-stroke digits **0–4 only**, then ask for digits **5–9**. The 5–9 come out bold too — the adapter learned the *style*, not the specific digits.
+- **The Big Idea:** The same tiny trainable "sticky note" that can teach a model a new *subject* (like the [LoRA Fine-Tune](../50-lora-fine-tune/README.md) project's bag) can just as easily teach it a new *look* instead. Train it on a batch of images that all share one visual style, and it learns that style itself — well enough to apply it to things it never even saw during training.
+- **Analogy:** Show an art student thirty drawings that were all made with a thick marker. A good student doesn't memorize those thirty specific drawings — they notice the *technique* (thick, bold strokes) and can apply it to something brand new you ask for. A student who instead just memorized and redrew the thirty originals has "overfit" — they learned the pictures, not the technique, which is exactly the failure mode this project is built to catch.
+- **Example:** We train a LoRA on bold-stroke versions of digits **0–4 only**, then ask the model to draw digits **5–9**, which it never saw in the bold style. They come out bold anyway — proof the adapter learned the marker technique itself, not just the five training pictures.
 
 ## Key Insight
 

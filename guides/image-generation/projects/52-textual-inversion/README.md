@@ -2,9 +2,9 @@
 
 ## ELI5 (Explain Like I'm 5)
 
-- **The Big Idea:** The model already knows how to draw. Instead of changing the model at all, you invent one brand-new "word" and teach *only that word* to mean your subject. You are learning a single vector of numbers — nothing else moves.
-- **Analogy:** Imagine a painter who can paint anything you name. You do not retrain the painter; you just teach them one new nickname, "Bloop," for a specific bag. Now "paint a Bloop" works, but the painter can only render Bloop as well as their existing skill allows.
-- **Example:** We freeze a digit model completely and optimize one 128-number embedding for token V on 20 bag images. The whole artifact is 512 bytes — and the model still draws every digit exactly as before, because not one weight changed.
+- **The Big Idea:** The model already knows how to draw almost anything — it just doesn't have a word for your specific subject yet. Instead of touching any of its drawing skill, Textual Inversion invents one brand-new "word" and teaches the model only what that one word should point to. Every dial and every existing skill stays frozen; you're only writing one new dictionary entry.
+- **Analogy:** Imagine an incredibly versatile illustrator who can draw literally anything you describe. You don't send them back to art school to learn your bag — you just teach them one private nickname for it, say "Bloop." Say "draw a Bloop" and out comes your bag, rendered using every drawing skill the illustrator already had. You taught them a label, not a new skill, so a Bloop can only ever look as good as their existing style allows.
+- **Example:** We freeze a digit-drawing model completely and train a single 128-number "word" for a bag using 20 photos. The whole result fits in about the size of a text message (512 bytes) — and every digit the model could already draw still looks exactly the same, because we never touched a single one of its original settings.
 
 ## Key Insight
 

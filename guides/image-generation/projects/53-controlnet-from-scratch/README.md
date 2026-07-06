@@ -2,9 +2,9 @@
 
 ## ELI5 (Explain Like I'm 5)
 
-- **The Big Idea:** You have a great image model but no way to control *where* things go. ControlNet bolts on a second copy of the model's front half that reads a "guide" picture (here, an outline/edge map) and whispers hints into the original — "put the stroke here." The original model is frozen; only the whisperer learns.
-- **Analogy:** A master painter (frozen) is handed a stencil by an apprentice standing behind them. At first the apprentice presses with zero force, so the painting is unchanged. Over training the apprentice learns exactly how hard to press so the painting follows the stencil — without ever retraining the master.
-- **Example:** We freeze a digit model and train a control branch on edge maps. Afterwards, hand it the *outline* of a digit it never saw and it fills in a matching digit — tracing the edges.
+- **The Big Idea:** A good image model can draw great pictures, but you often can't tell it exactly *where* things should go. ControlNet fixes this by attaching a second, trainable copy of part of the model that looks at a guide picture — here, just the outline of a shape — and whispers hints back into the original: "put your stroke right here." The original artist (the frozen model) never changes; only the whisperer standing behind it learns anything.
+- **Analogy:** Picture a master painter (frozen, never retrained) with an apprentice standing behind them holding a stencil. On day one, the apprentice presses the stencil so lightly it leaves no mark at all — the painting comes out exactly as if the apprentice weren't there. Over many practice sessions, the apprentice learns exactly how firmly to press so the final painting follows the stencil's outline, all without the master ever changing how they paint.
+- **Example:** We freeze a digit-drawing model, then train a small control branch that reads just the *outline* of a digit. Show it an outline it has never seen before, and it fills in a matching, solid digit that traces that exact outline.
 
 ## Key Insight
 

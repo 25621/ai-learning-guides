@@ -2,9 +2,9 @@
 
 ## ELI5 (Explain Like I'm 5)
 
-- **The Big Idea:** Teach a model a specific subject by retraining *the entire model* on 3–5 photos of it, tied to a made-up name. The likeness is superb — but if you train only on those photos, the model forgets everything else. So you also keep showing it generic examples, to protect what it already knew.
-- **Analogy:** A brilliant portrait artist studies five photos of your dog until they can draw it perfectly. If that is *all* they practice, they slowly forget how to draw any other dog. The fix: between sessions, have them keep sketching ordinary dogs so the general skill survives.
-- **Example:** We bind a new token V to a bag and fully fine-tune the model. With a "keep drawing digits" (prior-preservation) term, digits *and* the bag both work. Without it, every prompt — even "draw a 3" — comes out a bag.
+- **The Big Idea:** DreamBooth teaches a model a brand-new subject by retraining the *entire* model on just a handful of photos (3-5) and giving that subject a made-up name. The likeness this produces is excellent, but there's a catch: if the model only ever practices on those few photos, it can quietly forget how to draw everything else it used to know. So while it studies the new photos, you also keep feeding it a stream of the ordinary things it already knew, to protect that old knowledge.
+- **Analogy:** Picture a skilled portrait artist who studies five photographs of your dog until she can draw it from memory, perfectly. If those five photos are the *only* thing she practices on for weeks, she gradually loses her feel for drawing any other dog. The fix real art teachers use: keep assigning her ordinary sketching homework alongside the portrait study, so the specific skill and the general skill grow together instead of one replacing the other.
+- **Example:** We invent a new "name" for a bag and retrain an entire small digit-drawing model on 5 photos of it. Train it with a "keep practicing digits too" rule mixed in, and afterward it can still draw every digit *and* draw the bag on command. Skip that rule, and the model forgets digits altogether — ask it for a "3" and it draws a bag instead.
 
 ## Key Insight
 

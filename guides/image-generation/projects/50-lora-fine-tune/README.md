@@ -2,9 +2,9 @@
 
 ## ELI5 (Explain Like I'm 5)
 
-- **The Big Idea:** A giant image model already knows how to draw almost anything. To teach it one new thing, you do not rewrite the whole model — you clip a tiny, trainable "sticky note" onto each layer that nudges its output. Train only the sticky notes on ~20 photos of your subject and the model learns it, while the original weights never move.
-- **Analogy:** Instead of repainting an entire house to change the mood of one room, you hang a few small pictures on the walls. The house is untouched; you can take the pictures down or swap them any time. The pictures are a few kilobytes; the house is gigabytes.
-- **Example:** We freeze a digit-drawing model and train a rank-4 LoRA on 20 pictures of a *bag*. Afterwards the same model draws bags — from a file a fraction of the model's size.
+- **The Big Idea:** A big image-drawing AI already knows how to draw almost anything you ask for. Teaching it one brand-new thing the "normal" way means adjusting every one of its millions of internal settings — slow, expensive, and risky, since nudging everything can make it forget things it already knew. LoRA instead bolts on a tiny handful of new, easy-to-train numbers next to the existing ones, trains only those, and leaves every original setting exactly where it was.
+- **Analogy:** Think of the model as a thick, finished cookbook with thousands of recipes already worked out. To make one recipe extra garlicky, you don't rewrite the cookbook — you clip a sticky note onto that page: "add 1 tsp garlic." The book stays untouched and usable for everything else; the note weighs a gram next to a book that weighs a kilogram, and you can peel it off any time.
+- **Example:** We take a model that only knows how to draw handwritten digits, freeze it completely, and train a tiny rank-4 side-attachment on 20 photos of a bag. A few minutes later, the exact same frozen model draws bags too — and the "bag knowledge" lives in a file a fraction the size of the original model.
 
 ## Key Insight
 

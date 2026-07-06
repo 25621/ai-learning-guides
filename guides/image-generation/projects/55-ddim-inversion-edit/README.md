@@ -2,9 +2,9 @@
 
 ## ELI5 (Explain Like I'm 5)
 
-- **The Big Idea:** A diffusion model turns noise into a picture. To edit a *real* picture, you first run the process **backwards** to find the exact noise that would have produced it. Then you re-run forwards with a changed description — since you start from almost the same noise, the layout stays put and only the described content changes.
-- **Analogy:** Imagine a river flowing downhill from a spring to a lake (noise to image). To move a real boat on the lake, you trace the current back up to the spring it came from, then let it flow down again — but nudge the description of the destination. It follows nearly the same riverbed, so it arrives in almost the same place, slightly changed.
-- **Example:** We take real handwritten 4s, invert them to noise, then denoise while asking for a 9. The 9s come out with the 4s' slant, thickness and position — same pose, new digit.
+- **The Big Idea:** A diffusion model's normal trick is turning random static into a picture. To edit a real picture you already have, you first need to run that process **backwards** — finding the exact patch of static that would have produced your real picture, had you started from it. Once you have that static, you run forward again but ask for something slightly different this time. Because you start from almost the same static, the layout and pose stay put, and only the thing you asked to change actually changes.
+- **Analogy:** Picture a river that always flows downhill from a mountain spring to a lake (static flowing down into a picture). To nudge a boat already sitting in the lake, you can't just shove it — instead you trace the river's current backward, up to the exact spring it came from, then let it flow back down again, but slightly redirect where it empties out. Since it follows almost the same riverbed the whole way, the boat ends up in nearly the same spot on the lake, just gently shifted.
+- **Example:** We take real photos of handwritten 4s, run the process backward to find their "static," then run forward again asking for a 9 instead. The resulting 9s keep the original 4's slant, stroke thickness and position — same handwriting, different digit.
 
 ## Key Insight
 
