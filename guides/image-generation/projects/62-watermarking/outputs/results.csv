@@ -1,0 +1,6 @@
+metric,value
+psnr_db,37.43
+TPR,1.000
+FPR,0.000
+stat_watermarked,0.0659
+stat_clean,-0.0003

@@ -1,0 +1,5 @@
+sampler,nfe,readability
+teacher DDIM (50 steps),50,0.781
+student (1 step),1,0.705
+student (2 steps),2,0.759
+student (4 steps),4,0.686
