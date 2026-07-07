@@ -1,0 +1,16 @@
+=== English generation is unchanged by the resize ===
+
+prompt: 'The capital of France is'
+  before: 'The capital of France is the capital of the French Republic, and the capital of the French Republic is the capital of'
+  after : 'The capital of France is the capital of the French Republic, and the capital of the French Republic is the capital of'
+  identical: True
+
+prompt: 'In the beginning, the universe was'
+  before: 'In the beginning, the universe was a place of chaos and chaos. The universe was a place of chaos and chaos. The'
+  after : 'In the beginning, the universe was a place of chaos and chaos. The universe was a place of chaos and chaos. The'
+  identical: True
+
+prompt: 'She opened the door and saw'
+  before: 'She opened the door and saw a man in a white shirt and a black hoodie. He was wearing a black hood'
+  after : 'She opened the door and saw a man in a white shirt and a black hoodie. He was wearing a black hood'
+  identical: True

@@ -1,0 +1,6 @@
+reference vs buggy hand-render
+first mismatch at char 57
+  reference: ...<|im_end|>↵<|im_start|>u...
+  buggy    : ...<|im_end|><|im_start|>us...
+token counts: reference 41 vs buggy 37
+fixed render byte-identical to reference: True

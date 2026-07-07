@@ -1,0 +1,7 @@
+tokenizer,English_x_vs_english,French_x_vs_english,Mandarin_x_vs_english,Hindi_x_vs_english,Bengali_x_vs_english
+GPT-2,1.00,1.85,2.61,8.06,10.24
+GPT-4 (cl100k),1.00,1.52,1.52,5.03,6.45
+GPT-4o (o200k),1.00,1.24,1.06,1.36,1.70
+Llama 3,1.00,1.52,1.09,2.61,6.39
+Gemma 2,1.00,1.25,0.94,1.72,2.84
+BLOOM,1.00,1.15,0.79,1.09,1.03
