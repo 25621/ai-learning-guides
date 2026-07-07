@@ -1,0 +1,5 @@
+metric,value
+vocab,128
+tokens_per_image,49
+sampling_steps_per_image,49
+sample_seconds_for_30,0.19

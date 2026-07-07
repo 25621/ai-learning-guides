@@ -1,0 +1,6 @@
+metric,value
+codebook_size,256
+latent_grid,8x8
+test_recon_mse,0.0186
+perplexity,236.1
+codes_used,256

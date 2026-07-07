@@ -1,0 +1,7 @@
+metric,value
+vocab,128
+tokens_per_image,49
+autoregressive_steps,49
+maskgit_steps,8
+speedup,6.1x
+sample_seconds_for_30,0.19

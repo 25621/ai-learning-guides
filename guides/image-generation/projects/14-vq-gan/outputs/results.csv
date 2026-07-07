@@ -1,0 +1,4 @@
+model,sharpness_grad
+input,0.2364
+VQ-VAE (pixel),0.1705
+VQ-GAN,0.2395
