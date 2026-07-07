@@ -1,5 +1,11 @@
 # Conditional GAN
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** A standard GAN is like a painter who paints random things. A **Conditional GAN (cGAN)** is like a painter you can give orders to, like "paint a car" or "paint a frog." We do this by sending the label ("car", "frog", etc.) to both the painter (generator) and the critic (discriminator). We use a trick called **projection** to blend the label smoothly into the critic's checklist, making the training much more effective than just sticking the label on as extra text.
+- **Analogy:** Imagine ordering food at a restaurant. Instead of the chef bringing you a completely random dish, you specify "pasta." The chef uses that order to cook, and the waiter uses that order to verify they brought you the right plate. By using projection, the waiter doesn't just check the name of the dish; they actively match the dish's features (smell, ingredients) against the essence of "pasta."
+- **Example:** We train a conditional GAN on the CIFAR-10 dataset (which contains objects like planes, cars, and frogs). Even after a short training run on CPU, when we ask for a "ship" or a "plane," the generator outputs whites and blues (sky and water). An independent AI judge guesses the correct class for **35.3%** of these rough pictures — 3.5 times better than a random 10% guess.
+
 ## Key Insight
 
 A plain GAN samples a random image from everything it learned, with no way to ask for a specific kind. A [conditional GAN (cGAN)](/shared/glossary/#conditional-gan-cgan) fixes this by feeding the class label to *both* the [generator](/shared/glossary/#generator) and the [discriminator](/shared/glossary/#discriminator), turning generation into [class conditioning](/shared/glossary/#class-conditioning) — you can request "a 7" or "a cat" on demand. This project injects the label through a [projection discriminator](/shared/glossary/#projection-discriminator), which blends the label into the critic's score with a [dot product](/shared/glossary/#dot-product) against a learned per-class vector instead of just stapling the label on as an extra input channel — a trick that conditions more strongly for little extra cost. Training on [CIFAR-10](/shared/glossary/#cifar-10) with labels lets you verify the control works: ask for a class, and that class is what comes out.

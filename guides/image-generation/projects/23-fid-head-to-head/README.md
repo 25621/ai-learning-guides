@@ -1,5 +1,11 @@
 # FID Head-to-Head
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** How do we objectively score how "real" a fake picture looks? We use **FID (Fréchet Inception Distance)**, a math test that compares a batch of fake images to real ones using a smart vision network — lower score is better. In this project, we put a **VAE** (which learns to reconstruct images smoothly) and a **GAN** (which learns by playing a game of catch-me-if-you-can) in a head-to-head race to see which one learns faster and gets a better FID score.
+- **Analogy:** Think of a race between a runner who is slow but steady (the VAE) and a runner who is fast but clumsy and needs a long time to warm up (the GAN). For a short sprint, the steady runner wins. But for a long marathon, the fast runner eventually hits their stride and leaves the other far behind.
+- **Example:** At 500 training steps, the VAE gets a better FID score (**185.77**) than the GAN (**201.80**) because VAE steps are 10 times faster to compute. But the VAE quickly hits a quality ceiling where its images remain blurry. By running the GAN for 1500 steps, it overcomes its slow start and wins with an excellent score of **80.42**, producing much sharper numbers.
+
 ## Key Insight
 
 [FID (Fréchet Inception Distance)](/shared/glossary/#fid) scores how close a model's images are to real ones by comparing the two sets in the feature space of a pretrained classifier — lower means more realistic. This project trains a [DCGAN](/shared/glossary/#dcgan) and a small [VAE](/shared/glossary/#vae) on the same dataset and puts them head-to-head on FID, training time, and stability. The usual lesson is a clean illustration of the era's central trade-off: the GAN reaches a lower (better) FID with sharper samples but is fiddly to train and can fall into [mode collapse](/shared/glossary/#mode-collapse), while the VAE trains smoothly and reliably yet produces blurrier images.

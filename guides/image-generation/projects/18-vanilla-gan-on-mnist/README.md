@@ -1,5 +1,11 @@
 # Vanilla GAN on MNIST
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** A GAN (Generative Adversarial Network) is a game played between two computer brains: a **Generator** (the counterfeiter) who tries to make fake pictures, and a **Discriminator** (the detective) who tries to catch the fakes. They train by competing against each other. If the generator gets too far ahead, it takes a shortcut called **mode collapse** — it gets lazy and keeps drawing the exact same, single fake picture that it knows can fool the detective, rather than learning to draw many different things.
+- **Analogy:** Think of a painter learning to paint fake Mona Lisas, and an art critic trying to spot them. If the painter finds one specific smiley face that the critic is bad at identifying as a fake, the painter might just paint that exact same face over and over. Without a tough critic pushing them to paint other parts of the portrait, the painter stops trying to learn anything else.
+- **Example:** We train a GAN to draw handwritten numbers. In the `stable` version where they are evenly matched, the generator draws 10 different digit classes (0 through 9). In the `collapse` version, the generator gets too powerful too fast, stops trying, and outputs the digit "8" on **all 64 of 64** tries.
+
 ## Key Insight
 
 A [GAN](/shared/glossary/#gans) trains two networks in a contest: a [generator](/shared/glossary/#generator) that turns a vector of random noise into a fake image, and a [discriminator](/shared/glossary/#discriminator) that looks at an image and guesses whether it is real or generated. They improve by competing — the generator keeps trying to fool the critic while the critic keeps getting better at catching it — like a counterfeiter and a detective who each sharpen the other. This project builds [DCGAN](/shared/glossary/#dcgan), the first convolutional GAN recipe that trained reliably, on [MNIST](/shared/glossary/#mnist) digits, where you will watch the two losses oscillate instead of settling and learn to spot [mode collapse](/shared/glossary/#mode-collapse) — when the generator gives up on variety and keeps emitting the same one or two digits that happen to fool the critic.

@@ -1,5 +1,11 @@
 # GAN Inversion
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** Generative networks are usually one-way streets: you feed in a secret code, and out comes a picture. **GAN Inversion** is the art of going backward: given a real picture, we want to find the exact secret code that makes the generator recreate it. Once we have this code, we can edit the photo (like adding a smile or changing the hair color) by making tiny tweaks to the code. We can find the code in two ways: by carefully searching for it (slow but accurate) or by training a second network to guess it instantly (fast but rough).
+- **Analogy:** Imagine a locksmith trying to make a key for an existing lock. The "optimizer" approach is like sitting at the door with a file, making tiny adjustments to a blank key, testing it, and repeating until it opens perfectly. The "encoder" approach is like taking a quick photo of the keyhole and using a machine to instantly stamp out a rough guess.
+- **Example:** We test both methods on MNIST digits. The optimizer takes **350 milliseconds** to find a very clean code (error score of 0.10). The encoder guesses the code in just **1.8 milliseconds** (190x faster!) but the resulting image is slightly noisier (error score of 0.30).
+
 ## Key Insight
 
 A trained GAN only runs one direction: noise in, image out. [GAN inversion](/shared/glossary/#gan-inversion) solves the reverse problem — given a real photo, find the [latent](/shared/glossary/#latent-space) code that makes the [generator](/shared/glossary/#generator) reproduce it. Once you have that code you can edit the real image by nudging it in latent space, which is why inversion is the bridge between "generate random faces" and "edit *this particular* face." This project finds the code two ways and compares the trade-off: first by directly optimizing the latent to minimize reconstruction error (slow but accurate), then by training an encoder that predicts it in a single forward pass (fast but approximate) — often inverting into the more expressive [W+ space](/shared/glossary/#w-and-w-latent-spaces) because its per-layer codes can match a real photo more closely.

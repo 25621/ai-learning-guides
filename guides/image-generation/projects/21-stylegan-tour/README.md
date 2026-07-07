@@ -1,5 +1,11 @@
 # StyleGAN Tour
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** Instead of feeding random noise into the start of a network and hoping for the best, **StyleGAN** translates the noise into a master code (the **W space**). It then injects this code into *every single layer* of the network using a technique called AdaIN. This gives the model a set of "knobs" that control different details: early layers control the big picture (head pose, face shape), middle layers control features (eyes, nose), and late layers control micro-details (hair color, skin texture).
+- **Analogy:** Imagine a theater lighting board. Instead of having a single master switch that turns all the lights on randomly, you have a board of sliders. One slider controls the brightness of the stage left lights, another controls the color of the spotlight, and another controls the background haze. You can slide each one independently to design a custom scene.
+- **Example:** We load a professional, pretrained StyleGAN2 model that makes fake human faces. By swapping the codes of two different faces at layer 8, we mix them: the face takes the shape, age, and identity from face A, but copies the lighting, skin tone, and color details from face B.
+
 ## Key Insight
 
 Standard GANs feed the noise vector in only at the input and let the layers do the rest. [StyleGAN](/shared/glossary/#stylegan) instead first maps the noise into an intermediate [W latent space](/shared/glossary/#w-and-w-latent-spaces) and then injects that code into *every* layer through [adaptive instance normalization (AdaIN)](/shared/glossary/#adaptive-instance-normalization-adain) — a step that rescales each layer's feature maps using shift-and-scale numbers derived from the style code, so the one code steers features at every scale from pose down to skin texture. Because of this design the [latent space](/shared/glossary/#latent-space) becomes "disentangled": moving along one direction tends to change a single attribute (hair, smile, lighting) while leaving the rest alone. This project runs inference on a pretrained [StyleGAN2](/shared/glossary/#stylegan2) face model — the kind behind sites like `thispersondoesnotexist.com` — and compares editing in the shared W code versus the roomier W+ space, which gives each layer its own code for finer, more local control.

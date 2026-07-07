@@ -1,5 +1,11 @@
 # WGAN-GP
 
+## ELI5 (Explain Like I'm 5)
+
+- **The Big Idea:** In a standard GAN, if the detective gets too smart, the counterfeiter gets discouraged and stops learning because the detective's feedback is just a flat "no." A Wasserstein GAN (WGAN) solves this by changing how the detective scores images: instead of a simple "yes/no," it measures *how far* the fake images are from real ones (like measuring how much dirt you have to move to make two piles look the same). We use a **gradient penalty (GP)** to keep the detective's scoring smooth and fair, preventing it from making wild, sudden judgments.
+- **Analogy:** Imagine trying to learn how to high-jump. If the bar is set at 10 feet on day one, you will fail every time and learn nothing. WGAN is like having a coach who lowers the bar and gives you a score on *how close* you got to clearing it. The gradient penalty ensures the coach's scoring style is smooth and gradual, rather than jumping from "terrible" to "perfect" with no advice in between.
+- **Example:** We compare a weight-clipped WGAN (which uses a crude way of smoothing the detective) against WGAN-GP. The weight-clipped model fails, drawing the same fuzzy, low-contrast blobs. WGAN-GP holds its gradient score close to 1, producing sharp and recognizable digit shapes.
+
 ## Key Insight
 
 The original GAN loss can stall: once the [discriminator](/shared/glossary/#discriminator) gets too good, it hands back almost no useful gradient, so the [generator](/shared/glossary/#generator) stops learning. [Wasserstein GAN (WGAN)](/shared/glossary/#wasserstein-gan-wgan) swaps that loss for the [Earth Mover's Distance](/shared/glossary/#earth-movers-distance) — the amount of "work" needed to reshape the pile of generated images into the pile of real ones — which gives a smooth, always-informative signal even when the two distributions barely overlap. For that distance to be valid the critic must be 1-[Lipschitz](/shared/glossary/#lipschitz-constraint) (its output cannot change faster than its input), and this project enforces it with a [gradient penalty](/shared/glossary/#gradient-penalty): an extra loss term that pushes the size of the critic's input gradient toward 1, replacing the cruder weight-clipping of the original WGAN. The payoff you will see is far steadier training and much less fiddling with hyperparameters.
