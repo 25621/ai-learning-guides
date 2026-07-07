@@ -1,0 +1,3 @@
+config,wall_time_s,unique_digit_classes,normalized_entropy,counts
+stable,192.9,10,0.937,"[7, 3, 5, 12, 5, 7, 1, 11, 9, 4]"
+collapse,86.1,1,-0.000,"[0, 0, 0, 0, 0, 0, 0, 0, 64, 0]"

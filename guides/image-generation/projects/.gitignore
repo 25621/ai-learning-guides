@@ -5,3 +5,5 @@
 **/checkpoints/
 **/__pycache__/
 **/outputs/run*.log
+**/outputs/*.npz
+**/outputs/*.npy
