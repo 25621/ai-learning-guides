@@ -1,0 +1,4 @@
+model,fid,wall_time_s,late_training_loss_variance
+DCGAN,201.80,145.4,0.2246
+VAE,185.77,13.9,6.7366
+DCGAN (1500 steps),80.42,399.4,0.6197

@@ -1,0 +1,12 @@
+class,adherence_accuracy
+plane,0.367
+car,0.367
+bird,0.167
+cat,0.267
+deer,0.300
+dog,0.500
+frog,0.267
+horse,0.133
+ship,0.500
+truck,0.667
+overall,0.353

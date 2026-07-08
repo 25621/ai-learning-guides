@@ -1,0 +1,3 @@
+model,latent_budget,test_mse
+flat,512,0.01398
+hierarchical,512,0.01333

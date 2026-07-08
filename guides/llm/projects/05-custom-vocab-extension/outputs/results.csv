@@ -1,0 +1,12 @@
+metric,value
+vocab_before,50257
+vocab_after,50513
+tokens_added,256
+embedding_rows_before,50257
+embedding_rows_after,50513
+embedding_params_before,38597376
+embedding_params_after,38793984
+smiles_tokens_before,97
+smiles_tokens_after,29
+smiles_reduction,0.701
+english_generation_identical,True

@@ -1,0 +1,7 @@
+metric,value
+reference_chars,196
+buggy_matches,False
+first_mismatch_char,57
+reference_tokens,41
+buggy_tokens,37
+fixed_matches,True

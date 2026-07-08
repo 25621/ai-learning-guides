@@ -1,0 +1,4 @@
+config,recon_mse,perplexity,codes_used,codebook
+plain VQ,0.0643,6.2,19,1024
+EMA,0.0380,12.5,14,1024
+EMA + reinit,0.0189,905.2,1024,1024

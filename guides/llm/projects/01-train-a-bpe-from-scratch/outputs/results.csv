@@ -1,0 +1,6 @@
+metric,value
+corpus_bytes,1115394
+vocab_size,5000
+probe_tokens_per_byte,0.2736
+probe_bytes_per_token,3.6550
+train_seconds,38.5

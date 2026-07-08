@@ -1,0 +1,7 @@
+# Generated artifacts — corpora, model/tokenizer caches, and byte dumps are
+# reproducible from the scripts and stay out of the repo. Small PNG/CSV/TXT
+# outputs embedded in the READMEs are committed.
+**/data/
+**/checkpoints/
+**/__pycache__/
+**/outputs/run*.log

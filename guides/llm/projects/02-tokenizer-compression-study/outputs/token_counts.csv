@@ -1,0 +1,7 @@
+tokenizer,English,French,Mandarin,Hindi,Bengali
+GPT-2,33,61,86,266,338
+GPT-4 (cl100k),33,50,50,166,213
+GPT-4o (o200k),33,41,35,45,56
+Llama 3,33,50,36,86,211
+Gemma 2,32,40,30,55,91
+BLOOM,34,39,27,37,35
