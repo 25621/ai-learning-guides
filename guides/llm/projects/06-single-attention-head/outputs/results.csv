@@ -1,0 +1,4 @@
+metric,value
+verified_vs_pytorch,True
+peak_weight_unscaled_d256,0.901
+peak_weight_scaled_d256,0.106

@@ -1,0 +1,6 @@
+metric,value
+params_millions,0.79
+vocab_size,65
+final_train_loss,1.152
+final_val_loss,1.494
+steps,2500
