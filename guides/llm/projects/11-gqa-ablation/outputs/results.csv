@@ -1,0 +1,4 @@
+config,n_kv_heads,val_loss,serving_kv_cache_GB,cache_vs_mha
+MHA (8 kv),8,1.598,2.15,1x
+GQA-2,2,1.604,0.54,4x
+MQA (1 kv),1,1.592,0.27,8x

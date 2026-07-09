@@ -19,7 +19,7 @@
   purchase. A machine that also stocks Bengali coins lets you pay in a handful.
 - **Example:** We tokenize *the exact same sentence* (UN Human Rights Article 1)
   in five languages with six real tokenizers. English costs ~33 tokens
-  everywhere. Bengali costs **338 tokens with GPT-2** but only **35 with BLOOM** —
+  everywhere. Bengali costs **338 tokens with GPT-2** but only **35 with [BLOOM](/shared/glossary/#bloom)** —
   a 10× gap for identical content, and pure luck-of-the-tokenizer.
 
 ## Key Insight

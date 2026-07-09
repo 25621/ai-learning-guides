@@ -1,0 +1,3 @@
+config,total_params_M,active_params_M,val_loss
+dense,0.59,0.59,1.602
+moe,3.34,0.99,1.604

@@ -1,0 +1,8 @@
+metric,value
+train_context,128
+eval_context,384
+loss_within_window_naive,1.474
+loss_beyond_window_naive,2.500
+perplexity_beyond_naive,12.2
+loss_beyond_window_interpolated,1.507
+perplexity_beyond_interpolated,4.5

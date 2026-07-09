@@ -1,0 +1,5 @@
+config,n_kv_heads,kv_cache_GB_4k,shrink_vs_mha
+MHA,32,2.147,1x
+GQA-8,8,0.537,4x
+GQA-4,4,0.268,8x
+MQA,1,0.067,32x

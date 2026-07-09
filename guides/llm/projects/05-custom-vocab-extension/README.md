@@ -9,7 +9,7 @@
 ## ELI5 (Explain Like I'm 5)
 
 - **The Big Idea:** GPT-2's vocabulary knows English, not chemistry, so a molecule
-  written as SMILES (`CC(=O)Oc1ccccc1C(=O)O` = aspirin) gets spelled out one
+  written as [SMILES](/shared/glossary/#smiles) (`CC(=O)Oc1ccccc1C(=O)O` = aspirin) gets spelled out one
   character at a time — wasteful. We can teach it chemistry "words" by adding 256
   SMILES tokens. But every token ID needs a vector, so we must also grow the
   model's embedding table by 256 rows. The trick is to do it *without* disturbing
