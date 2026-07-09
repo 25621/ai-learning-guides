@@ -1,0 +1,3 @@
+run,final_val_loss,peak_train_loss,interventions
+naive,1.759,7.59,0
+guarded,1.653,7.79,1

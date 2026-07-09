@@ -1,0 +1,6 @@
+metric,value
+classifier_accuracy,1.000
+classifier_precision,1.000
+classifier_recall,1.000
+unfiltered_clean_val,1.897
+filtered_clean_val,1.545
