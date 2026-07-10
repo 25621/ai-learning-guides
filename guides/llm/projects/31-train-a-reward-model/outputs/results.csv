@@ -1,0 +1,4 @@
+reject_type,pairwise_accuracy
+random_wrong,0.843
+close_off_by_1_2,0.468
+mixed,0.672

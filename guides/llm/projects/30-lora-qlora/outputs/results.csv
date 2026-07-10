@@ -1,0 +1,4 @@
+method,accuracy,trainable_params,pct_of_full
+full fine-tune,0.780,788736,100.0
+LoRA (r=8),0.573,80072,10.2
+QLoRA (int8 base),0.568,80072,10.2

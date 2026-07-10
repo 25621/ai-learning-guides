@@ -1,0 +1,3 @@
+model,exact_answer_accuracy
+base (noisy pretrain),0.000
+sft (clean demos),0.645

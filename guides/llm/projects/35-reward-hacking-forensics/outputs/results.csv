@@ -1,0 +1,4 @@
+condition,accuracy_start,accuracy_end,accuracy_change
+A: blind RM, no KL,0.347,0.052,-0.295
+B: blind RM, strong KL,0.347,0.247,-0.100
+C: verifier, no KL,0.347,0.417,+0.070

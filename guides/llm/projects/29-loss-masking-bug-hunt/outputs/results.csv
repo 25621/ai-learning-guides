@@ -1,0 +1,3 @@
+loss,final_accuracy,free_gen_plus_rate
+assistant_only_mask,0.400,0.00
+full_sequence,0.080,1.00
