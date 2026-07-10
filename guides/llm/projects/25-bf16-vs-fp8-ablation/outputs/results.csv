@@ -1,0 +1,9 @@
+format,final_val_loss
+fp32,1.912
+bf16,1.910
+fp8 (no scale),1.907
+fp8 + per-tensor scale,1.906
+
+precision_probe,mean_relative_error
+fp8_no_scale_tiny_tensor,1.000
+fp8_scaled_tiny_tensor,0.025

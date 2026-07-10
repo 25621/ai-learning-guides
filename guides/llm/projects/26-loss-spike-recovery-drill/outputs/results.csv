@@ -1,0 +1,5 @@
+run,final_val_loss
+baseline,1.750
+guarded,1.679
+guarded_interventions,8
+young_daly_optimal_interval_steps,283

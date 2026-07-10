@@ -1,0 +1,3 @@
+corpus,documents,tokens_millions,clean_val_loss,hot_doc_loss
+raw,1562,2.34,1.630,1.182
+deduped,634,0.95,1.533,1.496

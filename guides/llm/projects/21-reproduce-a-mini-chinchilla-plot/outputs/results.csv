@@ -1,0 +1,11 @@
+size,params_millions,final_val_loss,final_flops
+d32,0.049,2.034,1.18e+12
+d64,0.197,1.886,2.84e+12
+d96,0.443,1.829,4.91e+12
+d128,0.787,1.798,6.51e+12
+d192,2.657,1.975,7.18e+12
+
+compute_budget_flops,optimal_size_params_millions,loss
+5.45e+11,0.197,2.109
+1.58e+12,0.443,1.956
+4.60e+12,0.443,1.841

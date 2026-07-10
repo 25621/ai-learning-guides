@@ -1,0 +1,3 @@
+run,reward_start,reward_end,accuracy_start,accuracy_end
+strong KL (beta=0.5),-0.03,-0.34,0.347,0.260
+no KL (beta=0),-0.03,-0.42,0.347,0.045

@@ -1,0 +1,4 @@
+metric,value
+loss_vs_reference_diff,0.00e+00
+sft_baseline_accuracy,0.347
+dpo_final_accuracy,0.432

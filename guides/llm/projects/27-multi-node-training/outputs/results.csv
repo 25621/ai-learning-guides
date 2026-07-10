@@ -1,0 +1,4 @@
+world_size,compute_ms,comm_ms,comm_frac_pct,tokens_per_s
+1,84,3.6,4,23421
+2,126,54.6,30,22669
+4,259,92.6,26,23302

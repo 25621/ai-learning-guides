@@ -1,0 +1,4 @@
+model,english_val_loss,code_val_loss
+base,1.678,5.063
+naive,2.681,1.411
+replay,1.962,1.413
