@@ -1,0 +1,7 @@
+metric,value
+world_size,2
+total_params_millions,0.795
+sharded_master_mb_per_rank,1.59
+replicated_master_mb_per_rank,3.18
+final_loss,1.8248
+max_sharded_vs_replicated_divergence,0.00e+00

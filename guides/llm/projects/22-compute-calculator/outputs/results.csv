@@ -1,0 +1,12 @@
+metric,value
+N_params_millions,10.622
+tokens_per_step,3072
+est_6ND_gflop,195.78
+measured_total_gflop,196.15
+measured_fwd_gflop,65.38
+measured_bwd_gflop,130.77
+measured_over_estimate,1.002
+step_time_ms,1041.5
+achieved_gflops,188.3
+cpu_peak_gflops,547.2
+mfu_percent,34.4
