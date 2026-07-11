@@ -1,0 +1,6 @@
+format,description,accuracy,ci_lo,ci_hi
+plain,Question: / A. / Answer:,0.4737,0.4098,0.5384
+no_labels,bare question / A. / Answer:,0.5175,0.4529,0.5816
+parenthesized,(A) options / The answer is (,0.4825,0.4184,0.5471
+verbose,expert-exam instruction wrapper,0.4430,0.3800,0.5079
+chat,Qwen chat template / assistant turn,0.4956,0.4313,0.5600

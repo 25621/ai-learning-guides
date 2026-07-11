@@ -1,0 +1,11 @@
+model,elo_judgeA,ci_lo,ci_hi,win_rate,elo_judgeB
+Qwen2.5-0.5B,1079,1004,1143,0.769,
+SmolLM2-360M,1070,1004,1125,0.800,
+SmolLM2-135M,1063,996,1130,0.800,
+gpt2,976,913,1042,0.455,
+bloom-560m,812,782,854,0.000,
+
+spearman_A_vs_B,
+judgeA_consistent_games,31
+judgeA_position_bias_discard,0.845
+judgeB_consistent_games,0

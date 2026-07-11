@@ -1,0 +1,3 @@
+method,accuracy,tokens_per_answer
+direct,0.283,3.0
+chain_of_thought,0.907,24.9

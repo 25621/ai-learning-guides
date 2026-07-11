@@ -1,0 +1,10 @@
+condition,EM,F1
+random ctx,0.003,0.016
+RAG top-3,0.670,0.741
+oracle ctx,0.763,0.856
+recall@1,0.733,
+recall@2,0.827,
+recall@3,0.877,
+recall@5,0.920,
+recall@10,0.950,
+nDCG@10,0.845,

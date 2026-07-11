@@ -1,0 +1,58 @@
+subject,category,correct,n,accuracy
+abstract_algebra,STEM,6,22,0.2727
+anatomy,STEM,9,22,0.4091
+astronomy,STEM,11,22,0.5000
+business_ethics,Other,10,22,0.4545
+clinical_knowledge,Other,12,22,0.5455
+college_biology,STEM,12,22,0.5455
+college_chemistry,STEM,8,22,0.3636
+college_computer_science,STEM,5,22,0.2273
+college_mathematics,STEM,9,22,0.4091
+college_medicine,Other,11,22,0.5000
+college_physics,STEM,6,22,0.2727
+computer_security,STEM,15,22,0.6818
+conceptual_physics,STEM,7,22,0.3182
+econometrics,Social Sciences,6,22,0.2727
+electrical_engineering,STEM,11,22,0.5000
+elementary_mathematics,STEM,6,22,0.2727
+formal_logic,Humanities,12,22,0.5455
+global_facts,Other,10,22,0.4545
+high_school_biology,STEM,16,22,0.7273
+high_school_chemistry,STEM,9,22,0.4091
+high_school_computer_science,STEM,11,22,0.5000
+high_school_european_history,Humanities,10,22,0.4545
+high_school_geography,Social Sciences,12,22,0.5455
+high_school_government_and_politics,Social Sciences,14,22,0.6364
+high_school_macroeconomics,Social Sciences,7,22,0.3182
+high_school_mathematics,STEM,6,22,0.2727
+high_school_microeconomics,Social Sciences,10,22,0.4545
+high_school_physics,STEM,4,22,0.1818
+high_school_psychology,Social Sciences,16,22,0.7273
+high_school_statistics,STEM,3,22,0.1364
+high_school_us_history,Humanities,12,22,0.5455
+high_school_world_history,Humanities,12,22,0.5455
+human_aging,Other,12,22,0.5455
+human_sexuality,Social Sciences,15,22,0.6818
+international_law,Humanities,16,22,0.7273
+jurisprudence,Humanities,7,22,0.3182
+logical_fallacies,Humanities,12,22,0.5455
+machine_learning,STEM,9,22,0.4091
+management,Other,12,22,0.5455
+marketing,Other,17,22,0.7727
+medical_genetics,Other,14,22,0.6364
+miscellaneous,Other,12,22,0.5455
+moral_disputes,Humanities,16,22,0.7273
+moral_scenarios,Humanities,4,22,0.1818
+nutrition,Other,12,22,0.5455
+philosophy,Humanities,14,22,0.6364
+prehistory,Humanities,11,22,0.5000
+professional_accounting,Other,8,22,0.3636
+professional_law,Humanities,8,22,0.3636
+professional_medicine,Other,13,22,0.5909
+professional_psychology,Social Sciences,8,22,0.3636
+public_relations,Social Sciences,9,22,0.4091
+security_studies,Social Sciences,13,22,0.5909
+sociology,Social Sciences,17,22,0.7727
+us_foreign_policy,Social Sciences,14,22,0.6364
+virology,Other,12,22,0.5455
+world_religions,Humanities,12,22,0.5455

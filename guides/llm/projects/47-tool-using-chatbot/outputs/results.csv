@@ -1,0 +1,7 @@
+model,kind,accuracy,malformed_rate,model_tokens
+direct,calc,0.030,0.000,6.3
+direct,lookup,0.017,0.000,5.0
+direct,compose,0.017,0.000,6.0
+tool,calc,0.847,0.000,14.3
+tool,lookup,1.000,0.000,10.0
+tool,compose,1.000,0.000,23.6

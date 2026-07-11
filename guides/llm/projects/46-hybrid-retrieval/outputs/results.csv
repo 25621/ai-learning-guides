@@ -1,0 +1,6 @@
+system,recall@1,recall@5,ndcg@10,EM,F1
+dense,0.733,0.920,0.845,0.670,0.741
+BM25,0.817,0.933,0.892,0.677,0.748
+hybrid (RRF),0.800,0.950,0.896,0.690,0.771
+only_dense@5,14,rescued_by_hybrid,10,,
+only_bm25@5,18,rescued_by_hybrid,13,,

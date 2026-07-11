@@ -1,0 +1,12 @@
+metric,value
+"pairwise acc, correct in slot A",1.0000
+"pairwise acc, correct in slot B",0.0333
+pairwise picks-slot-A rate,0.9833
+pairwise order consistency,0.0333
+pointwise mean score correct,3.6000
+pointwise mean score wrong,2.7750
+pointwise accuracy (ties=0.5),0.6125
+pointwise tie rate,0.4083
+"wrong-answer score, padded",4.3667
+judgeB pointwise accuracy,0.5958
+judgeA-judgeB gap correlation,-0.0239

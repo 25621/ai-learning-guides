@@ -1,0 +1,4 @@
+method,accuracy
+greedy_cot,0.740
+self_consistency,0.740
+tree_of_thoughts,0.740

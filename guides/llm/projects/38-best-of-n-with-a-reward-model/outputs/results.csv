@@ -1,0 +1,6 @@
+reward_model_discrimination,0.815
+N,best_of_n_accuracy,majority_accuracy
+1,0.858,0.858
+4,0.933,0.933
+16,0.958,0.958
+32,0.950,0.950

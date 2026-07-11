@@ -1,0 +1,6 @@
+prm_step_classification_accuracy,0.915
+N,prm_rerank_accuracy,majority_accuracy
+1,0.733,0.733
+4,0.833,0.833
+16,0.858,0.858
+32,0.850,0.850
