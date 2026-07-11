@@ -1,0 +1,16 @@
+metric,value
+grand_mean,4.3333
+var_between_signal,0.2043
+var_within_noise,1.2900
+icc,0.1367
+unanimous_frac,0.1400
+mean_grade_spread,1.4700
+
+category,mean_grade
+billing,4.458
+order_status,4.958
+out_of_scope,4.417
+returns,4.167
+shipping,4.312
+specs,4.438
+troubleshooting,3.667

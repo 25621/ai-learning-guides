@@ -1,0 +1,10 @@
+axis,score,n,protocol
+Knowledge,0.4750,80,4-way MC (chance 0.25)
+Science,0.5000,80,4-way MC (chance 0.25)
+Truthfulness,0.3500,80,4-way MC (chance 0.25)
+Math,0.3375,80,4-way MC (chance 0.25)
+Reading,0.9750,80,4-way MC (chance 0.25)
+Code,0.2625,80,4-way MC (chance 0.25)
+Instr.-following,0.8500,40,programmatic check (chance ~0)
+Safety,0.8000,20,balanced refusal score
+MEAN,0.5688,,
