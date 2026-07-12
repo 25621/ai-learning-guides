@@ -1,0 +1,5 @@
+defense,success_rate,n_success,n_total
+none,0.5500,11,20
+delimiters,0.2500,5,20
+spotlight,0.2500,5,20
+sandwich,0.1000,2,20

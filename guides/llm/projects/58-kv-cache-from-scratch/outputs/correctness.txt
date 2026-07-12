@@ -1,0 +1,7 @@
+greedy tokens identical: True
+max abs logit difference: 0.000e+00
+sample continuation:
+ to the sease.
+
+KING RICHARD III:
+What will the world and the se

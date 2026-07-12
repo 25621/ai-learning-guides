@@ -1,0 +1,12 @@
+sentence     : Jakarta resident Ken Thompson celebrated turning 21 last week.
+free         : '```json\n{\n  "name": "Ken Thompson",\n  "age": "21",\n  "city": "Jakarta"\n}\n```'
+constrained  : '{"name": "Ken Thompson", "age": 42, "city": "Jakarta"}'
+
+sentence     : Dublin resident Donald Knuth celebrated turning 44 last week.
+free         : '```json\n{\n  "name": "Donald Knuth",\n  "age": 44,\n  "city": "Dublin"\n}\n```'
+constrained  : '{"name": "Donald Knuth", "age": 59, "city": "Dublin"}'
+
+sentence     : Our guest Radia Perlman, aged 56, flew in from Bogota this morning.
+free         : '```json\n{\n  "name": "Radia Perlman",\n  "age": 56,\n  "city": "Bogota"\n}\n```'
+constrained  : '{"name": "Radia Perlman", "age": 56, "city": "Bogota"}'
+

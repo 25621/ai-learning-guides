@@ -1,0 +1,5 @@
+condition,set,n,refusal_rate,answer_rate,correct_rate
+plain,unanswerable,40,0.075,0.925,
+plain,answerable,25,0.000,1.000,0.840
+calibrated,unanswerable,40,0.100,0.900,
+calibrated,answerable,25,0.000,1.000,0.880

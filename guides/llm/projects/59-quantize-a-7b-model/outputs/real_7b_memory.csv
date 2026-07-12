@@ -1,0 +1,10 @@
+model,bits,weights_GB
+Llama-2-7B,16,13.48
+Llama-2-7B,8,6.90
+Llama-2-7B,4,3.50
+Llama-3-8B,16,16.06
+Llama-3-8B,8,8.22
+Llama-3-8B,4,4.17
+Llama-3-70B,16,141.20
+Llama-3-70B,8,72.25
+Llama-3-70B,4,36.68

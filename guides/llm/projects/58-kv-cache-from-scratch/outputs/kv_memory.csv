@@ -1,0 +1,6 @@
+model,layers,kv_heads,d_head,seq_len,batch,kv_GB
+this project (1.8M),4,6,32,512,1,0.0016
+Llama-3-8B  @ 8k,32,8,128,8192,1,1.0737
+"Llama-3-8B  @ 8k, batch 32",32,8,128,8192,32,34.3597
+"Llama-3-70B @ 8k, batch 32",80,8,128,8192,32,85.8993
+"Llama-3-70B @ 128k, batch 32",80,8,128,131072,32,1374.3895
