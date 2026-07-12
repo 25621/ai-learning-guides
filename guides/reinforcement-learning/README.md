@@ -323,10 +323,10 @@ loss = ((Q(s, a) - target)**2).mean()
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
-| [DQN on CartPole](projects/12-dqn-on-cartpole/README.md) | Single-file DQN that solves CartPole-v1 in <30k steps; no replay buffer tricks | ⭐⭐⭐ |
-| [Add a replay buffer](projects/13-add-a-replay-buffer/README.md) | Now add experience replay and a target network; verify stability | ⭐⭐⭐ |
-| [Atari Pong](projects/14-atari-pong/README.md) | Full DQN with frame stacking and reward clipping; solve Pong | ⭐⭐⭐⭐ |
-| [Double + Dueling](projects/15-double-dueling/README.md) | Add both to your DQN; ablate each on Pong or Breakout | ⭐⭐⭐⭐ |
+| [DQN on CartPole](projects/12-dqn-on-cartpole/README.md) | Single-file DQN with no replay buffer and no target network — watch the deadly triad drive the Q-values 10⁸× past what the game can pay | ⭐⭐⭐ |
+| [Add a replay buffer](projects/13-add-a-replay-buffer/README.md) | Now add experience replay and a target network; ablate the 2×2 and verify stability | ⭐⭐⭐ |
+| [Atari Pong](projects/14-atari-pong/README.md) | Full DQN from pixels with frame stacking and reward clipping — the real ALE preprocessing chain, trained on a Pong that fits in ten minutes | ⭐⭐⭐⭐ |
+| [Double + Dueling](projects/15-double-dueling/README.md) | Add both to your DQN; ablate each and measure the overestimation gap they close | ⭐⭐⭐⭐ |
 | [Prioritized replay](projects/16-prioritized-replay/README.md) | Implement PER with a sum-tree; verify the priorities improve sample efficiency | ⭐⭐⭐⭐ |
 | [Mini Rainbow](projects/17-mini-rainbow/README.md) | Combine Double + Dueling + PER + n-step; reproduce a ~Rainbow-lite ablation | ⭐⭐⭐⭐⭐ |
 | [Distributional DQN (C51)](projects/18-distributional-dqn-c51/README.md) | Predict a categorical distribution over returns; verify on a small env | ⭐⭐⭐⭐⭐ |

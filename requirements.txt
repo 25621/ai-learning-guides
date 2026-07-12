@@ -1,3 +1,8 @@
 numpy>=1.26
 matplotlib>=3.8
 gymnasium>=0.29
+torch>=2.0
+
+# Optional: real Atari ROMs, used by project 14 only to visualize the Pong
+# preprocessing pipeline. The projects train without it.
+# ale_py>=0.10
