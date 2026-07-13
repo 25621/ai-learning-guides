@@ -25,19 +25,31 @@ ordinary RL:        maximize  E[ sum of rewards ]
 maximum-entropy RL: maximize  E[ sum of rewards  +  alpha * entropy(policy) ]
 ```
 
-`alpha` is the exchange rate between the two. And that phrasing exposes the problem
-immediately: **an exchange rate only means something relative to the units on each
-side.** Entropy is measured in nats, and it lives on a small scale — a few nats,
-always. Reward is measured in whatever the environment happens to use, which might be
-0.5 per step or 500 per step, and which *grows* as the agent gets better.
+(`E[...]` just means "the average value of, over many episodes". And *entropy* is a
+measure of **how random the policy is**: high entropy = it picks varied actions, low
+entropy = it always does the same thing.)
 
-So `alpha = 0.2` is not a setting. It is a setting *relative to a reward scale*, and
-that scale is different on every task, and it moves during training.
+So SAC is paid for two things at once: collecting reward, *and* staying unpredictable.
+`alpha` is the **exchange rate** between them — how much reward one unit of randomness is
+worth.
 
-> **Analogy.** Imagine a rule that says "spend 5 dollars on lottery tickets for every
-> unit of profit you make." Whether that is reckless or trivial depends entirely on
-> whether your profit is measured in dollars or in millions of dollars — and on whether
-> your business grew tenfold since you wrote the rule. `alpha` has exactly this problem.
+And calling it an exchange rate exposes the problem immediately: **an exchange rate is
+meaningless unless you know the units on both sides.**
+
+- Entropy is measured in [nats](/shared/glossary/#nat), and it always lives on a small
+  scale — a few nats, never more.
+- Reward is measured in whatever units the environment happens to use. It might pay `0.5`
+  per step, or `500` per step. And it **grows** as the agent gets better.
+
+So `alpha = 0.2` is not really a setting at all. It is a setting *relative to a reward
+scale* — and that scale is different on every task, and it keeps moving during training.
+
+> **Analogy.** A company rule says: *"spend 5 dollars on lottery tickets for every unit
+> of profit you make."* Is that reckless or trivial? You cannot say, because it depends
+> on something the rule never mentions: whether "profit" is counted in dollars or in
+> millions of dollars. And even if you got it right on day one, the rule quietly becomes
+> wrong once the business grows tenfold. `alpha` has exactly this problem — it is a price
+> written down without naming the currency.
 
 ## The fix: stop setting `alpha`, start setting the entropy you want
 
@@ -46,8 +58,12 @@ The insight of SAC v2 is to flip the control problem around. Instead of choosing
 random you want the policy to be** — the target entropy — and let `alpha` be whatever
 it needs to be to achieve that.
 
-The standard target is `-1 nat per action dimension`, and `alpha` is then adjusted by
-[gradient descent](/shared/glossary/#sgd):
+The standard target is **`-1` nat per action dimension** — meaning "for each joint you
+control, stay about this random". A robot with 3 joints gets a target of `-3`; one with
+17 joints gets `-17`. The number scales with the body, not with the reward.
+
+`alpha` is then adjusted automatically by [gradient descent](/shared/glossary/#sgd), the
+same tool that trains the networks:
 
 ```python
 # push alpha UP when the policy is more deterministic than the target
@@ -55,14 +71,21 @@ The standard target is `-1 nat per action dimension`, and `alpha` is then adjust
 alpha_loss = -(log_alpha * (logp.detach() + target_entropy)).mean()
 ```
 
-This is a **thermostat**. You no longer set the boiler's fuel rate (`alpha`); you set
-the temperature you want the room to be (`target_entropy`) and let the controller work
-out the fuel. That is exactly the trade this update makes, and it is why the same
-configuration transfers across robots.
+This is a **thermostat**, and the analogy is exact. You do not tell a thermostat how much
+gas to burn — you would have no idea what number to pick, and the right number changes
+with the weather and the size of the room. You tell it **the temperature you want**, and
+it works out the gas by itself, continuously, forever.
 
-(The entropy this thermostat reads comes from the actor's
-[log-probability](/shared/glossary/#log-probability). If that number is wrong, the
-thermostat is servoing on a lie — which is precisely the bug project 30 audits.)
+Here the "temperature you want" is `target_entropy` (how random the policy should be), and
+the "gas" it works out for you is `alpha`. That swap is the whole idea, and it is why one
+configuration can walk onto a new robot and still work.
+
+(One warning, which is where the next project comes in. A thermostat is only as good as
+its thermometer. The entropy reading this controller relies on is computed from the
+actor's [log-probability](/shared/glossary/#log-probability) — and if *that* number is
+wrong, the controller will confidently steer the policy toward the wrong place while
+reporting that everything is fine. That is exactly the silent bug
+[project 30](../30-reparameterization-audit/README.md) hunts down.)
 
 ## The experiment
 
@@ -164,7 +187,11 @@ action dimension` means the same thing on a 3-joint hopper and a 17-joint humano
 `alpha = 0.2` does not mean the same thing on any two tasks at all.
 
 This is why SAC ships with one configuration and works across a whole
-[MuJoCo](/shared/glossary/#mujoco) suite (project 28) while [DDPG](/shared/glossary/#ddpg)
-needs its exploration noise re-tuned per task. The algorithmic difference is a few lines
-of [dual gradient descent](/shared/glossary/#sgd). The practical difference is whether
-you sweep four runs per robot, forever.
+[MuJoCo](/shared/glossary/#mujoco) suite ([project 28](../28-sac-on-a-mujoco-suite/README.md)),
+while [DDPG](/shared/glossary/#ddpg) needs its exploration noise re-tuned for every new
+task.
+
+In code, the difference is tiny: a few lines that nudge `alpha` up or down with
+[gradient descent](/shared/glossary/#sgd), exactly as shown above. In practice, the
+difference is whether you must run four training jobs to tune a single number **every
+time you meet a new robot** — forever — or none at all.

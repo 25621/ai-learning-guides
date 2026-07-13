@@ -17,8 +17,8 @@ python3 sample_efficiency.py     # ~6 min on 12 hyperthreads
 ```
 
 Neither algorithm is reimplemented here. SAC is
-[`cc_lib.py`](../26-ddpg-on-pendulum/cc_lib.py) from project 26; PPO is
-[`ppo.py`](../22-ppo-from-scratch/ppo.py) from project 22, configured for continuous
+[`cc_lib.py`](../26-ddpg-on-pendulum/cc_lib.py) from [project 26](../26-ddpg-on-pendulum/README.md); PPO is
+[`ppo.py`](../22-ppo-from-scratch/ppo.py) from [project 22](../22-ppo-from-scratch/README.md), configured for continuous
 control. That reuse is what makes the comparison trustworthy: both are code the guide
 has already tested, so any difference below is the *algorithms* differing, not two
 implementations of varying quality.
@@ -37,13 +37,20 @@ A paper reporting only the first is answering a question its readers may not hav
 asked. So this project plots **the same runs** against both x-axes and lets the
 disagreement show.
 
-All of it follows from one structural asymmetry — the
-[update-to-data ratio](/shared/glossary/#update-to-data-ratio):
+All of it follows from a single lopsided difference between the two — how many times each
+algorithm *studies* what it collects. That ratio has a name: the
+[update-to-data ratio](/shared/glossary/#update-to-data-ratio).
 
-- **SAC** does **one gradient update per environment step**. Every step is expensive,
-  but each sample is reused many times out of the replay buffer.
-- **PPO** collects 2,048 steps, does a few dozen updates on that batch, then **throws
-  it away**. Every step is cheap, but each sample teaches it far less.
+- **SAC** does **one gradient update for every single environment step.** Each step is
+  therefore expensive — but nothing is wasted, because every sample is stored in the
+  [replay buffer](/shared/glossary/#experience-replay) and studied again and again.
+- **PPO** collects 2,048 steps, does a few dozen updates on that whole batch, and then
+  **throws the data away for good.** Each step is cheap — but each sample teaches it far
+  less before it is discarded.
+
+> Two students with the same textbook. One re-reads every page until it sticks: slow per
+> page, but almost nothing is forgotten. The other skims each page once and never returns
+> to it — but gets through ten times as many books in the same evening.
 
 ## The result
 
@@ -52,6 +59,9 @@ All of it follows from one structural asymmetry — the
 Same six runs, same task ([HalfCheetah](/shared/glossary/#halfcheetah), where a random
 policy scores about `-280`). Only the x-axis changes.
 
+To compare fairly we pick a **threshold** — a "good enough" score both algorithms must
+reach (here, a return of `800`) — and then ask what each one had to *spend* to get there.
+
 ```
 HalfCheetah-v5  (threshold = 800)
   algo     env steps    seconds   final return   steps/s
@@ -59,9 +69,14 @@ HalfCheetah-v5  (threshold = 800)
   PPO        235,520        210            900      1124
 ```
 
-**Per sample, SAC is 10× better.** It reaches the threshold in 24,000 steps; PPO needs
-235,520. On a physical robot collecting one step per control tick, that is the
-difference between an afternoon and two weeks.
+**Per sample, SAC is 10× better.** It reaches the threshold after 24,000 steps of
+experience; PPO needs 235,520 — almost ten times as much.
+
+Why should you care? Because on a *real* robot, a "step" is not free: it is one actual
+movement of a physical arm, taking real time and wearing out real hardware. At a typical
+20 steps per second, 24,000 steps is about **20 minutes** of robot time. 235,520 steps is
+about **3.5 hours** of continuous running. Same robot, same result — one afternoon versus
+several days once you account for battery changes and breakages.
 
 **Per second, they arrive at the same moment.** SAC crosses the threshold at 203
 seconds, PPO at 210. A 3% gap — a tie.
@@ -89,13 +104,23 @@ recovering. That is SAC being SAC: more sample-efficient, and less placid than P
 which plods up its curve almost boringly.)
 
 **PPO's advantage is the one that scales.** PPO managed 1,124 steps/s on a *single CPU
-core*, and its rollout collection is
-[embarrassingly parallel](/shared/glossary/#vectorized-environment) — give it 64 cores
-and it collects roughly 64× faster, sliding its whole wall-clock curve to the left. SAC
-cannot do this: its bottleneck is the gradient update, and those are strictly
-*sequential* (one update per step, each depending on the last). Handing SAC 64 cores
-barely helps. **That is the real reason large-scale RL runs on PPO** despite being far
-less sample-efficient — its scarce resource is the one you can simply buy more of.
+core* — and gathering experience is work you can simply split up. Run 64 copies of the
+environment side by side ([vectorized environments](/shared/glossary/#vectorized-environment))
+on 64 cores, and PPO collects roughly 64× faster, sliding its entire wall-clock curve to
+the left.
+
+SAC cannot buy the same speedup, and the reason is worth understanding. Its bottleneck is
+not collecting data — it is the gradient updates, and those must happen **one after
+another**: update 2 uses the network that update 1 just produced, so you cannot do them
+at the same time. Handing SAC 64 cores barely helps, because the work it is waiting on
+refuses to be split.
+
+> Nine women cannot make a baby in one month. Some work divides across workers; some work
+> is a chain where each link needs the one before it. Collecting experience is the first
+> kind. Gradient updates are the second.
+
+**That is the real reason large-scale RL runs on PPO** despite being far less
+sample-efficient: its scarce resource is the one you can simply buy more of.
 
 ## What to take away
 

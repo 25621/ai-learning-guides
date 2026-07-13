@@ -10,7 +10,7 @@
 
 | File | Role |
 |------|------|
-| `cc_lib.py` | **The whole of Phase 5 lives here.** One `Agent`, one `Config`. DDPG, [TD3](/shared/glossary/#td3) and [SAC](/shared/glossary/#sac) are the same class with different flags set — projects 27–31 all import this file and flip fields. |
+| `cc_lib.py` | **The whole of Phase 5 lives here.** One `Agent`, one `Config`. DDPG, [TD3](/shared/glossary/#td3) and [SAC](/shared/glossary/#sac) are the same class with different flags set — [project 27](../27-td3-on-halfcheetah/README.md) through [project 31](../31-sample-efficiency-study/README.md) all import this file and flip fields. |
 | `ddpg.py` | The three experiments below: does it learn, is the critic honest, and where does its exploration actually come from. |
 
 ```bash
@@ -25,27 +25,53 @@ python3 ddpg.py       # ~8 min on 12 hyperthreads
 a* = argmax over a of Q(s, a)
 ```
 
-With four buttons, that is a lookup: score all four, take the best. With a robot
-arm's six continuous joint torques, there is no "all four". Between any two torques
-there is another torque. The `argmax` has quietly become an optimization problem that
-you would need to solve *from scratch, at every single timestep* — and you cannot
-afford that.
+[`argmax`](/shared/glossary/#argmax) just means "the input that gives the biggest
+output" — here, *the action with the highest score*.
+
+In a game with four buttons, that is a **lookup**: score all four actions, take the
+best one. Easy. But a robot arm does not have four buttons. It has six joints, and each
+one takes a *continuous* torque — any real number in a range, like `0.10` or `0.1001`.
+There is no "all four" to score, because **between any two torques there is always
+another torque**. The list you would have to search is infinite.
+
+So `argmax` has quietly stopped being a lookup and become a full *search* problem — and
+you would have to solve it from scratch at **every single timestep**, thousands of times
+a second. That is far too slow to be usable.
 
 DDPG's answer is the one idea the whole of Phase 5 is built on:
 
 > **Train a network to output the maximizing action directly. The actor *is* the argmax.**
 
-The [critic](/shared/glossary/#actor-critic) `Q(s, a)` scores actions. The actor
-`mu(s)` proposes them. To improve the actor, ask the critic which direction would
-raise the score, and push the action that way. That is just the chain rule, and in
-code it is a single line:
+Instead of searching for the best action every time, train a second network whose *only
+job* is to guess it in one shot. Two networks, two jobs:
+
+- the [critic](/shared/glossary/#actor-critic) `Q(s, a)` **scores** an action — "how good
+  is doing `a` in state `s`?"
+- the [actor](/shared/glossary/#actor-critic) `mu(s)` **proposes** one — "here is the
+  action I think is best in state `s`."
+
+To make the actor better, ask the critic a question it can already answer: *if I nudged
+this action slightly, would your score go up or down?* Then move the action in whichever
+direction raises the score. Repeat forever.
+
+That question has a name — it is the [gradient](/shared/glossary/#gradients) `dQ/da`, the
+direction in action-space that increases the critic's score fastest — and in code the
+whole thing is a single line:
 
 ```python
 pi_loss = -self.q1(o, self.actor(o)).mean()   # "make the critic like my actions more"
 ```
 
-That line is the [deterministic policy gradient](/shared/glossary/#deterministic-policy-gradient).
-Autograd works out `dQ/da · da/dtheta` for free.
+Read it right-to-left: take the actor's action, feed it to the critic, and put a **minus
+sign** in front. Minimizing `-Q` is the same as maximizing `Q`, and "maximize the critic's
+score of my own action" is exactly the instruction we wanted.
+
+That one line is the [deterministic policy gradient](/shared/glossary/#deterministic-policy-gradient).
+It works because [autograd](/shared/glossary/#autograd) — PyTorch's automatic
+differentiation — applies the [chain rule](/shared/glossary/#chain-rule) *through* the
+critic and into the actor for free: it computes how the score changes with the action
+(`dQ/da`), then how the action changes with the actor's weights (`da/dtheta`), and
+multiplies them. You never write either derivative yourself.
 
 ## It learns
 
@@ -61,7 +87,8 @@ scores about `-1200`; about `-150` is the usual "solved" line for Pendulum.
 Every seed learns, and every seed lands in or near the solved band. But look at the
 spread: **49 points between the best seed and the worst**, on a task this small. That
 gap is not evaluation noise — it is a real difference in the policies DDPG settled
-on. Hold that thought, because it is the reason projects 27 and 28 exist.
+on. Hold that thought, because it is the reason [project 27](../27-td3-on-halfcheetah/README.md)
+and [project 28](../28-sac-on-a-mujoco-suite/README.md) exist.
 
 ## The critic is lying, and you can measure it
 
@@ -102,7 +129,7 @@ errors never average out, because the actor is actively hunting for them.
 > you will come to believe your car is worth more than it is. That is exactly what a
 > `max` (or an actor trained to imitate one) does to a noisy critic.
 
-Everything in project 27 — [twin critics](/shared/glossary/#twin-critics),
+Everything in [project 27](../27-td3-on-halfcheetah/README.md) — [twin critics](/shared/glossary/#twin-critics),
 [target policy smoothing](/shared/glossary/#target-policy-smoothing) — is an attempt to
 stop this. Now you have the number they are trying to drive to zero.
 
@@ -113,12 +140,18 @@ exactly the same action, so it can never try anything new. DDPG therefore bolts
 exploration on from outside — and it does so in **two** places that tutorials tend to
 blur together:
 
-1. **Gaussian action noise** — random jitter added to every action the actor takes.
-2. **A random warmup** (`start_steps`) — before the policy takes over at all, act
-   completely at random for the first 1,000 steps, filling the
-   [replay buffer](/shared/glossary/#experience-replay) with varied experience.
+1. **Gaussian action noise** — a small random wobble added to every action the actor
+   takes. ("Gaussian" just means the wobble is drawn from a bell curve: usually tiny,
+   occasionally larger.) If the actor says "torque `0.30`", the agent might actually
+   apply `0.28` or `0.33`, so it never repeats itself exactly.
+2. **A random warmup** (`start_steps`) — before the policy is allowed to act at all, the
+   agent takes **completely random actions for the first 1,000 steps**, filling the
+   [replay buffer](/shared/glossary/#experience-replay) with varied experience for the
+   critic to learn from.
 
-Everyone talks about (1). So the honest thing to do is turn it off and see what breaks.
+Everyone talks about (1). So the honest thing to do is switch it off and see what breaks.
+Removing one piece at a time to find out what it was worth is called an
+[ablation](/shared/glossary/#ablation).
 
 ![exploration ablation](outputs/exploration_ablation.png)
 
@@ -152,11 +185,15 @@ Two lessons, and the second is the one that generalizes:
    the warmup, and that is enough.
 2. **An ablation is only as good as the thing it removes.** Had this project tested
    only "noise on vs noise off" — which is the ablation the tutorials imply — it would
-   have concluded "exploration does not matter for DDPG", published a flat line, and
-   been completely wrong. The effect was hiding in a *different* knob, and it only
-   appeared when both were removed together. When an ablation comes back null, the
-   first question is not "does this component matter?" but **"is something else
-   quietly doing its job?"**
+   have concluded "exploration does not matter for DDPG", drawn a flat line, and been
+   completely wrong. The effect was hiding in a *different* knob, and it only showed up
+   once **both** knobs were removed together. So when an ablation shows **no difference
+   at all**, the first question to ask is not "does this component matter?" but
+   **"is something else quietly doing this component's job for it?"**
+
+   > Unplug the kettle and the tea still gets made — so you conclude the kettle is
+   > useless. In fact your flatmate has been quietly boiling water on the stove all
+   > along. To learn what the kettle does, you have to switch off the stove too.
 
 Do not over-generalize the first lesson: on a [sparse-reward](/shared/glossary/#sparse-reward)
 task where reward only appears after a long, specific sequence of actions, a 1,000-step
@@ -173,13 +210,15 @@ critic — should stop feeling like a list of tricks and start feeling like one 
 
 But two cracks are already showing, and they are what the rest of Phase 5 is about:
 
-- **The critic is systematically optimistic** (+30 here, and it does not decay).
-  [TD3](/shared/glossary/#td3) attacks this head-on with twin critics (project 27).
+- **The critic is systematically optimistic** (+9 to +46 here, and the gap stops
+  shrinking instead of closing).
+  [TD3](/shared/glossary/#td3) attacks this head-on with twin critics ([project 27](../27-td3-on-halfcheetah/README.md)).
 - **The exploration is bolted on** — and, as the experiment above shows, it is not even
   bolted on where you thought. [SAC](/shared/glossary/#sac) removes the bolt entirely by
   making the policy itself stochastic and then *paying* it to stay random. That is the
-  [maximum-entropy](/shared/glossary/#maximum-entropy-rl) idea projects 28 and 29 are
-  built on.
+  [maximum-entropy](/shared/glossary/#maximum-entropy-rl) idea
+  [project 28](../28-sac-on-a-mujoco-suite/README.md) and
+  [project 29](../29-automatic-temperature-tuning/README.md) are built on.
 
 DDPG is, as the guide puts it, a pedagogical stepping stone. Build it once so you know
 exactly what TD3 and SAC are fixing — and then, as the phase's own advice goes, don't

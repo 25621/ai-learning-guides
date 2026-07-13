@@ -2,7 +2,7 @@
 
 ## Key Insight
 
-[SAC](/shared/glossary/#sac) (Soft Actor-Critic) is the modern default for [continuous control](/shared/glossary/#continuous-control) because it folds an entropy bonus straight into the objective — it follows [maximum-entropy RL](/shared/glossary/#maximum-entropy-rl), maximizing reward *and* keeping the [policy](/shared/glossary/#policy) as random as it can afford — so it explores on its own and stays robust without the hand-tuned action noise [DDPG](/shared/glossary/#ddpg) and [TD3](/shared/glossary/#td3) lean on. Running it across a [MuJoCo](/shared/glossary/#mujoco) suite of increasingly hard bodies — [HalfCheetah](/shared/glossary/#halfcheetah), [Walker2d](/shared/glossary/#walker2d), [Ant](/shared/glossary/#ant), and [Humanoid](/shared/glossary/#humanoid) — tests whether one algorithm with one hyperparameter setting can scale from a simple runner to a 17-joint humanoid, and SAC's reputation rests on the fact that it usually can.
+[SAC](/shared/glossary/#sac) (Soft Actor-Critic) is the modern default for [continuous control](/shared/glossary/#continuous-control) because it folds an entropy bonus straight into the objective — it follows [maximum-entropy RL](/shared/glossary/#maximum-entropy-rl), maximizing reward *and* keeping the [policy](/shared/glossary/#policy) as random as it can afford — so it explores on its own and stays robust without the hand-tuned action noise [DDPG](/shared/glossary/#ddpg) and [TD3](/shared/glossary/#td3) lean on. Running it across a [MuJoCo](/shared/glossary/#mujoco) suite of increasingly hard bodies — [HalfCheetah](/shared/glossary/#halfcheetah), [Walker2d](/shared/glossary/#walker2d), [Ant](/shared/glossary/#ant), and [Humanoid](/shared/glossary/#humanoid) — tests whether one algorithm with one [hyperparameter](/shared/glossary/#hyperparameter) setting can scale from a simple runner to a 17-joint humanoid, and SAC's reputation rests on the fact that it usually can.
 
 ---
 
@@ -33,7 +33,7 @@ Note the last line. [DDPG](/shared/glossary/#ddpg) and [TD3](/shared/glossary/#t
 `act_noise` — a hand-tuned amount of random jitter added to every action — because their
 actors are deterministic and cannot explore on their own. SAC sets it to **zero**. Its
 policy is a distribution, and the entropy bonus *pays it* to keep that distribution wide.
-Exploration stops being a bolted-on accessory (project 26 showed how fragile that bolt
+Exploration stops being a bolted-on accessory ([project 26](../26-ddpg-on-pendulum/README.md) showed how fragile that bolt
 is) and becomes part of the objective.
 
 ## What is actually being tested
@@ -44,10 +44,17 @@ The claim behind SAC's reputation is **not** "it gets a high score". It is:
 > learns on bodies ranging from a 6-joint runner to a 17-joint humanoid, **with no
 > per-task tuning.**
 
-Every algorithm setting in `sac_suite.py` is identical across the five bodies. The only
-thing that differs is the *number of steps*, and that is purely a budget decision:
-Humanoid's 348-dimensional observation makes one step several times more expensive than
-Hopper's, so an equal-steps suite would spend all of its wall-clock on one body.
+That word *tuning* is the point. Most RL algorithms need a human to sit down with each new
+robot and hand-adjust their settings until they work. That is slow, it needs an expert,
+and it has to be repeated for every new body. An algorithm that needs **none** of that is
+worth far more in practice than one that scores slightly higher after a week of fiddling.
+
+Every algorithm setting in `sac_suite.py` is therefore identical across the five bodies.
+The only thing that differs is the *number of steps* each one is given, and that is purely
+a budget decision, not a scientific one: Humanoid reports 348 numbers about its state at
+every step (against Hopper's 11), so a single Humanoid step costs several times more
+computer time. Giving every body the same number of steps would mean spending almost the
+whole ten minutes on the one body and starving the rest.
 
 ## The honest result
 
@@ -89,7 +96,7 @@ This is the part the budget *can* prove, and it is the more interesting one.
 ![alpha and entropy](outputs/alpha_entropy.png)
 
 The left panel is the [temperature](/shared/glossary/#temperature) `alpha` that
-[automatic tuning](/shared/glossary/#automatic-temperature-tuning) (project 29) settled
+[automatic tuning](/shared/glossary/#automatic-temperature-tuning) ([project 29](../29-automatic-temperature-tuning/README.md)) settled
 on for each body. They are not the same. They are not close:
 
 | body | `alpha` it converged to |
@@ -101,7 +108,7 @@ on for each body. They are not the same. They are not close:
 | Ant | ~0.010 |
 
 That is a **more than 10× spread**, discovered automatically, with no human involved. Now
-recall project 29's measurement: on HalfCheetah, moving `alpha` from `0.05` to `0.2`
+recall [project 29](../29-automatic-temperature-tuning/README.md)'s measurement: on HalfCheetah, moving `alpha` from `0.05` to `0.2`
 takes the return from `2250` to `12`. A 4× error in `alpha` is fatal. Here the *correct*
 values differ by more than 10× **between bodies** — so any single hand-picked constant
 would be badly wrong on most of this suite.
@@ -130,7 +137,7 @@ what a small budget can still speak to:
 
 The reason SAC became the default for [continuous control](/shared/glossary/#continuous-control)
 is visible in the first bullet. [DDPG](/shared/glossary/#ddpg) needs its exploration noise
-re-tuned per task (project 26 showed how brittle that noise actually is), and
+re-tuned per task ([project 26](../26-ddpg-on-pendulum/README.md) showed how brittle that noise actually is), and
 [TD3](/shared/glossary/#td3) inherits the same hand-tuned knob. SAC replaced it with a
 quantity that *transfers* — "be this random" instead of "pay this much for randomness" —
 and that single substitution is what lets one config walk onto a new robot and work.

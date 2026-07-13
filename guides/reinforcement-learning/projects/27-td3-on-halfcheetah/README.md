@@ -36,7 +36,7 @@ different algorithms, and you would be wrong.
 
 ## The three fixes, in plain language
 
-**1. Twin critics.** Project 26 measured DDPG's critic promising ~25 points more than
+**1. Twin critics.** [Project 26](../26-ddpg-on-pendulum/README.md) measured DDPG's critic promising ~25 points more than
 its episodes actually paid. The cause: the actor is trained to find actions the critic
 scores highly, so it systematically seeks out the critic's *most optimistic mistakes*.
 TD3 trains **two** critics and uses the **smaller** of their two opinions as the
@@ -67,24 +67,42 @@ TD3's published win over DDPG is measured at **1,000,000 steps with 10 seeds**. 
 project runs **60,000 steps with 3 seeds** — 6% of the samples, on a CPU. That is a real
 constraint, not a formality, and it changes which questions can be answered:
 
-- **"Which algorithm scores higher?"** — cannot be settled here. Deep RL's
-  seed-to-seed variance is large enough at this budget to swallow the difference
-  between two algorithms whole, and pretending otherwise would be dishonest.
+- **"Which algorithm scores higher?"** — cannot be settled here. Run the *same* algorithm
+  with a different random [seed](/shared/glossary/#seed) and you get a noticeably
+  different score; that run-to-run wobble is, at this budget, bigger than the difference
+  between the two algorithms. So any winner you declare might just be the luckier dice
+  roll, and pretending otherwise would be dishonest.
 - **"Does each fix do the thing it claims to do?"** — *can* be settled here, cleanly,
-  because the mechanism (is the critic honest?) is measurable directly and is far less
-  noisy than the score.
+  because the **mechanism** is measurable directly, and it is far less noisy than the
+  score.
 
-So this project measures the mechanism, and reports the scoreboard with its error bars
-showing.
+The mechanism has a name we will use throughout: **critic bias**.
+
+> **Critic bias = what the critic promised − what the episode actually paid.**
+>
+> At the start of an episode the critic predicts a score for the first action,
+> `Q(s0, a0)`. Then we simply let the episode run and add up the reward it really
+> earned (its [discounted return](/shared/glossary/#return)). Subtract the second from
+> the first.
+>
+> **Positive** = the critic over-promises (it is an optimist). **Zero** = honest.
+> **Negative** = it under-promises (a pessimist).
+
+This is a very cheap thing to log, and unlike the score it is not drowned in luck. So this
+project measures the mechanism, and reports the scoreboard with its uncertainty showing.
 
 ## The result
 
 The experiment runs on **two** bodies, and the second one is the whole point.
-[HalfCheetah](/shared/glossary/#halfcheetah) **cannot fall over** — it has no
-termination condition, so a bad policy simply runs slowly. [Hopper](/shared/glossary/#hopper)
-**can** fall, which ends the episode immediately. If TD3's fixes cure overconfidence,
-the place to look for the cure working is the body where overconfidence is actually
-punished.
+
+[HalfCheetah](/shared/glossary/#halfcheetah) **cannot fall over.** There is no way for
+its episode to end early — whatever it does, it keeps going for the full 1,000 steps. A
+terrible policy just runs slowly. [Hopper](/shared/glossary/#hopper) **can** fall, and
+when it does the episode is cut short on the spot.
+
+That difference decides whether a mistake is *cheap* or *expensive*. If TD3's fixes cure
+overconfidence, then the place to look for the cure working is the body where
+overconfidence is actually punished — the one that can fall.
 
 ![TD3 vs DDPG](outputs/td3_vs_ddpg.png)
 
@@ -106,10 +124,17 @@ DDPG   mean   +280.6  (OVER-estimates)
 
 **On the scoreboard, TD3 loses.** DDPG scores `1538` on HalfCheetah against TD3's
 `1270`, and on Hopper they are indistinguishable (`239` vs `242`). This is not the result
-the textbooks promise, and it is not a bug — it is what 60,000 steps buys you. Look at
-TD3's HalfCheetah seeds: `1951`, `631`, `1228`. The standard deviation is `540`.
-**The spread between seeds of the same algorithm is as large as the gap between the two
-algorithms**, which means this column is, statistically, not saying much at all.
+the textbooks promise, and it is not a bug — it is what 60,000 steps buys you.
+
+But before drawing any conclusion, look at TD3's three HalfCheetah seeds: `1951`, `631`,
+`1228`. These are **the same algorithm, the same settings — only the random seed differs**,
+and the best run is three times the worst. The `std` column (`540`) is the *standard
+deviation*, a one-number summary of how far apart those runs are.
+
+Now compare: the gap *between* TD3 and DDPG is `1538 − 1270 = 268`. The wobble *within*
+TD3 alone is `540` — **twice as large**. So the "gap" between the algorithms is smaller
+than the noise inside either one of them, and this column is, honestly, not saying
+anything at all. It is a coin toss reported to four significant figures.
 
 **Now look at the bias, and the fog clears.**
 

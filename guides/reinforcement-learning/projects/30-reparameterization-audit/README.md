@@ -29,15 +29,24 @@ SAC's actor does two things. First it samples an unbounded number from a Gaussia
 u = mu(s) + sigma(s) * eps          eps ~ N(0, 1)
 ```
 
-Then it squashes that number into the legal action range with `tanh`:
+Reading that line: the network looks at the state `s` and outputs two numbers — a
+**centre** `mu` ("the action I think is best") and a **spread** `sigma` ("how unsure I
+am"). Then `eps` is a random draw from a standard bell curve (`N(0, 1)` — usually near
+zero, occasionally further out). Multiply the spread by the random draw, add it to the
+centre, and you have a random action that is *usually* close to what the network wanted.
+
+There is one problem: `u` can be **any** number, and real motors have limits. So SAC
+squashes it into the legal range with `tanh`, an S-shaped function that takes any input
+and gently bends it into the interval from `-1` to `+1`:
 
 ```
 a = tanh(u)                         always lands in (-1, 1)
 ```
 
-The problem: SAC needs to know **how likely the action `a` was**, because it uses
-that number as its [entropy](/shared/glossary/#entropy-regularization) bonus. And
-squashing changes likelihoods.
+Now the problem this project is about. SAC needs to know **how likely the action `a`
+was** — it feeds that likelihood into its [entropy](/shared/glossary/#entropy-regularization)
+bonus, the thing that keeps the policy exploring. And squashing an action **changes how
+likely it was.**
 
 Here is the intuition, with no math. Think of probability as sand spread along an
 infinite line. `tanh` crushes that whole infinite line into the short interval from
@@ -60,8 +69,15 @@ environment ever saw.
 
 ## Check 1 — is it even a probability distribution?
 
-The cheapest possible test. A probability density must add up to exactly 1 over all
-possible actions. So add it up:
+The cheapest possible test, and it needs no RL at all.
+
+A [probability density](/shared/glossary/#probability-density) has one rule it can never
+break: **add it up over every possible outcome and you must get exactly 1.** ("Something
+must happen" — the chances of all the outcomes together have to be 100%.) Adding up a
+value across a continuous range like this is called *integrating*, and it is just a very
+careful sum.
+
+So: add it up.
 
 ```
 $ python3 reparam_audit.py checks
@@ -105,7 +121,7 @@ This is the check worth remembering, because it explains *why* the bug is so
 damaging, not merely that it is wrong.
 
 [Automatic temperature tuning](/shared/glossary/#automatic-temperature-tuning)
-(project 29) works by watching the policy's entropy and pushing it toward a target
+([project 29](../29-automatic-temperature-tuning/README.md)) works by watching the policy's entropy and pushing it toward a target
 value. Entropy means "how random is my policy". So that entropy number had better be
 true.
 
@@ -139,8 +155,9 @@ gauge that moves the wrong way.
 
 ## Check 4 — the `-inf` that eats your actor
 
-The literal textbook formula, `log(1 - tanh(u)^2)`, is correct in exact arithmetic
-and unusable in `float32`.
+The literal textbook formula, `log(1 - tanh(u)^2)`, is perfectly correct in exact
+mathematics — and unusable on a real computer, which stores numbers with only limited
+precision ([float32](/shared/glossary/#float32), about 7 decimal digits).
 
 ```
 4. NUMERICAL STABILITY — literal log(1 - tanh(u)^2) vs the stable form
@@ -151,18 +168,26 @@ and unusable in `float32`.
      20.0            inf      -187.1034      -162.3052
 ```
 
-At `|u| >= 10`, `tanh(u)` rounds to exactly `1.0` in float32. So `1 - tanh(u)^2` is
-exactly `0`, `log(0)` is `-inf`, the log-probability becomes `+inf`, and the next
-backward pass fills the actor with `NaN`. Training is over.
+Here is the chain of events. `tanh(10)` is `0.99999999...` — so close to `1` that float32
+cannot tell the difference and simply **rounds it to exactly `1.0`**. Then
+`1 - tanh(u)^2` is exactly `0`. Then `log(0)` is `-inf` (minus infinity), the
+log-probability becomes `+inf`, and on the very next update every weight in the actor
+turns into [`NaN`](/shared/glossary/#nan) ("not a number"). Training is over — the network
+is now permanently garbage.
 
-Note *when* this happens: at large `|u|`, which is precisely a
-[saturated](/shared/glossary/#action-saturation) actor. The formula breaks exactly
-in the situation you most need it to work.
+Note *when* this strikes: at large `|u|`, which is exactly a
+[saturated](/shared/glossary/#action-saturation) actor — one slamming its actions against
+the limits. **The formula breaks precisely in the situation you most need it to survive.**
 
-The popular fix is to add a small epsilon — `log(1 - tanh(u)^2 + 1e-6)`. It does
-stop the crash, and it is still wrong: the epsilon **caps** the correction at an
-arbitrary floor unrelated to the true value. At `u = 20` it is off by **25 nats**.
-You have traded a loud failure for a quiet one, which is a bad trade.
+The popular fix is to add a tiny number ("epsilon") to stop the `log(0)`:
+`log(1 - tanh(u)^2 + 1e-6)`. Look at the `+1e-6` column above. It does stop the crash —
+and it is still wrong. The epsilon quietly puts a **floor** under the correction, so
+instead of the true value it returns whatever that arbitrary floor allows. At `u = 20` it
+is off by **25 [nats](/shared/glossary/#nat)** — an enormous error.
+
+You have traded a *loud* failure (a crash you would fix in ten minutes) for a *quiet* one
+(a wrong number you will never notice). That is a bad trade, and it is the theme of this
+entire project.
 
 The identity used in `cc_lib.py` needs no epsilon and stays exact everywhere:
 
@@ -173,8 +198,13 @@ correction = 2 * (math.log(2) - u - F.softplus(-2 * u))
 
 ## Check 5 — why "reparameterization" and not REINFORCE?
 
-Both estimators compute the same gradient. Run each one 2,000 times on the same
-problem and look at how much the answers scatter:
+There are two different ways to work out which direction to push the actor, and both are
+*correct* — they aim at the same answer. An **estimator** is just a recipe for guessing a
+number from random samples, and because the samples are random, every estimator's guess
+wobbles a bit.
+
+So run each recipe 2,000 times on the identical problem, and see how much its answers
+scatter:
 
 ![gradient variance](outputs/grad_variance.png)
 
@@ -185,10 +215,15 @@ problem and look at how much the answers scatter:
            score function    -0.9440     0.2536
 ```
 
-They agree on the answer (`-0.936` vs `-0.944` — the same number, within noise).
-They disagree completely on how *confidently* they say it: the
-[score-function](/shared/glossary/#log-derivative-trick) estimator's spread is
-**3.1× wider**.
+They agree on the answer: `-0.936` vs `-0.944`, the same number once you allow for noise.
+That is the `mean` column, and it confirms neither one is *cheating*.
+
+The `std` column is where they part company. It measures how widely the 2,000 guesses were
+scattered around that answer — small `std` means "every attempt gave nearly the same
+result"; big `std` means "the answers were all over the place". The
+[score-function](/shared/glossary/#log-derivative-trick) recipe's scatter is **3.1× wider**.
+
+Both are aiming at the same target. One of them has a much steadier hand.
 
 The reason is structural. The score-function estimator only ever asks "that action
 scored well, so make actions like it more likely" — it treats the
@@ -199,7 +234,7 @@ question: "which **direction** should I nudge this action to raise its score?" I
 handed `dQ/da` directly instead of guessing it. That extra information is the
 variance reduction — and it is the same trick, for the same reason, as the
 [deterministic policy gradient](/shared/glossary/#deterministic-policy-gradient) in
-[DDPG](/shared/glossary/#ddpg) (project 26).
+[DDPG](/shared/glossary/#ddpg) ([project 26](../26-ddpg-on-pendulum/README.md)).
 
 ## The consequence: what the bug actually costs
 
@@ -231,7 +266,7 @@ Now look at the last column, which is the *mechanism* rather than the score. The
 agent reports an entropy of `-1.00` per action dimension — exactly the target it was
 aiming for. The broken agent reports **`+3.40`**.
 
-Its [temperature](/shared/glossary/#temperature) controller (project 29) is being told
+Its [temperature](/shared/glossary/#temperature) controller ([project 29](../29-automatic-temperature-tuning/README.md)) is being told
 the policy is far *more* random than the target, so it drives `alpha` down and down,
 trying to make an already-saturated policy less random. It is a thermostat wired to a
 thermometer that reads the wrong room. Nothing crashes. The agent just quietly ends up
@@ -249,10 +284,11 @@ and `cc_lib.py` has it right — but because **it is invisible**.
 
 There is no crash, no `NaN`, no warning. The loss curve looks healthy. The agent
 improves. Everything about the run says "working", and the only symptom is a final
-score lower than it should have been — which, in RL, is indistinguishable from an
+score lower than it should have been — which, in RL, looks *exactly the same* as an
 unlucky [seed](/shared/glossary/#seed), a hard task, or a slightly-off
-hyperparameter. You would never think to inspect your log-probability, because your
-log-probability never complains.
+[hyperparameter](/shared/glossary/#hyperparameter). Those are the three things you would
+blame, and you would spend a week on them. You would never think to inspect your
+log-probability, because your log-probability never complains.
 
 Three checks that cost fifteen seconds — *does it integrate to 1, does it match the
 histogram, does the entropy move in the right direction* — settle it permanently.
