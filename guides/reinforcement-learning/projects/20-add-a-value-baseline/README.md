@@ -10,15 +10,15 @@
 
 | File | Role |
 |------|------|
-| `baseline.py` | The same CartPole REINFORCE as project 19, with three choices of baseline, plus the two measurements that check the textbook's two promises: that the variance drops, and that the gradient does not move. |
+| `baseline.py` | The same CartPole REINFORCE as [project 19](../19-reinforce-on-cartpole/README.md), with three choices of baseline, plus the two measurements that check the textbook's two promises: that the variance drops, and that the gradient does not move. |
 
 ```bash
 python3 baseline.py all       # ~8 min on 12 CPU cores
 ```
 
-This project imports project 19's `pg_lib.py` and reuses its exact settings
+This project imports [project 19](../19-reinforce-on-cartpole/README.md)'s `pg_lib.py` and reuses its exact settings
 (`γ = 1`, `lr = 1e-3`, 5 episodes per update, 200 updates, 5 seeds). The `none`
-variant below therefore *is* project 19's reward-to-go agent, and the only thing
+variant below therefore *is* [project 19](../19-reinforce-on-cartpole/README.md)'s reward-to-go agent, and the only thing
 that changes is one subtraction.
 
 ## The claim, stated precisely enough to test
@@ -37,7 +37,7 @@ looks harmless and is not:
 
 | variant | `b` | |
 |---|---|---|
-| `none` | 0 | project 19's reward-to-go |
+| `none` | 0 | [project 19](../19-reinforce-on-cartpole/README.md)'s reward-to-go |
 | `constant` | the mean return of the batch | the cheapest baseline anyone would think of |
 | `learned` | `V_φ(s)`, a critic trained on the returns | the real thing — a *state-dependent* baseline |
 
@@ -57,7 +57,7 @@ lower variance buys — and on a task this easy it is a modest-looking win, whic
 the honest scale of it. CartPole is solvable without any of this. The reason to
 care is that the mechanism scales even though the task does not: everything after
 this project inherits the critic, and by the time [LunarLander](/shared/glossary/#lunarlander)
-arrives in project 21 the baseline has stopped being a nicety.
+arrives in [project 21](../21-a2c-with-parallel-envs/README.md) the baseline has stopped being a nicety.
 
 ## Barrel one: the variance really does drop
 
@@ -80,7 +80,7 @@ checkpoint it has overtaken the constant baseline, which is the expected orderin
 a state-*dependent* baseline can track how precarious each individual state is, and
 a single number cannot.
 
-Stacked on top of project 19's 4× from reward-to-go, the two cheapest tricks in RL
+Stacked on top of [project 19](../19-reinforce-on-cartpole/README.md)'s 4× from reward-to-go, the two cheapest tricks in RL
 together cut the gradient noise by roughly **20×** — and neither one costs a single
 extra episode of environment interaction.
 
@@ -91,16 +91,28 @@ unpleasant.
 
 The obvious test — "do the two mean gradients point the same way?" — is itself a
 trap. Near a converged policy the true gradient is almost zero, so a few hundred
-episodes cannot pin down its *direction*, and the cosine between two noisy estimates
-of a near-zero vector means nothing. Measured here, it came out at **−0.9**: not a
-scandal, just a measurement taken where no measurement is possible.
+episodes cannot pin down its *direction*, and the cosine (the standard way to
+measure the angle between two vectors — 1 means pointing the same way, 0 means
+perpendicular, −1 means opposite) between two noisy estimates of a near-zero vector
+means nothing. Imagine trying to tell which way an arrow points when the arrow is
+almost zero length — a tiny gust of wind can flip it end to end, so "which way is it
+pointing" stops being a meaningful question. Measured here, the cosine came out at
+**−0.9**: not a scandal, just a measurement taken where no measurement is possible.
 
-The well-conditioned test looks at the **difference** between the two estimators.
-Per episode, `g_none − g_baseline` is exactly `b · Σₜ ∇log π(aₜ|sₜ)`, and the theorem
-says its expectation is *zero* — that IS the unbiasedness claim, rewritten as
-something measurable. So bootstrap the null distribution (resample the centred
-differences, simulating a world where the mean truly is zero) and ask how often
-chance alone would produce a mean as large as the one observed:
+The well-conditioned test looks at the **difference** between the two estimators
+instead of comparing their directions. Per episode, `g_none − g_baseline` is exactly
+`b · Σₜ ∇log π(aₜ|sₜ)`, and the theorem says its expectation is *zero* — that IS the
+unbiasedness claim, rewritten as something measurable. To check whether a measured
+average could plausibly be "zero plus noise", this project uses a standard
+statistical trick called **bootstrap resampling**: take the many measured
+differences, repeatedly draw random resamples of them (with replacement — the same
+value can be drawn more than once), and see how large an average those resamples
+produce *just by chance*, if the true average really were zero. If the average
+actually measured is far out in the tail of that chance distribution, the "it's just
+noise" explanation becomes hard to believe; the **p-value** below is exactly that:
+the probability that pure chance alone would produce an average as large as the one
+observed (a low p-value, conventionally under 0.05, is read as "unlikely to be pure
+chance"). Here is what that check finds at each checkpoint:
 
 | checkpoint | constant baseline | learned `V(s)` baseline |
 |---|---|---|
@@ -134,7 +146,7 @@ the bias disappears into the noise. That is why the constant baseline still trai
 perfectly well. The bias is real, small, and usually survivable.
 
 It is also not an obscure corner case. PPO's [advantage normalization](/shared/glossary/#advantage-normalization)
-(project 23, detail #7) divides advantages by the standard deviation *of the same
+([project 23](../23-the-37-details/README.md), detail #7) divides advantages by the standard deviation *of the same
 minibatch*, which is the identical sin — and the field does it anyway, because it
 works. Now you know what it costs.
 
@@ -143,9 +155,10 @@ works. Now you know what it costs.
 ![explained variance](outputs/explained_variance.png)
 
 The number to watch when debugging any actor-critic method is the critic's
-**explained variance**: `1 − Var[G − V] / Var[G]`, or "what fraction of the variation
-in returns does the critic actually predict?" 1.0 is perfect, 0.0 is no better than
-guessing the mean, and *negative* means the critic is worse than useless.
+[**explained variance**](/shared/glossary/#explained-variance): `1 − Var[G − V] / Var[G]`,
+or "what fraction of the variation in returns does the critic actually predict?" 1.0
+is perfect, 0.0 is no better than guessing the mean, and *negative* means the critic
+is worse than useless.
 
 It starts negative here — an untrained critic predicting ≈0 against returns in the
 tens is actively wrong — climbs as the critic catches up, and never reaches 1.0. It
@@ -161,7 +174,7 @@ discount (`γ < 1`), which is what every project after this one does.
 
 The baseline is the best deal in reinforcement learning: a 2–5× cut in gradient
 noise, no extra environment interaction, no bias, and about ten lines of code.
-Project 19 bought 4× by deleting a term that could not carry information; this
+[Project 19](../19-reinforce-on-cartpole/README.md) bought 4× by deleting a term that could not carry information; this
 project buys another 2–5× by subtracting a term that predicts the part of the return
 having nothing to do with the action taken. What survives the subtraction —
 `Gₜ − V(sₜ)` — is the [advantage](/shared/glossary/#advantage), and estimating it

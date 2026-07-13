@@ -2,7 +2,7 @@
 
 ## Key Insight
 
-[PPO](/shared/glossary/#ppo)'s reputation for "just working" comes less from its five-line clipped objective than from roughly three dozen small implementation choices layered on top — things like [advantage](/shared/glossary/#advantage) [normalization](/shared/glossary/#normalization), clipping the [value function](/shared/glossary/#value-function) loss, orthogonal weight initialization, annealing the learning rate to zero, reward scaling, and global gradient clipping. Individually each looks like a minor detail; together they are the difference between a PPO that matches published scores and one that quietly fails to learn. This project implements or audits every one of the [37 documented details](https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/) and measures each as its own [ablation](/shared/glossary/#ablation), so you learn not just *that* they matter but *how much* each contributes. The deeper lesson generalizes beyond PPO: in modern RL the gap between a paper's pseudocode and a working agent is paved with unglamorous engineering.
+[PPO](/shared/glossary/#ppo)'s reputation for "just working" comes less from its five-line clipped objective than from roughly three dozen small implementation choices layered on top — things like [advantage](/shared/glossary/#advantage) [normalization](/shared/glossary/#normalization), clipping the [value function](/shared/glossary/#value-function) loss, [orthogonal weight initialization](/shared/glossary/#orthogonal-initialization), [annealing](/shared/glossary/#learning-rate-annealing) the learning rate to zero, reward scaling, and global [gradient clipping](/shared/glossary/#gradient-clipping). Individually each looks like a minor detail; together they are the difference between a PPO that matches published scores and one that quietly fails to learn. This project implements or audits every one of the [37 documented details](https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/) and measures each as its own [ablation](/shared/glossary/#ablation), so you learn not just *that* they matter but *how much* each contributes. The deeper lesson generalizes beyond PPO: in modern RL the gap between a paper's pseudocode and a working agent is paved with unglamorous engineering.
 
 ---
 
@@ -10,7 +10,7 @@
 
 | File | Role |
 |------|------|
-| `ablations.py` | Takes project 22's `PPOConfig`, flips one flag at a time, and trains 13 variants × 3 seeds on LunarLander. Plus the 2×2 that no one-at-a-time ablation can see. |
+| `ablations.py` | Takes [project 22](../22-ppo-from-scratch/README.md)'s `PPOConfig`, flips one flag at a time, and trains 13 variants × 3 seeds on LunarLander. Plus the 2×2 that no one-at-a-time ablation can see. |
 
 ```bash
 python3 ablations.py all       # ~10 min on 12 CPU cores
@@ -27,9 +27,9 @@ setting this phase exercises elsewhere.
 
 | # | detail | where | status |
 |---|---|---|---|
-| 1 | Vectorized architecture | `pg_lib.make_vec_env` | **measured** (project 21, at length) |
+| 1 | Vectorized architecture | `pg_lib.make_vec_env` | **measured** ([project 21](../21-a2c-with-parallel-envs/README.md), at length) |
 | 2 | [Orthogonal init](/shared/glossary/#orthogonal-initialization), constant bias | `pg_lib.layer_init` | **measured** |
-| 3 | Adam epsilon = 1e-5, not 1e-8 | `PPOConfig.adam_eps` | **measured** |
+| 3 | [Adam](/shared/glossary/#adam) epsilon = 1e-5, not 1e-8 | `PPOConfig.adam_eps` | **measured** |
 | 4 | [Learning-rate annealing](/shared/glossary/#learning-rate-annealing) | `train_ppo`, per update | **measured** |
 | 5 | [Generalized Advantage Estimation](/shared/glossary/#gae) | `pg_lib.compute_gae` | **measured** |
 | 6 | Mini-batch updates | `train_ppo`, epoch loop | **measured** |
@@ -38,21 +38,21 @@ setting this phase exercises elsewhere.
 | 9 | [Value-loss clipping](/shared/glossary/#value-clipping) | `ppo_losses` | **measured** |
 | 10 | Overall loss and [entropy bonus](/shared/glossary/#entropy-regularization) | `ppo_losses` | **measured** |
 | 11 | Global [gradient clipping](/shared/glossary/#gradient-clipping) | `train_ppo` | **measured** |
-| 12 | Debug variables (approx KL, clipfrac) | `ppo_losses` returns them | audited — see project 22's `ppo.py check` |
-| 13 | Shared vs separate policy/value networks | `pg_lib.ActorCritic` | audited — and *measured* in project 24, where the Atari answer is the opposite |
+| 12 | Debug variables (approx KL, clipfrac) | `ppo_losses` returns them | audited — see [project 22](../22-ppo-from-scratch/README.md)'s `ppo.py check` |
+| 13 | Shared vs separate policy/value networks | `pg_lib.ActorCritic` | audited — and *measured* in [project 24](../24-ppo-on-atari/README.md), where the Atari answer is the opposite |
 
-**9 Atari-specific details** — all in project 24, which trains PPO from pixels:
+**9 Atari-specific details** — all in [project 24](../24-ppo-on-atari/README.md), which trains PPO from pixels:
 
 | # | detail | status |
 |---|---|---|
-| 14–17 | `NoopResetEnv`, `MaxAndSkipEnv`, `EpisodicLifeEnv`, `FireResetEnv` | audited (project 14's `AtariPipeline`, run on real ALE frames) |
+| 14–17 | `NoopResetEnv`, `MaxAndSkipEnv`, `EpisodicLifeEnv`, `FireResetEnv` | audited ([project 14](../14-atari-pong/README.md)'s `AtariPipeline`, run on real ALE frames) |
 | 18 | `WarpFrame` — 84×84 grayscale | audited |
 | 19 | [`ClipRewardEnv`](/shared/glossary/#reward-clipping) | audited |
-| 20 | [`FrameStack`](/shared/glossary/#frame-stacking) | **measured in project 24** |
-| 21 | Shared Nature-[CNN](/shared/glossary/#cnn) for policy and value | **measured in project 24** |
+| 20 | [`FrameStack`](/shared/glossary/#frame-stacking) | **measured in [project 24](../24-ppo-on-atari/README.md)** |
+| 21 | Shared Nature-[CNN](/shared/glossary/#cnn) for policy and value | **measured in [project 24](../24-ppo-on-atari/README.md)** |
 | 22 | Scaling images to [0, 1] | audited |
 
-**9 continuous-action details** — all in project 25, which trains on [MuJoCo](/shared/glossary/#mujoco):
+**9 continuous-action details** — all in [project 25](../25-trpo-for-comparison/README.md), which trains on [MuJoCo](/shared/glossary/#mujoco):
 
 | # | detail | status |
 |---|---|---|
@@ -61,7 +61,7 @@ setting this phase exercises elsewhere.
 | 25 | Independent action components (diagonal Gaussian) | audited (log-probs summed over the action dim) |
 | 26 | **Separate** MLPs for policy and value | audited — note this *contradicts* #21, on purpose |
 | 27 | Action clipping to the valid range | audited (`gym.wrappers.ClipAction`) |
-| 28 | [Observation normalization](/shared/glossary/#observation-normalization) | audited (project 25 uses it) |
+| 28 | [Observation normalization](/shared/glossary/#observation-normalization) | audited ([project 25](../25-trpo-for-comparison/README.md) uses it) |
 | 29 | Observation clipping to ±10 | audited |
 | 30 | **Reward scaling** | **measured** — and it is the most interesting result here |
 | 31 | Reward clipping to ±10 | audited |
@@ -123,7 +123,7 @@ one learning rate then works across environments whose rewards differ by orders 
 magnitude.
 
 (It is also, strictly, a *biased* estimator — it divides by a statistic of the same
-minibatch it is weighting. Project 20 measures that bias directly and finds it real. The
+minibatch it is weighting. [Project 20](../20-add-a-value-baseline/README.md) measures that bias directly and finds it real. The
 field does it anyway, and this table is why.)
 
 ### #8, the clip: it is doing exactly what it claims (−76)
@@ -138,8 +138,15 @@ and that the trust region is what keeps the agent alive.
 
 ![the 2x2](outputs/interaction.png)
 
-This is the finding that a one-at-a-time ablation is structurally incapable of producing,
-and it is the reason this project runs a 2×2.
+This is the finding that a one-at-a-time [ablation](/shared/glossary/#ablation) is
+structurally incapable of producing, and it is the reason this project runs a 2×2 —
+training all four combinations of "reward scaling on/off" × "gradient clip on/off"
+instead of testing each detail alone. Two details are called **independent** if
+removing both costs exactly the sum of removing each one separately — like two
+light switches on different circuits, where flipping both off is exactly as dark as
+flipping each off in turn. When the actual combined cost comes out *different* from
+that sum, the two details are **interacting**: they are wired to the same circuit,
+and understanding one requires understanding the other.
 
 Reward scaling (#30) is usually explained as "the rewards are too big". That explanation
 is wrong, and the mechanism is far more interesting. On LunarLander the returns run into
@@ -176,7 +183,7 @@ update**. Whether that is sane depends entirely on the scale of the returns:
 - **raw rewards** (returns ≈ 300): a critic starting at 0 needs *1500 updates* just to
   reach the right order of magnitude, and it has 146. The critic never arrives, the
   advantages are meaningless, and the agent never learns. (This was a live bug in
-  project 22 before it was a paragraph: PPO scored −52 on LunarLander until value
+  [project 22](../22-ppo-from-scratch/README.md) before it was a paragraph: PPO scored −52 on LunarLander until value
   clipping was understood.)
 
 So detail #9 is not "useless". It is **conditional on detail #30**, and a study that

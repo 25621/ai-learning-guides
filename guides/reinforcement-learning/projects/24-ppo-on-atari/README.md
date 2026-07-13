@@ -10,7 +10,7 @@ Moving [PPO](/shared/glossary/#ppo) from low-dimensional control to [Atari](/sha
 
 | File | Role |
 |------|------|
-| `ppo_pixels.py` | The pixel PPO: a shared Nature-CNN trunk, a hand-rolled [vectorized](/shared/glossary/#vectorized-environment) pixel env, and the two Atari *network* details tested rather than assumed. Reuses project 14's `pong_lib.py` for the real ALE preprocessing chain and for MiniPong. |
+| `ppo_pixels.py` | The pixel PPO: a shared Nature-CNN trunk, a hand-rolled [vectorized](/shared/glossary/#vectorized-environment) pixel env, and the two Atari *network* details tested rather than assumed. Reuses [project 14](../14-atari-pong/README.md)'s `pong_lib.py` for the real ALE preprocessing chain and for MiniPong. |
 
 ```bash
 python3 ppo_pixels.py all       # ~7 min on 12 CPU cores
@@ -22,7 +22,7 @@ The nine Atari details in the 37 are not about PPO at all. Seven are environment
 (`NoopReset`, `MaxAndSkip`, `EpisodicLife`, `FireReset`, `WarpFrame`,
 [`ClipReward`](/shared/glossary/#reward-clipping),
 [`FrameStack`](/shared/glossary/#frame-stacking)) and two are about the network. They
-concern **what you feed the agent**, and project 14 already built that chain for
+concern **what you feed the agent**, and [project 14](../14-atari-pong/README.md) already built that chain for
 [DQN](/shared/glossary/#dqn). This project points the same chain at real `ALE/Pong-v5`
 and looks at what comes out of it:
 
@@ -63,7 +63,7 @@ the answer arrives in minutes — and measure the two Atari details that are abo
 | 1 frame, no stacking (#20 off) | **1.47 ± 1.66** | |
 
 The agent goes from missing nearly every ball to returning about seven rallies in ten,
-using nothing but raw pixels, the same clipped objective from project 22, and a three-layer
+using nothing but raw pixels, the same clipped objective from [project 22](../22-ppo-from-scratch/README.md), and a three-layer
 CNN.
 
 ## Detail #20, frame stacking: the agent is blind without it
@@ -92,10 +92,12 @@ are genuinely different:
 - On **pixels**, the trunk is a *perception system*. It is expensive, and both heads want
   exactly the same thing from it (where is the ball, where is the paddle). Sharing is
   nearly free and doubles the gradient signal reaching the convolutions.
-- On **proprioceptive vectors** (project 25), the "trunk" is two small dense layers on a
+- On **proprioceptive vectors** (a handful of numbers describing the agent's own body,
+  like joint angles and velocities, rather than an image — see [project 25](../25-trpo-for-comparison/README.md)),
+  the "trunk" is two small dense layers on a
   17-number observation. Sharing saves nothing worth having, and the value loss — whose
   scale is the *return* — bullies the policy gradient through the shared weights. That is
-  the same coupling project 23 measured through the gradient clip, arriving from a
+  the same coupling [project 23](../23-the-37-details/README.md) measured through the gradient clip, arriving from a
   different direction.
 
 Measured here, the shared trunk's advantage is **small on the mean and clear on the
@@ -107,7 +109,7 @@ Which is itself worth knowing.
 
 ## What to take away
 
-Pixels do not change PPO. Every line of the update from project 22 is untouched here; what
+Pixels do not change PPO. Every line of the update from [project 22](../22-ppo-from-scratch/README.md) is untouched here; what
 changes is the *stack in front of it* — the wrappers that turn a 210×160 RGB screen into
 something learnable, and a CNN where the MLP used to be. That is the real content of the
 nine Atari details, and the reason they read like a plumbing manual rather than an
@@ -117,4 +119,4 @@ The two that concern the network, measured rather than assumed, come out very un
 frame stacking is not a "detail" at all but a repair to a broken observation, worth 5.4
 points; the shared trunk is worth a little consistency and almost no score. A list of 37
 equal-looking bullet points hides that difference completely — which is the same lesson
-project 23 reaches from the other side.
+[project 23](../23-the-37-details/README.md) reaches from the other side.

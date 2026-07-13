@@ -10,7 +10,7 @@
 
 | File | Role |
 |------|------|
-| `ppo.py` | The whole algorithm, with **every implementation detail behind a named flag on `PPOConfig`**. Project 23 ablates those flags, project 24 swaps the network for a CNN, and project 25 uses this file as the yardstick TRPO is measured against. |
+| `ppo.py` | The whole algorithm, with **every implementation detail behind a named flag on `PPOConfig`**. [Project 23](../23-the-37-details/README.md) ablates those flags, [project 24](../24-ppo-on-atari/README.md) swaps the network for a CNN, and [project 25](../25-trpo-for-comparison/README.md) uses this file as the yardstick TRPO is measured against. |
 
 ```bash
 python3 ppo.py check       # the sanity check that belongs in every PPO you write
@@ -28,7 +28,7 @@ loss       = pg_loss + c1 * v_loss - c2 * entropy
 ```
 
 The reasoning behind them is worth stating precisely, because it explains why PPO
-exists at all. A2C (project 21) takes one gradient step per rollout and then throws
+exists at all. A2C ([project 21](../21-a2c-with-parallel-envs/README.md)) takes one gradient step per rollout and then throws
 the data away, because after that step the policy has moved and the data is [off-policy](/shared/glossary/#off-policy).
 That is a wretched trade: the data cost a walk through the environment, the gradient
 step cost a microsecond. PPO reuses each batch for several epochs and pays for the
@@ -38,7 +38,13 @@ the objective goes flat, its gradient vanishes, and the batch stops pulling. A
 [trust region](/shared/glossary/#trust-region) implemented as a `clamp`.
 
 The `min` (not `max`) is what makes the clipped objective a *pessimistic* bound: PPO
-always believes the less flattering of the two stories it is told about a step.
+always believes the less flattering of the two stories it is told about a step. In
+plain terms: PPO computes the update's benefit two ways — once with the ratio clipped,
+once without — and then, for a good action, always takes whichever number is
+*smaller*, and for a bad action, whichever is *worse*. It never lets the clip make a
+step look better than it honestly is; the clip can only hold the policy back, never
+push it further than the unclipped evidence would justify. That asymmetry is what
+turns "clip the ratio" into an actual safety rail rather than just a cosmetic cap.
 
 ## The check that belongs in every PPO you write
 
@@ -63,7 +69,7 @@ a worse agent.
 | CartPole-v1 | **500.0** (a perfect score on every seed) | 475 = solved |
 | LunarLander-v3 | **238.8** (164, 273, 279) | 200 = solved |
 
-And for contrast, [A2C](/shared/glossary/#a2c) from project 21 — the same network, the
+And for contrast, [A2C](/shared/glossary/#a2c) from [project 21](../21-a2c-with-parallel-envs/README.md) — the same network, the
 same [GAE](/shared/glossary/#gae), the same parallel environments, differing only in
 that it uses each batch **once** and does not clip — plateaus at **98** on
 LunarLander and stays there. It learns to fly and hover; it does not learn to land.
@@ -81,10 +87,16 @@ The clip fires on a real fraction of samples every update, and the [KL divergenc
 per update sits in a narrow band instead of wandering. That band is the trust region,
 enforced by a `clamp` that costs nothing.
 
-Note the diagnostic used here: the **k3 estimator** of the KL,
-`((ratio - 1) - log_ratio).mean()`, rather than the naive `(-log_ratio).mean()`. The
-naive version is unbiased but can go *negative*, which makes it useless as the alarm
-you actually want it to be ("how far has my policy moved?"). This is
+Note the diagnostic used here: the **k3 estimator** of the [KL divergence](/shared/glossary/#kl-divergence)
+(a standard way of measuring "how different is the new policy's action distribution
+from the old one" — 0 means identical, larger means further apart),
+`((ratio - 1) - log_ratio).mean()`, rather than the naive `(-log_ratio).mean()`. Both
+formulas are trying to answer the same question — "on average, how far did the policy
+move?" — but the naive one is unbiased *on average over infinitely many updates*
+while still being able to report a *negative* distance for any one actual update,
+which is useless as the alarm you actually want it to be ("how far has my policy
+moved *right now*?"); a distance that can read as negative cannot be trusted as an
+early-warning number to watch during training. This is
 [detail #12](https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/) —
 "debug variables" — and it is in the list of 37 for a reason: you cannot fix what you
 cannot see.
@@ -120,7 +132,7 @@ advantages) is order 0.1. **Global gradient clipping (detail #11) clips them
 jointly.** The critic's gradient eats the entire clipping budget, the whole update
 gets rescaled by 0.01, and the actor's effective learning rate collapses to 3e-6.
 The policy sits still while the critic thrashes. Normalizing the reward does not fix
-the reward; it fixes the *gradient budget*. Project 23 measures this.
+the reward; it fixes the *gradient budget*. [Project 23](../23-the-37-details/README.md) measures this.
 
 **3. Value-loss clipping (detail #9) is actively harmful on raw rewards.** It clamps
 the critic's prediction to move at most `±clip_coef = ±0.2` *per update*. With returns
@@ -128,12 +140,12 @@ in the hundreds, a critic starting at 0 needs a thousand updates just to reach t
 right order of magnitude — and it has only 293. The critic never arrives, the
 advantages are garbage, and the agent never learns. Once rewards are normalized the
 returns are order 1, the ±0.2 clamp becomes a sensible trust region on the critic, and
-the detail turns from harmful into helpful — project 23 measures it as worth +94.
+the detail turns from harmful into helpful — [project 23](../23-the-37-details/README.md) measures it as worth +94.
 Detail #9 is not "useless", as the literature often has it; it is *conditional on
 detail #30*, and an ablation that does not say which reward scale it used has measured
 nothing.
 
-None of this is in the paper. All of it is in the 37 details, and project 23 exists
+None of this is in the paper. All of it is in the 37 details, and [project 23](../23-the-37-details/README.md) exists
 to take each one apart.
 
 ## What to take away

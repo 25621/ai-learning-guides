@@ -10,7 +10,7 @@
 
 | File | Role |
 |------|------|
-| `trpo.py` | TRPO in full — [conjugate gradient](/shared/glossary/#conjugate-gradient), [Fisher](/shared/glossary/#fisher-information)-vector products by double backward, and a backtracking [line search](/shared/glossary/#line-search) — raced against project 22's PPO on `Hopper-v5`. |
+| `trpo.py` | TRPO in full — [conjugate gradient](/shared/glossary/#conjugate-gradient), [Fisher](/shared/glossary/#fisher-information)-vector products by double backward, and a backtracking [line search](/shared/glossary/#line-search) — raced against [project 22](../22-ppo-from-scratch/README.md)'s PPO on `Hopper-v5`. |
 
 ```bash
 python3 trpo.py all       # ~9 min on 12 CPU cores
@@ -25,20 +25,30 @@ subject to E[ KL( π_old(·|s) ‖ π_θ(·|s) ) ] ≤ δ       the trust region
 
 PPO's clip is a *heuristic* stand-in for that constraint. TRPO enforces the real thing —
 and the price is that you can no longer call `loss.backward()` and `optim.step()`, because
-that is not how constrained optimization works. Three pieces of machinery are needed:
+that is not how constrained optimization works. Three pieces of machinery are needed. Before
+the details, the shape of the problem in plain terms: TRPO wants the biggest step that
+improves the policy *without* moving the policy's behavior too far from where it started, and
+"too far" is measured not in the network's raw numbers but in how differently the policy
+actually *acts*.
 
 **1. The [natural gradient](/shared/glossary/#natural-gradient).** Linearize the objective,
 quadratically approximate the constraint, and the best step is `F⁻¹g`, where `F` is the
 [Fisher information](/shared/glossary/#fisher-information) matrix — the curvature of the KL.
 It measures distance in units of *behavioural change* rather than units of *parameters*,
-which is the right yardstick: the same policy can be written with wildly different weights,
-so "how far did θ move" is a meaningless question and "how far did π move" is the one that
-matters.
+which is the right yardstick: the same policy can be written with wildly different weights
+(scale one layer up and the next layer down and the network computes the exact same
+function), so "how far did θ (the raw weights) move" is a meaningless question and "how far
+did π (the actual behavior) move" is the one that matters. `F` is what converts a step size
+in weight-space into a step size in behavior-space, the way a currency exchange rate
+converts dollars moved into euros actually spent.
 
-**2. [Conjugate gradient](/shared/glossary/#conjugate-gradient).** For even this small
-network `F` is 4,600 × 4,600. You never build it. CG solves `F·x = g` using only the ability
-to compute `F·v` for vectors you choose — and that product is available directly from
-autograd, by differentiating the scalar `(∇KL · v)` a second time:
+**2. [Conjugate gradient](/shared/glossary/#conjugate-gradient) (CG).** For even this small
+network, writing `F` out as an explicit matrix would mean storing and inverting a
+4,600 × 4,600 grid of numbers — 21 million entries, recomputed every update. Nobody does
+that. Instead, CG is an iterative solver: it finds the same answer to `F·x = g` using only
+the ability to compute `F·v` for vectors `v` you choose one at a time, never building `F`
+itself. That narrower ability — "multiply by `F`", not "have `F`" — happens to be available
+directly from autograd, by differentiating the scalar `(∇KL · v)` a second time:
 
 ```python
 grads = flat_grad(kl, params, create_graph=True)   # ∇KL, still differentiable
@@ -47,13 +57,19 @@ hv    = flat_grad(gv, params)                      # ∇(∇KL · v)  =  F·v
 ```
 
 Ten CG iterations cost about ten backward passes. A matrix nobody could afford to write
-down is thereby used as though it were sitting in memory.
+down is thereby used as though it were sitting in memory — the classic trick of solving
+"multiply by a huge matrix" problems without ever materializing the huge matrix.
 
 **3. A [line search](/shared/glossary/#line-search).** Steps 1 and 2 rest on approximations
-that are only true *near* θ. So compute the largest step the quadratic model permits, then
-walk **backwards** from it, shrinking by 0.8 each time, until you find a step that genuinely
-improves the surrogate *and* genuinely respects the KL constraint — checked against the true
-quantities, not the models. If none does, take no step at all.
+(a *linear* stand-in for the objective, a *quadratic* stand-in for the constraint) that are
+only trustworthy *close to* the current policy θ — far from θ they can be wrong in either
+direction. So compute the largest step the quadratic model permits, then walk **backwards**
+from it, shrinking by 0.8 each time, until you find a step that genuinely improves the
+surrogate *and* genuinely respects the KL constraint — checked against the true quantities,
+not the approximating models. If none does, take no step at all. It is the safety net under
+a tightrope walker who has already done the math on where to put each foot: the math is
+trusted for the *direction*, but the actual footing is double-checked before any weight
+shifts onto it.
 
 That is roughly 200 lines against PPO's five. This project measures what they buy.
 
@@ -71,7 +87,9 @@ This is the money result, and it is exactly what the theory promises:
 TRPO's KL **never once** exceeds its budget across every update of every seed — its maximum
 lands at 0.0098 against a constraint of 0.0100, hugging the boundary from below because that
 is precisely what a constrained optimizer is *supposed* to do: take the largest step the
-constraint allows and not one nat more.
+constraint allows and not one **nat** more (a *nat* is simply the unit KL divergence is
+measured in, the natural-log counterpart to a *bit* — the number itself matters more than the
+unit's name).
 
 PPO's clip, by contrast, **overshoots on 4.3% of updates**, and its worst step is more than
 twice the budget. This is not a bug in the implementation; it is what a clip *is*. Clipping
@@ -117,8 +135,8 @@ Not for its results. For everything else:
 
 - **The trust region only covers the policy.** The Fisher is defined on the policy's *output
   distribution*, so the critic must be trained separately by ordinary Adam, and the actor and
-  critic cannot share a trunk. That forecloses the shared-CNN design that Atari needs (project
-  24's detail #21) — TRPO cannot easily do pixels.
+  critic cannot share a trunk. That forecloses the shared-CNN design that Atari needs
+  ([project 24](../24-ppo-on-atari/README.md)'s detail #21) — TRPO cannot easily do pixels.
 
 - **It cannot exploit data reuse.** TRPO takes *one* policy step per batch. PPO takes 320, and
   that is where PPO's sample efficiency comes from in settings where collecting data is the

@@ -40,11 +40,14 @@ loss = -(logp * w).sum()
 ```
 
 Set `w_t` to the return and you have REINFORCE. Set it to the return minus a
-[baseline](/shared/glossary/#baseline) and you have project 20. Set it to a
-bootstrapped [advantage](/shared/glossary/#advantage) and you have A2C. Set it to
-a clipped importance-weighted advantage and you have PPO. The whole phase is an
-argument about what belongs in `w_t`, and this project takes the two simplest
-positions:
+[baseline](/shared/glossary/#baseline) and you have [project 20](../20-add-a-value-baseline/README.md).
+Set it to a bootstrapped [advantage](/shared/glossary/#advantage) and you have
+[A2C](/shared/glossary/#a2c) ([project 21](../21-a2c-with-parallel-envs/README.md)).
+Set it to a clipped importance-weighted advantage and you have
+[PPO](/shared/glossary/#ppo) ([project 22](../22-ppo-from-scratch/README.md)). The
+whole phase is an argument about what belongs in `w_t` — everything from here on is
+the same one-line update with a different value plugged into `w`. This project takes
+the two simplest positions:
 
 | weighting | `w_t` | the claim it makes |
 |---|---|---|
@@ -90,15 +93,23 @@ estimates, and look at how far they scatter around their own mean:
 
 Both estimators are aimed at the *same* gradient — the rewards-before-the-action
 term has zero mean, so dropping it changes the noise and not the target. That is
-also why this project runs at `γ = 1` while the rest of the phase uses `γ = 0.99`:
-with a discount the two weightings quietly target *different* vectors (the
-full-return weight picks up an extra `γᵗ`), and comparing their variance would be
-comparing two different things. CartPole is hard-capped at 500 steps, so the
-undiscounted return is finite and no discount is needed to keep the math honest.
+also why this project runs at `γ = 1` (no [discount](/shared/glossary/#discount-factor))
+while the rest of the phase uses `γ = 0.99`. In plain terms: with a discount, an
+action at step `t` gets its future rewards shrunk by `γᵗ` before they are summed —
+so the full-return weight (which sums over the *whole* episode) and the reward-to-go
+weight (which sums from step `t` onward) end up multiplying the same reward by two
+different discount powers. That turns them into estimates of two subtly different
+targets, and comparing their variance would no longer be a fair fight — you'd be
+comparing apples to two slightly different apples. CartPole is hard-capped at 500
+steps, so the undiscounted return is finite and no discount is needed to keep the
+math honest.
 
 The right-hand panel holds the number that actually decides whether learning
-happens: the signal-to-noise ratio of one episode's gradient, `‖g‖ / √variance`.
-Read it and the picture is grimmer than the left panel suggests.
+happens: the signal-to-noise ratio (SNR) of one episode's gradient, `‖g‖ / √variance`
+— the same idea as trying to hear a friend's voice (the signal) over a noisy crowd
+(the noise): a high SNR means the voice comes through clearly, a low one means you
+mostly hear noise and can barely make out what was said. Read it and the picture is
+grimmer than the left panel suggests.
 
 **The estimator gets worse as the agent gets better.** For reward-to-go, SNR falls
 from 0.42 to 0.18 to 0.09 as the policy improves. At the competent checkpoint a
@@ -116,7 +127,14 @@ Success makes the measurement harder, and nothing inside REINFORCE pushes back.
 ## The only fix REINFORCE has, and its price
 
 If one estimate is too noisy, average more of them. That works — at exactly the
-rate the central limit theorem promises and not one bit faster:
+rate the central limit theorem promises and not one bit faster. The central limit
+theorem is the statistical fact behind
+"averaging cancels out noise": if you average `n` independent noisy measurements,
+the *variance* of the average shrinks proportionally to `1/n` — but the *error* you
+actually feel (a standard deviation, `√variance`) only shrinks as `1/√n`. Think of
+polling voters: to cut your polling error in half, you don't need twice as many
+people surveyed — you need **four times** as many, because error shrinks with the
+square root of sample size, not the sample size itself.
 
 ![batch variance](outputs/batch_variance.png)
 
@@ -131,9 +149,9 @@ optimum. It is **expensive**, and the price is set by a variance the algorithm
 does nothing about. Everything that follows is an attempt to get the variance down
 *without* buying more episodes:
 
-- project 20 subtracts a [baseline](/shared/glossary/#baseline) — another 3–5×, free,
-- project 21 bootstraps a critic, replacing the noisy tail of the return with an estimate,
-- project 22 reuses each batch several times, so the same episodes pay for several steps.
+- [project 20](../20-add-a-value-baseline/README.md) subtracts a [baseline](/shared/glossary/#baseline) — another 3–5×, free,
+- [project 21](../21-a2c-with-parallel-envs/README.md) bootstraps a critic, replacing the noisy tail of the return with an estimate,
+- [project 22](../22-ppo-from-scratch/README.md) reuses each batch several times, so the same episodes pay for several steps.
 
 ## A detail worth stealing: watch the gradient norm
 
